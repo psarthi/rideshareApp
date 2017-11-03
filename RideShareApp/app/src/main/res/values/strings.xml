@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Ride Share</string>
+    <string name="companyName">Digitus Revolution</string>
+    <string name="productName">Ride Share</string>
 </resources>

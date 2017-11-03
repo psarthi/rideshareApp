@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "715653590540",
+    "project_id": "ivory-sanctuary-114906"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715653590540:android:9f9f2c308792e95a",
+        "android_client_info": {
+          "package_name": "com.digitusrevolution.rideshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "715653590540-grt3g328jnrm1pl2rs7alkjjoce6edbb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.digitusrevolution.rideshare",
+            "certificate_hash": "a202663b583e0bfd59e7a9214015ddf6b8349f03"
+          }
+        },
+        {
+          "client_id": "715653590540-t5nknnctr11h9sakhhnmpohcnactkp6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzj1_oMiGKS7Zxc8mj-_p0efPAH1d3FTs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

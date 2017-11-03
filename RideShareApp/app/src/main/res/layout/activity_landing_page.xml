@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,17 +10,49 @@
         android:id="@+id/companyNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Digitus Revolution"
-        android:textSize="30sp"
-        tools:layout_editor_absoluteX="71dp"
-        tools:layout_editor_absoluteY="91dp"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:text="@string/companyName"
+        android:textSize="30sp"/>
 
     <TextView
         android:id="@+id/productNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ride Share"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="136dp"
-        tools:layout_editor_absoluteY="141dp"/>
-</android.support.constraint.ConstraintLayout>
+        android:layout_below="@id/companyNameTextView"
+        android:layout_centerHorizontal="true"
+        android:text="@string/productName"
+        android:textSize="24sp"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/welcomeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/productNameTextView"
+        android:layout_marginTop="100dp"
+        android:text="Welcome User"
+        android:layout_centerHorizontal="true"/>
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sign_out_button"
+        android:layout_marginHorizontal="20dp">
+    </com.google.android.gms.common.SignInButton>
+
+
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@android:color/white"
+        android:text="Sign Out"/>
+
+
+
+
+</RelativeLayout>
