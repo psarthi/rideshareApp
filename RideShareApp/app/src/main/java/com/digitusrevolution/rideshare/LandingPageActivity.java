@@ -15,32 +15,33 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 
 public class LandingPageActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String TAG = "LandingPageActivity";
+    private static final int RC_SIGN_IN = 9001;
+
     private GoogleApiClient mGoogleApiClient;
     private SignInButton mSignInButton;
-    private static final int RC_SIGN_IN = 9001;
-    private static final String TAG = "LandingPageActivity";
-    private TextView mWelcomeTextView;
-    private Button mSignOutButton;
+    private Button mSignUpButton;
+    private Button mLoginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
 
-        mWelcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
-        mSignOutButton = (Button) findViewById(R.id.sign_out_button);
-
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
+                .requestIdToken(getString(R.string.server_client_id))
                 .build();
 
         // Build a GoogleApiClient with access to the Google Sign-In API and the
@@ -54,40 +55,39 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.sign_in_button:
                         signIn();
-                        break;
-                    // ...
-                }
             }
         });
 
-        mSignOutButton.setOnClickListener(new View.OnClickListener() {
+        mSignUpButton = (Button) findViewById(R.id.sign_up_button);
+        mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (view.getId()) {
-                case R.id.sign_out_button:
-                signOut();
-                break;
-                }
+                signUp();
+            }
+        });
+
+        mLoginButton = (Button) findViewById(R.id.login_button);
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                login();
             }
         });
 
 
     }
 
-    private void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                mWelcomeTextView.setText("Successfully Signed Out");
-            }
-        });
+    private void login() {
+        Log.d(TAG,"Log In Button clicked");
+    }
+
+    private void signUp() {
+        Log.d(TAG,"Sign Up Button clicked");
     }
 
     private void signIn() {
-
+        Log.d(TAG,"Google Sign In Button Clicked");
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -116,14 +116,15 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
 
-            mWelcomeTextView.setText(" Welcome "+acct.getDisplayName()
-                                        +"\n Email:"+acct.getEmail()
-                                        +"\n First Name:"+acct.getGivenName()
-                                        +"\n Last Name:"+acct.getFamilyName());
+            Log.d(TAG,"DisplayName:"+acct.getDisplayName()
+                    +"\nEmail:"+acct.getEmail()
+                    +"\nFirst Name:"+acct.getGivenName()
+                    +"\nLast Name:"+acct.getFamilyName()
+                    +"\nTokenId:"+acct.getIdToken());
 
         } else {
             // Signed out, show unauthenticated UI.
-            mWelcomeTextView.setText("Sign in Failed");
+            Log.d(TAG,"Google Login Failed");
         }
     }
 }

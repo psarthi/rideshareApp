@@ -4,55 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.digitusrevolution.rideshare.LandingPageActivity">
 
     <TextView
-        android:id="@+id/companyNameTextView"
+        android:id="@+id/company_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:text="@string/companyName"
-        android:textSize="30sp"/>
+        android:layout_marginTop="@dimen/company_name_top_margin"
+        android:text="@string/company_name"
+        android:textSize="@dimen/company_name_text_size"/>
 
     <TextView
-        android:id="@+id/productNameTextView"
+        android:id="@+id/product_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/companyNameTextView"
+        android:layout_below="@id/company_name_text_view"
         android:layout_centerHorizontal="true"
-        android:text="@string/productName"
-        android:textSize="24sp"/>
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/welcomeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/productNameTextView"
-        android:layout_marginTop="100dp"
-        android:text="Welcome User"
-        android:layout_centerHorizontal="true"/>
+        android:text="@string/product_name"
+        android:textSize="@dimen/product_name_text_size"/>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/sign_out_button"
-        android:layout_marginHorizontal="20dp">
+        android:layout_above="@id/sign_up_login_linear_layout"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        app:colorScheme="light">
+
     </com.google.android.gms.common.SignInButton>
 
 
-    <Button
-        android:id="@+id/sign_out_button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginHorizontal="20dp"
-        android:background="@android:color/white"
-        android:text="Sign Out"/>
+        android:orientation="horizontal"
+        android:id="@+id/sign_up_login_linear_layout"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_alignParentBottom="true">
 
+        <Button
+            android:id="@+id/sign_up_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="@string/sign_up"
+            android:textAllCaps="false"
+            android:textStyle="bold"/>
 
+        <Button
+            android:id="@+id/login_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="@string/login"
+            android:textAllCaps="false"
+            android:textStyle="bold"/>
+    </LinearLayout>
 
 
 </RelativeLayout>

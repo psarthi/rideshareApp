@@ -16,9 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".RegistrationActivity">
+        <activity android:name=".UserRegistrationActivity">
         </activity>
         <activity android:name=".LoginActivity">
+        </activity>
+        <activity android:name=".OtpVerificationActivity">
+        </activity>
+        <activity android:name=".MobileRegistrationActivity">
         </activity>
     </application>
 

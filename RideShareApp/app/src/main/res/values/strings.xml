@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Ride Share</string>
-    <string name="companyName">Digitus Revolution</string>
-    <string name="productName">Ride Share</string>
+    <string name="company_name">Digitus Revolution</string>
+    <string name="product_name">Ride Share</string>
+    <string name="server_client_id">715653590540-t5nknnctr11h9sakhhnmpohcnactkp6g.apps.googleusercontent.com</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="title_activity_mobile_registration">MobileRegistrationActivity</string>
 </resources>
