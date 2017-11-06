@@ -24,7 +24,7 @@ import com.google.android.gms.common.api.Status;
 
 public class LandingPageActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = "LandingPage";
+    private static final String TAG = "RideShare";
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient mGoogleApiClient;

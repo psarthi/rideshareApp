@@ -1,5 +1,6 @@
 package com.digitusrevolution.rideshare;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +13,7 @@ import android.widget.TextView;
 
 public class MobileRegistrationActivity extends AppCompatActivity {
 
-    private static final String TAG = "MobileRegistration";
+    private static final String TAG = "RideShare";
     private Spinner mCountryNameSpinner;
     private EditText mMobileNumber;
     private Button mSendOTPButton;
@@ -43,6 +44,10 @@ public class MobileRegistrationActivity extends AppCompatActivity {
                 Log.d(TAG,"Sending OTP to Mobile number "+
                         mCountryNameSpinner.getSelectedItem().toString()+" " +
                         mMobileNumber.getText().toString());
+
+                Intent otpVerificationIntent = new Intent(getApplicationContext(), OtpVerificationActivity.class);
+                startActivity(otpVerificationIntent);
+
             }
         });
 

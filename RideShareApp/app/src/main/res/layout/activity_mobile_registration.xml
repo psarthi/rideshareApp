@@ -9,20 +9,20 @@
     <TextView
         android:id="@+id/verify_mobile_heading"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/block_height"
+        android:layout_height="@dimen/small_block_height"
         android:background="@color/colorPrimary"
         android:gravity="bottom|center_horizontal"
-        android:text="@string/verify_mobile_heading"
+        android:text="@string/mobile_registration_heading"
         android:textColor="@android:color/white"
         android:textSize="@dimen/heading2_text_size"/>
 
     <TextView
         android:id="@+id/verify_mobile_sub_heading"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/block_height"
+        android:layout_height="@dimen/small_block_height"
         android:background="@color/colorPrimary"
         android:gravity="center_horizontal"
-        android:text="@string/verify_mobile_sub_text"
+        android:text="@string/mobile_registration_sub_heading"
         android:textColor="@android:color/white"
         android:textSize="@dimen/heading3_text_size"
         android:paddingTop="@dimen/default_padding"
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/verify_mobile_sub_heading"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/medium_margin"
         android:layout_marginEnd="@dimen/default_margin"
         android:layout_marginStart="@dimen/default_margin"/>
 

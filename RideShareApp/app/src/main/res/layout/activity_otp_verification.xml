@@ -1,10 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.digitusrevolution.rideshare.OtpVerificationActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/otp_verification_heading"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/small_block_height"
+        android:background="@color/colorPrimary"
+        android:text="@string/verification_code_heading"
+        android:textSize="@dimen/heading2_text_size"
+        android:gravity="bottom|center_horizontal"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/otp_verification_sub_heading"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/small_block_height"
+        android:background="@color/colorPrimary"
+        android:text="@string/verification_code_message"
+        android:textSize="@dimen/heading3_text_size"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/otp_verification_heading"
+        android:paddingTop="@dimen/default_padding"/>
+
+    <LinearLayout
+        android:id="@+id/otp_code_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/otp_verification_sub_heading"
+        android:layout_marginStart="@dimen/large_margin"
+        android:layout_marginEnd="@dimen/large_margin"
+        android:layout_marginTop="@dimen/medium_margin">
+
+        <EditText
+            android:id="@+id/otp_code_1st_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="1"
+            android:maxLength="1"
+            android:textAlignment="center"
+            android:inputType="number"
+            android:textSize="@dimen/heading2_text_size"/>
+
+        <EditText
+            android:id="@+id/otp_code_2nd_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="1"
+            android:maxLength="1"
+            android:textAlignment="center"
+            android:inputType="number"
+            android:textSize="@dimen/heading2_text_size"/>
+
+        <EditText
+            android:id="@+id/otp_code_3rd_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="1"
+            android:maxLength="1"
+            android:textAlignment="center"
+            android:inputType="number"
+            android:textSize="@dimen/heading2_text_size"/>
+
+        <EditText
+            android:id="@+id/otp_code_4th_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="1"
+            android:maxLength="1"
+            android:textAlignment="center"
+            android:inputType="number"
+            android:textSize="@dimen/heading2_text_size"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/otp_resend_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/did_not_received_otp_code_label"
+        android:layout_below="@id/otp_code_layout"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:layout_marginStart="@dimen/large_margin"/>
+
+    <TextView
+        android:id="@+id/resend_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/resend_otp_code_message"
+        android:layout_toRightOf="@id/otp_resend_label"
+        android:layout_below="@id/otp_code_layout"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:textStyle="bold"
+        android:textAllCaps="true"/>
+
+
+    <Button
+        android:id="@+id/otp_confirmation_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/otp_confirm_button_text"
+        android:background="@color/colorPrimary"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_alignParentBottom="true"/>
+
+
+
+</RelativeLayout>

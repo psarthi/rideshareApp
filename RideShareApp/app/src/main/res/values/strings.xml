@@ -6,10 +6,15 @@
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
     <string name="title_activity_mobile_registration">MobileRegistrationActivity</string>
-    <string name="verify_mobile_heading">Verify Mobile</string>
-    <string name="verify_mobile_sub_text">Please enter your mobile number.</string>
+    <string name="mobile_registration_heading">Mobile Registration</string>
+    <string name="mobile_registration_sub_heading">Please enter your mobile number.</string>
     <string name="send_verification_code">Send Verification Code</string>
     <string name="default_country_code">+91</string>
+    <string name="verification_code_message">Please type the verification code sent to</string>
+    <string name="verification_code_heading">Verification Code</string>
+    <string name="otp_confirm_button_text">Confirm</string>
+    <string name="did_not_received_otp_code_label">Didn\'t received code?</string>
+    <string name="resend_otp_code_message">Resend</string>
     <string-array name="country_name">
         <item>India (+91)</item>
         <item>United States (+1)</item>
