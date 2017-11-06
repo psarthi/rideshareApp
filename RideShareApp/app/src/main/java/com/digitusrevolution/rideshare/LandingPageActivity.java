@@ -24,7 +24,7 @@ import com.google.android.gms.common.api.Status;
 
 public class LandingPageActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = "LandingPageActivity";
+    private static final String TAG = "LandingPage";
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient mGoogleApiClient;
@@ -36,6 +36,12 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
+        getSupportActionBar().hide();
+
+        mSignInButton = findViewById(R.id.sign_in_button);
+        mSignUpButton = findViewById(R.id.sign_up_button);
+        mLoginButton = findViewById(R.id.login_button);
+
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -51,23 +57,18 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                         signIn();
             }
         });
-
-        mSignUpButton = (Button) findViewById(R.id.sign_up_button);
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 signUp();
             }
         });
-
-        mLoginButton = (Button) findViewById(R.id.login_button);
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,6 +122,9 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
                     +"\nFirst Name:"+acct.getGivenName()
                     +"\nLast Name:"+acct.getFamilyName()
                     +"\nTokenId:"+acct.getIdToken());
+
+            Intent mobileRegistrationIntent = new Intent(this,MobileRegistrationActivity.class);
+            startActivity(mobileRegistrationIntent);
 
         } else {
             // Signed out, show unauthenticated UI.

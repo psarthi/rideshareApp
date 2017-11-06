@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="default_margin">8dp</dimen>
-    <dimen name="company_name_text_size">30sp</dimen>
-    <dimen name="product_name_text_size">30sp</dimen>
-    <dimen name="company_name_top_margin">50dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="default_padding">8dp</dimen>
+    <dimen name="heading1_text_size">30sp</dimen>
+    <dimen name="heading2_text_size">24sp</dimen>
+    <dimen name="heading3_text_size">18sp</dimen>
+    <dimen name="heading1_top_margin">100dp</dimen>
+    <dimen name="block_height">100dp</dimen>
 </resources>

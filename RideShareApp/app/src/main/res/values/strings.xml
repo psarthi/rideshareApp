@@ -6,4 +6,12 @@
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
     <string name="title_activity_mobile_registration">MobileRegistrationActivity</string>
+    <string name="verify_mobile_heading">Verify Mobile</string>
+    <string name="verify_mobile_sub_text">Please enter your mobile number.</string>
+    <string name="send_verification_code">Send Verification Code</string>
+    <string name="default_country_code">+91</string>
+    <string-array name="country_name">
+        <item>India (+91)</item>
+        <item>United States (+1)</item>
+    </string-array>
 </resources>
