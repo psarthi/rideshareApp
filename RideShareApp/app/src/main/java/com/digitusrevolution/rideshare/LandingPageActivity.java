@@ -8,19 +8,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.common.api.Status;
 
 public class LandingPageActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -42,6 +37,12 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
         mSignUpButton = findViewById(R.id.sign_up_button);
         mLoginButton = findViewById(R.id.login_button);
 
+        for (int i=0;i<mSignInButton.getChildCount();i++){
+            View view = mSignInButton.getChildAt(i);
+            if (view instanceof TextView){
+                ((TextView) view).setText(R.string.google_sign_in);
+            }
+        }
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -60,7 +61,7 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                        signIn();
+                        googleSignIn();
             }
         });
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +88,7 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
         Log.d(TAG,"Sign Up Button clicked");
     }
 
-    private void signIn() {
+    private void googleSignIn() {
         Log.d(TAG,"Google Sign In Button Clicked");
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);

@@ -67,7 +67,7 @@
             android:layout_marginStart="@dimen/default_margin"
             android:layout_weight="1"
             android:background="@color/colorPrimary"
-            android:text="@string/login"
+            android:text="@string/sign_in"
             android:textAllCaps="false"
             android:textStyle="bold"/>
     </LinearLayout>

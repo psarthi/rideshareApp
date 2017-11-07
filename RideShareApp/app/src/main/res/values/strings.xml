@@ -3,8 +3,9 @@
     <string name="company_name">Digitus Revolution</string>
     <string name="product_name">Ride Share</string>
     <string name="server_client_id">715653590540-t5nknnctr11h9sakhhnmpohcnactkp6g.apps.googleusercontent.com</string>
-    <string name="sign_up">Sign Up</string>
-    <string name="login">Login</string>
+    <string name="sign_up">Join</string>
+    <string name="sign_in">Sign In</string>
+    <string name="google_sign_in">Sign in with Google</string>
     <string name="title_activity_mobile_registration">MobileRegistrationActivity</string>
     <string name="mobile_registration_heading">Mobile Registration</string>
     <string name="mobile_registration_sub_heading">Please enter your mobile number.</string>

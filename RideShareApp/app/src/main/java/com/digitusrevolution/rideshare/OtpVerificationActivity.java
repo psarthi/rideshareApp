@@ -2,6 +2,8 @@ package com.digitusrevolution.rideshare;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +43,87 @@ public class OtpVerificationActivity extends AppCompatActivity {
                         +mOTPCode2ndNumber.getText().toString()
                         +mOTPCode3rdNumber.getText().toString()
                         +mOTPCode4thNumber.getText().toString());
+            }
+        });
+
+        addTextChangedListenerOnOTPTextField();
+    }
+
+    private void addTextChangedListenerOnOTPTextField() {
+        mOTPCode1stNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (mOTPCode1stNumber.getText().length() == getResources().getInteger(R.integer.otp_text_max_length)){
+                    mOTPCode2ndNumber.requestFocus();
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        mOTPCode2ndNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (mOTPCode2ndNumber.getText().length() == getResources().getInteger(R.integer.otp_text_max_length)){
+                    mOTPCode3rdNumber.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        mOTPCode3rdNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (mOTPCode3rdNumber.getText().length() == getResources().getInteger(R.integer.otp_text_max_length)){
+                    mOTPCode4thNumber.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        mOTPCode4thNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (mOTPCode4thNumber.getText().length() == getResources().getInteger(R.integer.otp_text_max_length)){
+                    mOTPConfirmationButton.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
     }
