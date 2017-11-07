@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.digitusrevolution.rideshare.MobileRegistrationActivity">
+    tools:context="com.digitusrevolution.rideshare.activity.MobileRegistrationActivity">
 
     <TextView
         android:id="@+id/verify_mobile_heading"
@@ -15,6 +16,15 @@
         android:text="@string/mobile_registration_heading"
         android:textColor="@android:color/white"
         android:textSize="@dimen/heading2_text_size"/>
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/small_margin"
+        app:srcCompat="@mipmap/ic_launcher_round"/>
 
     <TextView
         android:id="@+id/verify_mobile_sub_heading"

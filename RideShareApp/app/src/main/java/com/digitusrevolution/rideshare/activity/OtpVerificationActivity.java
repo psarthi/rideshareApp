@@ -1,4 +1,4 @@
-package com.digitusrevolution.rideshare;
+package com.digitusrevolution.rideshare.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.digitusrevolution.rideshare.R;
 
 public class OtpVerificationActivity extends AppCompatActivity {
 

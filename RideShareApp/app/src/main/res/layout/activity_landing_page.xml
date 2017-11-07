@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.digitusrevolution.rideshare.LandingPageActivity">
+    tools:context="com.digitusrevolution.rideshare.activity.LandingPageActivity">
 
     <TextView
         android:id="@+id/company_name_text_view"

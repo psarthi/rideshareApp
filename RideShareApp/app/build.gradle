@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 26
@@ -29,7 +28,13 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile 'com.google.android.gms:play-services-auth:11.4.2'
+    //If you use the latest version, then there is chances that all android devices may not have updated
+    // their google play services app and your application would not work. So better use bit old version
+    compile 'com.google.android.gms:play-services-auth:11.2.0'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.loopj.android:android-async-http:1.4.9'
 }
+
+//This has to be below the dependencies block otherwise you will get conflict with firebase (firebase comes with google services)
+// version which is internally used by google services and it somehow conflict with google play services
+apply plugin: 'com.google.gms.google-services'

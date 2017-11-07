@@ -9,20 +9,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LandingPageActivity">
+        <activity android:name=".activity.LandingPageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".UserRegistrationActivity">
+        <activity android:name=".activity.UserRegistrationActivity">
         </activity>
-        <activity android:name=".SignInActivity">
+        <activity android:name=".activity.SignInActivity">
         </activity>
-        <activity android:name=".OtpVerificationActivity">
+        <activity android:name=".activity.OtpVerificationActivity">
         </activity>
-        <activity android:name=".MobileRegistrationActivity">
+        <activity android:name=".activity.MobileRegistrationActivity">
         </activity>
     </application>
 

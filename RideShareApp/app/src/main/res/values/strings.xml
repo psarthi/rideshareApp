@@ -20,4 +20,6 @@
         <item>India (+91)</item>
         <item>United States (+1)</item>
     </string-array>
+    <string name="get_user_url">http://10.0.0.5:8080/RSUserSystem/api/domain/users/{id}?fetchChild=true</string>
+    <string name="register_user">http://10.0.0.5:8080/RSRideSystem/api/domain/ridesystem/dummypost</string>
 </resources>

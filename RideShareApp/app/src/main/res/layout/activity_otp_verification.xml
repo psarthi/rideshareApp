@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.digitusrevolution.rideshare.OtpVerificationActivity">
+    tools:context="com.digitusrevolution.rideshare.activity.OtpVerificationActivity">
 
     <TextView
         android:id="@+id/otp_verification_heading"
