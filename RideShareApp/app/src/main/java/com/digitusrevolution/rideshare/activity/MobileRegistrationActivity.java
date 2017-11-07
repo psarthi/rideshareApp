@@ -1,10 +1,8 @@
 package com.digitusrevolution.rideshare.activity;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,10 +12,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.helper.RESTClient;
-import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.squareup.picasso.Picasso;
 
-import cz.msebera.android.httpclient.Header;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MobileRegistrationActivity extends AppCompatActivity {
 
@@ -25,7 +22,7 @@ public class MobileRegistrationActivity extends AppCompatActivity {
     private Spinner mCountryNameSpinner;
     private EditText mMobileNumber;
     private Button mSendOTPButton;
-    private ImageView mPhoto;
+    private CircleImageView mPhotoImageView;
 
 
     @Override
@@ -37,7 +34,7 @@ public class MobileRegistrationActivity extends AppCompatActivity {
         mCountryNameSpinner = findViewById(R.id.country_name_spinner);
         mMobileNumber = findViewById(R.id.mobile_number);
         mSendOTPButton = findViewById(R.id.send_otp_button);
-        mPhoto = findViewById(R.id.photo);
+        mPhotoImageView = findViewById(R.id.photo);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -66,13 +63,15 @@ public class MobileRegistrationActivity extends AppCompatActivity {
         String photoURL = intent.getStringExtra("photoURL");
         Log.d(TAG,photoURL);
 
-        RESTClient.get(photoURL, null, new BinaryHttpResponseHandler() {
+        Picasso.with(this).load(photoURL).into(mPhotoImageView);
+
+  /*      RESTClient.get(photoURL, null, new BinaryHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
 
                 String photo = Base64.encodeToString(binaryData,Base64.DEFAULT);
                 Log.d(TAG,photo);
-                mPhoto.setImageBitmap(BitmapFactory.decodeByteArray(binaryData,0,binaryData.length));
+                mPhotoImageView.setImageBitmap(BitmapFactory.decodeByteArray(binaryData,0,binaryData.length));
             }
 
             @Override
@@ -80,6 +79,7 @@ public class MobileRegistrationActivity extends AppCompatActivity {
 
             }
         });
+*/
 
 
 
