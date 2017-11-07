@@ -23,9 +23,9 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
     private static final int RC_SIGN_IN = 9001;
 
     private GoogleApiClient mGoogleApiClient;
-    private SignInButton mSignInButton;
+    private SignInButton mGoogleSignInButton;
     private Button mSignUpButton;
-    private Button mLoginButton;
+    private Button mSignInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +33,12 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
         setContentView(R.layout.activity_landing_page);
         getSupportActionBar().hide();
 
-        mSignInButton = findViewById(R.id.sign_in_button);
+        mGoogleSignInButton = findViewById(R.id.google_sign_in_button);
         mSignUpButton = findViewById(R.id.sign_up_button);
-        mLoginButton = findViewById(R.id.login_button);
+        mSignInButton = findViewById(R.id.sign_in_button);
 
-        for (int i=0;i<mSignInButton.getChildCount();i++){
-            View view = mSignInButton.getChildAt(i);
+        for (int i=0;i<mGoogleSignInButton.getChildCount();i++){
+            View view = mGoogleSignInButton.getChildAt(i);
             if (view instanceof TextView){
                 ((TextView) view).setText(R.string.google_sign_in);
             }
@@ -58,7 +58,7 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        mSignInButton.setOnClickListener(new View.OnClickListener() {
+        mGoogleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                         googleSignIn();
@@ -70,18 +70,18 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
                 signUp();
             }
         });
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
+        mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login();
+                signIn();
             }
         });
 
 
     }
 
-    private void login() {
-        Log.d(TAG,"Log In Button clicked");
+    private void signIn() {
+        Log.d(TAG,"Sign In Button clicked");
     }
 
     private void signUp() {
@@ -129,7 +129,7 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
 
         } else {
             // Signed out, show unauthenticated UI.
-            Log.d(TAG,"Google Login Failed");
+            Log.d(TAG,"Google Sign In Failed");
         }
     }
 }
