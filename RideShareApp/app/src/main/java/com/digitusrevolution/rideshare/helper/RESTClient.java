@@ -2,14 +2,16 @@ package com.digitusrevolution.rideshare.helper;
 
 import android.content.Context;
 
+import com.digitusrevolution.rideshare.adapter.GsonUTCDateAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 
-import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 /**
@@ -26,7 +28,8 @@ public class RESTClient {
 
     public static void post(Context context, String url, Object model, AsyncHttpResponseHandler responseHandler) {
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class,new GsonUTCDateAdapter())
+                .create();
         String json = gson.toJson(model);
 
         StringEntity entity = null;

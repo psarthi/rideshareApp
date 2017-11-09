@@ -1,20 +1,18 @@
 package com.digitusrevolution.rideshare.activity;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.RESTClient;
-import com.digitusrevolution.rideshare.model.SampleUser;
+import com.digitusrevolution.rideshare.model.SampleDateModel;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -22,12 +20,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -99,16 +98,19 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
     private void signIn() throws URISyntaxException {
         Log.d(TAG,"Sign In Button clicked");
 
-        String GET_USER_URL= getResources().getString(R.string.get_user_url);
-        GET_USER_URL = GET_USER_URL.replace("{id}", "1");
+        String GET_URL= APIUrl.GET_URL;
+        GET_URL = GET_URL.replace("{id}", "1");
 
-        RESTClient.get(GET_USER_URL, null, new JsonHttpResponseHandler(){
+        RESTClient.get(GET_URL, null, new JsonHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
 
-                Log.d(TAG,"Response Success: "+response);
+                Log.d(TAG,"GET Response Success: "+response);
+                Gson gson = new Gson();
+                SampleDateModel date = gson.fromJson(response.toString(), SampleDateModel.class);
+                Log.d(TAG,"GET: Date: "+ date.getDate());
 
             }
 
@@ -116,7 +118,7 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
 
-                Log.d(TAG,"Response Failure: "+errorResponse);
+                Log.d(TAG,"GET Response Failure: "+errorResponse);
             }
         });
 
@@ -125,25 +127,27 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
     private void signUp() {
         Log.d(TAG,"Sign Up Button clicked");
 
-        String REGISTER_USER_URL = getResources().getString(R.string.register_user);
+        String POST_URL = APIUrl.POST_URL;
 
-        SampleUser user = new SampleUser();
-        user.setEmail("email@abc.com");
-        user.setPassword("password");
+        SampleDateModel model = new SampleDateModel();
+        model.setDate(new Date());
+        Log.d(TAG,"Post Initial Value:"+model.getDate());
 
-        RESTClient.post(this,REGISTER_USER_URL,user, new JsonHttpResponseHandler(){
+        RESTClient.post(this,POST_URL,model, new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
-
-                        Log.d(TAG,"User Created with id:"+response);
+                        Log.d(TAG,"POST Response Success: "+response);
+                        Gson gson = new Gson();
+                        SampleDateModel sampleDateModel = gson.fromJson(response.toString(), SampleDateModel.class);
+                        Log.d(TAG,"POST: Date:"+ sampleDateModel.getDate());
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
 
-                        Log.d(TAG,"Unable to create user with error:" + errorResponse);
+                        Log.d(TAG,"POST Response Failure:" + errorResponse);
                     }
                 });
     }
