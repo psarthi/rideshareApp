@@ -20,11 +20,11 @@ import java.util.TimeZone;
  * Created by psarthi on 11/9/17.
  */
 
-public class GsonUTCDateAdapter implements JsonSerializer<Date>,JsonDeserializer<Date> {
+public class GsonDateAdapter implements JsonSerializer<Date>,JsonDeserializer<Date> {
 
     private final DateFormat dateFormat;
 
-    public GsonUTCDateAdapter() {
+    public GsonDateAdapter() {
         dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");      //This is the format I need
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));                            //This is the key line which converts the date to UTC which cannot be accessed with the default serializer
     }

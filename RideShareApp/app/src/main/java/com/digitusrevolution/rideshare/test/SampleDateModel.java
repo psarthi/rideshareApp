@@ -1,4 +1,4 @@
-package com.digitusrevolution.rideshare.model;
+package com.digitusrevolution.rideshare.test;
 
 import java.time.ZonedDateTime;
 import java.util.Date;

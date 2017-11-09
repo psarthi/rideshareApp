@@ -1,7 +1,6 @@
-package com.digitusrevolution.rideshare.data;
+package com.digitusrevolution.rideshare;
 
-import com.digitusrevolution.rideshare.adapter.GsonUTCDateAdapter;
-import com.digitusrevolution.rideshare.model.SampleModel;
+import com.digitusrevolution.rideshare.adapter.GsonDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -21,7 +20,7 @@ public class SampleDAO {
         sampleModel.setName("Name-1");
         sampleModel.setEmail("Email-1");
 
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class,new GsonUTCDateAdapter()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class,new GsonDateAdapter()).create();
         String json = gson.toJson(sampleModel);
         System.out.println(json);
 

@@ -1,4 +1,4 @@
-package com.digitusrevolution.rideshare.model;
+package com.digitusrevolution.rideshare;
 
 /**
  * Created by psarthi on 11/7/17.

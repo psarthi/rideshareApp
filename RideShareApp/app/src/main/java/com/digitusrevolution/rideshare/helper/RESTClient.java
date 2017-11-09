@@ -2,7 +2,7 @@ package com.digitusrevolution.rideshare.helper;
 
 import android.content.Context;
 
-import com.digitusrevolution.rideshare.adapter.GsonUTCDateAdapter;
+import com.digitusrevolution.rideshare.adapter.GsonDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
@@ -28,7 +28,7 @@ public class RESTClient {
 
     public static void post(Context context, String url, Object model, AsyncHttpResponseHandler responseHandler) {
 
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class,new GsonUTCDateAdapter())
+        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class,new GsonDateAdapter())
                 .create();
         String json = gson.toJson(model);
 
