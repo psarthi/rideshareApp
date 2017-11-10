@@ -11,6 +11,7 @@ import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import cz.msebera.android.httpclient.entity.StringEntity;
 
@@ -28,6 +29,12 @@ public class RESTClient {
 
     public static void post(Context context, String url, Object model, AsyncHttpResponseHandler responseHandler) {
 
+        /*This is very important as Gson default serializer would not convert the Date into ISO format with UTC timezone
+        and in the backend Jackson expects the date in ISO format with UTC timezone - yyyy-MM-dd'T'HH:mm:ss.SSS'Z' (e.g. 2017-11-10T15:30:00Z).
+        So we are using custom Gson Adapter which does the Job of changing Date into ISO format and convert it to UTC timezone.
+        Note - ISO Format is a standard but jackson expects string in specific pattern of ISO where timezone is only UTC i.e. ending with Z
+        No other ISO format pattern would work as Jackson default deserializer doesn't support that.
+        */
         Gson gson = new GsonBuilder().registerTypeAdapter(Date.class,new GsonDateAdapter())
                 .create();
         String json = gson.toJson(model);

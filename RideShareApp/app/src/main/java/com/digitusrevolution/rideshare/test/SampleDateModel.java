@@ -1,6 +1,5 @@
 package com.digitusrevolution.rideshare.test;
 
-import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class SampleDateModel {

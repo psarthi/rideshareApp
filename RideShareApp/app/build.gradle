@@ -35,7 +35,6 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:2.2.0'
-    compile files('/Users/psarthi/Partha/workspace/build/model_v0.1/RSModel-0.0.1-SNAPSHOT.jar')
 }
 
 //This has to be below the dependencies block otherwise you will get conflict with firebase (firebase comes with google services)

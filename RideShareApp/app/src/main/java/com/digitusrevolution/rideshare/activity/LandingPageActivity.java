@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.test.SampleDateModel;
+import com.digitusrevolution.rideshare.test.SampleStringLocalTimeModel;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -98,7 +100,7 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
     private void signIn() throws URISyntaxException {
         Log.d(TAG,"Sign In Button clicked");
 
-        String GET_URL= APIUrl.GET_URL;
+        String GET_URL= APIUrl.GET_RIDE_URL;
         GET_URL = GET_URL.replace("{id}", "1");
 
         RESTClient.get(GET_URL, null, new JsonHttpResponseHandler(){
@@ -109,8 +111,8 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
 
                 Log.d(TAG,"GET Response Success: "+response);
                 Gson gson = new Gson();
-                SampleDateModel date = gson.fromJson(response.toString(), SampleDateModel.class);
-                Log.d(TAG,"GET: Date: "+ date.getDate());
+                RideRequest rideRequest = gson.fromJson(response.toString(), RideRequest.class);
+                Log.d(TAG,"GET: Ride Request TimeVariation: "+ rideRequest.getPickupPoint().getTimeVariation());
 
             }
 
@@ -129,9 +131,10 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
 
         String POST_URL = APIUrl.POST_URL;
 
-        SampleDateModel model = new SampleDateModel();
-        model.setDate(new Date());
-        Log.d(TAG,"Post Initial Value:"+model.getDate());
+        SampleStringLocalTimeModel model = new SampleStringLocalTimeModel();
+        model.setTime("00:30");
+        Gson gson = new Gson();
+        Log.d(TAG,"Post Initial Value:"+ gson.toJson(model));
 
         RESTClient.post(this,POST_URL,model, new JsonHttpResponseHandler(){
                     @Override
@@ -139,8 +142,8 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
                         super.onSuccess(statusCode, headers, response);
                         Log.d(TAG,"POST Response Success: "+response);
                         Gson gson = new Gson();
-                        SampleDateModel sampleDateModel = gson.fromJson(response.toString(), SampleDateModel.class);
-                        Log.d(TAG,"POST: Date:"+ sampleDateModel.getDate());
+                        SampleStringLocalTimeModel sampleStringLocalTimeModel = gson.fromJson(response.toString(), SampleStringLocalTimeModel.class);
+                        Log.d(TAG,"POST: From Gson Model:"+ sampleStringLocalTimeModel.getTime());
                     }
 
                     @Override
