@@ -11,4 +11,5 @@ public class APIUrl {
     public static final String POST_URL = "http://10.0.0.5:8080/RSRideSystem/api/domain/ridesystem/testpost";
     public static final String GET_URL = "http://10.0.0.5:8080/RSRideSystem/api/domain/ridesystem/testget";
     public static final String GET_RIDE_URL = "http://10.0.0.5:8080/RSRideSystem/api/domain/riderequests/1?fetchChild=true";
+    public static final String SIGN_IN_URL = "http://10.0.0.5:8080/RSUserSystem/api/users/signin";
 }

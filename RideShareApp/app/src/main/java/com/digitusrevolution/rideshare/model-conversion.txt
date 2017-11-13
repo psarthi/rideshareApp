@@ -5,3 +5,5 @@ For converting from Backend Models to Android - Following things has to be taken
 3. Convery @jsonproperty to @SerializedName
 4. Remove any jackson specific annotation e.g. jsonignoreproperties (Gson will ignore extra unknown fields automatically)
 5. Remove @jsonproperty from setter level e.g. in Point
+6. Remove GoogleDirection object e.g in RideOfferDTO
+7. Remove MultiPlygon object e.g. in RideRequestSearchResult

@@ -13,6 +13,8 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
+import com.digitusrevolution.rideshare.model.user.dto.SignInInfo;
+import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.digitusrevolution.rideshare.test.SampleDateModel;
 import com.digitusrevolution.rideshare.test.SampleStringLocalTimeModel;
 import com.google.android.gms.auth.api.Auth;
@@ -129,21 +131,22 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
     private void signUp() {
         Log.d(TAG,"Sign Up Button clicked");
 
-        String POST_URL = APIUrl.POST_URL;
+        String POST_URL = APIUrl.SIGN_IN_URL;
 
-        SampleStringLocalTimeModel model = new SampleStringLocalTimeModel();
-        model.setTime("00:30");
+        SignInInfo signInInfo = new SignInInfo();
+        signInInfo.setEmail("email-1");
+        signInInfo.setPassword("password");
         Gson gson = new Gson();
-        Log.d(TAG,"Post Initial Value:"+ gson.toJson(model));
+        Log.d(TAG,"Post Initial Value:"+ gson.toJson(signInInfo));
 
-        RESTClient.post(this,POST_URL,model, new JsonHttpResponseHandler(){
+        RESTClient.post(this,POST_URL,signInInfo, new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         Log.d(TAG,"POST Response Success: "+response);
                         Gson gson = new Gson();
-                        SampleStringLocalTimeModel sampleStringLocalTimeModel = gson.fromJson(response.toString(), SampleStringLocalTimeModel.class);
-                        Log.d(TAG,"POST: From Gson Model:"+ sampleStringLocalTimeModel.getTime());
+                        UserSignInResult userSignInResult = gson.fromJson(response.toString(), UserSignInResult.class);
+                        Log.d(TAG,"POST: From Gson Model:"+ userSignInResult.getToken());
                     }
 
                     @Override
