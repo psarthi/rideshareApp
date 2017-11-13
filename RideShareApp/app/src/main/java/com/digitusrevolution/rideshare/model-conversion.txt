@@ -1,0 +1,7 @@
+For converting from Backend Models to Android - Following things has to be taken care
+
+1. Convert ZonedDateTime to Date
+2. Convert LocalTime to String
+3. Convery @jsonproperty to @SerializedName
+4. Remove any jackson specific annotation e.g. jsonignoreproperties (Gson will ignore extra unknown fields automatically)
+5. Remove @jsonproperty from setter level e.g. in Point

@@ -3,7 +3,6 @@ package com.digitusrevolution.rideshare.model.ride.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /*
  * This is based on GeoJSON Point Geometry Object specification
  * http://geojson.org/geojson-spec.html
@@ -56,12 +55,12 @@ public class Point implements Geometry{
 	public double getLatitude(){		
 		return getCoordinates().get(1);
 	}
-	
-	public void setLongitude(double longitude){
+
+	public void setLongitude(double longitude){		
 		getCoordinates().set(0,longitude);
 	}
-	
-	public void setLatitude(double latitude){
+
+	public void setLatitude(double latitude){		
 		getCoordinates().set(1, latitude);
 	}
 

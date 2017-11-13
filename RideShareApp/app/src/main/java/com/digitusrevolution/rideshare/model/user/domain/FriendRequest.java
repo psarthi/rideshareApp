@@ -1,8 +1,8 @@
 package com.digitusrevolution.rideshare.model.user.domain;
 
-import com.digitusrevolution.rideshare.model.user.domain.core.User;
-
 import java.util.Date;
+
+import com.digitusrevolution.rideshare.model.user.domain.core.User;
 
 public class FriendRequest {
 	

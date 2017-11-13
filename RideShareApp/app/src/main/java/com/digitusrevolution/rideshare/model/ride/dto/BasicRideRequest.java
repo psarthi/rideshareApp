@@ -1,18 +1,17 @@
-package com.digitusrevolution.rideshare.model.ride.domain.core;
+package com.digitusrevolution.rideshare.model.ride.dto;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.domain.RideRequestPoint;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
-import com.digitusrevolution.rideshare.model.user.domain.core.User;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 
-public class RideRequest {
+public class BasicRideRequest {
 
 	private int id;
 	private RideRequestPoint pickupPoint = new RideRequestPoint();
@@ -28,15 +27,13 @@ public class RideRequest {
 	private int pickupPointVariation;
 	private int dropPointVariation;
 	private RideRequestStatus status;
-	private User passenger;
+	private BasicUser passenger;
 	private boolean ridePreference;
-	private Collection<Ride> preferredRides = new HashSet<Ride>();
-	private Ride acceptedRide;
 	private RidePoint ridePickupPoint = new RidePoint();
 	private RidePoint rideDropPoint = new RidePoint();
 	private int travelTime;
 	private int travelDistance;
-	private Collection<Ride> cancelledRides = new HashSet<Ride>();
+	private BasicRide acceptedRide;
 	
 	public int getId() {
 		return id;
@@ -122,29 +119,17 @@ public class RideRequest {
 	public void setDropPointVariation(int dropPointVariation) {
 		this.dropPointVariation = dropPointVariation;
 	}
-	public User getPassenger() {
+	public BasicUser getPassenger() {
 		return passenger;
 	}
-	public void setPassenger(User passenger) {
+	public void setPassenger(BasicUser passenger) {
 		this.passenger = passenger;
-	}
-	public Collection<Ride> getPreferredRides() {
-		return preferredRides;
-	}
-	public void setPreferredRides(Collection<Ride> preferredRides) {
-		this.preferredRides = preferredRides;
 	}
 	public boolean getRidePreference() {
 		return ridePreference;
 	}
 	public void setRidePreference(boolean ridePreference) {
 		this.ridePreference = ridePreference;
-	}
-	public Ride getAcceptedRide() {
-		return acceptedRide;
-	}
-	public void setAcceptedRide(Ride acceptedRide) {
-		this.acceptedRide = acceptedRide;
 	}
 	public RidePoint getRidePickupPoint() {
 		return ridePickupPoint;
@@ -170,53 +155,10 @@ public class RideRequest {
 	public void setTravelDistance(int travelDistance) {
 		this.travelDistance = travelDistance;
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		result = prime * result + ((passenger == null) ? 0 : passenger.hashCode());
-		result = prime * result + ((pickupTime == null) ? 0 : pickupTime.hashCode());
-		return result;
+	public BasicRide getAcceptedRide() {
+		return acceptedRide;
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof RideRequest)) {
-			return false;
-		}
-		RideRequest other = (RideRequest) obj;
-		if (id != other.id) {
-			return false;
-		}
-		if (passenger == null) {
-			if (other.passenger != null) {
-				return false;
-			}
-		} else if (!passenger.equals(other.passenger)) {
-			return false;
-		}
-		if (pickupTime == null) {
-			if (other.pickupTime != null) {
-				return false;
-			}
-		} else if (!pickupTime.equals(other.pickupTime)) {
-			return false;
-		}
-		return true;
+	public void setAcceptedRide(BasicRide acceptedRide) {
+		this.acceptedRide = acceptedRide;
 	}
-	public Collection<Ride> getCancelledRides() {
-		return cancelledRides;
-	}
-	public void setCancelledRides(Collection<Ride> cancelledRides) {
-		this.cancelledRides = cancelledRides;
-	}
-
 }

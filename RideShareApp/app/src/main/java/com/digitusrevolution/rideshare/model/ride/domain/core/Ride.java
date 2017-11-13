@@ -1,17 +1,17 @@
 package com.digitusrevolution.rideshare.model.ride.domain.core;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
-import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.domain.RecurringDetail;
+import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.domain.Route;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
 import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.core.User;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 
 public class Ride {
 
@@ -30,7 +30,7 @@ public class Ride {
 	private RideStatus status;
 	private RideSeatStatus seatStatus;
 	private Vehicle vehicle;
-	private User driver; 
+	private User driver;
 	private Collection<RidePassenger> ridePassengers = new HashSet<RidePassenger>();
 	private Collection<Bill> bills = new HashSet<Bill>();
 	private Collection<RideRequest> acceptedRideRequests = new HashSet<RideRequest>();

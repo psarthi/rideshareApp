@@ -1,0 +1,117 @@
+package com.digitusrevolution.rideshare.model.ride.dto;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+
+import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
+import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideSeatStatus;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
+import com.digitusrevolution.rideshare.model.user.domain.Sex;
+import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+
+public class BasicRide {
+
+	//id data type needs to be finalized later, whether to use int, long, string
+	private int id;
+	private Date startTime;
+	private RidePoint startPoint = new RidePoint();
+	private RidePoint endPoint = new RidePoint();
+	private int seatOffered;
+	private int luggageCapacityOffered;
+	private Sex sexPreference;
+	private TrustNetwork trustNetwork;
+	private RideStatus status;
+	private RideSeatStatus seatStatus;
+	private Vehicle vehicle;
+	private BasicUser driver;
+	private Collection<BasicRidePassenger> ridePassengers = new HashSet<BasicRidePassenger>();
+	private int travelDistance;
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public Date getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+	public RidePoint getStartPoint() {
+		return startPoint;
+	}
+	public void setStartPoint(RidePoint startPoint) {
+		this.startPoint = startPoint;
+	}
+	public int getSeatOffered() {
+		return seatOffered;
+	}
+	public void setSeatOffered(int seatOffered) {
+		this.seatOffered = seatOffered;
+	}
+	public int getLuggageCapacityOffered() {
+		return luggageCapacityOffered;
+	}
+	public void setLuggageCapacityOffered(int luggageCapacityOffered) {
+		this.luggageCapacityOffered = luggageCapacityOffered;
+	}
+	public RideStatus getStatus() {
+		return status;
+	}
+	public void setStatus(RideStatus status) {
+		this.status = status;
+	}
+	public TrustNetwork getTrustNetwork() {
+		return trustNetwork;
+	}
+	public void setTrustNetwork(TrustNetwork trustNetwork) {
+		this.trustNetwork = trustNetwork;
+	}
+	public Vehicle getVehicle() {
+		return vehicle;
+	}
+	public void setVehicle(Vehicle vehicle) {
+		this.vehicle = vehicle;
+	}
+	public RidePoint getEndPoint() {
+		return endPoint;
+	}
+	public void setEndPoint(RidePoint endPoint) {
+		this.endPoint = endPoint;
+	}
+	public BasicUser getDriver() {
+		return driver;
+	}
+	public void setDriver(BasicUser driver) {
+		this.driver = driver;
+	}
+	public Collection<BasicRidePassenger> getRidePassengers() {
+		return ridePassengers;
+	}
+	public void setRidePassengers(Collection<BasicRidePassenger> ridePassengers) {
+		this.ridePassengers = ridePassengers;
+	}
+	public Sex getSexPreference() {
+		return sexPreference;
+	}
+	public void setSexPreference(Sex sexPreference) {
+		this.sexPreference = sexPreference;
+	}
+	public int getTravelDistance() {
+		return travelDistance;
+	}
+	public void setTravelDistance(int travelDistance) {
+		this.travelDistance = travelDistance;
+	}
+	public RideSeatStatus getSeatStatus() {
+		return seatStatus;
+	}
+	public void setSeatStatus(RideSeatStatus seatStatus) {
+		this.seatStatus = seatStatus;
+	}	
+}

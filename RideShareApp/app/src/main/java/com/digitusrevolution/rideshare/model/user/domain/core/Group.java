@@ -1,14 +1,14 @@
 package com.digitusrevolution.rideshare.model.user.domain.core;
 
-import com.digitusrevolution.rideshare.model.user.domain.GroupFeedback;
-import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
-import com.digitusrevolution.rideshare.model.user.domain.MembershipRequest;
-import com.digitusrevolution.rideshare.model.user.domain.Photo;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
+
+import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
+import com.digitusrevolution.rideshare.model.user.domain.Photo;
+import com.digitusrevolution.rideshare.model.user.domain.GroupFeedback;
+import com.digitusrevolution.rideshare.model.user.domain.MembershipRequest;
 
 public class Group {
 

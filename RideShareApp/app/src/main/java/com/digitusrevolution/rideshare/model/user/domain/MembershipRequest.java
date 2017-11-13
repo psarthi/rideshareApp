@@ -1,10 +1,10 @@
 package com.digitusrevolution.rideshare.model.user.domain;
 
-import com.digitusrevolution.rideshare.model.user.domain.core.User;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.digitusrevolution.rideshare.model.user.domain.core.User;
 
 public class MembershipRequest {
 

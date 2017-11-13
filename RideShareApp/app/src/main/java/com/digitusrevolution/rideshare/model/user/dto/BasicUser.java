@@ -1,13 +1,20 @@
 package com.digitusrevolution.rideshare.model.user.dto;
 
+import java.util.Collection;
+import java.util.HashSet;
+
+import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
 import com.digitusrevolution.rideshare.model.user.domain.City;
 import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
+import com.digitusrevolution.rideshare.model.user.domain.Role;
 import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.State;
+import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 
-public class UserDTO {
+public class BasicUser {
 	
+	private int id;
 	private String firstName;
 	private String lastName;
 	private Sex sex;
@@ -18,7 +25,17 @@ public class UserDTO {
 	private State state;
 	private Country country;
 	private Photo photo;
-	
+	private Collection<Vehicle> vehicles = new HashSet<Vehicle>();
+	private float profileRating;
+	private Collection<Role> roles = new HashSet<Role>();
+	private Collection<Account> accounts = new HashSet<Account>();
+
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getFirstName() {
 		return firstName;
 	}
@@ -79,5 +96,52 @@ public class UserDTO {
 	public void setPhoto(Photo photo) {
 		this.photo = photo;
 	}
+	public Collection<Vehicle> getVehicles() {
+		return vehicles;
+	}
+	public void setVehicles(Collection<Vehicle> vehicles) {
+		this.vehicles = vehicles;
+	}
+	public float getProfileRating() {
+		return profileRating;
+	}
+	public void setProfileRating(float profileRating) {
+		this.profileRating = profileRating;
+	}
+	public Collection<Role> getRoles() {
+		return roles;
+	}
+	public void setRoles(Collection<Role> roles) {
+		this.roles = roles;
+	}
+	public Collection<Account> getAccounts() {
+		return accounts;
+	}
+	public void setAccounts(Collection<Account> accounts) {
+		this.accounts = accounts;
+	}
+	
 
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

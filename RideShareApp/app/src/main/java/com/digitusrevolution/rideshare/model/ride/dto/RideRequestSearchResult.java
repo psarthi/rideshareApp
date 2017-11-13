@@ -7,6 +7,8 @@ public class RideRequestSearchResult {
 	private List<MatchedTripInfo> matchedTripInfos;
 	private double searchDistance;
 	private int resultLastIndex;
+	//Commented this as i don't have the required GeoJson library
+	//private MultiPolygon multiPolygon;
 	
 	public double getSearchDistance() {
 		return searchDistance;

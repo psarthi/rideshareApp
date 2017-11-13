@@ -1,6 +1,5 @@
 package com.digitusrevolution.rideshare.model.ride.domain;
 
-import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class RidePointProperty {
