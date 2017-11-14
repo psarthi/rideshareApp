@@ -7,3 +7,6 @@ For converting from Backend Models to Android - Following things has to be taken
 5. Remove @jsonproperty from setter level e.g. in Point
 6. Remove GoogleDirection object e.g in RideOfferDTO
 7. Remove MultiPlygon object e.g. in RideRequestSearchResult
+
+Current Version mapped to Backend Tag - 0.24m (Dated 13th Nov'17)
+Version Baselined in Android Tag - 0.1m (Dated 13th Nov'17)

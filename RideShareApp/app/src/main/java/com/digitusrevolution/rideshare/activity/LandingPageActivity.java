@@ -18,12 +18,16 @@ import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.digitusrevolution.rideshare.test.SampleDateModel;
 import com.digitusrevolution.rideshare.test.SampleStringLocalTimeModel;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -34,12 +38,12 @@ import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
 
-public class LandingPageActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class LandingPageActivity extends AppCompatActivity{
 
     private static final String TAG = "RideShare";
     private static final int RC_SIGN_IN = 9001;
 
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleSignInClient mGoogleSignInClient;
     private SignInButton mGoogleSignInButton;
     private Button mSignUpButton;
     private Button mSignInButton;
@@ -68,12 +72,8 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
                 .requestIdToken(getString(R.string.server_client_id))
                 .build();
 
-        // Build a GoogleApiClient with access to the Google Sign-In API and the
-        // options specified by gso.
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
 
         mGoogleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,14 +160,8 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
 
     private void googleSignIn() {
         Log.d(TAG,"Google Sign In Button Clicked");
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     @Override
@@ -176,32 +170,38 @@ public class LandingPageActivity extends AppCompatActivity implements GoogleApiC
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleGoogleSignInResult(result);
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
 
         }
     }
 
-    private void handleGoogleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleGoogleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
             // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-
-            Log.d(TAG,"DisplayName:"+acct.getDisplayName()
-                    +"\nEmail:"+acct.getEmail()
-                    +"\nFirst Name:"+acct.getGivenName()
-                    +"\nLast Name:"+acct.getFamilyName()
-                    +"\nTokenId:"+acct.getIdToken()
-                    +"\nPhotoURL:"+acct.getPhotoUrl());
-
-            Intent mobileRegistrationIntent = new Intent(this,MobileRegistrationActivity.class);
-            mobileRegistrationIntent.putExtra("photoURL",acct.getPhotoUrl().toString());
-            startActivity(mobileRegistrationIntent);
-
-        } else {
-            // Signed out, show unauthenticated UI.
-            Log.d(TAG,"Google Sign In Failed");
+            Log.d(TAG,"Sign in success");
+            updateUI(account);
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+           // updateUI(null);
         }
+    }
+
+    private void updateUI(GoogleSignInAccount acct){
+        Log.d(TAG,"DisplayName:"+acct.getDisplayName()
+                +"\nEmail:"+acct.getEmail()
+                +"\nFirst Name:"+acct.getGivenName()
+                +"\nLast Name:"+acct.getFamilyName()
+                +"\nTokenId:"+acct.getIdToken()
+                +"\nPhotoURL:"+acct.getPhotoUrl());
+
+        Intent mobileRegistrationIntent = new Intent(this,MobileRegistrationActivity.class);
+        mobileRegistrationIntent.putExtra("photoURL",acct.getPhotoUrl().toString());
+        startActivity(mobileRegistrationIntent);
+
     }
 }

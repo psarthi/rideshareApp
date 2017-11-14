@@ -30,7 +30,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     //If you use the latest version, then there is chances that all android devices may not have updated
     // their google play services app and your application would not work. So better use bit old version
-    compile 'com.google.android.gms:play-services-auth:11.2.0'
+    compile 'com.google.android.gms:play-services-auth:11.6.0'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.squareup.picasso:picasso:2.5.2'
