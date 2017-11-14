@@ -14,7 +14,7 @@ import com.digitusrevolution.rideshare.R;
 
 public class OtpVerificationActivity extends AppCompatActivity {
 
-    private static final String TAG="RideShare";
+    private static final String TAG = OtpVerificationActivity.class.getName();
     private TextView mVerificationCodeSubHeading;
     private EditText mOTPCode1stNumber;
     private EditText mOTPCode2ndNumber;

@@ -12,13 +12,15 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MobileRegistrationActivity extends AppCompatActivity {
 
-    private static final String TAG = "RideShare";
+    private static final String TAG = MobileRegistrationActivity.class.getName();
     private Spinner mCountryNameSpinner;
     private EditText mMobileNumber;
     private Button mSendOTPButton;
@@ -60,10 +62,11 @@ public class MobileRegistrationActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        String photoURL = intent.getStringExtra("photoURL");
-        Log.d(TAG,photoURL);
+        String data = intent.getStringExtra(getPackageName()+".data");
+        UserRegistration userRegistration = new Gson().fromJson(data,UserRegistration.class);
+        Log.d(TAG,userRegistration.getPhoto().getImageLocation());
 
-        Picasso.with(this).load(photoURL).into(mPhotoImageView);
+        Picasso.with(this).load(userRegistration.getPhoto().getImageLocation()).into(mPhotoImageView);
 
   /*      RESTClient.get(photoURL, null, new BinaryHttpResponseHandler() {
             @Override

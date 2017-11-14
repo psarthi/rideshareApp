@@ -6,10 +6,14 @@ package com.digitusrevolution.rideshare.config;
 
 public class APIUrl {
 
-    //public static String GET_USER_URL = "http://10.0.0.5:8080/RSUserSystem/api/domain/users/{id}?fetchChild=true";
-    //public static String REGISTER_USER = "http://10.0.0.5:8080/RSRideSystem/api/domain/ridesystem/dummypost";
-    public static final String POST_URL = "http://10.0.0.5:8080/RSRideSystem/api/domain/ridesystem/testpost";
-    public static final String GET_URL = "http://10.0.0.5:8080/RSRideSystem/api/domain/ridesystem/testget";
-    public static final String GET_RIDE_URL = "http://10.0.0.5:8080/RSRideSystem/api/domain/riderequests/1?fetchChild=true";
-    public static final String SIGN_IN_URL = "http://10.0.0.5:8080/RSUserSystem/api/users/signin";
+    public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.5:8080/RSRideSystem/api";
+    public static final String BASE_URL_USER_SYSTEM = "http://10.0.0.5:8080/RSUserSystem/api";
+
+    public static final String USER_EMAIL_KEY = "{userEmail}";
+    public static final String ID_KEY = "{id}";
+
+    public static final String GET_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/domain/riderequests/{id}?fetchChild=true";
+    public static final String SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/signin";
+    public static final String CHECK_USER_EXIST_URL = BASE_URL_USER_SYSTEM + "/users/checkuserexist/{userEmail}";
+
 }
