@@ -15,5 +15,7 @@ public class APIUrl {
     public static final String GET_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/domain/riderequests/{id}?fetchChild=true";
     public static final String SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/signin";
     public static final String CHECK_USER_EXIST_URL = BASE_URL_USER_SYSTEM + "/users/checkuserexist/{userEmail}";
+    public static final String GET_COUNTRIES_URL = BASE_URL_USER_SYSTEM + "/usersystem/countries";
+
 
 }
