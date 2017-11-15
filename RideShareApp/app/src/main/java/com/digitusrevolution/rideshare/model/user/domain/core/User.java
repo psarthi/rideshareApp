@@ -14,6 +14,7 @@ import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.domain.FriendRequest;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
+import com.digitusrevolution.rideshare.model.user.domain.RegistrationType;
 import com.digitusrevolution.rideshare.model.user.domain.Role;
 import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.State;
@@ -48,6 +49,7 @@ public class User {
 	private float profileRating;
 	
 	private Collection<Group> groupInvites = new HashSet<Group>();
+	private RegistrationType registrationType;
 	
 	public int getId() {
 		return id;
@@ -313,6 +315,13 @@ public class User {
 		this.groupInvites = groupInvites;
 	}
 
+	public RegistrationType getRegistrationType() {
+		return registrationType;
+	}
+
+	public void setRegistrationType(RegistrationType registrationType) {
+		this.registrationType = registrationType;
+	}
 }
 
 

@@ -1,7 +1,6 @@
 package com.digitusrevolution.rideshare.activity;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,8 +8,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.CustomCountryAdapter;
@@ -20,16 +19,14 @@ import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -43,6 +40,11 @@ public class MobileRegistrationActivity extends AppCompatActivity {
     private Button mSendOTPButton;
     private CircleImageView mPhotoImageView;
     private List<Country> mCountries;
+    private String mOTP;
+    private UserRegistration mUserRegistration;
+    private String mExtraKeyName;
+    private String mSelectedCountryCode;
+    private Country mSelectedCountry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,32 +56,18 @@ public class MobileRegistrationActivity extends AppCompatActivity {
         mMobileNumber = findViewById(R.id.mobile_number);
         mSendOTPButton = findViewById(R.id.send_otp_button);
         mPhotoImageView = findViewById(R.id.photo);
+        mExtraKeyName = getPackageName()+".data";
 
+        getExtraFromIntent();
+        displayProfilePhoto();
         setCountryList();
 
         mSendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Country selectedCountry = (Country) mCountryNameSpinner.getSelectedItem();
-
-                Log.d(TAG,"Sending OTP to Mobile number "+
-                        selectedCountry.getCode() +
-                        mMobileNumber.getText().toString());
-
-                Intent otpVerificationIntent = new Intent(getApplicationContext(), OtpVerificationActivity.class);
-                startActivity(otpVerificationIntent);
-
+                sendOTP();
             }
         });
-
-        Intent intent = getIntent();
-        String data = intent.getStringExtra(getPackageName()+".data");
-        UserRegistration userRegistration = new Gson().fromJson(data,UserRegistration.class);
-        Log.d(TAG,userRegistration.getPhoto().getImageLocation());
-
-        //This is easy way to get impage downloaded and displaying as well using Picaso Library
-        Picasso.with(this).load(userRegistration.getPhoto().getImageLocation()).into(mPhotoImageView);
 
         /*
         //Below is the sample snippet for dnownloading image from URL
@@ -98,6 +86,56 @@ public class MobileRegistrationActivity extends AppCompatActivity {
             }
         });
         */
+    }
+
+    private void getExtraFromIntent() {
+        Intent intent = getIntent();
+        String data = intent.getStringExtra(mExtraKeyName);
+        mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
+        Log.d(TAG,"Photo URL:"+mUserRegistration.getPhoto().getImageLocation());
+    }
+
+    private void sendOTP() {
+        mSelectedCountry = (Country) mCountryNameSpinner.getSelectedItem();
+        mSelectedCountryCode = mSelectedCountry.getCode();
+        Log.d(TAG,"Sending OTP to Mobile number "+
+                mSelectedCountryCode +
+                mMobileNumber.getText().toString());
+
+        if (mCountryNameSpinner.getSelectedItem()!=null) {
+            if (mMobileNumber.getText().length() == 10) {
+                String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,mSelectedCountryCode+
+                        mMobileNumber.getText().toString());
+                RESTClient.get(GET_OTP_URL, null, new TextHttpResponseHandler() {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.d(TAG, "Response Failure:" + responseString);
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                        Log.d(TAG, "Response Success:" + responseString);
+                        mOTP = responseString;
+                        SaveExtra();
+                        Intent otpVerificationIntent = new Intent(getApplicationContext(), OtpVerificationActivity.class);
+                        otpVerificationIntent.putExtra(mExtraKeyName,new Gson().toJson(mUserRegistration));
+                        startActivity(otpVerificationIntent);
+                    }
+                });
+
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.invalid_mobile_number, Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            Toast.makeText(getApplicationContext(), R.string.system_exception_msg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void displayProfilePhoto() {
+
+        //This is easy way to get impage downloaded and displaying as well using Picaso Library
+        Picasso.with(this).load(mUserRegistration.getPhoto().getImageLocation()).into(mPhotoImageView);
     }
 
     private void setCountryList(){
@@ -134,5 +172,11 @@ public class MobileRegistrationActivity extends AppCompatActivity {
                 Log.d(TAG,"Response Failed:"+errorResponse);
             }
         });
+    }
+
+    private void SaveExtra(){
+        mUserRegistration.setOtp(mOTP);
+        mUserRegistration.setMobileNumber(mSelectedCountryCode + mMobileNumber.getText().toString());
+        mUserRegistration.setCountry(mSelectedCountry);
     }
 }

@@ -16,6 +16,8 @@
     <string name="otp_confirm_button_text">Confirm</string>
     <string name="did_not_received_otp_code_label">Didn\'t received code?</string>
     <string name="resend_otp_code_message">Resend</string>
+    <string name="invalid_mobile_number">Please enter 10 digit mobile number</string>
+    <string name="system_exception_msg">Technical Issue. Please try again</string>
     <string-array name="country_name">
         <item>India (+91)</item>
         <item>United States (+1)</item>

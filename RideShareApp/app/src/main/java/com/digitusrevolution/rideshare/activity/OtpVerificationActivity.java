@@ -1,5 +1,6 @@
 package com.digitusrevolution.rideshare.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,8 +10,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
+import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
+import com.google.gson.Gson;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.TextHttpResponseHandler;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class OtpVerificationActivity extends AppCompatActivity {
 
@@ -22,6 +35,11 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private EditText mOTPCode4thNumber;
     private TextView mResendText;
     private Button mOTPConfirmationButton;
+    private UserRegistration mUserRegistration;
+    private String mExtraKeyName;
+    private String mOTPInput;
+    private boolean mOTPMatch;
+    private UserSignInResult mUserSignInResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +54,27 @@ public class OtpVerificationActivity extends AppCompatActivity {
         mOTPCode4thNumber = findViewById(R.id.otp_code_4th_number);
         mResendText = findViewById(R.id.resend_text);
         mOTPConfirmationButton = findViewById(R.id.otp_confirmation_button);
+        mExtraKeyName = getPackageName()+".data";
+
+        getExtraFromIntent();
+        addTextChangedListenerOnOTPTextField();
 
         mOTPConfirmationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG,"OTP Confirmation code is - "
-                        +mOTPCode1stNumber.getText().toString()
-                        +mOTPCode2ndNumber.getText().toString()
-                        +mOTPCode3rdNumber.getText().toString()
-                        +mOTPCode4thNumber.getText().toString());
+
+                mOTPInput = mOTPCode1stNumber.getText().toString()
+                            +mOTPCode2ndNumber.getText().toString()
+                            +mOTPCode3rdNumber.getText().toString()
+                            +mOTPCode4thNumber.getText().toString();
+
+                Log.d(TAG,"OTP Input Code is - "+ mOTPInput);
+
+                validateOTP();
+
             }
         });
 
-        addTextChangedListenerOnOTPTextField();
     }
 
     private void addTextChangedListenerOnOTPTextField() {
@@ -129,4 +155,62 @@ public class OtpVerificationActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void getExtraFromIntent() {
+        Intent intent = getIntent();
+        String data = intent.getStringExtra(mExtraKeyName);
+        mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
+        Log.d(TAG,"OTP:" + mUserRegistration.getOtp());
+        Toast.makeText(this,"OTP:"+mUserRegistration.getOtp(),Toast.LENGTH_LONG).show();
+    }
+
+    private void validateOTP(){
+
+        String VALIDATE_OTP_URL = APIUrl.VALIDATE_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,mUserRegistration.getMobileNumber())
+                                  .replace(APIUrl.OTP_KEY,mOTPInput);
+        RESTClient.get(VALIDATE_OTP_URL, null, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d(TAG,"Response Failed:"+responseString);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                mOTPMatch = Boolean.parseBoolean(responseString);
+
+                Log.d(TAG,"Response Success:"+responseString);
+
+                if (mOTPMatch) {
+                    Log.d(TAG,"OTP Validation Success");
+                    mUserRegistration.setOtp(mOTPInput);
+                    RegisterUser();
+
+                } else {
+                    Log.d(TAG,"OTP Validation failed");
+                    Toast.makeText(OtpVerificationActivity.this,"OTP Validation Failed, please reenter valid OTP",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void RegisterUser() {
+
+        RESTClient.post(this,APIUrl.USER_REGISTRATION,mUserRegistration,new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                mUserSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
+                Log.d(TAG,"User has been successfully registered, Redirect to Home Page");
+                Log.d(TAG,"Access Token:"+mUserSignInResult.getToken());
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.d(TAG,"Response Failed:"+errorResponse);
+            }
+        });
+    }
+
 }

@@ -1,7 +1,9 @@
 package com.digitusrevolution.rideshare.helper;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.digitusrevolution.rideshare.activity.LandingPageActivity;
 import com.digitusrevolution.rideshare.adapter.GsonDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,9 +23,11 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class RESTClient {
 
+    private static final String TAG = RESTClient.class.getName();
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        Log.d(TAG,"GET URL:"+url);
         client.get(url, params, responseHandler);
     }
 
@@ -45,7 +49,7 @@ public class RESTClient {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
+        Log.d(TAG,"POST URL:"+url);
         client.post(context, url, entity, "application/json", responseHandler);
     }
 
