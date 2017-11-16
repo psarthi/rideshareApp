@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
@@ -47,17 +48,19 @@ public class OtpVerificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_otp_verification);
         getSupportActionBar().hide();
 
-        mVerificationCodeSubHeading = findViewById(R.id.verify_mobile_sub_heading);
+        mVerificationCodeSubHeading = findViewById(R.id.otp_verification_sub_heading);
         mOTPCode1stNumber = findViewById(R.id.otp_code_1st_number);
         mOTPCode2ndNumber = findViewById(R.id.otp_code_2nd_number);
         mOTPCode3rdNumber = findViewById(R.id.otp_code_3rd_number);
         mOTPCode4thNumber = findViewById(R.id.otp_code_4th_number);
         mResendText = findViewById(R.id.resend_text);
         mOTPConfirmationButton = findViewById(R.id.otp_confirmation_button);
-        mExtraKeyName = getPackageName()+".data";
 
         getExtraFromIntent();
         addTextChangedListenerOnOTPTextField();
+
+        //Note - I have appended "+" sign as we are storing country code without + due to some technical issue
+        mVerificationCodeSubHeading.append(" +"+mUserRegistration.getMobileNumber());
 
         mOTPConfirmationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,9 +161,11 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
     private void getExtraFromIntent() {
         Intent intent = getIntent();
+        mExtraKeyName = intent.getStringExtra(Constant.INTENT_EXTRA_KEY);
         String data = intent.getStringExtra(mExtraKeyName);
         mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
         Log.d(TAG,"OTP:" + mUserRegistration.getOtp());
+        Log.d(TAG,"Mobile Number:" + mUserRegistration.getMobileNumber());
         Toast.makeText(this,"OTP:"+mUserRegistration.getOtp(),Toast.LENGTH_LONG).show();
     }
 

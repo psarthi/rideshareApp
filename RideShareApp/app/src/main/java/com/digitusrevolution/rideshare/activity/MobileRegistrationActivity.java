@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.CustomCountryAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
@@ -42,9 +43,9 @@ public class MobileRegistrationActivity extends AppCompatActivity {
     private List<Country> mCountries;
     private String mOTP;
     private UserRegistration mUserRegistration;
-    private String mExtraKeyName;
     private String mSelectedCountryCode;
     private Country mSelectedCountry;
+    private String mExtraKeyName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,6 @@ public class MobileRegistrationActivity extends AppCompatActivity {
         mMobileNumber = findViewById(R.id.mobile_number);
         mSendOTPButton = findViewById(R.id.send_otp_button);
         mPhotoImageView = findViewById(R.id.photo);
-        mExtraKeyName = getPackageName()+".data";
 
         getExtraFromIntent();
         displayProfilePhoto();
@@ -90,6 +90,7 @@ public class MobileRegistrationActivity extends AppCompatActivity {
 
     private void getExtraFromIntent() {
         Intent intent = getIntent();
+        mExtraKeyName = intent.getStringExtra(Constant.INTENT_EXTRA_KEY);
         String data = intent.getStringExtra(mExtraKeyName);
         mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
         Log.d(TAG,"Photo URL:"+mUserRegistration.getPhoto().getImageLocation());
@@ -118,6 +119,8 @@ public class MobileRegistrationActivity extends AppCompatActivity {
                         mOTP = responseString;
                         SaveExtra();
                         Intent otpVerificationIntent = new Intent(getApplicationContext(), OtpVerificationActivity.class);
+                        //Reason for storing key name as well, so that calling class don't have to know the key name
+                        otpVerificationIntent.putExtra(Constant.INTENT_EXTRA_KEY,mExtraKeyName);
                         otpVerificationIntent.putExtra(mExtraKeyName,new Gson().toJson(mUserRegistration));
                         startActivity(otpVerificationIntent);
                     }

@@ -8,9 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
@@ -56,7 +58,9 @@ public class LandingPageActivity extends AppCompatActivity{
         mGoogleSignInButton = findViewById(R.id.google_sign_in_button);
         mSignUpButton = findViewById(R.id.sign_up_button);
         mSignInButton = findViewById(R.id.sign_in_button);
-        mExtraKeyName = getPackageName()+".data";
+        //Reason for appending packageName as per recommendation on android docs so that
+        // it doesn't get name clash with other objects
+        mExtraKeyName = getPackageName()+Constant.INTENT_EXTRA_DATA_NAME;
 
         //Change the text of google sign in button
         for (int i=0;i<mGoogleSignInButton.getChildCount();i++){
@@ -196,6 +200,7 @@ public class LandingPageActivity extends AppCompatActivity{
                     UserStatus status = new Gson().fromJson(response.toString(), UserStatus.class);
                     if (status.isUserExist()){
                         Log.d(TAG,"Redirect to Home Page as User exist");
+                        Toast.makeText(LandingPageActivity.this,"User Exist, Redirecting to Home Page",Toast.LENGTH_SHORT).show();
                     } else {
                         Log.d(TAG,"User doesn't exist:" + account.getEmail());
                         mobileRegistration(account);
@@ -224,8 +229,8 @@ public class LandingPageActivity extends AppCompatActivity{
         saveExtra(account);
 
         Intent mobileRegistrationIntent = new Intent(this,MobileRegistrationActivity.class);
-        //Reason for appending packageName as per recommendation on android docs so that
-        // it doesn't get name clash with other objects
+        //Reason for storing key name as well, so that calling class don't have to know the key name
+        mobileRegistrationIntent.putExtra(Constant.INTENT_EXTRA_KEY,mExtraKeyName);
         mobileRegistrationIntent.putExtra(mExtraKeyName,new Gson().toJson(mUserRegistration));
         startActivity(mobileRegistrationIntent);
     }
