@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+    <!-- Id has been given at group level so that divider would come up else its not showing up between groups items-->
+    <group android:checkableBehavior="single" android:id="@+id/core_group_menu">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@android:drawable/btn_default"
+            android:title="Home"/>
+        <item
+            android:id="@+id/nav_rides"
+            android:icon="@android:drawable/btn_default"
+            android:title="Rides"/>
+        <item
+            android:id="@+id/nav_payments"
+            android:icon="@android:drawable/btn_default"
+            android:title="Payments"/>
+    </group>
+
+    <group android:checkableBehavior="single" android:id="@+id/trust_network_menu">
+        <item
+            android:id="@+id/nav_groups"
+            android:icon="@android:drawable/btn_default"
+            android:title="Groups"/>
+        <item
+            android:id="@+id/nav_friends"
+            android:icon="@android:drawable/btn_default"
+            android:title="Friends"/>
+    </group>
+
+    <group android:checkableBehavior="single" android:id="@+id/misc_group_menu">
+        <item
+            android:id="@+id/nav_preference"
+            android:icon="@android:drawable/btn_default"
+            android:title="Preference"/>
+        <item
+            android:id="@+id/nav_vehicles"
+            android:icon="@android:drawable/btn_default"
+            android:title="Vehicles"/>
+        <item
+            android:id="@+id/nav_wallet"
+            android:icon="@android:drawable/btn_default"
+            android:title="Wallet"/>
+        <item
+            android:id="@+id/nav_signout"
+            android:icon="@android:drawable/btn_default"
+            android:title="SignOut"/>
+    </group>
+
+</menu>
