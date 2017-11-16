@@ -117,7 +117,7 @@ public class MobileRegistrationActivity extends AppCompatActivity {
                     public void onSuccess(int statusCode, Header[] headers, String responseString) {
                         Log.d(TAG, "Response Success:" + responseString);
                         mOTP = responseString;
-                        SaveExtra();
+                        saveExtra();
                         Intent otpVerificationIntent = new Intent(getApplicationContext(), OtpVerificationActivity.class);
                         //Reason for storing key name as well, so that calling class don't have to know the key name
                         otpVerificationIntent.putExtra(Constant.INTENT_EXTRA_KEY,mExtraKeyName);
@@ -177,7 +177,7 @@ public class MobileRegistrationActivity extends AppCompatActivity {
         });
     }
 
-    private void SaveExtra(){
+    private void saveExtra(){
         mUserRegistration.setOtp(mOTP);
         mUserRegistration.setMobileNumber(mSelectedCountryCode + mMobileNumber.getText().toString());
         mUserRegistration.setCountry(mSelectedCountry);

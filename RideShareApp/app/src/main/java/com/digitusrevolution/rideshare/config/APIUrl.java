@@ -20,7 +20,7 @@ public class APIUrl {
     public static final String GET_COUNTRIES_URL = BASE_URL_USER_SYSTEM + "/usersystem/countries";
     public static final String GET_OTP_URL = BASE_URL_USER_SYSTEM + "/users/getotp/{mobileNumber}";
     public static final String VALIDATE_OTP_URL = BASE_URL_USER_SYSTEM + "/users/validateotp/{mobileNumber}/{otp}";
-    public static final String USER_REGISTRATION = BASE_URL_USER_SYSTEM + "/users";
-
+    public static final String USER_REGISTRATION_URL = BASE_URL_USER_SYSTEM + "/users";
+    public static final String SIGN_IN_WITH_TOKEN_URL = BASE_URL_USER_SYSTEM + "/users/signinwithtoken";
 
 }

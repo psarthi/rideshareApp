@@ -1,6 +1,8 @@
 package com.digitusrevolution.rideshare.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,6 +18,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
@@ -67,14 +70,21 @@ public class OtpVerificationActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 mOTPInput = mOTPCode1stNumber.getText().toString()
-                            +mOTPCode2ndNumber.getText().toString()
-                            +mOTPCode3rdNumber.getText().toString()
-                            +mOTPCode4thNumber.getText().toString();
+                        +mOTPCode2ndNumber.getText().toString()
+                        +mOTPCode3rdNumber.getText().toString()
+                        +mOTPCode4thNumber.getText().toString();
 
                 Log.d(TAG,"OTP Input Code is - "+ mOTPInput);
 
                 validateOTP();
 
+            }
+        });
+
+        mResendText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reSendOTP();
             }
         });
 
@@ -172,7 +182,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private void validateOTP(){
 
         String VALIDATE_OTP_URL = APIUrl.VALIDATE_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,mUserRegistration.getMobileNumber())
-                                  .replace(APIUrl.OTP_KEY,mOTPInput);
+                .replace(APIUrl.OTP_KEY,mOTPInput);
         RESTClient.get(VALIDATE_OTP_URL, null, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -189,7 +199,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 if (mOTPMatch) {
                     Log.d(TAG,"OTP Validation Success");
                     mUserRegistration.setOtp(mOTPInput);
-                    RegisterUser();
+                    registerUser();
 
                 } else {
                     Log.d(TAG,"OTP Validation failed");
@@ -199,15 +209,18 @@ public class OtpVerificationActivity extends AppCompatActivity {
         });
     }
 
-    private void RegisterUser() {
+    private void registerUser() {
 
-        RESTClient.post(this,APIUrl.USER_REGISTRATION,mUserRegistration,new JsonHttpResponseHandler(){
+        RESTClient.post(this,APIUrl.USER_REGISTRATION_URL,mUserRegistration,new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 mUserSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                 Log.d(TAG,"User has been successfully registered, Redirect to Home Page");
                 Log.d(TAG,"Access Token:"+mUserSignInResult.getToken());
+
+                saveAccessToken();
+
             }
 
             @Override
@@ -216,6 +229,32 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 Log.d(TAG,"Response Failed:"+errorResponse);
             }
         });
+    }
+
+    private void saveAccessToken() {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Constant.SHARED_PREFS_TOKEN_KEY,mUserSignInResult.getToken());
+        editor.commit();
+        String token = sharedPref.getString(Constant.SHARED_PREFS_TOKEN_KEY,null);
+        Log.d(TAG,"Token from SharedPrefs:"+token);
+    }
+
+    private void reSendOTP() {
+        String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,mUserRegistration.getMobileNumber());
+        RESTClient.get(GET_OTP_URL, null, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d(TAG, "Response Failure:" + responseString);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.d(TAG, "Response Success:" + responseString);
+                Toast.makeText(OtpVerificationActivity.this,"OTP:"+responseString,Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
 }
