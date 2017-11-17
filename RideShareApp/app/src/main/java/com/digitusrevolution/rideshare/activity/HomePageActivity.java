@@ -1,12 +1,10 @@
 package com.digitusrevolution.rideshare.activity;
 
-
-
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,6 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
@@ -23,6 +24,7 @@ import com.digitusrevolution.rideshare.fragment.HomePageWithRideFragment;
 import com.digitusrevolution.rideshare.helper.CommonFunctions;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 public class HomePageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomePageWithNoRidesFragment.OnFragmentInteractionListener, HomePageWithRideFragment.OnFragmentInteractionListener{
@@ -32,6 +34,9 @@ public class HomePageActivity extends AppCompatActivity
     private String mExtraKeyName;
     private UserSignInResult mUserSignInResult;
     private CommonFunctions mCommonFunctions;
+    private ImageView mProfilePhotoImageView;
+    private TextView mUserNameTextView;
+    private TextView mUserEmailTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,24 @@ public class HomePageActivity extends AppCompatActivity
         mCommonFunctions = new CommonFunctions(this);
         Log.d(TAG,"Access Token retrieved from mCommonFunctions:"+ mCommonFunctions.getAccessToken());
         getExtraFromIntent();
+        setNavHeader(navigationView);
+    }
+
+    private void setNavHeader(NavigationView navigationView) {
+
+        //This is very important as findViewById would return null if you don't do on headerview as
+        // default drawerlayout view doesn't contain image view directly and its inside the headerlayout
+        View headerView = navigationView.getHeaderView(0);
+
+        mProfilePhotoImageView = headerView.findViewById(R.id.userPhotoImageView);
+        Picasso.with(this).load(mUserSignInResult.getUserProfile().getPhoto().getImageLocation()).into(mProfilePhotoImageView);
+
+        mUserNameTextView = headerView.findViewById(R.id.userNameTextView);
+        mUserNameTextView.setText(mUserSignInResult.getUserProfile().getFirstName()+" "
+                +mUserSignInResult.getUserProfile().getLastName());
+
+        mUserEmailTextView = headerView.findViewById(R.id.userEmailTextView);
+        mUserEmailTextView.setText(mUserSignInResult.getUserProfile().getEmail());
     }
 
     private void getExtraFromIntent() {
@@ -83,7 +106,7 @@ public class HomePageActivity extends AppCompatActivity
         int id = item.getItemId();
         Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
         if (id == R.id.nav_home) {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             HomePageWithNoRidesFragment homePageWithNoRidesFragment = new HomePageWithNoRidesFragment();
             fragmentTransaction.add(R.id.home_page_container, homePageWithNoRidesFragment).addToBackStack(null);
@@ -108,7 +131,7 @@ public class HomePageActivity extends AppCompatActivity
     }
 
     private void loadFragmentB() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         HomePageWithRideFragment homePageWithRideFragment = HomePageWithRideFragment.newInstance("Dummy Data 1st Param","Dummy Data 2nd Param");
         fragmentTransaction.add(R.id.home_page_container, homePageWithRideFragment).addToBackStack(null);
