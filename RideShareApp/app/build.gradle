@@ -21,6 +21,8 @@ android {
 
 dependencies {
     implementation 'com.android.support:design:26.1.0'
+    //This support library may not be required as it has been when creating Fragment which uses support version
+    // but in my application we are using standard Fragment budled with android
     implementation 'com.android.support:support-v4:26.1.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -31,11 +33,18 @@ dependencies {
     testCompile 'junit:junit:4.12'
     //If you use the latest version, then there is chances that all android devices may not have updated
     // their google play services app and your application would not work. So better use bit old version
+    //This is used for Google Sign In
     compile 'com.google.android.gms:play-services-auth:11.6.0'
+    //This is for Json parser
     compile 'com.google.code.gson:gson:2.8.2'
+    //This is for REST Calls
     compile 'com.loopj.android:android-async-http:1.4.9'
+    //This is for image suppport
     compile 'com.squareup.picasso:picasso:2.5.2'
+    //This is to create circular image view as its not available by default
     compile 'de.hdodenhof:circleimageview:2.2.0'
+    //Google Maps library
+    compile 'com.google.android.gms:play-services-maps:11.6.0'
 }
 
 //This has to be below the dependencies block otherwise you will get conflict with firebase (firebase comes with google services)

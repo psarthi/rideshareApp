@@ -1,8 +1,8 @@
 package com.digitusrevolution.rideshare.fragment;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,7 +26,7 @@ import com.digitusrevolution.rideshare.R;
  * Use the {@link HomePageWithNoRidesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomePageWithNoRidesFragment extends Fragment {
+public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyCallback{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,6 +40,7 @@ public class HomePageWithNoRidesFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private TextView mTextView;
+    private GoogleMap mMap;
 
     public HomePageWithNoRidesFragment() {
         // Required empty public constructor
@@ -70,16 +78,8 @@ public class HomePageWithNoRidesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_home_page_with_no_rides, container, false);
-        mTextView = inflate.findViewById(R.id.fragment_text_content);
-        mTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, mTextView.getText().toString());
-                if (mListener != null) {
-                    mListener.onHomePageWithNoRidesFragmentInteraction(mTextView.getText().toString());
-                }
-            }
-        });
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         return inflate;
     }
 
@@ -98,6 +98,16 @@ public class HomePageWithNoRidesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Add a marker in Sydney, Australia, and move the camera.
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     /**

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.digitusrevolution.rideshare"
           xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -24,10 +25,19 @@
         </activity>
         <activity android:name=".activity.MobileRegistrationActivity">
         </activity>
+        <!-- Its very important to have NoActionBar statement in HomePageActivity otherwise it will throw an error
+        as in HomePage activity we are setting custom toolbar which we will modify later on as well, but if this
+        toolbar is there then we can't set toolbar on top of toolbar -->
         <activity
             android:name=".activity.HomePageActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC0d1RsEyfvvg1AnB14Q6QIhiKwBpPjVSM"/>
     </application>
 
 </manifest>
