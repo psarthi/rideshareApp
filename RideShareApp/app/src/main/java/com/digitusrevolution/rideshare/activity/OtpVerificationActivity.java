@@ -1,8 +1,6 @@
 package com.digitusrevolution.rideshare.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,8 +15,8 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.helper.CommonFunctions;
 import com.digitusrevolution.rideshare.helper.RESTClient;
-import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
@@ -44,6 +42,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private String mOTPInput;
     private boolean mOTPMatch;
     private UserSignInResult mUserSignInResult;
+    private CommonFunctions mCommonFunctions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +50,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_otp_verification);
         getSupportActionBar().hide();
 
+        mCommonFunctions = new CommonFunctions(this);
         mVerificationCodeSubHeading = findViewById(R.id.otp_verification_sub_heading);
         mOTPCode1stNumber = findViewById(R.id.otp_code_1st_number);
         mOTPCode2ndNumber = findViewById(R.id.otp_code_2nd_number);
@@ -218,7 +218,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 mUserSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                 Log.d(TAG,"User has been successfully registered, Redirect to Home Page");
                 Log.d(TAG,"Access Token:"+mUserSignInResult.getToken());
-                saveAccessTokenAndStartHomePageActivity();
+                mCommonFunctions.saveAccessTokenAndStartHomePageActivity(mUserSignInResult);
 
             }
 
@@ -229,20 +229,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void saveAccessTokenAndStartHomePageActivity() {
-        SharedPreferences sharedPref = getSharedPreferences(getPackageName()+Constant.SHARED_PREFS_KEY_FILE,Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constant.SHARED_PREFS_TOKEN_KEY,mUserSignInResult.getToken());
-        editor.commit();
-        String token = sharedPref.getString(Constant.SHARED_PREFS_TOKEN_KEY,null);
-        Log.d(TAG,"Token from SharedPrefs:"+token);
-        Intent intent = new Intent(OtpVerificationActivity.this,HomePageActivity.class);
-        intent.putExtra(Constant.INTENT_EXTRA_KEY,mExtraKeyName);
-        intent.putExtra(mExtraKeyName,new Gson().toJson(mUserSignInResult));
-        startActivity(intent);
-    }
-
     private void reSendOTP() {
         String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,mUserRegistration.getMobileNumber());
         RESTClient.get(GET_OTP_URL, null, new TextHttpResponseHandler() {

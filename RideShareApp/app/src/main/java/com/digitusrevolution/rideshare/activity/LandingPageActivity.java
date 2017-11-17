@@ -1,8 +1,6 @@
 package com.digitusrevolution.rideshare.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +13,7 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.helper.CommonFunctions;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
@@ -44,6 +43,7 @@ public class LandingPageActivity extends AppCompatActivity{
 
     private static final String TAG = LandingPageActivity.class.getName();
     private static final int RC_SIGN_IN = 9001;
+    private CommonFunctions mCommonFunctions;
 
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton mGoogleSignInButton;
@@ -59,6 +59,7 @@ public class LandingPageActivity extends AppCompatActivity{
         setContentView(R.layout.activity_landing_page);
         getSupportActionBar().hide();
 
+        mCommonFunctions = new CommonFunctions(this);
         mGoogleSignInButton = findViewById(R.id.google_sign_in_button);
         mSignUpButton = findViewById(R.id.sign_up_button);
         mSignInButton = findViewById(R.id.sign_in_button);
@@ -214,7 +215,7 @@ public class LandingPageActivity extends AppCompatActivity{
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                         super.onSuccess(statusCode, headers, response);
                                         mUserSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
-                                        saveAccessTokenAndStartHomePageActivity();
+                                        mCommonFunctions.saveAccessTokenAndStartHomePageActivity(mUserSignInResult);
                                     }
                                     @Override
                                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -268,20 +269,4 @@ public class LandingPageActivity extends AppCompatActivity{
         mUserRegistration.setPhoto(photo);
         mUserRegistration.setRegistrationType(RegistrationType.Google);
     }
-
-    private void saveAccessTokenAndStartHomePageActivity() {
-        SharedPreferences sharedPref = getSharedPreferences(getPackageName()+Constant.SHARED_PREFS_KEY_FILE,Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constant.SHARED_PREFS_TOKEN_KEY,mUserSignInResult.getToken());
-        editor.commit();
-        String token = sharedPref.getString(Constant.SHARED_PREFS_TOKEN_KEY,null);
-        Log.d(TAG,"Token from SharedPrefs:"+token);
-        Intent intent = new Intent(LandingPageActivity.this,HomePageActivity.class);
-        intent.putExtra(Constant.INTENT_EXTRA_KEY,mExtraKeyName);
-        intent.putExtra(mExtraKeyName,new Gson().toJson(mUserSignInResult));
-        startActivity(intent);
-
-    }
-
-
 }

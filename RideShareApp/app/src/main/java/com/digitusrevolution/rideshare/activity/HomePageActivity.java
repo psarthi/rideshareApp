@@ -4,9 +4,7 @@ package com.digitusrevolution.rideshare.activity;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,7 +20,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.HomePageWithNoRidesFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithRideFragment;
-import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
+import com.digitusrevolution.rideshare.helper.CommonFunctions;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 
@@ -33,6 +31,7 @@ public class HomePageActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private String mExtraKeyName;
     private UserSignInResult mUserSignInResult;
+    private CommonFunctions mCommonFunctions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,8 @@ public class HomePageActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getAccessToken();
+        mCommonFunctions = new CommonFunctions(this);
+        Log.d(TAG,"Access Token retrieved from mCommonFunctions:"+ mCommonFunctions.getAccessToken());
         getExtraFromIntent();
     }
 
@@ -89,7 +89,6 @@ public class HomePageActivity extends AppCompatActivity
             fragmentTransaction.add(R.id.home_page_container, homePageWithNoRidesFragment).addToBackStack(null);
             fragmentTransaction.commit();
             mToolbar.setTitle("BlankFragment");
-
         } else if (id == R.id.nav_rides) {
             loadFragmentB();
 
@@ -127,12 +126,6 @@ public class HomePageActivity extends AppCompatActivity
     @Override
     public void onHomePageWithRideFragmentInteraction(String data) {
         Log.d(TAG,"Value returned to activity from Ride Fragment:"+data);
-    }
-
-    private void getAccessToken() {
-        SharedPreferences sharedPref = getSharedPreferences(getPackageName()+Constant.SHARED_PREFS_KEY_FILE,Context.MODE_PRIVATE);
-        String token = sharedPref.getString(Constant.SHARED_PREFS_TOKEN_KEY,null);
-        Log.d(TAG,"Token from SharedPrefs:"+token);
     }
 
 }
