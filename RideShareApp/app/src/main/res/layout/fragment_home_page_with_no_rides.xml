@@ -3,13 +3,13 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="@android:color/white"
-             tools:context="com.digitusrevolution.rideshare.fragment.RideHomePageFragment">
+             tools:context="com.digitusrevolution.rideshare.fragment.HomePageWithNoRidesFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:id="@+id/ride_fragment_text_content"
+        android:id="@+id/fragment_text_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_ride_fragment"/>
+        android:text="@string/hello_blank_fragment"/>
 
 </FrameLayout>

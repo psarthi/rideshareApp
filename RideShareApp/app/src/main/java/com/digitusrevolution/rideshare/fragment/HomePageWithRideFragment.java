@@ -2,33 +2,36 @@ package com.digitusrevolution.rideshare.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
-
-import java.util.zip.Inflater;
+import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
+import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
+import com.google.gson.Gson;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RideHomePageFragment#newInstance} factory method to
+ * Use the {@link HomePageWithRideFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RideHomePageFragment extends Fragment {
+public class HomePageWithRideFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private static final String TAG = RideHomePageFragment.class.getName();
+    private static final String TAG = HomePageWithRideFragment.class.getName();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -37,7 +40,7 @@ public class RideHomePageFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private TextView mTextView;
 
-    public RideHomePageFragment() {
+    public HomePageWithRideFragment() {
         // Required empty public constructor
     }
 
@@ -47,11 +50,11 @@ public class RideHomePageFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RideHomePageFragment.
+     * @return A new instance of fragment HomePageWithRideFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RideHomePageFragment newInstance(String param1, String param2) {
-        RideHomePageFragment fragment = new RideHomePageFragment();
+    public static HomePageWithRideFragment newInstance(String param1, String param2) {
+        HomePageWithRideFragment fragment = new HomePageWithRideFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -66,13 +69,14 @@ public class RideHomePageFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inflate = inflater.inflate(R.layout.fragment_ride_home_page, container, false);
+        View inflate = inflater.inflate(R.layout.fragment_home_page_with_ride, container, false);
         mTextView = inflate.findViewById(R.id.ride_fragment_text_content);
         mTextView.setText(getArguments().getString(ARG_PARAM1));
         mTextView.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +84,7 @@ public class RideHomePageFragment extends Fragment {
             public void onClick(View view) {
                 Log.d(TAG, mTextView.getText().toString());
                 if (mListener != null) {
-                    mListener.onRideHomePageFragmentInteraction(mTextView.getText().toString());
+                    mListener.onHomePageWithRideFragmentInteraction(mTextView.getText().toString());
                     getActivity();
                 }
             }
@@ -118,6 +122,6 @@ public class RideHomePageFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onRideHomePageFragmentInteraction(String data);
+        void onHomePageWithRideFragmentInteraction(String data);
     }
 }

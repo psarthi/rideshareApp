@@ -4,7 +4,9 @@ package com.digitusrevolution.rideshare.activity;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.net.Uri;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,14 +19,20 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.fragment.BlankHomePageFragment;
-import com.digitusrevolution.rideshare.fragment.RideHomePageFragment;
+import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.fragment.HomePageWithNoRidesFragment;
+import com.digitusrevolution.rideshare.fragment.HomePageWithRideFragment;
+import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
+import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
+import com.google.gson.Gson;
 
 public class HomePageActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BlankHomePageFragment.OnFragmentInteractionListener, RideHomePageFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, HomePageWithNoRidesFragment.OnFragmentInteractionListener, HomePageWithRideFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
     private Toolbar mToolbar;
+    private String mExtraKeyName;
+    private UserSignInResult mUserSignInResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,17 @@ public class HomePageActivity extends AppCompatActivity
         //This will set up listener on Navigation items
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        getAccessToken();
+        getExtraFromIntent();
+    }
+
+    private void getExtraFromIntent() {
+        Intent intent = getIntent();
+        mExtraKeyName = intent.getStringExtra(Constant.INTENT_EXTRA_KEY);
+        String data = intent.getStringExtra(mExtraKeyName);
+        mUserSignInResult = new Gson().fromJson(data,UserSignInResult.class);
+        Log.d(TAG,"Token from Intent:" + mUserSignInResult.getToken());
     }
 
     //This method is just to close drawer if system back button is pressed
@@ -66,8 +85,8 @@ public class HomePageActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            BlankHomePageFragment blankHomePageFragment = new BlankHomePageFragment();
-            fragmentTransaction.add(R.id.content_home, blankHomePageFragment).addToBackStack(null);
+            HomePageWithNoRidesFragment homePageWithNoRidesFragment = new HomePageWithNoRidesFragment();
+            fragmentTransaction.add(R.id.home_page_container, homePageWithNoRidesFragment).addToBackStack(null);
             fragmentTransaction.commit();
             mToolbar.setTitle("BlankFragment");
 
@@ -92,21 +111,28 @@ public class HomePageActivity extends AppCompatActivity
     private void loadFragmentB() {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        RideHomePageFragment rideHomePageFragment = RideHomePageFragment.newInstance("Dummy Data 1st Param","Dummy Data 2nd Param");
-        fragmentTransaction.add(R.id.content_home, rideHomePageFragment).addToBackStack(null);
+        HomePageWithRideFragment homePageWithRideFragment = HomePageWithRideFragment.newInstance("Dummy Data 1st Param","Dummy Data 2nd Param");
+        fragmentTransaction.add(R.id.home_page_container, homePageWithRideFragment).addToBackStack(null);
         fragmentTransaction.commit();
         mToolbar.setTitle("RideFragment");
     }
 
     @Override
-    public void onBlankHomePageFragmentInteraction(String data) {
+    public void onHomePageWithNoRidesFragmentInteraction(String data) {
         Log.d(TAG,"Value returned to activity from Blank Fragment:"+data);
         loadFragmentB();
 
     }
 
     @Override
-    public void onRideHomePageFragmentInteraction(String data) {
+    public void onHomePageWithRideFragmentInteraction(String data) {
         Log.d(TAG,"Value returned to activity from Ride Fragment:"+data);
     }
+
+    private void getAccessToken() {
+        SharedPreferences sharedPref = getSharedPreferences(getPackageName()+Constant.SHARED_PREFS_KEY_FILE,Context.MODE_PRIVATE);
+        String token = sharedPref.getString(Constant.SHARED_PREFS_TOKEN_KEY,null);
+        Log.d(TAG,"Token from SharedPrefs:"+token);
+    }
+
 }

@@ -2,7 +2,6 @@ package com.digitusrevolution.rideshare.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,23 +10,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.activity.LandingPageActivity;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link BlankHomePageFragment.OnFragmentInteractionListener} interface
+ * {@link HomePageWithNoRidesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link BlankHomePageFragment#newInstance} factory method to
+ * Use the {@link HomePageWithNoRidesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BlankHomePageFragment extends Fragment {
+public class HomePageWithNoRidesFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private static final String TAG = BlankHomePageFragment.class.getName();
+    private static final String TAG = HomePageWithNoRidesFragment.class.getName();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -36,7 +34,7 @@ public class BlankHomePageFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private TextView mTextView;
 
-    public BlankHomePageFragment() {
+    public HomePageWithNoRidesFragment() {
         // Required empty public constructor
     }
 
@@ -46,11 +44,11 @@ public class BlankHomePageFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment BlankHomePageFragment.
+     * @return A new instance of fragment HomePageWithNoRidesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BlankHomePageFragment newInstance(String param1, String param2) {
-        BlankHomePageFragment fragment = new BlankHomePageFragment();
+    public static HomePageWithNoRidesFragment newInstance(String param1, String param2) {
+        HomePageWithNoRidesFragment fragment = new HomePageWithNoRidesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -71,14 +69,14 @@ public class BlankHomePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inflate = inflater.inflate(R.layout.fragment_blank_home_page, container, false);
+        View inflate = inflater.inflate(R.layout.fragment_home_page_with_no_rides, container, false);
         mTextView = inflate.findViewById(R.id.fragment_text_content);
         mTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, mTextView.getText().toString());
                 if (mListener != null) {
-                    mListener.onBlankHomePageFragmentInteraction(mTextView.getText().toString());
+                    mListener.onHomePageWithNoRidesFragmentInteraction(mTextView.getText().toString());
                 }
             }
         });
@@ -114,6 +112,6 @@ public class BlankHomePageFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onBlankHomePageFragmentInteraction(String data);
+        void onHomePageWithNoRidesFragmentInteraction(String data);
     }
 }

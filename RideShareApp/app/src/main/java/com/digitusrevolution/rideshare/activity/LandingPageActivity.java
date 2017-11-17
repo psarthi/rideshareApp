@@ -1,6 +1,8 @@
 package com.digitusrevolution.rideshare.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
 import com.digitusrevolution.rideshare.model.user.domain.RegistrationType;
+import com.digitusrevolution.rideshare.model.user.dto.GoogleSignInInfo;
 import com.digitusrevolution.rideshare.model.user.dto.SignInInfo;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
@@ -48,6 +51,7 @@ public class LandingPageActivity extends AppCompatActivity{
     private Button mSignInButton;
     private String mExtraKeyName;
     private UserRegistration mUserRegistration;
+    private UserSignInResult mUserSignInResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +87,7 @@ public class LandingPageActivity extends AppCompatActivity{
         mGoogleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                        googleSignIn();
+                googleSignIn();
             }
         });
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
@@ -201,7 +205,25 @@ public class LandingPageActivity extends AppCompatActivity{
                     if (status.isUserExist()){
                         Log.d(TAG,"Redirect to Home Page as User exist");
                         Toast.makeText(LandingPageActivity.this,"User Exist, Redirecting to Home Page",Toast.LENGTH_SHORT).show();
-                    } else {
+
+                        GoogleSignInInfo googleSignInInfo = new GoogleSignInInfo();
+                        googleSignInInfo.setEmail(account.getEmail());
+                        RESTClient.post(LandingPageActivity.this,APIUrl.GOOGLE_SIGN_IN_URL,
+                                googleSignInInfo,new JsonHttpResponseHandler(){
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        super.onSuccess(statusCode, headers, response);
+                                        mUserSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
+                                        saveAccessTokenAndStartHomePageActivity();
+                                    }
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                                        Log.d(TAG,"Failed Response:"+errorResponse.toString());
+                                    }
+                                });
+                    }
+                    else {
                         Log.d(TAG,"User doesn't exist:" + account.getEmail());
                         mobileRegistration(account);
                     }
@@ -212,7 +234,7 @@ public class LandingPageActivity extends AppCompatActivity{
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-           // updateUI(null);
+            // updateUI(null);
         }
     }
 
@@ -246,5 +268,20 @@ public class LandingPageActivity extends AppCompatActivity{
         mUserRegistration.setPhoto(photo);
         mUserRegistration.setRegistrationType(RegistrationType.Google);
     }
+
+    private void saveAccessTokenAndStartHomePageActivity() {
+        SharedPreferences sharedPref = getSharedPreferences(getPackageName()+Constant.SHARED_PREFS_KEY_FILE,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Constant.SHARED_PREFS_TOKEN_KEY,mUserSignInResult.getToken());
+        editor.commit();
+        String token = sharedPref.getString(Constant.SHARED_PREFS_TOKEN_KEY,null);
+        Log.d(TAG,"Token from SharedPrefs:"+token);
+        Intent intent = new Intent(LandingPageActivity.this,HomePageActivity.class);
+        intent.putExtra(Constant.INTENT_EXTRA_KEY,mExtraKeyName);
+        intent.putExtra(mExtraKeyName,new Gson().toJson(mUserSignInResult));
+        startActivity(intent);
+
+    }
+
 
 }

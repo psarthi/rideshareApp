@@ -218,8 +218,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
                 mUserSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                 Log.d(TAG,"User has been successfully registered, Redirect to Home Page");
                 Log.d(TAG,"Access Token:"+mUserSignInResult.getToken());
-
-                saveAccessToken();
+                saveAccessTokenAndStartHomePageActivity();
 
             }
 
@@ -231,13 +230,17 @@ public class OtpVerificationActivity extends AppCompatActivity {
         });
     }
 
-    private void saveAccessToken() {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+    private void saveAccessTokenAndStartHomePageActivity() {
+        SharedPreferences sharedPref = getSharedPreferences(getPackageName()+Constant.SHARED_PREFS_KEY_FILE,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(Constant.SHARED_PREFS_TOKEN_KEY,mUserSignInResult.getToken());
         editor.commit();
         String token = sharedPref.getString(Constant.SHARED_PREFS_TOKEN_KEY,null);
         Log.d(TAG,"Token from SharedPrefs:"+token);
+        Intent intent = new Intent(OtpVerificationActivity.this,HomePageActivity.class);
+        intent.putExtra(Constant.INTENT_EXTRA_KEY,mExtraKeyName);
+        intent.putExtra(mExtraKeyName,new Gson().toJson(mUserSignInResult));
+        startActivity(intent);
     }
 
     private void reSendOTP() {
@@ -257,4 +260,8 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
     }
 
+    private void saveExtra(){
+        //Intentional blank as userSignInResult is already created and no further modification required
+        //This should be used if any further modification required to maintain consistency of coding pattern
+    }
 }
