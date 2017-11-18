@@ -45,6 +45,8 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.2.0'
     //Google Maps library
     compile 'com.google.android.gms:play-services-maps:11.6.0'
+    //Google Location Service
+    compile 'com.google.android.gms:play-services-location:11.6.0'
 }
 
 //This has to be below the dependencies block otherwise you will get conflict with firebase (firebase comes with google services)

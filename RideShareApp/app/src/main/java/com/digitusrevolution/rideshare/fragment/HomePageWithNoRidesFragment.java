@@ -1,15 +1,25 @@
 package com.digitusrevolution.rideshare.fragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.Constant;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -17,6 +27,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,11 +37,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Use the {@link HomePageWithNoRidesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyCallback{
+public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM1 = "title";
 
     private static final String TAG = HomePageWithNoRidesFragment.class.getName();
 
@@ -41,6 +51,7 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
     private OnFragmentInteractionListener mListener;
     private TextView mTextView;
     private GoogleMap mMap;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
 
     public HomePageWithNoRidesFragment() {
         // Required empty public constructor
@@ -55,11 +66,10 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
      * @return A new instance of fragment HomePageWithNoRidesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomePageWithNoRidesFragment newInstance(String param1, String param2) {
+    public static HomePageWithNoRidesFragment newInstance(String title) {
         HomePageWithNoRidesFragment fragment = new HomePageWithNoRidesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, title);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,8 +79,8 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        getActivity().setTitle(getArguments().getString(ARG_PARAM1));
     }
 
     @Override
@@ -80,6 +90,7 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
         View inflate = inflater.inflate(R.layout.fragment_home_page_with_no_rides, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         return inflate;
     }
 
@@ -104,10 +115,33 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Location Permission not there");
+            //This is important for Fragment and not we are not using Activity requestPermissions method but we are using Fragment requestPermissions,
+            // so that request can be handled in this class itself instead of handling it in Activity class
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constant.ACCESS_FINE_LOCATION_REQUEST_CODE);
+        } else {
+            Log.d(TAG, "Location Permission already there");
+            setCurrentLocationOnMap();
+        }
+    }
+
+    private void setCurrentLocationOnMap() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        // Add a marker in User Current Location, and move the camera.
+                        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(currentLocation));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, Constant.MAP_CURRENT_LOCATION_ZOOM_LEVEL));
+                    } else {
+                        Log.d(TAG, "Location is null");
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -123,5 +157,22 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onHomePageWithNoRidesFragmentInteraction(String data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d(TAG, "Permission Result Recieved");
+        switch (requestCode) {
+            case Constant.ACCESS_FINE_LOCATION_REQUEST_CODE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Log.d(TAG, "Location Permission granted");
+                    setCurrentLocationOnMap();
+                } else {
+                    Log.d(TAG, "Location Permission denied");
+                }
+            }
+        }
+
     }
 }

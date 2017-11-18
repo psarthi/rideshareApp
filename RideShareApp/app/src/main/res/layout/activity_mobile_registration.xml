@@ -66,10 +66,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
+        android:layout_marginBottom="@dimen/default_margin"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
-        android:layout_marginBottom="@dimen/default_margin"
+        android:background="@color/colorPrimary"
         android:text="@string/send_verification_code"
         android:textAllCaps="false"
         android:textStyle="bold"/>

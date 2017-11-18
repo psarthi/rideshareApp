@@ -108,15 +108,15 @@
 
     <Button
         android:id="@+id/otp_confirmation_button"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/otp_confirm_button_text"
-        android:background="@color/colorPrimary"
-        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/default_margin"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:layout_alignParentBottom="true"/>
+        android:background="@color/colorPrimary"
+        android:text="@string/otp_confirm_button_text"/>
 
 
 

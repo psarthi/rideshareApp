@@ -30,6 +30,7 @@ public class HomePageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomePageWithNoRidesFragment.OnFragmentInteractionListener, HomePageWithRideFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
+
     private Toolbar mToolbar;
     private String mExtraKeyName;
     private UserSignInResult mUserSignInResult;
@@ -61,6 +62,7 @@ public class HomePageActivity extends AppCompatActivity
         Log.d(TAG,"Access Token retrieved from mCommonFunctions:"+ mCommonFunctions.getAccessToken());
         getExtraFromIntent();
         setNavHeader(navigationView);
+        loadHomePageWithNoRidesFragment();
     }
 
     private void setNavHeader(NavigationView navigationView) {
@@ -106,14 +108,9 @@ public class HomePageActivity extends AppCompatActivity
         int id = item.getItemId();
         Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
         if (id == R.id.nav_home) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            HomePageWithNoRidesFragment homePageWithNoRidesFragment = new HomePageWithNoRidesFragment();
-            fragmentTransaction.add(R.id.home_page_container, homePageWithNoRidesFragment).addToBackStack(null);
-            fragmentTransaction.commit();
-            mToolbar.setTitle("BlankFragment");
+            loadHomePageWithNoRidesFragment();
         } else if (id == R.id.nav_rides) {
-            loadFragmentB();
+            loadHomePageWithRideFragment();
 
         } else if (id == R.id.nav_payments) {
 
@@ -130,7 +127,15 @@ public class HomePageActivity extends AppCompatActivity
         return true;
     }
 
-    private void loadFragmentB() {
+    private void loadHomePageWithNoRidesFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        HomePageWithNoRidesFragment homePageWithNoRidesFragment = HomePageWithNoRidesFragment.newInstance(Constant.HomePageWithNoRidesFragment_Title);
+        fragmentTransaction.add(R.id.home_page_container, homePageWithNoRidesFragment).addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void loadHomePageWithRideFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         HomePageWithRideFragment homePageWithRideFragment = HomePageWithRideFragment.newInstance("Dummy Data 1st Param","Dummy Data 2nd Param");
@@ -142,7 +147,7 @@ public class HomePageActivity extends AppCompatActivity
     @Override
     public void onHomePageWithNoRidesFragmentInteraction(String data) {
         Log.d(TAG,"Value returned to activity from Blank Fragment:"+data);
-        loadFragmentB();
+        loadHomePageWithRideFragment();
 
     }
 
