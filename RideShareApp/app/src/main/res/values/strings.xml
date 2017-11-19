@@ -33,4 +33,6 @@
     <string name="offer_ride_button_text">Offer Ride</string>
     <string name="preference_button_text">Preference</string>
     <string name="confirm_button_text">Confirm</string>
+    <string name="from_address_label">From</string>
+    <string name="to_address_label">To</string>
 </resources>

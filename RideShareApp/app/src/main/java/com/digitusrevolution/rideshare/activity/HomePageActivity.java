@@ -166,4 +166,5 @@ public class HomePageActivity extends AppCompatActivity
     public void onOfferRideFragmentInteraction(Uri uri) {
 
     }
+
 }

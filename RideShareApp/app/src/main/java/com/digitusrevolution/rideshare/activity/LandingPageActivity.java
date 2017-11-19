@@ -205,7 +205,7 @@ public class LandingPageActivity extends AppCompatActivity{
                     UserStatus status = new Gson().fromJson(response.toString(), UserStatus.class);
                     if (status.isUserExist()){
                         Log.d(TAG,"Redirect to Home Page as User exist");
-                        //Toast.makeText(LandingPageActivity.this,"User Exist, Redirecting to Home Page",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LandingPageActivity.this,"User Exist, Redirecting to Home Page",Toast.LENGTH_SHORT).show();
 
                         GoogleSignInInfo googleSignInInfo = new GoogleSignInInfo();
                         googleSignInInfo.setEmail(account.getEmail());

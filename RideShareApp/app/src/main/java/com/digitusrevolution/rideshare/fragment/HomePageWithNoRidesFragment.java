@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -147,10 +146,11 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
                 @Override
                 public void onSuccess(Location location) {
                     if (location != null) {
+                        Log.d(TAG, "Current Location:"+location.getLatitude()+","+location.getLongitude());
                         // Add a marker in User Current Location, and move the camera.
                         LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(currentLocation));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, Constant.MAP_CURRENT_LOCATION_ZOOM_LEVEL));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
                     } else {
                         Log.d(TAG, "Location is null");
                     }

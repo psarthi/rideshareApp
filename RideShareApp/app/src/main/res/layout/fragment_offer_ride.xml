@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,7 +27,7 @@
         android:layout_marginTop="@dimen/small_margin"
         android:background="@android:color/white"
         android:padding="@dimen/default_padding"
-        android:text="From"
+        android:text="@string/from_address_label"
         android:textAlignment="viewStart"
         />
 
@@ -41,7 +40,7 @@
         android:layout_marginTop="@dimen/default_margin"
         android:layout_marginRight="@dimen/large_margin"
         android:background="@android:color/white"
-        android:text="To"
+        android:text="@string/to_address_label"
         android:textAlignment="viewStart"
         android:padding="@dimen/default_padding"
         android:layout_below="@id/offer_ride_from_address_text"/>
@@ -51,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/offer_ride_to_address_text"
-        android:layout_marginLeft="@dimen/large_margin"
+        android:layout_marginStart="@dimen/large_margin"
         android:layout_marginTop="@dimen/default_margin"
         android:background="@android:color/white"
         android:src="@drawable/ic_access_time"/>
@@ -61,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/offer_ride_to_address_text"
-        android:layout_toRightOf="@id/offer_ride_date_time_button"
+        android:layout_toEndOf="@id/offer_ride_date_time_button"
         android:layout_marginTop="@dimen/default_margin"
         android:padding="@dimen/default_padding"
         android:text="15/05/2017 09:00 AM"
