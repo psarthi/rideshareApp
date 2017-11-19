@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="com.digitusrevolution.rideshare.fragment.OfferRideFragment">
+
+
+    <fragment android:id="@+id/offer_ride_map"
+              android:name="com.google.android.gms.maps.SupportMapFragment"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_above="@id/offer_ride_buttons_linear_layout"/>
+
+
+    <TextView
+        android:id="@+id/offer_ride_from_address_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/large_margin"
+        android:layout_marginRight="@dimen/large_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:background="@android:color/white"
+        android:padding="@dimen/default_padding"
+        android:text="From"
+        android:textAlignment="viewStart"
+        />
+
+    <TextView
+        android:id="@+id/offer_ride_to_address_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/large_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginRight="@dimen/large_margin"
+        android:background="@android:color/white"
+        android:text="To"
+        android:textAlignment="viewStart"
+        android:padding="@dimen/default_padding"
+        android:layout_below="@id/offer_ride_from_address_text"/>
+
+    <ImageButton
+        android:id="@+id/offer_ride_date_time_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/offer_ride_to_address_text"
+        android:layout_marginLeft="@dimen/large_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:background="@android:color/white"
+        android:src="@drawable/ic_access_time"/>
+
+    <TextView
+        android:id="@+id/offer_ride_date_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/offer_ride_to_address_text"
+        android:layout_toRightOf="@id/offer_ride_date_time_button"
+        android:layout_marginTop="@dimen/default_margin"
+        android:padding="@dimen/default_padding"
+        android:text="15/05/2017 09:00 AM"
+        android:background="@color/colorAccent"
+        android:textSize="@dimen/date_time_text_size"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"/>
+
+    <LinearLayout android:id="@+id/offer_ride_buttons_linear_layout"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  android:orientation="horizontal"
+                  android:paddingBottom="@dimen/default_padding"
+                  android:paddingEnd="@dimen/default_padding"
+                  android:paddingStart="@dimen/default_padding"
+                  android:paddingTop="@dimen/default_padding">
+
+        <Button
+            android:id="@+id/offer_ride_preference_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="@string/preference_button_text"
+            android:textAllCaps="false"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/offer_ride_confirm_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="@string/confirm_button_text"
+            android:textAllCaps="false"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

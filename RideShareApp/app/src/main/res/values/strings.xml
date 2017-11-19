@@ -29,9 +29,8 @@
 
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_ride_fragment">Hello Ride fragment</string>
-    <string name="request_ride">Request Ride</string>
-    <string name="offer_ride">Offer Ride</string>
+    <string name="request_ride_button_text">Request Ride</string>
+    <string name="offer_ride_button_text">Offer Ride</string>
+    <string name="preference_button_text">Preference</string>
+    <string name="confirm_button_text">Confirm</string>
 </resources>

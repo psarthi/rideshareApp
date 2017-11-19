@@ -1,6 +1,7 @@
 package com.digitusrevolution.rideshare.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -21,13 +22,17 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.HomePageWithNoRidesFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithRideFragment;
+import com.digitusrevolution.rideshare.fragment.OfferRideFragment;
 import com.digitusrevolution.rideshare.helper.CommonFunctions;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 public class HomePageActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomePageWithNoRidesFragment.OnFragmentInteractionListener, HomePageWithRideFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener,
+        HomePageWithNoRidesFragment.OnFragmentInteractionListener,
+        OfferRideFragment.OnFragmentInteractionListener,
+        HomePageWithRideFragment.OnFragmentInteractionListener {
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -130,8 +135,9 @@ public class HomePageActivity extends AppCompatActivity
     private void loadHomePageWithNoRidesFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        HomePageWithNoRidesFragment homePageWithNoRidesFragment = HomePageWithNoRidesFragment.newInstance(Constant.HomePageWithNoRidesFragment_Title);
-        fragmentTransaction.add(R.id.home_page_container, homePageWithNoRidesFragment).addToBackStack(null);
+        HomePageWithNoRidesFragment homePageWithNoRidesFragment = HomePageWithNoRidesFragment.newInstance(HomePageWithNoRidesFragment.TITLE, null);
+        //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
+        fragmentTransaction.add(R.id.home_page_container, homePageWithNoRidesFragment,HomePageWithNoRidesFragment.TAG);
         fragmentTransaction.commit();
     }
 
@@ -139,7 +145,7 @@ public class HomePageActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         HomePageWithRideFragment homePageWithRideFragment = HomePageWithRideFragment.newInstance("Dummy Data 1st Param","Dummy Data 2nd Param");
-        fragmentTransaction.add(R.id.home_page_container, homePageWithRideFragment).addToBackStack(null);
+        fragmentTransaction.add(R.id.home_page_container, homePageWithRideFragment, HomePageWithRideFragment.TAG).addToBackStack(HomePageWithRideFragment.TAG);
         fragmentTransaction.commit();
         mToolbar.setTitle("RideFragment");
     }
@@ -156,4 +162,8 @@ public class HomePageActivity extends AppCompatActivity
         Log.d(TAG,"Value returned to activity from Ride Fragment:"+data);
     }
 
+    @Override
+    public void onOfferRideFragmentInteraction(Uri uri) {
+
+    }
 }

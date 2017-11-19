@@ -4,7 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
@@ -22,7 +21,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -41,8 +39,10 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "title";
+    private static final String ARG_PARAM2 = "param2";
 
-    private static final String TAG = HomePageWithNoRidesFragment.class.getName();
+    public static final String TAG = HomePageWithNoRidesFragment.class.getName();
+    public static final String TITLE = "Ride Share";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -61,15 +61,15 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param title Fragment Title
      * @return A new instance of fragment HomePageWithNoRidesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomePageWithNoRidesFragment newInstance(String title) {
+    public static HomePageWithNoRidesFragment newInstance(String title, String param2) {
         HomePageWithNoRidesFragment fragment = new HomePageWithNoRidesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, title);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,6 +79,7 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
         getActivity().setTitle(getArguments().getString(ARG_PARAM1));
     }
@@ -87,11 +88,25 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inflate = inflater.inflate(R.layout.fragment_home_page_with_no_rides, container, false);
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
+        View view = inflater.inflate(R.layout.fragment_home_page_with_no_rides, container, false);
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.home_page_with_no_rides_map);
         mapFragment.getMapAsync(this);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        return inflate;
+
+        view.findViewById(R.id.home_page_offer_ride_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Fragment offerRideFragment = OfferRideFragment.newInstance(OfferRideFragment.TITLE, null);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.home_page_container,offerRideFragment,OfferRideFragment.TAG)
+                        .addToBackStack(OfferRideFragment.TAG)
+                        .commit();
+
+            }
+        });
+
+        return view;
     }
 
     @Override
@@ -175,4 +190,6 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
         }
 
     }
+
+
 }

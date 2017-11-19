@@ -10,6 +10,6 @@
         android:id="@+id/ride_fragment_text_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_ride_fragment"/>
+        android:text="Dummy Rides Fragment"/>
 
 </FrameLayout>
