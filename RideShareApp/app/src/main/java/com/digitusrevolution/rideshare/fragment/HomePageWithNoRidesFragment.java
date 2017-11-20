@@ -104,7 +104,6 @@ public class HomePageWithNoRidesFragment extends Fragment implements OnMapReadyC
 
             }
         });
-
         return view;
     }
 
