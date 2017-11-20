@@ -22,11 +22,11 @@
     <group android:checkableBehavior="single" android:id="@+id/trust_network_menu">
         <item
             android:id="@+id/nav_groups"
-            android:icon="@android:drawable/btn_default"
+            android:icon="@drawable/ic_ic_group_black_24px"
             android:title="Groups"/>
         <item
             android:id="@+id/nav_friends"
-            android:icon="@android:drawable/btn_default"
+            android:icon="@drawable/ic_if__friends_2006658"
             android:title="Friends"/>
     </group>
 

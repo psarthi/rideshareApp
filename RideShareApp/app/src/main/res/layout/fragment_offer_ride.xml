@@ -15,7 +15,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:layout_above="@id/ride_offer_trust_network_bottom_navigation"/>
+              android:layout_above="@id/offer_ride_buttons_linear_layout"/>
 
     <TextView
         android:id="@+id/offer_ride_from_address_text"
@@ -45,50 +45,54 @@
         android:padding="@dimen/default_padding"
         android:layout_below="@id/offer_ride_from_address_text"/>
 
-    <ImageButton
-        android:id="@+id/offer_ride_date_time_button"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/offer_ride_to_address_text"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/default_margin"
         android:layout_marginStart="@dimen/large_margin"
-        android:layout_marginTop="@dimen/default_margin"
-        android:background="@android:color/white"
-        android:src="@drawable/ic_access_time"/>
+        android:layout_marginEnd="@dimen/large_margin"
+        android:id="@+id/ride_offer_datetime_layout">
 
-    <TextView
-        android:id="@+id/offer_ride_date_time_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/offer_ride_to_address_text"
-        android:layout_toEndOf="@id/offer_ride_date_time_button"
-        android:layout_marginTop="@dimen/default_margin"
-        android:padding="@dimen/default_padding"
-        android:text="15/05/2017 09:00 AM"
-        android:background="@color/colorAccent"
-        android:textSize="@dimen/date_time_text_size"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"/>
+        <ImageButton
+            android:id="@+id/ride_offer_date_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_date"
+            android:background="@android:color/white"/>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Fare Rs 45/-"
-        android:padding="@dimen/default_padding"
-        android:background="@color/colorPrimary"
-        android:textColor="@android:color/white"
-        android:gravity="center"
-        android:layout_above="@id/ride_offer_trust_network_bottom_navigation"/>
+        <TextView
+            android:id="@+id/offer_ride_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_padding"
+            android:text="Mon 1 Jan"
+            android:background="@color/colorAccent"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"/>
 
-    <android.support.design.widget.BottomNavigationView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/ride_offer_trust_network_bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_gravity="start"
-        app:menu="@menu/trust_network_items"
-        android:layout_above="@id/offer_ride_buttons_linear_layout"/>
+        <ImageButton
+            android:id="@+id/ride_offer_time_button"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_access_time"
+            android:background="@android:color/white"/>
+
+        <TextView
+            android:id="@+id/offer_ride_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_padding"
+            android:text="09:00 AM"
+            android:background="@color/colorAccent"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/white"/>
+
+
+    </LinearLayout>
 
     <LinearLayout android:id="@+id/offer_ride_buttons_linear_layout"
                   xmlns:android="http://schemas.android.com/apk/res/android"
