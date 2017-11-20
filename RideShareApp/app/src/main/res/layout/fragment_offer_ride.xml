@@ -69,6 +69,17 @@
         android:textStyle="bold"
         android:textColor="@android:color/white"/>
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fare Rs 45/-"
+        android:padding="@dimen/default_padding"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:layout_above="@id/ride_offer_trust_network_bottom_navigation"/>
+
     <android.support.design.widget.BottomNavigationView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
