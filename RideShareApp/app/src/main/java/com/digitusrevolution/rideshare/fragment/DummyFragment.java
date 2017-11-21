@@ -1,7 +1,6 @@
 package com.digitusrevolution.rideshare.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,29 +8,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.config.Constant;
-import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
-import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
-import com.google.gson.Gson;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link HomePageWithRideFragment#newInstance} factory method to
+ * Use the {@link DummyFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomePageWithRideFragment extends Fragment {
+public class DummyFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    public static final String TAG = HomePageWithRideFragment.class.getName();
+    public static final String TAG = DummyFragment.class.getName();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -40,7 +34,7 @@ public class HomePageWithRideFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private TextView mTextView;
 
-    public HomePageWithRideFragment() {
+    public DummyFragment() {
         // Required empty public constructor
     }
 
@@ -50,11 +44,11 @@ public class HomePageWithRideFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HomePageWithRideFragment.
+     * @return A new instance of fragment DummyFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomePageWithRideFragment newInstance(String param1, String param2) {
-        HomePageWithRideFragment fragment = new HomePageWithRideFragment();
+    public static DummyFragment newInstance(String param1, String param2) {
+        DummyFragment fragment = new DummyFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -84,7 +78,7 @@ public class HomePageWithRideFragment extends Fragment {
             public void onClick(View view) {
                 Log.d(TAG, mTextView.getText().toString());
                 if (mListener != null) {
-                    mListener.onHomePageWithRideFragmentInteraction(mTextView.getText().toString());
+                    mListener.onDummyFragmentInteraction(mTextView.getText().toString());
                     getActivity();
                 }
             }
@@ -122,6 +116,6 @@ public class HomePageWithRideFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onHomePageWithRideFragmentInteraction(String data);
+        void onDummyFragmentInteraction(String data);
     }
 }

@@ -7,13 +7,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.digitusrevolution.rideshare.activity.LandingPageActivity">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/home_page_rides_layout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/large_margin"
+            android:paddingBottom="@dimen/large_margin"
+            android:background="@android:color/white"
+            android:id="@+id/current_ride_layout">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Current Ride"
+                android:textAlignment="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/small_block_height"
+            android:paddingBottom="@dimen/small_block_height"
+            android:background="@android:color/white"
+            android:id="@+id/current_ride_request_layout">
+
+            <TextView
+                android:id="@+id/textView-1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Current Ride Request"
+                android:textAlignment="center"/>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:id="@+id/home_page_with_no_rides_map"
               android:name="com.google.android.gms.maps.SupportMapFragment"
-              android:layout_above="@+id/ride_buttons_linear_layout"/>
+              android:layout_above="@+id/ride_buttons_linear_layout"
+              android:layout_below="@id/home_page_rides_layout"/>
 
     <include layout="@layout/home_page_ride_buttons"
         android:layout_alignParentBottom="true"

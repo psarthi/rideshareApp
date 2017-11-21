@@ -26,15 +26,18 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +47,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
  * Use the {@link OfferRideFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OfferRideFragment extends Fragment implements OnMapReadyCallback {
+public class OfferRideFragment extends BaseFragment implements OnMapReadyCallback{
+
+    public static final String TAG = OfferRideFragment.class.getName();
+    public static final String TITLE = "Offer Ride";
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "title";
@@ -55,18 +62,16 @@ public class OfferRideFragment extends Fragment implements OnMapReadyCallback {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    public static final String TAG = OfferRideFragment.class.getName();
-    public static final String TITLE = "Offer Ride";
     int PLACE_FROM_ADDRESS_REQUEST_CODE = 1;
     int PLACE_TO_ADDRESS_REQUEST_CODE = 2;
     private TextView mFromAddressTextView;
     private TextView mToAddressTextView;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private LatLngBounds mLatLngBounds;
-    private LatLngBounds.Builder mLatLngBoundsBuilder;
-    private Place mFromPlace;
-    private Place mToPlace;
+    private LatLng mFromLatLng;
+    private LatLng mToLatLng;
+    private List<Marker> mMarkers = new ArrayList<>();
+
 
     public OfferRideFragment() {
         // Required empty public constructor
@@ -97,8 +102,8 @@ public class OfferRideFragment extends Fragment implements OnMapReadyCallback {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        getActivity().setTitle(getArguments().getString(ARG_PARAM1));
-        mLatLngBoundsBuilder = new LatLngBounds.Builder();
+        getActivity().setTitle(mParam1);
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
     }
 
     @Override
@@ -153,10 +158,12 @@ public class OfferRideFragment extends Fragment implements OnMapReadyCallback {
 
         if (requestCode == PLACE_FROM_ADDRESS_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                mFromPlace = PlaceAutocomplete.getPlace(getActivity(), data);
-                Log.i(TAG, "From Place: " + mFromPlace.getName());
-                mFromAddressTextView.setText(mFromPlace.getName());
-                setAddressOnMap(mFromPlace.getLatLng());
+                Place fromPlace = PlaceAutocomplete.getPlace(getActivity(), data);
+                Log.i(TAG, "From Place: " + fromPlace.getName());
+                mFromAddressTextView.setText(fromPlace.getName());
+                mFromLatLng = fromPlace.getLatLng();
+                addMarker();
+                moveCamera(mFromLatLng);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
                 // TODO: Handle the error.
@@ -169,10 +176,12 @@ public class OfferRideFragment extends Fragment implements OnMapReadyCallback {
 
         if (requestCode == PLACE_TO_ADDRESS_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                mToPlace = PlaceAutocomplete.getPlace(getActivity(), data);
-                Log.i(TAG, "To Place: " + mToPlace.getName());
-                mToAddressTextView.setText(mToPlace.getName());
-                setAddressOnMap(mToPlace.getLatLng());
+                Place toPlace = PlaceAutocomplete.getPlace(getActivity(), data);
+                Log.i(TAG, "To Place: " + toPlace.getName());
+                mToAddressTextView.setText(toPlace.getName());
+                mToLatLng = toPlace.getLatLng();
+                addMarker();
+                moveCamera(mToLatLng);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
                 // TODO: Handle the error.
@@ -184,24 +193,41 @@ public class OfferRideFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void setAddressOnMap(LatLng latLng) {
-        mLatLngBoundsBuilder.include(latLng);
-        mLatLngBounds = mLatLngBoundsBuilder.build();
 
-        int width = getResources().getDisplayMetrics().widthPixels;
-        //This is here for experience purpose, we can use either heigth or width whichever make sense
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * Constant.LAT_LNG_PADDING_PERCENT); // offset from edges of the map 10% of screen
-        Log.d(TAG, "Width Pixel:"+width+",Heigth Pixel:"+height+",Padding Pixel:"+padding);
+    private void addMarker(){
 
-        mMap.addMarker(new MarkerOptions().position(latLng));
-        if (mToAddressTextView.getText().equals(getResources().getString(R.string.to_address_label))){
+        //This will remove old markers so that we have clean slate and we don't end up with old data
+        for (Marker marker: mMarkers){
+            marker.remove();
+        }
+
+        if (mFromLatLng!=null){
+            mMarkers.add(mMap.addMarker(new MarkerOptions().position(mFromLatLng)));
+        }
+        if (mToLatLng!=null){
+            mMarkers.add(mMap.addMarker(new MarkerOptions().position(mToLatLng)));
+        }
+    }
+
+    private void moveCamera(LatLng latLng) {
+
+        if (mFromLatLng == null || mToLatLng == null){
             Log.d(TAG, "To Field is empty, so using location camera zoom");
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
         } else {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(mLatLngBounds,padding));
-            Log.d(TAG, "To Field exist, so using latlng bounds camera zoom");
+            moveCameraBasedOnLatLngBounds();
         }
+    }
+
+    private void moveCameraBasedOnLatLngBounds(){
+
+        LatLngBounds.Builder latLngBoundsBuilder = new LatLngBounds.Builder();
+        latLngBoundsBuilder.include(mFromLatLng);
+        latLngBoundsBuilder.include(mToLatLng);
+        LatLngBounds latLngBounds = latLngBoundsBuilder.build();
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
+        Log.d(TAG, "To Field exist, so using latlng bounds camera zoom");
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -231,7 +257,7 @@ public class OfferRideFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        setPadding();
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Location Permission not there");
             //This is important for Fragment and not we are not using Activity requestPermissions method but we are using Fragment requestPermissions,
@@ -251,16 +277,29 @@ public class OfferRideFragment extends Fragment implements OnMapReadyCallback {
                     if (location != null) {
                         Log.d(TAG, "Current Location:"+location.getLatitude()+","+location.getLongitude());
                         // Add a marker in User Current Location, and move the camera.
-                        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.addMarker(new MarkerOptions().position(currentLocation));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
-                        mFromAddressTextView.setText("Current Location");
+                        mFromLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(mFromLatLng));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mFromLatLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
+                        mFromAddressTextView.setText(Constant.CURRENT_LOCATION_TEXT);
                     } else {
                         Log.d(TAG, "Location is null");
                     }
                 }
             });
         }
+    }
+
+    private void setPadding(){
+
+        int width = getResources().getDisplayMetrics().widthPixels;
+        //This is here for experience purpose, we can use either heigth or width whichever make sense
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int topPadding = (int) (height * Constant.LAT_LNG_TOP_PADDING_PERCENT); // offset from edges of the map 10% of screen
+        int standardPaddding = (int) (height * Constant.LAT_LNG_STANDARD_PADDING_PERCENT);
+        Log.d(TAG, "Width Pixel:"+width+",Heigth Pixel:"+height+",Padding Pixel:"+topPadding);
+
+        //This is very important to customize the visibility range of camera
+        mMap.setPadding(standardPaddding,topPadding, standardPaddding,standardPaddding);
     }
 
     @Override
@@ -277,7 +316,6 @@ public class OfferRideFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         }
-
     }
 
     /**

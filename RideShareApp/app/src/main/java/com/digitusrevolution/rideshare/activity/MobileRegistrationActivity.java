@@ -33,19 +33,17 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MobileRegistrationActivity extends AppCompatActivity {
+public class MobileRegistrationActivity extends BaseActivity {
 
     private static final String TAG = MobileRegistrationActivity.class.getName();
     private Spinner mCountryNameSpinner;
     private EditText mMobileNumber;
     private Button mSendOTPButton;
     private CircleImageView mPhotoImageView;
-    private List<Country> mCountries;
     private String mOTP;
     private UserRegistration mUserRegistration;
     private String mSelectedCountryCode;
     private Country mSelectedCountry;
-    private String mExtraKeyName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +56,12 @@ public class MobileRegistrationActivity extends AppCompatActivity {
         mSendOTPButton = findViewById(R.id.send_otp_button);
         mPhotoImageView = findViewById(R.id.photo);
 
-        getExtraFromIntent();
+
+        Intent intent = getIntent();
+        //Package name would always be same for the application, so key would also be the same and its independent of activity
+        String data = intent.getStringExtra(getExtraDataKey());
+        mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
+        Log.d(TAG,"Photo URL:"+mUserRegistration.getPhoto().getImageLocation());
         displayProfilePhoto();
         setCountryList();
 
@@ -88,14 +91,6 @@ public class MobileRegistrationActivity extends AppCompatActivity {
         */
     }
 
-    private void getExtraFromIntent() {
-        Intent intent = getIntent();
-        mExtraKeyName = intent.getStringExtra(Constant.INTENT_EXTRA_KEY);
-        String data = intent.getStringExtra(mExtraKeyName);
-        mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
-        Log.d(TAG,"Photo URL:"+mUserRegistration.getPhoto().getImageLocation());
-    }
-
     private void sendOTP() {
         mSelectedCountry = (Country) mCountryNameSpinner.getSelectedItem();
         mSelectedCountryCode = mSelectedCountry.getCode();
@@ -117,11 +112,10 @@ public class MobileRegistrationActivity extends AppCompatActivity {
                     public void onSuccess(int statusCode, Header[] headers, String responseString) {
                         Log.d(TAG, "Response Success:" + responseString);
                         mOTP = responseString;
-                        saveExtra();
+                        String data = getExtraData();
                         Intent otpVerificationIntent = new Intent(getApplicationContext(), OtpVerificationActivity.class);
                         //Reason for storing key name as well, so that calling class don't have to know the key name
-                        otpVerificationIntent.putExtra(Constant.INTENT_EXTRA_KEY,mExtraKeyName);
-                        otpVerificationIntent.putExtra(mExtraKeyName,new Gson().toJson(mUserRegistration));
+                        otpVerificationIntent.putExtra(getExtraDataKey(),data);
                         startActivity(otpVerificationIntent);
                     }
                 });
@@ -151,8 +145,8 @@ public class MobileRegistrationActivity extends AppCompatActivity {
                 Log.d(TAG,"Response Success:"+response);
                 //This is important otherwise Gson is unable to convert JsonArray to List
                 Type listType = new TypeToken<List<Country>>() {}.getType();
-                mCountries = (List<Country>) new Gson().fromJson(response.toString(), listType);
-                ArrayAdapter<Country> countryArrayAdapter = new CustomCountryAdapter(getApplicationContext(), mCountries);
+                List<Country> countries= (List<Country>) new Gson().fromJson(response.toString(), listType);
+                ArrayAdapter<Country> countryArrayAdapter = new CustomCountryAdapter(getApplicationContext(), countries);
                 // Apply the adapter to the spinner
                 mCountryNameSpinner.setAdapter(countryArrayAdapter);
 
@@ -177,9 +171,10 @@ public class MobileRegistrationActivity extends AppCompatActivity {
         });
     }
 
-    private void saveExtra(){
+    private String getExtraData(){
         mUserRegistration.setOtp(mOTP);
         mUserRegistration.setMobileNumber(mSelectedCountryCode + mMobileNumber.getText().toString());
         mUserRegistration.setCountry(mSelectedCountry);
+        return new Gson().toJson(mUserRegistration);
     }
 }

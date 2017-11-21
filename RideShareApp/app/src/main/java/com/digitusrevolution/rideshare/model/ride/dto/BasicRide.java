@@ -17,6 +17,7 @@ public class BasicRide {
 	//id data type needs to be finalized later, whether to use int, long, string
 	private int id;
 	private Date startTime;
+	private Date endTime;
 	private RidePoint startPoint = new RidePoint();
 	private RidePoint endPoint = new RidePoint();
 	private int seatOffered;
@@ -113,5 +114,13 @@ public class BasicRide {
 	}
 	public void setSeatStatus(RideSeatStatus seatStatus) {
 		this.seatStatus = seatStatus;
-	}	
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
 }

@@ -1,7 +1,6 @@
 package com.digitusrevolution.rideshare.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,8 +13,6 @@ import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
-import com.digitusrevolution.rideshare.config.Constant;
-import com.digitusrevolution.rideshare.helper.CommonFunctions;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
@@ -27,7 +24,7 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
-public class OtpVerificationActivity extends AppCompatActivity {
+public class OtpVerificationActivity extends BaseActivity {
 
     private static final String TAG = OtpVerificationActivity.class.getName();
     private TextView mVerificationCodeSubHeading;
@@ -38,11 +35,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private TextView mResendText;
     private Button mOTPConfirmationButton;
     private UserRegistration mUserRegistration;
-    private String mExtraKeyName;
     private String mOTPInput;
-    private boolean mOTPMatch;
-    private UserSignInResult mUserSignInResult;
-    private CommonFunctions mCommonFunctions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +43,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_otp_verification);
         getSupportActionBar().hide();
 
-        mCommonFunctions = new CommonFunctions(this);
         mVerificationCodeSubHeading = findViewById(R.id.otp_verification_sub_heading);
         mOTPCode1stNumber = findViewById(R.id.otp_code_1st_number);
         mOTPCode2ndNumber = findViewById(R.id.otp_code_2nd_number);
@@ -59,7 +51,14 @@ public class OtpVerificationActivity extends AppCompatActivity {
         mResendText = findViewById(R.id.resend_text);
         mOTPConfirmationButton = findViewById(R.id.otp_confirmation_button);
 
-        getExtraFromIntent();
+        Intent intent = getIntent();
+        //Package name would always be same for the application, so key would also be the same and its independent of activity
+        String data = intent.getStringExtra(getExtraDataKey());
+        mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
+        Log.d(TAG,"OTP:" + mUserRegistration.getOtp());
+        Log.d(TAG,"Mobile Number:" + mUserRegistration.getMobileNumber());
+        Toast.makeText(this,"OTP:"+mUserRegistration.getOtp(),Toast.LENGTH_LONG).show();
+
         addTextChangedListenerOnOTPTextField();
 
         //Note - I have appended "+" sign as we are storing country code without + due to some technical issue
@@ -169,16 +168,6 @@ public class OtpVerificationActivity extends AppCompatActivity {
         });
     }
 
-    private void getExtraFromIntent() {
-        Intent intent = getIntent();
-        mExtraKeyName = intent.getStringExtra(Constant.INTENT_EXTRA_KEY);
-        String data = intent.getStringExtra(mExtraKeyName);
-        mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
-        Log.d(TAG,"OTP:" + mUserRegistration.getOtp());
-        Log.d(TAG,"Mobile Number:" + mUserRegistration.getMobileNumber());
-        Toast.makeText(this,"OTP:"+mUserRegistration.getOtp(),Toast.LENGTH_LONG).show();
-    }
-
     private void validateOTP(){
 
         String VALIDATE_OTP_URL = APIUrl.VALIDATE_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,mUserRegistration.getMobileNumber())
@@ -192,11 +181,11 @@ public class OtpVerificationActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-                mOTPMatch = Boolean.parseBoolean(responseString);
+                boolean OTPMatch = Boolean.parseBoolean(responseString);
 
                 Log.d(TAG,"Response Success:"+responseString);
 
-                if (mOTPMatch) {
+                if (OTPMatch) {
                     Log.d(TAG,"OTP Validation Success");
                     mUserRegistration.setOtp(mOTPInput);
                     registerUser();
@@ -215,11 +204,11 @@ public class OtpVerificationActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                mUserSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
+                UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                 Log.d(TAG,"User has been successfully registered, Redirect to Home Page");
-                Log.d(TAG,"Access Token:"+mUserSignInResult.getToken());
-                mCommonFunctions.saveAccessTokenAndStartHomePageActivity(mUserSignInResult);
-
+                Log.d(TAG,"Access Token:"+userSignInResult.getToken());
+                saveAccessToken(userSignInResult);
+                startHomePageActivity(userSignInResult);
             }
 
             @Override
@@ -229,6 +218,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
             }
         });
     }
+
     private void reSendOTP() {
         String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,mUserRegistration.getMobileNumber());
         RESTClient.get(GET_OTP_URL, null, new TextHttpResponseHandler() {
@@ -246,8 +236,4 @@ public class OtpVerificationActivity extends AppCompatActivity {
 
     }
 
-    private void saveExtra(){
-        //Intentional blank as userSignInResult is already created and no further modification required
-        //This should be used if any further modification required to maintain consistency of coding pattern
-    }
 }

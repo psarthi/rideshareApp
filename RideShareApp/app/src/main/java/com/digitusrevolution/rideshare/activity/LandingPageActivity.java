@@ -2,7 +2,6 @@ package com.digitusrevolution.rideshare.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,8 +11,6 @@ import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
-import com.digitusrevolution.rideshare.config.Constant;
-import com.digitusrevolution.rideshare.helper.CommonFunctions;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
@@ -39,19 +36,14 @@ import java.net.URISyntaxException;
 
 import cz.msebera.android.httpclient.Header;
 
-public class LandingPageActivity extends AppCompatActivity{
+public class LandingPageActivity extends BaseActivity{
 
     private static final String TAG = LandingPageActivity.class.getName();
     private static final int RC_SIGN_IN = 9001;
-    private CommonFunctions mCommonFunctions;
-
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton mGoogleSignInButton;
     private Button mSignUpButton;
     private Button mSignInButton;
-    private String mExtraKeyName;
-    private UserRegistration mUserRegistration;
-    private UserSignInResult mUserSignInResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +51,9 @@ public class LandingPageActivity extends AppCompatActivity{
         setContentView(R.layout.activity_landing_page);
         getSupportActionBar().hide();
 
-        mCommonFunctions = new CommonFunctions(this);
         mGoogleSignInButton = findViewById(R.id.google_sign_in_button);
         mSignUpButton = findViewById(R.id.sign_up_button);
         mSignInButton = findViewById(R.id.sign_in_button);
-        //Reason for appending packageName as per recommendation on android docs so that
-        // it doesn't get name clash with other objects
-        mExtraKeyName = getPackageName()+Constant.INTENT_EXTRA_DATA_NAME;
 
         //Change the text of google sign in button
         for (int i=0;i<mGoogleSignInButton.getChildCount();i++){
@@ -214,8 +202,9 @@ public class LandingPageActivity extends AppCompatActivity{
                                     @Override
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                         super.onSuccess(statusCode, headers, response);
-                                        mUserSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
-                                        mCommonFunctions.saveAccessTokenAndStartHomePageActivity(mUserSignInResult);
+                                        UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
+                                        saveAccessToken(userSignInResult);
+                                        startHomePageActivity(userSignInResult);
                                     }
                                     @Override
                                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -249,24 +238,23 @@ public class LandingPageActivity extends AppCompatActivity{
                 +"\nTokenId:"+account.getIdToken()
                 +"\nPhotoURL:"+account.getPhotoUrl());
 
-        saveExtra(account);
+        String data = getExtraData(account);
 
         Intent mobileRegistrationIntent = new Intent(this,MobileRegistrationActivity.class);
-        //Reason for storing key name as well, so that calling class don't have to know the key name
-        mobileRegistrationIntent.putExtra(Constant.INTENT_EXTRA_KEY,mExtraKeyName);
-        mobileRegistrationIntent.putExtra(mExtraKeyName,new Gson().toJson(mUserRegistration));
+        mobileRegistrationIntent.putExtra(getExtraDataKey(),data);
         startActivity(mobileRegistrationIntent);
     }
 
     @NonNull
-    private void saveExtra(GoogleSignInAccount account) {
-        mUserRegistration = new UserRegistration();
-        mUserRegistration.setFirstName(account.getGivenName());
-        mUserRegistration.setLastName(account.getFamilyName());
-        mUserRegistration.setEmail(account.getEmail());
+    private String getExtraData(GoogleSignInAccount account) {
+        UserRegistration userRegistration = new UserRegistration();
+        userRegistration.setFirstName(account.getGivenName());
+        userRegistration.setLastName(account.getFamilyName());
+        userRegistration.setEmail(account.getEmail());
         Photo photo = new Photo();
         photo.setImageLocation(account.getPhotoUrl().toString());
-        mUserRegistration.setPhoto(photo);
-        mUserRegistration.setRegistrationType(RegistrationType.Google);
+        userRegistration.setPhoto(photo);
+        userRegistration.setRegistrationType(RegistrationType.Google);
+        return new Gson().toJson(userRegistration);
     }
 }

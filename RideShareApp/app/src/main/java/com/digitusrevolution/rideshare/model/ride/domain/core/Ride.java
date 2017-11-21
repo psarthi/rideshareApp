@@ -9,6 +9,7 @@ import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.core.User;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ public class Ride {
 	//id data type needs to be finalized later, whether to use int, long, string
 	private int id;
 	private Date startTime;
+	private Date endTime;
 	private RidePoint startPoint = new RidePoint();
 	private RidePoint endPoint = new RidePoint();
 	private int seatOffered;
@@ -233,5 +235,12 @@ public class Ride {
 		throw new RuntimeException("No passenger found with id:"+passengerId);
 	}
 
-	
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
 }

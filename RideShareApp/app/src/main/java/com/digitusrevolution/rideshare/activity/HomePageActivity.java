@@ -18,8 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.fragment.HomePageWithNoRidesFragment;
-import com.digitusrevolution.rideshare.fragment.HomePageWithRideFragment;
+import com.digitusrevolution.rideshare.fragment.DummyFragment;
+import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.OfferRideFragment;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
@@ -27,9 +27,9 @@ import com.squareup.picasso.Picasso;
 
 public class HomePageActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        HomePageWithNoRidesFragment.OnFragmentInteractionListener,
+        HomePageWithCurrentRidesFragment.OnFragmentInteractionListener,
         OfferRideFragment.OnFragmentInteractionListener,
-        HomePageWithRideFragment.OnFragmentInteractionListener {
+        DummyFragment.OnFragmentInteractionListener {
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -64,7 +64,7 @@ public class HomePageActivity extends BaseActivity
         mUserSignInResult = new Gson().fromJson(data,UserSignInResult.class);
         Log.d(TAG,"Token from Intent:" + mUserSignInResult.getToken());
         setNavHeader(navigationView);
-        loadHomePageWithNoRidesFragment();
+        loadHomePageWithCurrentRidesFragment();
     }
 
     private void setNavHeader(NavigationView navigationView) {
@@ -102,9 +102,9 @@ public class HomePageActivity extends BaseActivity
         int id = item.getItemId();
         Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
         if (id == R.id.nav_home) {
-            loadHomePageWithNoRidesFragment();
+            loadHomePageWithCurrentRidesFragment();
         } else if (id == R.id.nav_rides) {
-            loadHomePageWithRideFragment();
+            loadDummyFragment();
 
         } else if (id == R.id.nav_payments) {
 
@@ -121,34 +121,34 @@ public class HomePageActivity extends BaseActivity
         return true;
     }
 
-    private void loadHomePageWithNoRidesFragment() {
+    private void loadHomePageWithCurrentRidesFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        HomePageWithNoRidesFragment homePageWithNoRidesFragment = HomePageWithNoRidesFragment.
-                newInstance(HomePageWithNoRidesFragment.TITLE, new Gson().toJson(mUserSignInResult));
+        HomePageWithCurrentRidesFragment homePageWithCurrentRidesFragment = HomePageWithCurrentRidesFragment.
+                newInstance(HomePageWithCurrentRidesFragment.TITLE, new Gson().toJson(mUserSignInResult));
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
-        fragmentTransaction.replace(R.id.home_page_container, homePageWithNoRidesFragment,HomePageWithNoRidesFragment.TAG);
+        fragmentTransaction.replace(R.id.home_page_container, homePageWithCurrentRidesFragment, HomePageWithCurrentRidesFragment.TAG);
         fragmentTransaction.commit();
     }
 
-    private void loadHomePageWithRideFragment() {
+    private void loadDummyFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        HomePageWithRideFragment homePageWithRideFragment = HomePageWithRideFragment.newInstance("Dummy Data 1st Param","Dummy Data 2nd Param");
-        fragmentTransaction.add(R.id.home_page_container, homePageWithRideFragment, HomePageWithRideFragment.TAG).addToBackStack(HomePageWithRideFragment.TAG);
+        DummyFragment dummyFragment = DummyFragment.newInstance("Dummy Data 1st Param","Dummy Data 2nd Param");
+        fragmentTransaction.add(R.id.home_page_container, dummyFragment, DummyFragment.TAG).addToBackStack(DummyFragment.TAG);
         fragmentTransaction.commit();
-        mToolbar.setTitle("RideFragment");
+        mToolbar.setTitle("DummyFragment");
     }
 
     @Override
-    public void onHomePageWithNoRidesFragmentInteraction(String data) {
+    public void onHomePageWithCurrentRidesFragmentInteraction(String data) {
         Log.d(TAG,"Value returned to activity from Blank Fragment:"+data);
-        loadHomePageWithRideFragment();
+        loadDummyFragment();
 
     }
 
     @Override
-    public void onHomePageWithRideFragmentInteraction(String data) {
+    public void onDummyFragmentInteraction(String data) {
         Log.d(TAG,"Value returned to activity from Ride Fragment:"+data);
     }
 
