@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,16 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.HomePageWithNoRidesFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithRideFragment;
 import com.digitusrevolution.rideshare.fragment.OfferRideFragment;
-import com.digitusrevolution.rideshare.helper.CommonFunctions;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-public class HomePageActivity extends AppCompatActivity
+public class HomePageActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HomePageWithNoRidesFragment.OnFragmentInteractionListener,
         OfferRideFragment.OnFragmentInteractionListener,
@@ -37,9 +34,7 @@ public class HomePageActivity extends AppCompatActivity
     private static final String TAG = HomePageActivity.class.getName();
 
     private Toolbar mToolbar;
-    private String mExtraKeyName;
     private UserSignInResult mUserSignInResult;
-    private CommonFunctions mCommonFunctions;
     private ImageView mProfilePhotoImageView;
     private TextView mUserNameTextView;
     private TextView mUserEmailTextView;
@@ -63,9 +58,11 @@ public class HomePageActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mCommonFunctions = new CommonFunctions(this);
-        Log.d(TAG,"Access Token retrieved from mCommonFunctions:"+ mCommonFunctions.getAccessToken());
-        getExtraFromIntent();
+        Log.d(TAG,"Access Token retrieved from mCommonFunctions:"+ getAccessToken());
+        Intent intent = getIntent();
+        String data = intent.getStringExtra(getExtraDataKey());
+        mUserSignInResult = new Gson().fromJson(data,UserSignInResult.class);
+        Log.d(TAG,"Token from Intent:" + mUserSignInResult.getToken());
         setNavHeader(navigationView);
         loadHomePageWithNoRidesFragment();
     }
@@ -85,14 +82,6 @@ public class HomePageActivity extends AppCompatActivity
 
         mUserEmailTextView = headerView.findViewById(R.id.userEmailTextView);
         mUserEmailTextView.setText(mUserSignInResult.getUserProfile().getEmail());
-    }
-
-    private void getExtraFromIntent() {
-        Intent intent = getIntent();
-        mExtraKeyName = intent.getStringExtra(Constant.INTENT_EXTRA_KEY);
-        String data = intent.getStringExtra(mExtraKeyName);
-        mUserSignInResult = new Gson().fromJson(data,UserSignInResult.class);
-        Log.d(TAG,"Token from Intent:" + mUserSignInResult.getToken());
     }
 
     //This method is just to close drawer if system back button is pressed
@@ -135,9 +124,10 @@ public class HomePageActivity extends AppCompatActivity
     private void loadHomePageWithNoRidesFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        HomePageWithNoRidesFragment homePageWithNoRidesFragment = HomePageWithNoRidesFragment.newInstance(HomePageWithNoRidesFragment.TITLE, null);
+        HomePageWithNoRidesFragment homePageWithNoRidesFragment = HomePageWithNoRidesFragment.
+                newInstance(HomePageWithNoRidesFragment.TITLE, new Gson().toJson(mUserSignInResult));
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
-        fragmentTransaction.add(R.id.home_page_container, homePageWithNoRidesFragment,HomePageWithNoRidesFragment.TAG);
+        fragmentTransaction.replace(R.id.home_page_container, homePageWithNoRidesFragment,HomePageWithNoRidesFragment.TAG);
         fragmentTransaction.commit();
     }
 
