@@ -15,10 +15,9 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:layout_above="@id/create_rides_buttons_linear_layout"/>
+              android:layout_above="@id/create_rides_bottom_layout"/>
 
-    <TextView
-        android:id="@+id/create_rides_from_address_text"
+    <TextView android:id="@+id/create_rides_from_address_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -31,8 +30,7 @@
         android:textAlignment="viewStart"
         />
 
-    <TextView
-        android:id="@+id/create_rides_to_address_text"
+    <TextView android:id="@+id/create_rides_to_address_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -45,15 +43,14 @@
         android:padding="@dimen/default_padding"
         android:layout_below="@id/create_rides_from_address_text"/>
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/create_rides_datetime_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/create_rides_to_address_text"
         android:orientation="horizontal"
         android:layout_marginTop="@dimen/default_margin"
         android:layout_marginStart="@dimen/large_margin"
-        android:layout_marginEnd="@dimen/large_margin"
-        android:id="@+id/create_rides_datetime_layout">
+        android:layout_marginEnd="@dimen/large_margin">
 
         <ImageButton
             android:id="@+id/create_rides_date_button"
@@ -94,39 +91,128 @@
 
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/create_rides_buttons_linear_layout"
-                  xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentBottom="true"
-                  android:orientation="horizontal"
-                  android:paddingBottom="@dimen/default_padding"
-                  android:paddingEnd="@dimen/default_padding"
-                  android:paddingStart="@dimen/default_padding"
-                  android:paddingTop="@dimen/default_padding">
+    <LinearLayout android:id="@+id/create_rides_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
 
-        <Button
-            android:id="@+id/create_rides_preference_button"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
+        <TextView android:id="@+id/create_rides_fare_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:text="Fare Rs 45/-"
+            android:gravity="center"
             android:background="@color/colorPrimary"
-            android:text="@string/preference_button_text"
-            android:textAllCaps="false"
-            android:textStyle="bold"/>
+            android:textColor="@android:color/white"
+            android:padding="@dimen/default_padding"/>
 
-        <Button
-            android:id="@+id/create_rides_confirm_button"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
-            android:text="@string/confirm_button_text"
-            android:textAllCaps="false"
-            android:textStyle="bold"/>
+        <LinearLayout android:id="@+id/create_rides_trust_network_root_layout"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:layout_above="@id/create_rides_buttons_layout"
+                      android:background="@android:color/white">
+
+            <LinearLayout android:id="@+id/create_rides_trust_network_all_layout"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:gravity="center"
+                          android:paddingTop="@dimen/default_padding"
+                          android:paddingBottom="@dimen/default_padding"
+                          android:layout_weight="1">
+
+                <ImageView android:id="@+id/create_rides_trust_network_all_image"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:src="@drawable/ic_ic_person_black_24px"
+                           android:clickable="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All"/>
+
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/create_rides_trust_network_groups_layout"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:gravity="center"
+                          android:paddingTop="@dimen/default_padding"
+                          android:paddingBottom="@dimen/default_padding"
+                          android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_ic_group_black_24px"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Groups"/>
+
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/create_rides_trust_network_friends_layout"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:gravity="center"
+                          android:paddingTop="@dimen/default_padding"
+                          android:paddingBottom="@dimen/default_padding"
+                          android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_if__friends_2006658"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Friends"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/create_rides_buttons_layout"
+                      xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentBottom="true"
+                      android:orientation="horizontal"
+                      android:paddingBottom="@dimen/default_padding"
+                      android:paddingEnd="@dimen/default_padding"
+                      android:paddingStart="@dimen/default_padding">
+
+            <Button
+                android:id="@+id/create_rides_preference_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:text="@string/preference_button_text"
+                android:textAllCaps="false"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/create_rides_confirm_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:text="@string/confirm_button_text"
+                android:textAllCaps="false"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

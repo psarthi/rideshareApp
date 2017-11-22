@@ -3,13 +3,16 @@ package com.digitusrevolution.rideshare.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
@@ -116,6 +119,8 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_rides, container, false);
+        //Make fare view invisible initially and make it visible later for ride request cases only
+        view.findViewById(R.id.create_rides_fare_text).setVisibility(View.GONE);
         mFromAddressTextView = view.findViewById(R.id.create_rides_from_address_text);
         mToAddressTextView = view.findViewById(R.id.create_rides_to_address_text);
         setAddressOnClickListener();
@@ -124,7 +129,13 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         mapFragment.getMapAsync(this);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-
+        view.findViewById(R.id.create_rides_trust_network_all_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView imageView = (ImageView) v;
+                Log.d(TAG,"Clicked on the All Image View. Tint:"+ imageView.getColorFilter());
+            }
+        });
 
         return view;
     }
