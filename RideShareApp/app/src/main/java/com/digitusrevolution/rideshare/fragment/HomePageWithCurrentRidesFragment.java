@@ -26,7 +26,7 @@ import com.google.gson.Gson;
  * Use the {@link HomePageWithCurrentRidesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomePageWithCurrentRidesFragment extends BaseFragment implements BaseFragment.OnFragmentInteractionListener{
+public class HomePageWithCurrentRidesFragment extends BaseFragment implements BaseFragment.BaseFragmentListener {
 
     public static final String TAG = HomePageWithCurrentRidesFragment.class.getName();
     public static final String TITLE = "Ride Share";
@@ -169,7 +169,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement BaseFragmentListener");
         }
     }
 

@@ -17,6 +17,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by psarthi on 11/21/17.
  */
@@ -26,7 +30,7 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
     public static final String TAG = BaseFragment.class.getName();
     public GoogleMap mMap;
     public FusedLocationProviderClient mFusedLocationProviderClient;
-    public OnFragmentInteractionListener mBaseFragmentListener;
+    public BaseFragmentListener mBaseFragmentListener;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -97,7 +101,13 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
         }
     }
 
-    public interface OnFragmentInteractionListener {
+    public String getFormattedDateString(long dateTime) {
+        Date date = new Date(dateTime);
+        DateFormat dateFormat = new SimpleDateFormat("EEE, MMM d");
+        return dateFormat.format(date);
+    }
+
+    public interface BaseFragmentListener {
 
         void onSetCurrentLocationOnMap(LatLng latLng);
     }

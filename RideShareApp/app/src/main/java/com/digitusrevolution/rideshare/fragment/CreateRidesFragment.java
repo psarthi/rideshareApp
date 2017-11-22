@@ -3,21 +3,24 @@ package com.digitusrevolution.rideshare.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -31,7 +34,11 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,7 +49,8 @@ import java.util.List;
  * Use the {@link CreateRidesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateRidesFragment extends BaseFragment implements BaseFragment.OnFragmentInteractionListener{
+public class CreateRidesFragment extends BaseFragment implements BaseFragment.BaseFragmentListener,
+        TimePickerFragment.TimePickerFragmentListener, DatePickerFragment.DatePickerFragmentListener {
 
     public static final String TAG = CreateRidesFragment.class.getName();
     public static final String OFFER_RIDE_TITLE = "Offer Ride";
@@ -67,7 +75,10 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     private LatLng mFromLatLng;
     private LatLng mToLatLng;
     private List<Marker> mMarkers = new ArrayList<>();
-
+    private BasicRide mBasicRide;
+    private BasicRideRequest mBasicRideRequest;
+    private TextView mDateTextView;
+    private TextView mTimeTextView;
 
     public CreateRidesFragment() {
         // Required empty public constructor
@@ -128,6 +139,24 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.create_rides_map);
         mapFragment.getMapAsync(this);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        mDateTextView = view.findViewById(R.id.create_rides_date_text);
+        mTimeTextView = view.findViewById(R.id.create_rides_time_text);
+
+        view.findViewById(R.id.create_rides_time_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialogFragment = TimePickerFragment.newInstance(CreateRidesFragment.this);
+                dialogFragment.show(getActivity().getSupportFragmentManager(),"timePicker" );
+            }
+        });
+
+        view.findViewById(R.id.create_rides_date_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialogFragment = DatePickerFragment.newInstance(CreateRidesFragment.this);
+                dialogFragment.show(getActivity().getSupportFragmentManager(),"datePicker" );
+            }
+        });
 
         view.findViewById(R.id.create_rides_trust_network_all_image).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,7 +292,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement BaseFragmentListener");
         }
     }
 
@@ -278,6 +307,19 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         Log.d(TAG,"Recieved Callback with LatLng:"+latLng.latitude+","+latLng.latitude);
         mFromLatLng = latLng;
         mFromAddressTextView.setText(Constant.CURRENT_LOCATION_TEXT);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Log.d(TAG,"Recieved callback. Value of HH:MM-"+hourOfDay+":"+minute);
+        mTimeTextView.setText(hourOfDay+":"+minute);
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day){
+        Log.d(TAG,"Recieved callback. Value of DD/MM/YY-"+day+"/"+month+"/"+year);
+        String formattedDate = day+"/"+month+"/"+year;
+        mDateTextView.setText(formattedDate);
     }
 
     /**
