@@ -88,7 +88,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements On
             mTitle = getArguments().getString(ARG_TITLE);
             mData = getArguments().getString(ARG_DATA);
         }
-        getActivity().setTitle(mTitle);
         mUserSignInResult = new Gson().fromJson(mData,UserSignInResult.class);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
     }
@@ -125,6 +124,13 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements On
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Its important to set Title here else while loading fragment from backstack, title would not change
+        getActivity().setTitle(mTitle);
     }
 
     private void setRidesLayoutVisibility() {
