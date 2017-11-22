@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -101,11 +102,27 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
         }
     }
 
-    public String getFormattedDateString(long dateTime) {
-        Date date = new Date(dateTime);
+    public String getFormattedDateString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("EEE, MMM d");
         return dateFormat.format(date);
     }
+
+    @NonNull
+    public String getTimeIn12HrFormat(int hourOfDay, int minute) {
+        Calendar calendar = Calendar.getInstance();
+        //Calendar.HOUR_OF_DAY is in 24-hour format
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+
+        String hour = String.format("%02d", calendar.get(Calendar.HOUR));
+        String min = String.format("%02d", calendar.get(Calendar.MINUTE));
+        String AM_PM = calendar.get(Calendar.AM_PM) == 0 ? "AM" : "PM";
+
+        //Calendar.HOUR is in 12-hour format
+        return hour+":"+min+" "+AM_PM;
+    }
+
+
 
     public interface BaseFragmentListener {
 

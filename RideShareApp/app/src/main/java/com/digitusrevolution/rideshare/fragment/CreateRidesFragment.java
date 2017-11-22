@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -37,8 +38,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -139,24 +144,10 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.create_rides_map);
         mapFragment.getMapAsync(this);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
         mDateTextView = view.findViewById(R.id.create_rides_date_text);
         mTimeTextView = view.findViewById(R.id.create_rides_time_text);
-
-        view.findViewById(R.id.create_rides_time_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment dialogFragment = TimePickerFragment.newInstance(CreateRidesFragment.this);
-                dialogFragment.show(getActivity().getSupportFragmentManager(),"timePicker" );
-            }
-        });
-
-        view.findViewById(R.id.create_rides_date_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment dialogFragment = DatePickerFragment.newInstance(CreateRidesFragment.this);
-                dialogFragment.show(getActivity().getSupportFragmentManager(),"datePicker" );
-            }
-        });
+        setDateTimeOnClickListener();
 
         view.findViewById(R.id.create_rides_trust_network_all_image).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,6 +158,24 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         });
 
         return view;
+    }
+
+    private void setDateTimeOnClickListener() {
+        mDateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialogFragment = DatePickerFragment.newInstance(CreateRidesFragment.this);
+                dialogFragment.show(getActivity().getSupportFragmentManager(),"datePicker" );
+            }
+        });
+
+        mTimeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialogFragment = TimePickerFragment.newInstance(CreateRidesFragment.this);
+                dialogFragment.show(getActivity().getSupportFragmentManager(),"timePicker" );
+            }
+        });
     }
 
     private void setAddressOnClickListener() {
@@ -312,13 +321,17 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Log.d(TAG,"Recieved callback. Value of HH:MM-"+hourOfDay+":"+minute);
-        mTimeTextView.setText(hourOfDay+":"+minute);
+        String timeIn12HrFormat = getTimeIn12HrFormat(hourOfDay, minute);
+        mTimeTextView.setText(timeIn12HrFormat);
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day){
         Log.d(TAG,"Recieved callback. Value of DD/MM/YY-"+day+"/"+month+"/"+year);
-        String formattedDate = day+"/"+month+"/"+year;
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.set(year, month, day);
+        Date date = calendar.getTime();
+        String formattedDate = getFormattedDateString(date);
         mDateTextView.setText(formattedDate);
     }
 
