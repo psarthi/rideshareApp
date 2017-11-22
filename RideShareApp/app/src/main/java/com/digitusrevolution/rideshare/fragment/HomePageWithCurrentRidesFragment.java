@@ -37,7 +37,7 @@ import com.google.gson.Gson;
  * Use the {@link HomePageWithCurrentRidesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomePageWithCurrentRidesFragment extends BaseFragment implements OnMapReadyCallback{
+public class HomePageWithCurrentRidesFragment extends BaseFragment implements BaseFragment.OnFragmentInteractionListener{
 
     public static final String TAG = HomePageWithCurrentRidesFragment.class.getName();
     public static final String TITLE = "Ride Share";
@@ -53,8 +53,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements On
 
     private OnFragmentInteractionListener mListener;
     private TextView mTextView;
-    private GoogleMap mMap;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
     private UserSignInResult mUserSignInResult;
     private LinearLayout mCurrentRideLinearLayout;
     private LinearLayout mCurrentRideRequestLinearLayout;
@@ -90,6 +88,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements On
         }
         mUserSignInResult = new Gson().fromJson(mData,UserSignInResult.class);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        //This will assign this fragment to base fragment for callbacks.
+        mBaseFragmentListener = this;
     }
 
     @Override
@@ -184,53 +184,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements On
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Location Permission not there");
-            //This is important for Fragment and not we are not using Activity requestPermissions method but we are using Fragment requestPermissions,
-            // so that request can be handled in this class itself instead of handling it in Activity class
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constant.ACCESS_FINE_LOCATION_REQUEST_CODE);
-        } else {
-            Log.d(TAG, "Location Permission already there");
-            setCurrentLocationOnMap();
-        }
-    }
-
-    public void setCurrentLocationOnMap() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        Log.d(TAG, "Current Location:"+location.getLatitude()+","+location.getLongitude());
-                        // Add a marker in User Current Location, and move the camera.
-                        LatLng latLng  = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.addMarker(new MarkerOptions().position(latLng));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
-                    } else {
-                        Log.d(TAG, "Location is null");
-                    }
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d(TAG, "Permission Result Recieved");
-        switch (requestCode) {
-            case Constant.ACCESS_FINE_LOCATION_REQUEST_CODE: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Log.d(TAG, "Location Permission granted");
-                    setCurrentLocationOnMap();
-                } else {
-                    Log.d(TAG, "Location Permission denied");
-                }
-            }
-        }
+    public void onSetCurrentLocationOnMap(LatLng latLng) {
+        Log.d(TAG,"Recieved Callback with LatLng:"+latLng.latitude+","+latLng.latitude);
     }
 
     /**

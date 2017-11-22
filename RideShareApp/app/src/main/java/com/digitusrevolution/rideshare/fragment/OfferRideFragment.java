@@ -47,7 +47,7 @@ import java.util.List;
  * Use the {@link OfferRideFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OfferRideFragment extends BaseFragment implements OnMapReadyCallback{
+public class OfferRideFragment extends BaseFragment implements BaseFragment.OnFragmentInteractionListener{
 
     public static final String TAG = OfferRideFragment.class.getName();
     public static final String TITLE = "Offer Ride";
@@ -66,8 +66,6 @@ public class OfferRideFragment extends BaseFragment implements OnMapReadyCallbac
     int PLACE_TO_ADDRESS_REQUEST_CODE = 2;
     private TextView mFromAddressTextView;
     private TextView mToAddressTextView;
-    private GoogleMap mMap;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
     private LatLng mFromLatLng;
     private LatLng mToLatLng;
     private List<Marker> mMarkers = new ArrayList<>();
@@ -103,6 +101,8 @@ public class OfferRideFragment extends BaseFragment implements OnMapReadyCallbac
             mData = getArguments().getString(ARG_PARAM2);
         }
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        //This will assign this fragment to base fragment for callbacks.
+        mBaseFragmentListener = this;
     }
 
     @Override
@@ -261,67 +261,10 @@ public class OfferRideFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        setPadding();
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Location Permission not there");
-            //This is important for Fragment and not we are not using Activity requestPermissions method but we are using Fragment requestPermissions,
-            // so that request can be handled in this class itself instead of handling it in Activity class
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constant.ACCESS_FINE_LOCATION_REQUEST_CODE);
-        } else {
-            Log.d(TAG, "Location Permission already there");
-            setCurrentLocationOnMap();
-        }
-    }
-
-    private void setCurrentLocationOnMap() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        Log.d(TAG, "Current Location:"+location.getLatitude()+","+location.getLongitude());
-                        // Add a marker in User Current Location, and move the camera.
-                        mFromLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.addMarker(new MarkerOptions().position(mFromLatLng));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mFromLatLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
-                        mFromAddressTextView.setText(Constant.CURRENT_LOCATION_TEXT);
-                    } else {
-                        Log.d(TAG, "Location is null");
-                    }
-                }
-            });
-        }
-    }
-
-    private void setPadding(){
-
-        int width = getResources().getDisplayMetrics().widthPixels;
-        //This is here for experience purpose, we can use either heigth or width whichever make sense
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int topPadding = (int) (height * Constant.LAT_LNG_TOP_PADDING_PERCENT); // offset from edges of the map 10% of screen
-        int standardPaddding = (int) (height * Constant.LAT_LNG_STANDARD_PADDING_PERCENT);
-        Log.d(TAG, "Width Pixel:"+width+",Heigth Pixel:"+height+",Padding Pixel:"+topPadding);
-
-        //This is very important to customize the visibility range of camera
-        mMap.setPadding(standardPaddding,topPadding, standardPaddding,standardPaddding);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d(TAG, "Permission Result Recieved");
-        switch (requestCode) {
-            case Constant.ACCESS_FINE_LOCATION_REQUEST_CODE: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Log.d(TAG, "Location Permission granted");
-                    setCurrentLocationOnMap();
-                } else {
-                    Log.d(TAG, "Location Permission denied");
-                }
-            }
-        }
+    public void onSetCurrentLocationOnMap(LatLng latLng) {
+        Log.d(TAG,"Recieved Callback with LatLng:"+latLng.latitude+","+latLng.latitude);
+        mFromLatLng = latLng;
+        mFromAddressTextView.setText(Constant.CURRENT_LOCATION_TEXT);
     }
 
     /**
