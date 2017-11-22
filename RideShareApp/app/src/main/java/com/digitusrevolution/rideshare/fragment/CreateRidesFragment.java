@@ -3,11 +3,14 @@ package com.digitusrevolution.rideshare.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.ColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +87,19 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     private BasicRideRequest mBasicRideRequest;
     private TextView mDateTextView;
     private TextView mTimeTextView;
+    private boolean mAllSelected;
+    private boolean mGroupsSelected;
+    private boolean mFriendsSelected;
+    private ImageView mAllImageView;
+    private ImageView mGroupsImageView;
+    private ImageView mFriendsImageView;
+    private TextView mAllTextView;
+    private TextView mGroupsTextView;
+    private TextView mFriendsTextView;
+    private int mSelectedColor;
+    private int mDefaultTextColor;
+    private ColorFilter mDefaultImageTint;
+
 
     public CreateRidesFragment() {
         // Required empty public constructor
@@ -149,15 +165,96 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         mTimeTextView = view.findViewById(R.id.create_rides_time_text);
         setDateTimeOnClickListener();
 
-        view.findViewById(R.id.create_rides_trust_network_all_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageView imageView = (ImageView) v;
-                Log.d(TAG,"Clicked on the All Image View. Tint:"+ imageView.getColorFilter());
-            }
-        });
+        setTrustNetworkViews(view);
+        //Initial value on home page
+        mAllSelected = true;
+        updateTrustNetworkItemsColor();
+        setTrustNetworkOnClickListener(view);
 
         return view;
+    }
+
+    private void setTrustNetworkViews(View view) {
+        mAllImageView = view.findViewById(R.id.create_rides_trust_network_all_image);
+        mAllTextView = view.findViewById(R.id.create_rides_trust_network_all_text);
+        mGroupsImageView = view.findViewById(R.id.create_rides_trust_network_groups_image);
+        mGroupsTextView = view.findViewById(R.id.create_rides_trust_network_groups_text);
+        mFriendsImageView = view.findViewById(R.id.create_rides_trust_network_friends_image);
+        mFriendsTextView = view.findViewById(R.id.create_rides_trust_network_friends_text);
+
+        mSelectedColor = ContextCompat.getColor(getActivity(), R.color.colorAccent);
+        mDefaultTextColor = mAllTextView.getTextColors().getDefaultColor();
+        mDefaultImageTint = mAllImageView.getColorFilter();
+        Log.d(TAG,"Text Default color:"+ mDefaultTextColor+":Image Default Tint:"+mAllImageView.getColorFilter());
+    }
+
+    private void setTrustNetworkOnClickListener(View view) {
+        mAllImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Clicked on the All Image View: Selected Status:" + mAllSelected);
+                mAllSelected = !mAllSelected;
+                //If all is selected then by default Groups and Friends is already included, so no need to select them individually
+                if (mAllSelected){
+                    mFriendsSelected = false;
+                    mGroupsSelected = false;
+                }
+                updateTrustNetworkItemsColor();
+            }
+        });
+        mGroupsImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Clicked on the Groups Image View: Selected Status:" + mGroupsSelected);
+                mGroupsSelected = !mGroupsSelected;
+                if (mGroupsSelected){
+                    mAllSelected = false;
+                }
+                updateTrustNetworkItemsColor();
+            }
+        });
+        mFriendsImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Clicked on the Friends Image View: Selected Status:" + mFriendsImageView);
+                mFriendsSelected = !mFriendsSelected;
+                if (mFriendsSelected){
+                    mAllSelected = false;
+                }
+                updateTrustNetworkItemsColor();
+            }
+        });
+    }
+
+    private void updateTrustNetworkItemsColor(){
+
+        if (mAllSelected){
+            mAllImageView.setColorFilter(mSelectedColor);
+            mAllTextView.setTextColor(mSelectedColor);
+        }
+        if (!mAllSelected){
+            mAllImageView.setColorFilter(mDefaultImageTint);
+            mAllTextView.setTextColor(mDefaultTextColor);
+
+        }
+        if (mGroupsSelected){
+            mGroupsImageView.setColorFilter(mSelectedColor);
+            mGroupsTextView.setTextColor(mSelectedColor);
+        }
+        if (!mGroupsSelected){
+            mGroupsImageView.setColorFilter(mDefaultImageTint);
+            mGroupsTextView.setTextColor(mDefaultTextColor);
+        }
+        if (mFriendsSelected){
+            mFriendsImageView.setColorFilter(mSelectedColor);
+            mFriendsTextView.setTextColor(mSelectedColor);
+        }
+        if (!mFriendsSelected){
+            mFriendsImageView.setColorFilter(mDefaultImageTint);
+            mFriendsTextView.setTextColor(mDefaultTextColor);
+        }
+
+
     }
 
     private void setDateTimeOnClickListener() {

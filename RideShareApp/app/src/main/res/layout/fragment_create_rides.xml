@@ -108,13 +108,16 @@
                           android:paddingBottom="@dimen/default_padding"
                           android:layout_weight="1">
 
-                <ImageView android:id="@+id/create_rides_trust_network_all_image"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:src="@drawable/ic_person"
-                           android:clickable="true"/>
+                <ImageView
+                    android:id="@+id/create_rides_trust_network_all_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_person"
+                    />
 
-                <TextView
+                <TextView android:id="@+id/create_rides_trust_network_all_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="All"/>
@@ -130,12 +133,14 @@
                           android:paddingBottom="@dimen/default_padding"
                           android:layout_weight="1">
 
-                <ImageView
+                <ImageView android:id="@+id/create_rides_trust_network_groups_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_group"/>
+                    android:src="@drawable/ic_group"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
-                <TextView
+                <TextView android:id="@+id/create_rides_trust_network_groups_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Groups"/>
@@ -151,12 +156,14 @@
                           android:paddingBottom="@dimen/default_padding"
                           android:layout_weight="1">
 
-                <ImageView
+                <ImageView android:id="@+id/create_rides_trust_network_friends_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_friends"/>
+                    android:src="@drawable/ic_friends"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
-                <TextView
+                <TextView android:id="@+id/create_rides_trust_network_friends_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Friends"/>
