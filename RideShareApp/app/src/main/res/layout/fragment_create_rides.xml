@@ -6,19 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context="com.digitusrevolution.rideshare.fragment.OfferRideFragment">
+    tools:context="com.digitusrevolution.rideshare.fragment.CreateRidesFragment">
 
 
-    <fragment android:id="@+id/offer_ride_map"
+    <fragment android:id="@+id/create_rides_map"
               android:name="com.google.android.gms.maps.SupportMapFragment"
               xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:layout_above="@id/offer_ride_buttons_linear_layout"/>
+              android:layout_above="@id/create_rides_buttons_linear_layout"/>
 
     <TextView
-        android:id="@+id/offer_ride_from_address_text"
+        android:id="@+id/create_rides_from_address_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -32,7 +32,7 @@
         />
 
     <TextView
-        android:id="@+id/offer_ride_to_address_text"
+        android:id="@+id/create_rides_to_address_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -43,27 +43,27 @@
         android:text="@string/to_address_label"
         android:textAlignment="viewStart"
         android:padding="@dimen/default_padding"
-        android:layout_below="@id/offer_ride_from_address_text"/>
+        android:layout_below="@id/create_rides_from_address_text"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/offer_ride_to_address_text"
+        android:layout_below="@id/create_rides_to_address_text"
         android:orientation="horizontal"
         android:layout_marginTop="@dimen/default_margin"
         android:layout_marginStart="@dimen/large_margin"
         android:layout_marginEnd="@dimen/large_margin"
-        android:id="@+id/ride_offer_datetime_layout">
+        android:id="@+id/create_rides_datetime_layout">
 
         <ImageButton
-            android:id="@+id/ride_offer_date_button"
+            android:id="@+id/create_rides_date_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_date"
             android:background="@android:color/white"/>
 
         <TextView
-            android:id="@+id/offer_ride_date_text"
+            android:id="@+id/create_rides_date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/default_padding"
@@ -73,7 +73,7 @@
             android:textColor="@android:color/white"/>
 
         <ImageButton
-            android:id="@+id/ride_offer_time_button"
+            android:id="@+id/create_rides_time_button"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
             android:background="@android:color/white"/>
 
         <TextView
-            android:id="@+id/offer_ride_time_text"
+            android:id="@+id/create_rides_time_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/default_padding"
@@ -94,7 +94,7 @@
 
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/offer_ride_buttons_linear_layout"
+    <LinearLayout android:id="@+id/create_rides_buttons_linear_layout"
                   xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
                   android:paddingTop="@dimen/default_padding">
 
         <Button
-            android:id="@+id/offer_ride_preference_button"
+            android:id="@+id/create_rides_preference_button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
             android:textStyle="bold"/>
 
         <Button
-            android:id="@+id/offer_ride_confirm_button"
+            android:id="@+id/create_rides_confirm_button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

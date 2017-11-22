@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.DummyFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
-import com.digitusrevolution.rideshare.fragment.OfferRideFragment;
+import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -28,7 +28,7 @@ import com.squareup.picasso.Picasso;
 public class HomePageActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HomePageWithCurrentRidesFragment.OnFragmentInteractionListener,
-        OfferRideFragment.OnFragmentInteractionListener,
+        CreateRidesFragment.OnFragmentInteractionListener,
         DummyFragment.OnFragmentInteractionListener {
 
     private static final String TAG = HomePageActivity.class.getName();
@@ -125,7 +125,7 @@ public class HomePageActivity extends BaseActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         HomePageWithCurrentRidesFragment homePageWithCurrentRidesFragment = HomePageWithCurrentRidesFragment.
-                newInstance(HomePageWithCurrentRidesFragment.TITLE, new Gson().toJson(mUserSignInResult));
+                newInstance(new Gson().toJson(mUserSignInResult));
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, homePageWithCurrentRidesFragment, HomePageWithCurrentRidesFragment.TAG);
         fragmentTransaction.commit();

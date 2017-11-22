@@ -31,7 +31,7 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (mBaseFragmentListener instanceof OfferRideFragment){
+        if (mBaseFragmentListener instanceof CreateRidesFragment){
             Log.d(TAG,"Setting Padding");
             setPadding();
         }

@@ -1,12 +1,7 @@
 package com.digitusrevolution.rideshare.fragment;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,17 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 
 /**
@@ -44,11 +33,10 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_TITLE = "title";
+    // These are the keys which would be used to store and retrieve the data
     private static final String ARG_DATA = "data";
 
     // TODO: Rename and change types of parameters
-    private String mTitle;
     private String mData;
 
     private OnFragmentInteractionListener mListener;
@@ -65,15 +53,13 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param title Fragment Title
      * @param data  Data in Json format
      * @return A new instance of fragment HomePageWithCurrentRidesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomePageWithCurrentRidesFragment newInstance(String title, String data) {
+    public static HomePageWithCurrentRidesFragment newInstance(String data) {
         HomePageWithCurrentRidesFragment fragment = new HomePageWithCurrentRidesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_TITLE, title);
         args.putString(ARG_DATA, data);
         fragment.setArguments(args);
         return fragment;
@@ -83,7 +69,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mTitle = getArguments().getString(ARG_TITLE);
             mData = getArguments().getString(ARG_DATA);
         }
         mUserSignInResult = new Gson().fromJson(mData,UserSignInResult.class);
@@ -96,7 +81,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home_page_with_no_rides, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
         mCurrentRideLinearLayout = view.findViewById(R.id.current_ride_layout);
         mCurrentRideRequestLinearLayout = view.findViewById(R.id.current_ride_request_layout);
 
@@ -108,29 +93,40 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         //This will make appropriate layout visible
         setRidesLayoutVisibility();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.home_page_with_no_rides_map);
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.home_page_map);
         mapFragment.getMapAsync(this);
 
         view.findViewById(R.id.home_page_offer_ride_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Fragment offerRideFragment = OfferRideFragment.newInstance(OfferRideFragment.TITLE, null);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.home_page_container,offerRideFragment,OfferRideFragment.TAG)
-                        .addToBackStack(OfferRideFragment.TAG)
-                        .commit();
-
+                loadCreatesRideFragment(RideType.OfferRide);
             }
         });
+
+        view.findViewById(R.id.home_page_request_ride_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadCreatesRideFragment(RideType.RequestRide);            }
+        });
+
+
         return view;
+    }
+
+    private void loadCreatesRideFragment(RideType rideType) {
+        Fragment createRidesFragment = CreateRidesFragment.newInstance(rideType, null);
+        //Add to back stack as user may want to go back to home page and choose alternate option
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_page_container,createRidesFragment, CreateRidesFragment.TAG)
+                .addToBackStack(CreateRidesFragment.TAG)
+                .commit();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         //Its important to set Title here else while loading fragment from backstack, title would not change
-        getActivity().setTitle(mTitle);
+        getActivity().setTitle(TITLE);
     }
 
     private void setRidesLayoutVisibility() {

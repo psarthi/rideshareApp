@@ -1,15 +1,10 @@
 package com.digitusrevolution.rideshare.fragment;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,22 +14,19 @@ import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.model.app.RideType;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,24 +34,27 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OfferRideFragment.OnFragmentInteractionListener} interface
+ * {@link CreateRidesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link OfferRideFragment#newInstance} factory method to
+ * Use the {@link CreateRidesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OfferRideFragment extends BaseFragment implements BaseFragment.OnFragmentInteractionListener{
+public class CreateRidesFragment extends BaseFragment implements BaseFragment.OnFragmentInteractionListener{
 
-    public static final String TAG = OfferRideFragment.class.getName();
-    public static final String TITLE = "Offer Ride";
+    public static final String TAG = CreateRidesFragment.class.getName();
+    public static final String OFFER_RIDE_TITLE = "Offer Ride";
+    public static final String REQUEST_RIDE_TITLE = "Request Ride";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "title";
-    private static final String ARG_PARAM2 = "data";
+    // These are the keys which would be used to store and retrieve the data
+    private static final String ARG_RIDE_TYPE = "rideType";
+    private static final String ARG_DATA = "data";
 
     // TODO: Rename and change types of parameters
     private String mTitle;
     private String mData;
+    private RideType mRideType;
 
     private OnFragmentInteractionListener mListener;
     int PLACE_FROM_ADDRESS_REQUEST_CODE = 1;
@@ -71,7 +66,7 @@ public class OfferRideFragment extends BaseFragment implements BaseFragment.OnFr
     private List<Marker> mMarkers = new ArrayList<>();
 
 
-    public OfferRideFragment() {
+    public CreateRidesFragment() {
         // Required empty public constructor
     }
 
@@ -79,16 +74,16 @@ public class OfferRideFragment extends BaseFragment implements BaseFragment.OnFr
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param title Fragment Title
+     * @param rideType Type of ride e.g. Offer Ride or Request Ride
      * @param data  Data in Json format
-     * @return A new instance of fragment OfferRideFragment.
+     * @return A new instance of fragment CreateRidesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static OfferRideFragment newInstance(String title, String data) {
-        OfferRideFragment fragment = new OfferRideFragment();
+    public static CreateRidesFragment newInstance(RideType rideType, String data) {
+        CreateRidesFragment fragment = new CreateRidesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, title);
-        args.putString(ARG_PARAM2, data);
+        args.putString(ARG_RIDE_TYPE, rideType.toString());
+        args.putString(ARG_DATA, data);
         fragment.setArguments(args);
         return fragment;
     }
@@ -97,8 +92,8 @@ public class OfferRideFragment extends BaseFragment implements BaseFragment.OnFr
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mTitle = getArguments().getString(ARG_PARAM1);
-            mData = getArguments().getString(ARG_PARAM2);
+            mData = getArguments().getString(ARG_DATA);
+            mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
         }
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //This will assign this fragment to base fragment for callbacks.
@@ -109,25 +104,35 @@ public class OfferRideFragment extends BaseFragment implements BaseFragment.OnFr
     public void onResume() {
         super.onResume();
         //Its important to set Title here else while loading fragment from backstack, title would not change
-        getActivity().setTitle(mTitle);
+        if (mRideType.equals(RideType.OfferRide)){
+            getActivity().setTitle(OFFER_RIDE_TITLE);
+        } else {
+            getActivity().setTitle(REQUEST_RIDE_TITLE);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_offer_ride, container, false);
-        mFromAddressTextView = view.findViewById(R.id.offer_ride_from_address_text);
-        mToAddressTextView = view.findViewById(R.id.offer_ride_to_address_text);
+        View view = inflater.inflate(R.layout.fragment_create_rides, container, false);
+        mFromAddressTextView = view.findViewById(R.id.create_rides_from_address_text);
+        mToAddressTextView = view.findViewById(R.id.create_rides_to_address_text);
+        setAddressOnClickListener();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.offer_ride_map);
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.create_rides_map);
         mapFragment.getMapAsync(this);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
+
+
+        return view;
+    }
+
+    private void setAddressOnClickListener() {
         mFromAddressTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 try {
                     Intent placeAutoCompleteIntent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(getActivity());
                     startActivityForResult(placeAutoCompleteIntent,PLACE_FROM_ADDRESS_REQUEST_CODE);
@@ -142,7 +147,6 @@ public class OfferRideFragment extends BaseFragment implements BaseFragment.OnFr
         mToAddressTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 try {
                     Intent placeAutoCompleteIntent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(getActivity());
                     startActivityForResult(placeAutoCompleteIntent,PLACE_TO_ADDRESS_REQUEST_CODE);
@@ -154,8 +158,6 @@ public class OfferRideFragment extends BaseFragment implements BaseFragment.OnFr
 
             }
         });
-
-        return view;
     }
 
     @Override

@@ -70,7 +70,7 @@ public class DummyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home_page_with_ride, container, false);
+        View view = inflater.inflate(R.layout.fragment_dummy, container, false);
         mTextView = view.findViewById(R.id.ride_fragment_text_content);
         mTextView.setText(getArguments().getString(ARG_PARAM1));
         mTextView.setOnClickListener(new View.OnClickListener() {
