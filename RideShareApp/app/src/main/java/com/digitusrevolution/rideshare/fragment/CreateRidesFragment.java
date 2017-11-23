@@ -3,6 +3,7 @@ package com.digitusrevolution.rideshare.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.ColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,8 +20,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.dto.google.Bounds;
+import com.digitusrevolution.rideshare.model.dto.google.GoogleDirection;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -31,21 +36,25 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
-import com.google.maps.DirectionsApi;
-import com.google.maps.DirectionsApiRequest;
-import com.google.maps.PendingResult;
-import com.google.maps.model.DirectionsResult;
+import com.google.maps.android.PolyUtil;
+import com.google.maps.android.SphericalUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
-import java.util.ArrayList;
+import org.json.JSONObject;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,7 +89,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     private TextView mToAddressTextView;
     private LatLng mFromLatLng;
     private LatLng mToLatLng;
-    private List<Marker> mMarkers = new ArrayList<>();
     private BasicRide mBasicRide;
     private BasicRideRequest mBasicRideRequest;
     private TextView mDateTextView;
@@ -97,6 +105,8 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     private int mSelectedColor;
     private int mDefaultTextColor;
     private ColorFilter mDefaultImageTint;
+    private GoogleDirection mGoogleDirection;
+    private Calendar mStartTimeCalendar;
 
 
     public CreateRidesFragment() {
@@ -131,6 +141,8 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //This will assign this fragment to base fragment for callbacks.
         mBaseFragmentListener = this;
+        //Setting calender to current time
+        mStartTimeCalendar = Calendar.getInstance();
     }
 
     @Override
@@ -301,23 +313,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         });
     }
 
-    private void getDirection(){
-        DirectionsApi.newRequest(mGeoApiContext)
-                .origin(new com.google.maps.model.LatLng(mFromLatLng.latitude,mFromLatLng.longitude))
-                .destination(new com.google.maps.model.LatLng(mToLatLng.latitude,mToLatLng.longitude))
-                .setCallback(new PendingResult.Callback<DirectionsResult>() {
-                    @Override
-                    public void onResult(DirectionsResult result) {
-                        Log.d(TAG, new Gson().toJson(result));
-                    }
-
-                    @Override
-                    public void onFailure(Throwable e) {
-                        Log.d(TAG, "Failed Response:"+e.getMessage());
-                    }
-                });
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -328,8 +323,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
                 Log.i(TAG, "From Place: " + fromPlace.getName());
                 mFromAddressTextView.setText(fromPlace.getName());
                 mFromLatLng = fromPlace.getLatLng();
-                addMarker();
-                moveCamera(mFromLatLng);
+                drawOnMap();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
                 // TODO: Handle the error.
@@ -346,9 +340,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
                 Log.i(TAG, "To Place: " + toPlace.getName());
                 mToAddressTextView.setText(toPlace.getName());
                 mToLatLng = toPlace.getLatLng();
-                addMarker();
-                moveCamera(mToLatLng);
-                getDirection();
+                drawOnMap();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
                 // TODO: Handle the error.
@@ -360,40 +352,111 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         }
     }
 
-    private void addMarker(){
+    private void drawOnMap(){
+        //This will clear existing polylinem markers etc. from map
+        mMap.clear();
 
-        //This will remove old markers so that we have clean slate and we don't end up with old data
-        for (Marker marker: mMarkers){
-            marker.remove();
-        }
+        //Draw Marker
+        if (mFromLatLng!=null) mMap.addMarker(new MarkerOptions().position(mFromLatLng).
+                icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        if (mToLatLng!=null) mMap.addMarker(new MarkerOptions().position(mToLatLng));
 
-        if (mFromLatLng!=null){
-            mMarkers.add(mMap.addMarker(new MarkerOptions().position(mFromLatLng)));
-        }
-        if (mToLatLng!=null){
-            mMarkers.add(mMap.addMarker(new MarkerOptions().position(mToLatLng)));
+        if (mRideType.equals(RideType.OfferRide)){
+            //Get Direction
+            getDirection();
+            //No Need to move camera as it would be done post drawing route in getDirection
+            //This will also avoid moving camera twice
+        } else {
+            //Draw Pickup/Drop Zone using circle
+            //TODO Replace with actual radius for each ride
+            if (mFromLatLng!=null) mMap.addCircle(new CircleOptions().center(mFromLatLng).radius(500));
+            if (mToLatLng!=null) mMap.addCircle(new CircleOptions().center(mToLatLng).radius(500));
+            //Move camera
+            moveCamera();
         }
     }
 
-    private void moveCamera(LatLng latLng) {
+    private void getDirection() {
 
+        String GET_GOOGLE_DIRECTION_URL = APIUrl.GET_GOOGLE_DIRECTION_URL.replace(APIUrl.originLat_KEY, Double.toString(mFromLatLng.latitude))
+                .replace(APIUrl.originLng_KEY, Double.toString(mFromLatLng.longitude))
+                .replace(APIUrl.destinationLat_KEY, Double.toString(mToLatLng.latitude))
+                .replace(APIUrl.destinationLng_KEY, Double.toString(mToLatLng.longitude))
+                .replace(APIUrl.departureEpochSecond_KEY, Long.toString(mStartTimeCalendar.getTimeInMillis()))
+                .replace(APIUrl.GOOGLE_API_KEY, getResources().getString(R.string.GOOGLE_API_KEY));
+
+        RESTClient.get(GET_GOOGLE_DIRECTION_URL, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Log.d(TAG, "Success Response:" + response);
+                mGoogleDirection = new Gson().fromJson(response.toString(), GoogleDirection.class);
+                //Draw Route
+                List<LatLng> latLngs = PolyUtil.decode(mGoogleDirection.getRoutes().get(0).getOverview_polyline().getPoints());
+                mMap.addPolyline(new PolylineOptions().addAll(latLngs));
+                //Move Camera to cover all markers on Map
+                moveCamera();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.d(TAG, "Failed Response:" + errorResponse);
+            }
+        });
+    }
+
+    private LatLngBounds getBounds(){
+        LatLngBounds.Builder latLngBoundsBuilder = new LatLngBounds.Builder();
+        if (mFromLatLng!=null) latLngBoundsBuilder.include(mFromLatLng);
+        if (mToLatLng!=null) latLngBoundsBuilder.include(mToLatLng);
+        LatLngBounds latLngBounds;
+        //This will return the bound of route and no need to extend as that would be default cover start and end point
+        if (mGoogleDirection!=null){
+            Bounds bounds = mGoogleDirection.getRoutes().get(0).getBounds();
+            //This will save loop again for so many times to go through each points
+            latLngBounds = new LatLngBounds(new LatLng(bounds.getSouthwest().getLat(), bounds.getSouthwest().getLng()),
+                    new LatLng(bounds.getNortheast().getLat(), bounds.getNortheast().getLng()));
+            return latLngBounds;
+        }
+        //This will extend the bound to cover circle
+        //TODO Replace with actual radius of rides
+        if (mRideType.equals(RideType.RequestRide)){
+            if (mFromLatLng!=null) {
+                latLngBounds = getCircleBounds(mFromLatLng,500);
+                latLngBoundsBuilder.include(latLngBounds.northeast);
+                latLngBoundsBuilder.include(latLngBounds.southwest);
+            }
+            if (mToLatLng!=null) {
+                latLngBounds = getCircleBounds(mToLatLng,500);
+                latLngBoundsBuilder.include(latLngBounds.northeast);
+                latLngBoundsBuilder.include(latLngBounds.southwest);
+            }
+        }
+        latLngBounds = latLngBoundsBuilder.build();
+        return latLngBounds;
+    }
+
+    private LatLngBounds getCircleBounds(LatLng center, double radiusInMeters) {
+        double distanceFromCenterToCorner = radiusInMeters * Math.sqrt(2.0);
+        LatLng southwestCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 225.0);
+        LatLng northeastCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 45.0);
+        return new LatLngBounds(southwestCorner, northeastCorner);
+    }
+
+    private void moveCamera() {
         if (mFromLatLng == null || mToLatLng == null){
             Log.d(TAG, "To Field is empty, so using location camera zoom");
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
+            if (mFromLatLng!=null) mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mFromLatLng,Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
+            if (mToLatLng!=null) mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mToLatLng,Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
         } else {
-            moveCameraBasedOnLatLngBounds();
+            LatLngBounds bounds = getBounds();
+            //Note - padding should be "0" as we have already set padding on map seperately using setPadding()
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,0));
+            Log.d(TAG, "To Field exist, so using latlng bounds camera zoom");
         }
-    }
-
-    private void moveCameraBasedOnLatLngBounds(){
-
-        LatLngBounds.Builder latLngBoundsBuilder = new LatLngBounds.Builder();
-        latLngBoundsBuilder.include(mFromLatLng);
-        latLngBoundsBuilder.include(mToLatLng);
-        LatLngBounds latLngBounds = latLngBoundsBuilder.build();
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
-        Log.d(TAG, "To Field exist, so using latlng bounds camera zoom");
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -432,6 +495,8 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         Log.d(TAG,"Recieved callback. Value of HH:MM-"+hourOfDay+":"+minute);
         String timeIn12HrFormat = getTimeIn12HrFormat(hourOfDay, minute);
         mTimeTextView.setText(timeIn12HrFormat);
+        mStartTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        mStartTimeCalendar.set(Calendar.MINUTE, minute);
     }
 
     @Override
@@ -442,6 +507,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         Date date = calendar.getTime();
         String formattedDate = getFormattedDateString(date);
         mDateTextView.setText(formattedDate);
+        mStartTimeCalendar.set(year,month,day);
     }
 
     /**

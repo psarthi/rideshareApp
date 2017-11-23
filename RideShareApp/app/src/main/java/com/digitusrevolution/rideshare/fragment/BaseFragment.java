@@ -9,15 +9,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.maps.GeoApiContext;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,7 +35,6 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
     GoogleMap mMap;
     FusedLocationProviderClient mFusedLocationProviderClient;
     BaseFragmentListener mBaseFragmentListener;
-    GeoApiContext mGeoApiContext;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -52,27 +52,6 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
             Log.d(TAG, "Location Permission already there");
             setCurrentLocationOnMap();
         }
-
-        //This will set Google Maps API Context, Ideally this should be set only once for the lifetime of application.
-        //TODO May need to figure our better place for this function
-        setGeoApiContext();
-    }
-
-    private void setGeoApiContext(){
-        String API_KEY = getStringValueFromManifest("com.google.android.geo.API_KEY");
-        mGeoApiContext = new GeoApiContext.Builder().apiKey(API_KEY).build();
-    }
-
-    private String getStringValueFromManifest(String KEY) {
-        ApplicationInfo ai = null;
-        String value = null;
-        try {
-            ai = getActivity().getPackageManager().getApplicationInfo(getActivity().getPackageName(), PackageManager.GET_META_DATA);
-            value = ai.metaData.getString(KEY);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG,"Unable to read KEY:"+KEY);
-        }
-        return value;
     }
 
     private void setCurrentLocationOnMap() {
@@ -84,7 +63,8 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
                         Log.d(TAG, "Current Location:"+location.getLatitude()+","+location.getLongitude());
                         // Add a marker in User Current Location, and move the camera.
                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.addMarker(new MarkerOptions().position(latLng));
+                        mMap.addMarker(new MarkerOptions().position(latLng)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
                         //Calling back the interface implementor i.e. whatever has been set in BaseFragmentListener member variable,
                         // it will get call back

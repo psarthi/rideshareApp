@@ -13,6 +13,13 @@ public class APIUrl {
     public static final String ID_KEY = "{id}";
     public static final String MOBILE_NUMBER_KEY = "{mobileNumber}";
     public static final String OTP_KEY = "{otp}";
+    public static final String originLat_KEY = "{originLat}";
+    public static final String originLng_KEY = "{originLng}";
+    public static final String destinationLat_KEY = "{destinationLat}";
+    public static final String destinationLng_KEY = "{destinationLng}";
+    public static final String departureEpochSecond_KEY = "{departureEpochSecond}";
+    public static final String GOOGLE_API_KEY = "{key}";
+
 
     public static final String GET_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/domain/riderequests/{id}?fetchChild=true";
     public static final String SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/signin";
@@ -23,6 +30,9 @@ public class APIUrl {
     public static final String GET_OTP_URL = BASE_URL_USER_SYSTEM + "/users/getotp/{mobileNumber}";
     public static final String VALIDATE_OTP_URL = BASE_URL_USER_SYSTEM + "/users/validateotp/{mobileNumber}/{otp}";
     public static final String USER_REGISTRATION_URL = BASE_URL_USER_SYSTEM + "/users";
+
+    public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +
+            "&destination={destinationLat},{destinationLng}&departure_time={departureEpochSecond}&key={key}";
 
 
 }
