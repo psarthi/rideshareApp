@@ -3,11 +3,9 @@ package com.digitusrevolution.rideshare.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.ColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -37,12 +35,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.maps.DirectionsApi;
+import com.google.maps.DirectionsApiRequest;
+import com.google.maps.PendingResult;
+import com.google.maps.model.DirectionsResult;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -165,22 +163,22 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         mTimeTextView = view.findViewById(R.id.create_rides_time_text);
         setDateTimeOnClickListener();
 
-        setTrustNetworkViews(view);
+        setTrustCategoryViews(view);
         //Initial value on home page
         mAllSelected = true;
-        updateTrustNetworkItemsColor();
-        setTrustNetworkOnClickListener(view);
+        updateTrustCategoryItemsColor();
+        setTrustCategoryOnClickListener(view);
 
         return view;
     }
 
-    private void setTrustNetworkViews(View view) {
-        mAllImageView = view.findViewById(R.id.create_rides_trust_network_all_image);
-        mAllTextView = view.findViewById(R.id.create_rides_trust_network_all_text);
-        mGroupsImageView = view.findViewById(R.id.create_rides_trust_network_groups_image);
-        mGroupsTextView = view.findViewById(R.id.create_rides_trust_network_groups_text);
-        mFriendsImageView = view.findViewById(R.id.create_rides_trust_network_friends_image);
-        mFriendsTextView = view.findViewById(R.id.create_rides_trust_network_friends_text);
+    private void setTrustCategoryViews(View view) {
+        mAllImageView = view.findViewById(R.id.create_rides_trust_category_all_image);
+        mAllTextView = view.findViewById(R.id.create_rides_trust_category_all_text);
+        mGroupsImageView = view.findViewById(R.id.create_rides_trust_category_groups_image);
+        mGroupsTextView = view.findViewById(R.id.create_rides_trust_category_groups_text);
+        mFriendsImageView = view.findViewById(R.id.create_rides_trust_category_friends_image);
+        mFriendsTextView = view.findViewById(R.id.create_rides_trust_category_friends_text);
 
         mSelectedColor = ContextCompat.getColor(getActivity(), R.color.colorAccent);
         mDefaultTextColor = mAllTextView.getTextColors().getDefaultColor();
@@ -188,7 +186,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         Log.d(TAG,"Text Default color:"+ mDefaultTextColor+":Image Default Tint:"+mAllImageView.getColorFilter());
     }
 
-    private void setTrustNetworkOnClickListener(View view) {
+    private void setTrustCategoryOnClickListener(View view) {
         mAllImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,7 +197,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
                     mFriendsSelected = false;
                     mGroupsSelected = false;
                 }
-                updateTrustNetworkItemsColor();
+                updateTrustCategoryItemsColor();
             }
         });
         mGroupsImageView.setOnClickListener(new View.OnClickListener() {
@@ -210,7 +208,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
                 if (mGroupsSelected){
                     mAllSelected = false;
                 }
-                updateTrustNetworkItemsColor();
+                updateTrustCategoryItemsColor();
             }
         });
         mFriendsImageView.setOnClickListener(new View.OnClickListener() {
@@ -221,18 +219,17 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
                 if (mFriendsSelected){
                     mAllSelected = false;
                 }
-                updateTrustNetworkItemsColor();
+                updateTrustCategoryItemsColor();
             }
         });
     }
 
-    private void updateTrustNetworkItemsColor(){
+    private void updateTrustCategoryItemsColor(){
 
         if (mAllSelected){
             mAllImageView.setColorFilter(mSelectedColor);
             mAllTextView.setTextColor(mSelectedColor);
-        }
-        if (!mAllSelected){
+        } else {
             mAllImageView.setColorFilter(mDefaultImageTint);
             mAllTextView.setTextColor(mDefaultTextColor);
 
@@ -240,16 +237,14 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         if (mGroupsSelected){
             mGroupsImageView.setColorFilter(mSelectedColor);
             mGroupsTextView.setTextColor(mSelectedColor);
-        }
-        if (!mGroupsSelected){
+        } else {
             mGroupsImageView.setColorFilter(mDefaultImageTint);
             mGroupsTextView.setTextColor(mDefaultTextColor);
         }
         if (mFriendsSelected){
             mFriendsImageView.setColorFilter(mSelectedColor);
             mFriendsTextView.setTextColor(mSelectedColor);
-        }
-        if (!mFriendsSelected){
+        } else {
             mFriendsImageView.setColorFilter(mDefaultImageTint);
             mFriendsTextView.setTextColor(mDefaultTextColor);
         }
@@ -306,6 +301,23 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         });
     }
 
+    private void getDirection(){
+        DirectionsApi.newRequest(mGeoApiContext)
+                .origin(new com.google.maps.model.LatLng(mFromLatLng.latitude,mFromLatLng.longitude))
+                .destination(new com.google.maps.model.LatLng(mToLatLng.latitude,mToLatLng.longitude))
+                .setCallback(new PendingResult.Callback<DirectionsResult>() {
+                    @Override
+                    public void onResult(DirectionsResult result) {
+                        Log.d(TAG, new Gson().toJson(result));
+                    }
+
+                    @Override
+                    public void onFailure(Throwable e) {
+                        Log.d(TAG, "Failed Response:"+e.getMessage());
+                    }
+                });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -336,6 +348,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
                 mToLatLng = toPlace.getLatLng();
                 addMarker();
                 moveCamera(mToLatLng);
+                getDirection();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
                 // TODO: Handle the error.
@@ -346,7 +359,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
             }
         }
     }
-
 
     private void addMarker(){
 

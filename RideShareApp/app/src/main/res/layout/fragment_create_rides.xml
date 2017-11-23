@@ -92,14 +92,14 @@
             android:textColor="@android:color/white"
             android:padding="@dimen/default_padding"/>
 
-        <LinearLayout android:id="@+id/create_rides_trust_network_root_layout"
+        <LinearLayout android:id="@+id/create_rides_trust_category_root_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"
                       android:layout_above="@id/create_rides_buttons_layout"
                       android:background="@android:color/white">
 
-            <LinearLayout android:id="@+id/create_rides_trust_network_all_layout"
+            <LinearLayout android:id="@+id/create_rides_trust_category_all_layout"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:orientation="vertical"
@@ -109,7 +109,7 @@
                           android:layout_weight="1">
 
                 <ImageView
-                    android:id="@+id/create_rides_trust_network_all_image"
+                    android:id="@+id/create_rides_trust_category_all_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -117,14 +117,14 @@
                     android:src="@drawable/ic_person"
                     />
 
-                <TextView android:id="@+id/create_rides_trust_network_all_text"
+                <TextView android:id="@+id/create_rides_trust_category_all_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="All"/>
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/create_rides_trust_network_groups_layout"
+            <LinearLayout android:id="@+id/create_rides_trust_category_groups_layout"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:orientation="vertical"
@@ -133,21 +133,21 @@
                           android:paddingBottom="@dimen/default_padding"
                           android:layout_weight="1">
 
-                <ImageView android:id="@+id/create_rides_trust_network_groups_image"
+                <ImageView android:id="@+id/create_rides_trust_category_groups_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_group"
                     android:clickable="true"
                     android:focusable="true"/>
 
-                <TextView android:id="@+id/create_rides_trust_network_groups_text"
+                <TextView android:id="@+id/create_rides_trust_category_groups_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Groups"/>
 
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/create_rides_trust_network_friends_layout"
+            <LinearLayout android:id="@+id/create_rides_trust_category_friends_layout"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:orientation="vertical"
@@ -156,14 +156,14 @@
                           android:paddingBottom="@dimen/default_padding"
                           android:layout_weight="1">
 
-                <ImageView android:id="@+id/create_rides_trust_network_friends_image"
+                <ImageView android:id="@+id/create_rides_trust_category_friends_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_friends"
                     android:clickable="true"
                     android:focusable="true"/>
 
-                <TextView android:id="@+id/create_rides_trust_network_friends_text"
+                <TextView android:id="@+id/create_rides_trust_category_friends_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Friends"/>

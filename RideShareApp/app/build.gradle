@@ -48,6 +48,12 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:11.6.0'
     //Google Places Service for AutoComplete
     compile 'com.google.android.gms:play-services-places:11.6.0'
+    //Google Maps Android Util
+    compile 'com.google.maps.android:android-maps-utils:0.5'
+    //Google Maps Services API Library for Java
+    compile 'com.google.maps:google-maps-services:0.2.5'
+    //This is required for Google Maps Service API Library as a dependency
+    compile 'org.slf4j:slf4j-nop:1.7.25'
 }
 
 //This has to be below the dependencies block otherwise you will get conflict with firebase (firebase comes with google services)

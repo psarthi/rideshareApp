@@ -1,6 +1,7 @@
 package com.digitusrevolution.rideshare.fragment;
 
 import android.Manifest;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.maps.GeoApiContext;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,9 +31,10 @@ import java.util.Date;
 public class BaseFragment extends Fragment implements OnMapReadyCallback{
 
     public static final String TAG = BaseFragment.class.getName();
-    public GoogleMap mMap;
-    public FusedLocationProviderClient mFusedLocationProviderClient;
-    public BaseFragmentListener mBaseFragmentListener;
+    GoogleMap mMap;
+    FusedLocationProviderClient mFusedLocationProviderClient;
+    BaseFragmentListener mBaseFragmentListener;
+    GeoApiContext mGeoApiContext;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -49,6 +52,27 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
             Log.d(TAG, "Location Permission already there");
             setCurrentLocationOnMap();
         }
+
+        //This will set Google Maps API Context, Ideally this should be set only once for the lifetime of application.
+        //TODO May need to figure our better place for this function
+        setGeoApiContext();
+    }
+
+    private void setGeoApiContext(){
+        String API_KEY = getStringValueFromManifest("com.google.android.geo.API_KEY");
+        mGeoApiContext = new GeoApiContext.Builder().apiKey(API_KEY).build();
+    }
+
+    private String getStringValueFromManifest(String KEY) {
+        ApplicationInfo ai = null;
+        String value = null;
+        try {
+            ai = getActivity().getPackageManager().getApplicationInfo(getActivity().getPackageName(), PackageManager.GET_META_DATA);
+            value = ai.metaData.getString(KEY);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG,"Unable to read KEY:"+KEY);
+        }
+        return value;
     }
 
     private void setCurrentLocationOnMap() {
