@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
@@ -173,6 +174,10 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
 
         mDateTextView = view.findViewById(R.id.create_rides_date_text);
         mTimeTextView = view.findViewById(R.id.create_rides_time_text);
+        //Set current time
+        mDateTextView.setText(getFormattedDateString(mStartTimeCalendar.getTime()));
+        mTimeTextView.setText(getTimeIn12HrFormat(mStartTimeCalendar.get(Calendar.HOUR_OF_DAY),mStartTimeCalendar.get(Calendar.MINUTE)));
+        Log.d(TAG,"Current Time in Millis:"+mStartTimeCalendar.getTimeInMillis());
         setDateTimeOnClickListener();
 
         setTrustCategoryViews(view);
@@ -497,6 +502,15 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         mTimeTextView.setText(timeIn12HrFormat);
         mStartTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         mStartTimeCalendar.set(Calendar.MINUTE, minute);
+        Log.d(TAG,"Selected Date:"+mStartTimeCalendar.getTime());
+        Log.d(TAG,"Current Date:"+Calendar.getInstance().getTime());
+        /*
+        if (mStartTimeCalendar.getTime().before(Calendar.getInstance().getTime())){
+            Toast.makeText(getActivity(),"Start Time can't be in the past",Toast.LENGTH_LONG).show();
+            DialogFragment dialogFragment = TimePickerFragment.newInstance(CreateRidesFragment.this);
+            dialogFragment.show(getActivity().getSupportFragmentManager(),"timePicker" );
+        }
+        */
     }
 
     @Override
