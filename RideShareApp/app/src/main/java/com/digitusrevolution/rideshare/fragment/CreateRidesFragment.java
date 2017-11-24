@@ -3,7 +3,6 @@ package com.digitusrevolution.rideshare.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.ColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
@@ -189,12 +188,12 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     }
 
     private void setTrustCategoryViews(View view) {
-        mAllImageView = view.findViewById(R.id.create_rides_trust_category_all_image);
-        mAllTextView = view.findViewById(R.id.create_rides_trust_category_all_text);
-        mGroupsImageView = view.findViewById(R.id.create_rides_trust_category_groups_image);
-        mGroupsTextView = view.findViewById(R.id.create_rides_trust_category_groups_text);
-        mFriendsImageView = view.findViewById(R.id.create_rides_trust_category_friends_image);
-        mFriendsTextView = view.findViewById(R.id.create_rides_trust_category_friends_text);
+        mAllImageView = view.findViewById(R.id.trust_category_all_image);
+        mAllTextView = view.findViewById(R.id.trust_category_all_text);
+        mGroupsImageView = view.findViewById(R.id.trust_category_groups_image);
+        mGroupsTextView = view.findViewById(R.id.trust_category_groups_text);
+        mFriendsImageView = view.findViewById(R.id.trust_category_friends_image);
+        mFriendsTextView = view.findViewById(R.id.trust_category_friends_text);
 
         mSelectedColor = ContextCompat.getColor(getActivity(), R.color.colorAccent);
         mDefaultTextColor = mAllTextView.getTextColors().getDefaultColor();

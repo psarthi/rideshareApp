@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 
@@ -84,7 +83,7 @@ public class AddVehicleFragment extends BaseFragment {
         // Don't setDropDownView here and instead overwrite getDropDownView since we are using Object instead of String.
         //If you are using plan String in ArrayAdapter then no need to write custom adapter and below set function would do the job
         categoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner categotySpinner = view.findViewById(R.id.add_vehicle_category_spinner);
+        Spinner categotySpinner = view.findViewById(R.id.vehicle_category_spinner);
         categotySpinner.setAdapter(categoryArrayAdapter);
 
         //Below snapshot is for reference which shows that no need to write custom adapter if the value is plan String
@@ -96,7 +95,7 @@ public class AddVehicleFragment extends BaseFragment {
         // Don't setDropDownView here and instead overwrite getDropDownView since we are using Object instead of String.
         //If you are using plan String in ArrayAdapter then no need to write custom adapter and below set function would do the job
         subCategoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner subCategorySpinner = view.findViewById(R.id.add_vehicle_sub_category_spinner);
+        Spinner subCategorySpinner = view.findViewById(R.id.vehicle_sub_category_spinner);
         subCategorySpinner.setAdapter(subCategoryArrayAdapter);
         subCategorySpinner.setSelection(1);
 
