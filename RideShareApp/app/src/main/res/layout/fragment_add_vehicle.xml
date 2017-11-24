@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.digitusrevolution.rideshare.fragment.AddVehicleFragment">
+    tools:context="com.digitusrevolution.rideshare.fragment.AddVehicleFragment"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/default_margin">
 
     <LinearLayout android:id="@+id/add_vehicle_number_layout"
                   android:layout_width="match_parent"
@@ -17,8 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/registration_number_label"
-            android:textSize="@dimen/standard_label_text_size"
-            android:padding="@dimen/default_padding"/>
+            android:textSize="@dimen/standard_label_text_size"/>
 
         <EditText android:id="@+id/add_vehicle_number_text"
                   android:layout_width="match_parent"
@@ -30,7 +31,6 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:padding="@dimen/default_padding"
-                  android:layout_below="@id/add_vehicle_number_layout"
                   android:orientation="vertical">
 
         <TextView
@@ -38,8 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/model_label"
-            android:textSize="@dimen/standard_label_text_size"
-            android:padding="@dimen/default_padding"/>
+            android:textSize="@dimen/standard_label_text_size"/>
 
         <EditText android:id="@+id/add_vehicle_model_text"
                   android:layout_width="match_parent"
@@ -51,15 +50,15 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:padding="@dimen/default_padding"
-                  android:layout_below="@id/add_vehicle_model_layout">
+                  android:layout_marginBottom="@dimen/default_margin"
+                  android:gravity="center">
 
         <TextView
             android:id="@+id/add_vehicle_category_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/category_label"
-            android:textSize="@dimen/standard_label_text_size"
-            android:padding="@dimen/default_padding"/>
+            android:textSize="@dimen/standard_label_text_size"/>
 
         <Spinner android:id="@+id/add_vehicle_category_spinner"
                  android:layout_width="match_parent"
@@ -71,15 +70,15 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:padding="@dimen/default_padding"
-                  android:layout_below="@id/add_vehicle_category_layout">
+                  android:layout_marginBottom="@dimen/default_margin"
+                  android:gravity="center">
 
         <TextView
             android:id="@+id/add_vehicle_sub_category_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sub_category_label"
-            android:textSize="@dimen/standard_label_text_size"
-            android:padding="@dimen/default_padding"/>
+            android:textSize="@dimen/standard_label_text_size"/>
 
         <Spinner android:id="@+id/add_vehicle_sub_category_spinner"
                  android:layout_width="match_parent"
@@ -91,15 +90,14 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:padding="@dimen/default_padding"
-                  android:layout_below="@id/add_vehicle_sub_category_layout">
+                  android:gravity="center">
 
         <TextView
             android:id="@+id/add_vehicle_seat_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/number_of_seats_label"
-            android:textSize="@dimen/standard_label_text_size"
-            android:padding="@dimen/default_padding"/>
+            android:textSize="@dimen/standard_label_text_size"/>
 
         <LinearLayout android:id="@+id/add_vehicle_seat_inner_layout"
                       android:layout_width="match_parent"
@@ -112,7 +110,6 @@
                          android:layout_height="wrap_content"
                          android:src="@drawable/ic_minus_circle"
                          android:background="@android:color/transparent"
-                         android:layout_gravity="center"
                          android:layout_marginEnd="@dimen/default_margin"/>
 
             <TextView android:id="@+id/add_vehicle_seat_text"
@@ -120,7 +117,6 @@
                       android:layout_height="wrap_content"
                       android:text="4"
                       android:background="@drawable/border"
-                      android:textAlignment="center"
                       android:padding="@dimen/default_padding"/>
 
             <ImageButton android:id="@+id/add_vehicle_seat_plus_image"
@@ -128,13 +124,10 @@
                          android:layout_height="wrap_content"
                          android:src="@drawable/ic_add_circle"
                          android:background="@android:color/transparent"
-                         android:layout_gravity="center"
                          android:layout_marginStart="@dimen/default_margin"/>
 
 
         </LinearLayout>
-
-
 
     </LinearLayout>
 
@@ -142,15 +135,14 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:padding="@dimen/default_padding"
-                  android:layout_below="@id/add_vehicle_seat_layout">
+                  android:gravity="center">
 
         <TextView
             android:id="@+id/add_vehicle_luggage_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/small_suitcase_capacity_label"
-            android:textSize="@dimen/standard_label_text_size"
-            android:padding="@dimen/default_padding"/>
+            android:textSize="@dimen/standard_label_text_size"/>
 
         <LinearLayout android:id="@+id/add_vehicle_luggage_inner_layout"
                       android:layout_width="match_parent"
@@ -163,8 +155,7 @@
                          android:layout_height="wrap_content"
                          android:src="@drawable/ic_minus_circle"
                          android:background="@android:color/transparent"
-                         android:layout_marginEnd="@dimen/default_margin"
-                         android:layout_gravity="center"/>
+                         android:layout_marginEnd="@dimen/default_margin"/>
 
             <TextView android:id="@+id/add_vehicle_luggage_text"
                       android:layout_width="wrap_content"
@@ -179,8 +170,7 @@
                          android:layout_height="wrap_content"
                          android:src="@drawable/ic_add_circle"
                          android:background="@android:color/transparent"
-                         android:layout_marginStart="@dimen/default_margin"
-                         android:layout_gravity="center"/>
+                         android:layout_marginStart="@dimen/default_margin"/>
 
 
         </LinearLayout>
@@ -192,10 +182,10 @@
     <LinearLayout android:id="@+id/add_vehicle_buttons_layout"
                   xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
+                  android:layout_height="match_parent"
                   android:orientation="horizontal"
                   android:padding="@dimen/default_padding"
-        android:layout_alignParentBottom="true">
+                  android:gravity="bottom">
 
         <Button
             android:id="@+id/add_vehicle_cancel_button"
@@ -222,4 +212,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

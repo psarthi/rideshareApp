@@ -44,7 +44,7 @@
         android:layout_below="@id/create_rides_from_address_text"/>
 
     <LinearLayout android:id="@+id/create_rides_datetime_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/create_rides_to_address_text"
         android:orientation="horizontal"
@@ -74,8 +74,8 @@
             android:background="@android:color/white"
             android:drawableLeft="@drawable/ic_access_time"/>
 
-
     </LinearLayout>
+
 
     <LinearLayout android:id="@+id/create_rides_bottom_layout"
         android:layout_width="match_parent"

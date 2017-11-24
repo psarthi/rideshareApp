@@ -7,25 +7,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddVehicleFragment.OnFragmentInteractionListener} interface
+ * {@link PreferenceFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link AddVehicleFragment#newInstance} factory method to
+ * Use the {@link PreferenceFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddVehicleFragment extends BaseFragment {
+public class PreferenceFragment extends BaseFragment {
 
-    public static final String TAG = AddVehicleFragment.class.getName();
+    public static final String TAG = PreferenceFragment.class.getName();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,7 +33,7 @@ public class AddVehicleFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public AddVehicleFragment() {
+    public PreferenceFragment() {
         // Required empty public constructor
     }
 
@@ -48,11 +43,11 @@ public class AddVehicleFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AddVehicleFragment.
+     * @return A new instance of fragment PreferenceFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddVehicleFragment newInstance(String param1, String param2) {
-        AddVehicleFragment fragment = new AddVehicleFragment();
+    public static PreferenceFragment newInstance(String param1, String param2) {
+        PreferenceFragment fragment = new PreferenceFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -73,40 +68,13 @@ public class AddVehicleFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_vehicle, container, false);
-
-        //Below snapshot is for reference which shows that no need to write custom adapter if the value is plan String
-        ArrayList<String> categoryArrayList = new ArrayList<>();
-        categoryArrayList.add("Car");
-        categoryArrayList.add("Two Wheeler");
-        ArrayAdapter<String> categoryArrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,categoryArrayList);
-        // Specify the layout to use when the list of choices appears
-        // Don't setDropDownView here and instead overwrite getDropDownView since we are using Object instead of String.
-        //If you are using plan String in ArrayAdapter then no need to write custom adapter and below set function would do the job
-        categoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner categotySpinner = view.findViewById(R.id.add_vehicle_category_spinner);
-        categotySpinner.setAdapter(categoryArrayAdapter);
-
-        //Below snapshot is for reference which shows that no need to write custom adapter if the value is plan String
-        ArrayList<String> subCategoryArrayList = new ArrayList<>();
-        subCategoryArrayList.add("Sedan");
-        subCategoryArrayList.add("Hatch Back");
-        ArrayAdapter<String> subCategoryArrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,subCategoryArrayList);
-        // Specify the layout to use when the list of choices appears
-        // Don't setDropDownView here and instead overwrite getDropDownView since we are using Object instead of String.
-        //If you are using plan String in ArrayAdapter then no need to write custom adapter and below set function would do the job
-        subCategoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner subCategorySpinner = view.findViewById(R.id.add_vehicle_sub_category_spinner);
-        subCategorySpinner.setAdapter(subCategoryArrayAdapter);
-        subCategorySpinner.setSelection(1);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_preference, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onAddVehicleFragmentFragmentInteraction(uri);
+            mListener.onPreferenceFragmentInteraction(uri);
         }
     }
 
@@ -139,6 +107,6 @@ public class AddVehicleFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onAddVehicleFragmentFragmentInteraction(Uri uri);
+        void onPreferenceFragmentInteraction(Uri uri);
     }
 }

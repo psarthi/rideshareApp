@@ -8,38 +8,38 @@
     tools:context="com.digitusrevolution.rideshare.activity.LandingPageActivity">
 
     <RelativeLayout android:id="@+id/home_page_rides_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
         <LinearLayout android:id="@+id/current_ride_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/large_margin"
-            android:paddingBottom="@dimen/large_margin"
-            android:background="@android:color/white">
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:paddingTop="@dimen/large_margin"
+                      android:paddingBottom="@dimen/large_margin"
+                      android:background="@android:color/white">
 
             <TextView android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Current Ride"
-                android:textAlignment="center"/>
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:text="Current Ride"
+                      android:textAlignment="center"/>
 
         </LinearLayout>
 
         <LinearLayout android:id="@+id/current_ride_request_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/small_block_height"
-            android:paddingBottom="@dimen/small_block_height"
-            android:background="@android:color/white">
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:paddingTop="@dimen/small_block_height"
+                      android:paddingBottom="@dimen/small_block_height"
+                      android:background="@android:color/white">
 
             <TextView android:id="@+id/textView-1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Current Ride Request"
-                android:textAlignment="center"/>
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:text="Current Ride Request"
+                      android:textAlignment="center"/>
         </LinearLayout>
 
 
@@ -54,9 +54,37 @@
               android:layout_above="@+id/ride_buttons_layout"
               android:layout_below="@id/home_page_rides_layout"/>
 
-    <include layout="@layout/home_page_ride_buttons"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
+    <LinearLayout android:id="@+id/ride_buttons_layout"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:padding="@dimen/default_padding"
+                  android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/home_page_request_ride_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="@string/request_ride_button_text"
+            android:textAllCaps="false"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/home_page_offer_ride_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="@string/offer_ride_button_text"
+            android:textAllCaps="false"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

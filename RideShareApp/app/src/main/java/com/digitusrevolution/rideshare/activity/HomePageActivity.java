@@ -22,6 +22,8 @@ import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.DummyFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
+import com.digitusrevolution.rideshare.fragment.PreferenceFragment;
+import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -31,7 +33,8 @@ public class HomePageActivity extends BaseActivity
         HomePageWithCurrentRidesFragment.OnFragmentInteractionListener,
         CreateRidesFragment.OnFragmentInteractionListener,
         DummyFragment.OnFragmentInteractionListener,
-        AddVehicleFragment.OnFragmentInteractionListener{
+        AddVehicleFragment.OnFragmentInteractionListener,
+        PreferenceFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -116,6 +119,8 @@ public class HomePageActivity extends BaseActivity
 
         } else if (id == R.id.nav_vehicles) {
             loadAddVehicleFragment();
+        } else if (id == R.id.nav_preference) {
+            loadPreferenceFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -141,6 +146,17 @@ public class HomePageActivity extends BaseActivity
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG);
         fragmentTransaction.addToBackStack(AddVehicleFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    private void loadPreferenceFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        PreferenceFragment preferenceFragment = PreferenceFragment.
+                newInstance(new Gson().toJson(mUserSignInResult),null);
+        //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
+        fragmentTransaction.replace(R.id.home_page_container, preferenceFragment, PreferenceFragment.TAG);
+        fragmentTransaction.addToBackStack(PreferenceFragment.TAG);
         fragmentTransaction.commit();
     }
 
@@ -172,6 +188,11 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onAddVehicleFragmentFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onPreferenceFragmentInteraction(Uri uri) {
 
     }
 }
