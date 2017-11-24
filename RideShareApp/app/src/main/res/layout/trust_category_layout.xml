@@ -8,7 +8,6 @@
               android:layout_height="wrap_content"
               android:orientation="horizontal"
               android:layout_above="@id/create_rides_buttons_layout"
-              android:background="@android:color/white"
               tools:showIn="@layout/fragment_create_rides">
 
     <LinearLayout

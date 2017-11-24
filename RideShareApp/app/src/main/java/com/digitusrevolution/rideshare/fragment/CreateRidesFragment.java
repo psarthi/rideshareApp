@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,9 @@ import com.digitusrevolution.rideshare.model.dto.google.Bounds;
 import com.digitusrevolution.rideshare.model.dto.google.GoogleDirection;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.user.domain.Role;
+import com.digitusrevolution.rideshare.model.user.domain.RoleName;
+import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -107,6 +112,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     private Calendar mStartTimeCalendar;
     private boolean mTimeInPast;
     private static final int BUFFER_TIME_IN_MINUTE = 5;
+    private UserSignInResult mUserSignInResult;
 
 
     public CreateRidesFragment() {
@@ -137,6 +143,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
             mData = getArguments().getString(ARG_DATA);
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
         }
+        mUserSignInResult = new Gson().fromJson(mData,UserSignInResult.class);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //This will assign this fragment to base fragment for callbacks.
         mBaseFragmentListener = this;
@@ -184,8 +191,27 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         updateTrustCategoryItemsColor();
         setTrustCategoryOnClickListener(view);
 
+        view.findViewById(R.id.create_rides_preference_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadPreferenceFragment();
+            }
+        });
+
+        view.findViewById(R.id.create_rides_confirm_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mUserSignInResult.getUserProfile().getRoles().contains(RoleName.Driver)){
+                    loadAddVehicleFragment();
+                } else {
+                    Log.d(TAG, "User is a driver, so create ride directly");
+                }
+            }
+        });
+
         return view;
     }
+
 
     private void setTrustCategoryViews(View view) {
         mAllImageView = view.findViewById(R.id.trust_category_all_image);
@@ -540,5 +566,32 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         // TODO: Update argument type and name
         void onCreateRideFragmentInteraction(Uri uri);
     }
+
+    private void loadPreferenceFragment() {
+        PreferenceFragment preferenceFragment = PreferenceFragment.
+                newInstance(mRideType,new Gson().toJson(mUserSignInResult));
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
+        if (mRideType.equals(RideType.OfferRide)){
+            transaction.add(R.id.home_page_container, preferenceFragment, PreferenceFragment.TAG)
+                    .addToBackStack(PreferenceFragment.TAG).commit();
+        } else {
+            transaction.replace(R.id.home_page_container, preferenceFragment, PreferenceFragment.TAG)
+                    .addToBackStack(PreferenceFragment.TAG).commit();
+        }
+    }
+
+    private void loadAddVehicleFragment() {
+        AddVehicleFragment addVehicleFragment = AddVehicleFragment.
+                newInstance(null,null);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG)
+                .addToBackStack(AddVehicleFragment.TAG)
+                .commit();
+    }
+
+
 
 }

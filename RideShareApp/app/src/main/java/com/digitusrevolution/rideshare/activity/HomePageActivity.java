@@ -23,6 +23,7 @@ import com.digitusrevolution.rideshare.fragment.DummyFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.PreferenceFragment;
+import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
@@ -153,7 +154,7 @@ public class HomePageActivity extends BaseActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         PreferenceFragment preferenceFragment = PreferenceFragment.
-                newInstance(new Gson().toJson(mUserSignInResult),null);
+                newInstance(RideType.RequestRide,new Gson().toJson(mUserSignInResult));
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, preferenceFragment, PreferenceFragment.TAG);
         fragmentTransaction.addToBackStack(PreferenceFragment.TAG);

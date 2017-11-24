@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.digitusrevolution.rideshare.fragment.PreferenceFragment"
-    android:orientation="vertical"
-    android:layout_marginTop="@dimen/default_margin">
+    android:orientation="vertical">
 
     <include layout="@layout/seat_luggage_layout"/>
 
@@ -83,7 +82,8 @@
     <LinearLayout android:id="@+id/preference_ride_layout"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:orientation="vertical">
+                  android:orientation="vertical"
+                  android:background="?android:colorBackground">
 
         <LinearLayout android:id="@+id/preference_vehicle_name_layout"
                       android:layout_width="match_parent"

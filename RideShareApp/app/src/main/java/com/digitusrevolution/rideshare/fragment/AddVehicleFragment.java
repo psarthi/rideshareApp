@@ -25,6 +25,7 @@ import java.util.ArrayList;
 public class AddVehicleFragment extends BaseFragment {
 
     public static final String TAG = AddVehicleFragment.class.getName();
+    public static final String TITLE = "Add Vehicle";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -107,6 +108,12 @@ public class AddVehicleFragment extends BaseFragment {
         if (mListener != null) {
             mListener.onAddVehicleFragmentFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(TITLE);
     }
 
     @Override

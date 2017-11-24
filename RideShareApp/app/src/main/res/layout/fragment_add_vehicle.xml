@@ -50,7 +50,6 @@
 
     <include layout="@layout/seat_luggage_layout"/>
 
-
     <LinearLayout android:id="@+id/add_vehicle_buttons_layout"
                   xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="match_parent"

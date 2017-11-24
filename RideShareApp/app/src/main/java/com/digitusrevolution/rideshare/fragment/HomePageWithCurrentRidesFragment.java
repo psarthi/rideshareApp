@@ -114,7 +114,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
     }
 
     private void loadCreatesRideFragment(RideType rideType) {
-        Fragment createRidesFragment = CreateRidesFragment.newInstance(rideType, null);
+        Fragment createRidesFragment = CreateRidesFragment.newInstance(rideType, new Gson().toJson(mUserSignInResult));
         //Add to back stack as user may want to go back to home page and choose alternate option
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_page_container,createRidesFragment, CreateRidesFragment.TAG)

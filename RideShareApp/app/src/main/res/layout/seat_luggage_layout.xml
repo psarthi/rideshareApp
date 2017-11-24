@@ -6,6 +6,7 @@
               android:layout_height="wrap_content"
               android:padding="@dimen/default_padding"
               android:orientation="horizontal"
+              android:background="?android:colorBackground"
               tools:showIn="@layout/fragment_add_vehicle">
 
     <LinearLayout

@@ -4,11 +4,16 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.ride.domain.core.Ride;
+import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
+import com.google.gson.Gson;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,17 +26,19 @@ import com.digitusrevolution.rideshare.R;
 public class PreferenceFragment extends BaseFragment {
 
     public static final String TAG = PreferenceFragment.class.getName();
+    public static final String TITLE = "Preference";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_RIDE_TYPE = "rideType";
+    private static final String ARG_PARAM2 = "data";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RideType mRideType;
+    private String mData;
 
     private OnFragmentInteractionListener mListener;
+    private UserSignInResult mUserSignInResult;
 
     public PreferenceFragment() {
         // Required empty public constructor
@@ -41,16 +48,16 @@ public class PreferenceFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param rideType Type of ride e.g. Offer Ride or Request Ride
+     * @param data  Data in Json format
      * @return A new instance of fragment PreferenceFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PreferenceFragment newInstance(String param1, String param2) {
+    public static PreferenceFragment newInstance(RideType rideType, String data) {
         PreferenceFragment fragment = new PreferenceFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_RIDE_TYPE, rideType.toString());
+        args.putString(ARG_PARAM2, data);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,16 +66,31 @@ public class PreferenceFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
+            mData = getArguments().getString(ARG_PARAM2);
         }
+        mUserSignInResult = new Gson().fromJson(mData,UserSignInResult.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_preference, container, false);
+        View view = inflater.inflate(R.layout.fragment_preference, container, false);
+        //This will always be invisible as it would be used in other screens and not here
+        view.findViewById(R.id.trust_category_root_layout).setVisibility(View.GONE);
+        if (!mRideType.equals(RideType.OfferRide)){
+            view.findViewById(R.id.preference_ride_layout).setVisibility(View.GONE);
+        } else {
+            view.findViewById(R.id.preference_ride_request_layout).setVisibility(View.GONE);
+        }
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(TITLE);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
