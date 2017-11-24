@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.DummyFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
@@ -29,7 +30,8 @@ public class HomePageActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HomePageWithCurrentRidesFragment.OnFragmentInteractionListener,
         CreateRidesFragment.OnFragmentInteractionListener,
-        DummyFragment.OnFragmentInteractionListener {
+        DummyFragment.OnFragmentInteractionListener,
+        AddVehicleFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -113,7 +115,7 @@ public class HomePageActivity extends BaseActivity
         } else if (id == R.id.nav_groups) {
 
         } else if (id == R.id.nav_vehicles) {
-
+            loadAddVehicleFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -128,6 +130,17 @@ public class HomePageActivity extends BaseActivity
                 newInstance(new Gson().toJson(mUserSignInResult));
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, homePageWithCurrentRidesFragment, HomePageWithCurrentRidesFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    private void loadAddVehicleFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        AddVehicleFragment addVehicleFragment = AddVehicleFragment.
+                newInstance(new Gson().toJson(mUserSignInResult),null);
+        //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
+        fragmentTransaction.replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG);
+        fragmentTransaction.addToBackStack(AddVehicleFragment.TAG);
         fragmentTransaction.commit();
     }
 
@@ -153,8 +166,12 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onOfferRideFragmentInteraction(Uri uri) {
+    public void onCreateRideFragmentInteraction(Uri uri) {
 
     }
 
+    @Override
+    public void onAddVehicleFragmentFragmentInteraction(Uri uri) {
+
+    }
 }

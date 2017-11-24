@@ -61,7 +61,7 @@
             android:background="@android:color/white"
             android:textStyle="italic"
             android:gravity="center"
-            android:drawableLeft="@drawable/ic_date"/>
+            android:drawableLeft="@android:drawable/ic_menu_my_calendar"/>
 
         <TextView
             android:id="@+id/create_rides_time_text"

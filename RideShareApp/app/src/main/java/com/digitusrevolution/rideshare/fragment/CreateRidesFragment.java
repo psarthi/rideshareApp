@@ -72,13 +72,11 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     public static final String OFFER_RIDE_TITLE = "Offer Ride";
     public static final String REQUEST_RIDE_TITLE = "Request Ride";
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     // These are the keys which would be used to store and retrieve the data
     private static final String ARG_RIDE_TYPE = "rideType";
     private static final String ARG_DATA = "data";
 
-    // TODO: Rename and change types of parameters
     private String mTitle;
     private String mData;
     private RideType mRideType;
@@ -108,6 +106,8 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     private ColorFilter mDefaultImageTint;
     private GoogleDirection mGoogleDirection;
     private Calendar mStartTimeCalendar;
+    private boolean mTimeInPast;
+    private static final int BUFFER_TIME_IN_MINUTE = 5;
 
 
     public CreateRidesFragment() {
@@ -122,7 +122,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
      * @param data  Data in Json format
      * @return A new instance of fragment CreateRidesFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static CreateRidesFragment newInstance(RideType rideType, String data) {
         CreateRidesFragment fragment = new CreateRidesFragment();
         Bundle args = new Bundle();
@@ -467,7 +466,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onOfferRideFragmentInteraction(uri);
+            mListener.onCreateRideFragmentInteraction(uri);
         }
     }
 
@@ -504,13 +503,17 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         mStartTimeCalendar.set(Calendar.MINUTE, minute);
         Log.d(TAG,"Selected Date:"+mStartTimeCalendar.getTime());
         Log.d(TAG,"Current Date:"+Calendar.getInstance().getTime());
-        /*
-        if (mStartTimeCalendar.getTime().before(Calendar.getInstance().getTime())){
-            Toast.makeText(getActivity(),"Start Time can't be in the past",Toast.LENGTH_LONG).show();
-            DialogFragment dialogFragment = TimePickerFragment.newInstance(CreateRidesFragment.this);
-            dialogFragment.show(getActivity().getSupportFragmentManager(),"timePicker" );
+        Calendar currentTime = Calendar.getInstance();
+        //This will subtract 5 minutes to the current time for comparision of selected time vs current time
+        currentTime.add(Calendar.MINUTE,-BUFFER_TIME_IN_MINUTE);
+        if (mStartTimeCalendar.getTime().before(currentTime.getTime())){
+            Toast.makeText(getActivity(),"Start Time can't be in the past",Toast.LENGTH_SHORT).show();
+            mTimeTextView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+            mTimeInPast = true;
+        } else {
+            mTimeTextView.setTextColor(mDefaultTextColor);
+            mTimeInPast = false;
         }
-        */
     }
 
     @Override
@@ -536,7 +539,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onOfferRideFragmentInteraction(Uri uri);
+        void onCreateRideFragmentInteraction(Uri uri);
     }
 
 }

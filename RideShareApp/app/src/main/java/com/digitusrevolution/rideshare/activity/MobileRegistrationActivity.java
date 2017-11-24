@@ -158,7 +158,7 @@ public class MobileRegistrationActivity extends BaseActivity {
                 ArrayAdapter<String> countryArrayAdapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,arrayList);
                 // Specify the layout to use when the list of choices appears
                 // Don't setDropDownView here and instead overwrite getDropDownView since we are using Object instead of String.
-                //If you are using plan String in ArrayAdapter then no need to write custom adapter and below set function would do the job
+                //If you are using plain String in ArrayAdapter then no need to write custom adapter and below set function would do the job
                 countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 */
             }
