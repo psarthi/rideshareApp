@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.digitusrevolution.rideshare.fragment.PreferenceFragment"
-    android:orientation="vertical">
+    tools:context="com.digitusrevolution.rideshare.fragment.RidesOptionFragment">
 
-    <include layout="@layout/seat_luggage_layout"/>
+    <include layout="@layout/seat_luggage_layout" android:id="@+id/rides_option_seat_luggage_layout"/>
 
-    <LinearLayout android:id="@+id/preference_ride_request_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <LinearLayout android:id="@+id/rides_option_ride_request_layout"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_below="@id/rides_option_seat_luggage_layout">
 
-        <LinearLayout android:id="@+id/preference_pickup_time_variation_layout"
+        <LinearLayout android:id="@+id/rides_option_pickup_time_variation_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
                       android:padding="@dimen/default_padding"
                       android:layout_marginTop="@dimen/default_margin">
 
-            <TextView android:id="@+id/preference_pickup_time_variation_label"
+            <TextView android:id="@+id/rides_option_pickup_time_variation_label"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="Pickup Time Variation"/>
 
-            <SeekBar android:id="@+id/preference_pickup_time_variation_seekBar"
+            <SeekBar android:id="@+id/rides_option_pickup_time_variation_seekBar"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:min="10"
@@ -35,18 +35,18 @@
 
         </LinearLayout>
 
-        <LinearLayout android:id="@+id/preference_pickup_distance_variation_layout"
+        <LinearLayout android:id="@+id/rides_option_pickup_distance_variation_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
                       android:padding="@dimen/default_padding">
 
-            <TextView android:id="@+id/preference_pickup_distance_variation_label"
+            <TextView android:id="@+id/rides_option_pickup_distance_variation_label"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="Pickup Distance Variation"/>
 
-            <SeekBar android:id="@+id/preference_pickup_distance_variation_seekBar"
+            <SeekBar android:id="@+id/rides_option_pickup_distance_variation_seekBar"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:min="10"
@@ -55,18 +55,18 @@
 
         </LinearLayout>
 
-        <LinearLayout android:id="@+id/preference_drop_time_variation_layout"
+        <LinearLayout android:id="@+id/rides_option_drop_time_variation_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
                       android:padding="@dimen/default_padding">
 
-            <TextView android:id="@+id/preference_drop_time_variation_label"
+            <TextView android:id="@+id/rides_option_drop_time_variation_label"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="Pickup Distance Variation"/>
 
-            <SeekBar android:id="@+id/preference_drop_time_variation_seekBar"
+            <SeekBar android:id="@+id/rides_option_drop_time_variation_seekBar"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:min="10"
@@ -79,13 +79,15 @@
 
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/preference_ride_layout"
+    <LinearLayout android:id="@+id/rides_option_ride_layout"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="vertical"
-                  android:background="?android:colorBackground">
+                  android:background="?android:colorBackground"
+                  android:layout_below="@id/rides_option_ride_request_layout"
+                  android:layout_above="@id/rides_option_buttons_layout">
 
-        <LinearLayout android:id="@+id/preference_vehicle_name_layout"
+        <LinearLayout android:id="@+id/rides_option_vehicle_name_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:padding="@dimen/default_padding"
@@ -93,33 +95,39 @@
                       android:layout_marginBottom="@dimen/default_margin">
 
             <TextView
-                android:id="@+id/preference_vehicle_name_label"
+                android:id="@+id/rides_option_vehicle_name_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/vehicle_number_label"
                 android:textSize="@dimen/standard_label_text_size"/>
 
-            <Spinner android:id="@+id/preference_vehicle_name_spinner"
+            <Spinner android:id="@+id/rides_option_vehicle_name_spinner"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:textAlignment="viewEnd"/>
         </LinearLayout>
 
+        <fragment android:id="@+id/rides_option_map"
+                  xmlns:map="http://schemas.android.com/apk/res-auto"
+                  android:name="com.google.android.gms.maps.SupportMapFragment"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  map:liteMode="true"/>
 
     </LinearLayout>
 
-    <include layout="@layout/trust_category_layout"/>
-
-    <LinearLayout android:id="@+id/preference_buttons_layout"
+    <LinearLayout android:id="@+id/rides_option_buttons_layout"
                   xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="match_parent"
-                  android:layout_height="match_parent"
+                  android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:padding="@dimen/default_padding"
-                  android:gravity="bottom">
+                  android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/preference_cancel_button"
+            android:id="@+id/rides_option_cancel_button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -130,7 +138,7 @@
             android:textStyle="bold"/>
 
         <Button
-            android:id="@+id/preference_confirm_button"
+            android:id="@+id/rides_option_confirm_button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -143,4 +151,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

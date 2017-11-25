@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +28,6 @@ import com.digitusrevolution.rideshare.model.dto.google.Bounds;
 import com.digitusrevolution.rideshare.model.dto.google.GoogleDirection;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
-import com.digitusrevolution.rideshare.model.user.domain.Role;
 import com.digitusrevolution.rideshare.model.user.domain.RoleName;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -191,10 +188,10 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         updateTrustCategoryItemsColor();
         setTrustCategoryOnClickListener(view);
 
-        view.findViewById(R.id.create_rides_preference_button).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.create_rides_option_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadPreferenceFragment();
+                loadRidesOptionFragment();
             }
         });
 
@@ -567,19 +564,13 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         void onCreateRideFragmentInteraction(Uri uri);
     }
 
-    private void loadPreferenceFragment() {
-        PreferenceFragment preferenceFragment = PreferenceFragment.
+    private void loadRidesOptionFragment() {
+        RidesOptionFragment ridesOptionFragment = RidesOptionFragment.
                 newInstance(mRideType,new Gson().toJson(mUserSignInResult));
 
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-
-        if (mRideType.equals(RideType.OfferRide)){
-            transaction.add(R.id.home_page_container, preferenceFragment, PreferenceFragment.TAG)
-                    .addToBackStack(PreferenceFragment.TAG).commit();
-        } else {
-            transaction.replace(R.id.home_page_container, preferenceFragment, PreferenceFragment.TAG)
-                    .addToBackStack(PreferenceFragment.TAG).commit();
-        }
+        getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG)
+                    .addToBackStack(RidesOptionFragment.TAG).commit();
     }
 
     private void loadAddVehicleFragment() {

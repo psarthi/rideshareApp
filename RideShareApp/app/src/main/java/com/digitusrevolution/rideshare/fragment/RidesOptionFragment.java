@@ -4,29 +4,27 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.model.app.RideType;
-import com.digitusrevolution.rideshare.model.ride.domain.core.Ride;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PreferenceFragment.OnFragmentInteractionListener} interface
+ * {@link RidesOptionFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PreferenceFragment#newInstance} factory method to
+ * Use the {@link RidesOptionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PreferenceFragment extends BaseFragment {
+public class RidesOptionFragment extends BaseFragment {
 
-    public static final String TAG = PreferenceFragment.class.getName();
-    public static final String TITLE = "Preference";
+    public static final String TAG = RidesOptionFragment.class.getName();
+    public static final String TITLE = "Option";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,7 +38,7 @@ public class PreferenceFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     private UserSignInResult mUserSignInResult;
 
-    public PreferenceFragment() {
+    public RidesOptionFragment() {
         // Required empty public constructor
     }
 
@@ -50,11 +48,11 @@ public class PreferenceFragment extends BaseFragment {
      *
      * @param rideType Type of ride e.g. Offer Ride or Request Ride
      * @param data  Data in Json format
-     * @return A new instance of fragment PreferenceFragment.
+     * @return A new instance of fragment RidesOptionFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PreferenceFragment newInstance(RideType rideType, String data) {
-        PreferenceFragment fragment = new PreferenceFragment();
+    public static RidesOptionFragment newInstance(RideType rideType, String data) {
+        RidesOptionFragment fragment = new RidesOptionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_RIDE_TYPE, rideType.toString());
         args.putString(ARG_PARAM2, data);
@@ -76,13 +74,11 @@ public class PreferenceFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_preference, container, false);
-        //This will always be invisible as it would be used in other screens and not here
-        view.findViewById(R.id.trust_category_root_layout).setVisibility(View.GONE);
+        View view = inflater.inflate(R.layout.fragment_rides_option, container, false);
         if (!mRideType.equals(RideType.OfferRide)){
-            view.findViewById(R.id.preference_ride_layout).setVisibility(View.GONE);
+            view.findViewById(R.id.rides_option_ride_layout).setVisibility(View.GONE);
         } else {
-            view.findViewById(R.id.preference_ride_request_layout).setVisibility(View.GONE);
+            view.findViewById(R.id.rides_option_ride_request_layout).setVisibility(View.GONE);
         }
         return view;
     }

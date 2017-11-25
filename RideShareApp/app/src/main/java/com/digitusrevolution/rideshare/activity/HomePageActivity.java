@@ -22,9 +22,8 @@ import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.DummyFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
-import com.digitusrevolution.rideshare.fragment.PreferenceFragment;
+import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.model.app.RideType;
-import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -35,7 +34,7 @@ public class HomePageActivity extends BaseActivity
         CreateRidesFragment.OnFragmentInteractionListener,
         DummyFragment.OnFragmentInteractionListener,
         AddVehicleFragment.OnFragmentInteractionListener,
-        PreferenceFragment.OnFragmentInteractionListener{
+        RidesOptionFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -121,7 +120,7 @@ public class HomePageActivity extends BaseActivity
         } else if (id == R.id.nav_vehicles) {
             loadAddVehicleFragment();
         } else if (id == R.id.nav_preference) {
-            loadPreferenceFragment();
+            loadRidesOptionFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -150,14 +149,14 @@ public class HomePageActivity extends BaseActivity
         fragmentTransaction.commit();
     }
 
-    private void loadPreferenceFragment() {
+    private void loadRidesOptionFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        PreferenceFragment preferenceFragment = PreferenceFragment.
+        RidesOptionFragment ridesOptionFragment = RidesOptionFragment.
                 newInstance(RideType.RequestRide,new Gson().toJson(mUserSignInResult));
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
-        fragmentTransaction.replace(R.id.home_page_container, preferenceFragment, PreferenceFragment.TAG);
-        fragmentTransaction.addToBackStack(PreferenceFragment.TAG);
+        fragmentTransaction.replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG);
+        fragmentTransaction.addToBackStack(RidesOptionFragment.TAG);
         fragmentTransaction.commit();
     }
 
