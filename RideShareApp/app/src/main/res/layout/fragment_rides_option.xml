@@ -107,15 +107,6 @@
                      android:textAlignment="viewEnd"/>
         </LinearLayout>
 
-        <fragment android:id="@+id/rides_option_map"
-                  xmlns:map="http://schemas.android.com/apk/res-auto"
-                  android:name="com.google.android.gms.maps.SupportMapFragment"
-                  xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:tools="http://schemas.android.com/tools"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  map:liteMode="true"/>
-
     </LinearLayout>
 
     <LinearLayout android:id="@+id/rides_option_buttons_layout"
@@ -145,7 +136,7 @@
             android:layout_marginStart="@dimen/default_margin"
             android:layout_weight="1"
             android:background="@color/colorPrimary"
-            android:text="@string/confirm_button_text"
+            android:text="@string/save_button_text"
             android:textAllCaps="false"
             android:textStyle="bold"/>
 

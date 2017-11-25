@@ -24,7 +24,8 @@ import com.google.gson.Gson;
 public class RidesOptionFragment extends BaseFragment {
 
     public static final String TAG = RidesOptionFragment.class.getName();
-    public static final String TITLE = "Option";
+    public static final String OFFER_RIDE_OPTION_TITLE = "Offer Ride Option";
+    public static final String REQUEST_RIDE_OPTION_TITLE = "Request Ride Option";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,7 +87,11 @@ public class RidesOptionFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle(TITLE);
+        if (mRideType.equals(RideType.OfferRide)){
+            getActivity().setTitle(OFFER_RIDE_OPTION_TITLE);
+        } else {
+            getActivity().setTitle(REQUEST_RIDE_OPTION_TITLE);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
