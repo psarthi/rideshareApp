@@ -94,7 +94,7 @@ public class RidesOptionFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((HomePageActivity)getActivity()).showBackButton(true);
+        //((HomePageActivity)getActivity()).showBackButton(true);
         if (mRideType.equals(RideType.OfferRide)){
             getActivity().setTitle(OFFER_RIDE_OPTION_TITLE);
         } else {

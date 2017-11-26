@@ -126,7 +126,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
     @Override
     public void onResume() {
         super.onResume();
-        ((HomePageActivity)getActivity()).showBackButton(false);
+        //((HomePageActivity)getActivity()).showBackButton(false);
         //Its important to set Title here else while loading fragment from backstack, title would not change
         getActivity().setTitle(TITLE);
     }
