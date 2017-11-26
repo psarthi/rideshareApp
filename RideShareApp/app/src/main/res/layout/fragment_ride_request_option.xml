@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.digitusrevolution.rideshare.fragment.RidesOptionFragment">
+
+    <include layout="@layout/seat_luggage_single_row_layout" android:id="@+id/seat_luggage_single_row_layout"/>
+
+    <include layout="@layout/vehicle_category_layout" android:id="@+id/vehicle_category_layout"
+             android:layout_below="@id/seat_luggage_single_row_layout"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/vehicle_category_layout">
+
+        <LinearLayout android:id="@+id/rides_option_pickup_time_variation_layout"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:padding="@dimen/default_padding">
+
+            <TextView android:id="@+id/rides_option_pickup_time_variation_label"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="Pickup Time Variation"/>
+
+            <SeekBar android:id="@+id/rides_option_pickup_time_variation_seekBar"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:min="10"
+                     android:max="30"
+                     android:padding="@dimen/default_padding"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/rides_option_pickup_distance_variation_layout"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:padding="@dimen/default_padding">
+
+            <TextView android:id="@+id/rides_option_pickup_distance_variation_label"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="Pickup Distance Variation"/>
+
+            <SeekBar android:id="@+id/rides_option_pickup_distance_variation_seekBar"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:min="10"
+                     android:max="30"
+                     android:padding="@dimen/default_padding"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/rides_option_drop_time_variation_layout"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:padding="@dimen/default_padding">
+
+            <TextView android:id="@+id/rides_option_drop_time_variation_label"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="Pickup Distance Variation"/>
+
+            <SeekBar android:id="@+id/rides_option_drop_time_variation_seekBar"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:min="10"
+                     android:max="30"
+                     android:padding="@dimen/default_padding"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/trust_category_layout" android:id="@+id/trust_category_layout"
+             android:layout_above="@id/button_layout"
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"/>
+
+    <include layout="@layout/rides_option_button_layout" android:id="@+id/button_layout"
+             android:layout_alignParentBottom="true"
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"/>
+
+</RelativeLayout>

@@ -95,7 +95,9 @@ public class HomePageActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+            Log.d(TAG,"On Back Pressed: Inside Drawer Open State");
         } else {
+            Log.d(TAG,"On Back Pressed: Inside Else Block");
             super.onBackPressed();
         }
     }

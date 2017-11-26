@@ -91,7 +91,7 @@
             android:textColor="@android:color/white"
             android:padding="@dimen/default_padding"/>
 
-        <include layout="@layout/trust_category_layout"/>
+        <include layout="@layout/trust_category_layout" android:id="@+id/trust_category_layout"/>
 
         <LinearLayout android:id="@+id/create_rides_buttons_layout"
                       xmlns:android="http://schemas.android.com/apk/res/android"

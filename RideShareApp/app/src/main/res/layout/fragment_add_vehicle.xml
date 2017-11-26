@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:layout_marginTop="@dimen/default_margin">
 
-    <include layout="@layout/vehicle_category_layout"/>
+    <include layout="@layout/vehicle_category_layout" android:id="@+id/vehicle_category_layout"/>
 
     <LinearLayout android:id="@+id/add_vehicle_number_layout"
                   android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/registration_number_label"
-            android:textSize="@dimen/standard_label_text_size"/>
+            android:textSize="@dimen/standard_text_size"/>
 
         <EditText android:id="@+id/add_vehicle_number_text"
                   android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/model_label"
-            android:textSize="@dimen/standard_label_text_size"/>
+            android:textSize="@dimen/standard_text_size"/>
 
         <EditText android:id="@+id/add_vehicle_model_text"
                   android:layout_width="match_parent"
@@ -48,7 +48,7 @@
                   android:inputType="textNoSuggestions"/>
     </LinearLayout>
 
-    <include layout="@layout/seat_luggage_layout"/>
+    <include layout="@layout/seat_luggage_layout" android:id="@+id/seat_luggage_layout"/>
 
     <LinearLayout android:id="@+id/add_vehicle_buttons_layout"
                   xmlns:android="http://schemas.android.com/apk/res/android"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,13 +75,16 @@ public class RidesOptionFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view;
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_rides_option, container, false);
-        if (!mRideType.equals(RideType.OfferRide)){
-            view.findViewById(R.id.rides_option_ride_layout).setVisibility(View.GONE);
+        if (mRideType.equals(RideType.OfferRide)){
+            view = inflater.inflate(R.layout.fragment_offer_ride_option, container, false);
         } else {
-            view.findViewById(R.id.rides_option_ride_request_layout).setVisibility(View.GONE);
+            view = inflater.inflate(R.layout.fragment_ride_request_option, container, false);
         }
+        Log.d(TAG,"RideType:"+mRideType);
+        view.findViewById(R.id.trust_category_layout).setVisibility(View.GONE);
+
         return view;
     }
 
