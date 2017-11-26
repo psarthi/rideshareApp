@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.android.gms.location.LocationServices;
@@ -125,6 +126,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
     @Override
     public void onResume() {
         super.onResume();
+        ((HomePageActivity)getActivity()).showBackButton(false);
         //Its important to set Title here else while loading fragment from backstack, title would not change
         getActivity().setTitle(TITLE);
     }

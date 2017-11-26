@@ -20,6 +20,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
@@ -569,8 +570,8 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
                 newInstance(mRideType,new Gson().toJson(mUserSignInResult));
 
         getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG)
-                    .addToBackStack(RidesOptionFragment.TAG).commit();
+                .replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG)
+                .addToBackStack(RidesOptionFragment.TAG).commit();
     }
 
     private void loadAddVehicleFragment() {

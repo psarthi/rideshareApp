@@ -42,8 +42,8 @@
     <string name="model_label">Model</string>
     <string name="category_label">Category</string>
     <string name="sub_category_label">Sub Category</string>
-    <string name="number_of_seats_label">Number of Seats</string>
-    <string name="small_suitcase_capacity_label">Small Suitcase Capacity</string>
+    <string name="number_of_seats_label">Seats</string>
+    <string name="small_luggage_label">Small Luggage</string>
     <string name="cancel_button_text">Cancel</string>
     <string name="add_button_text">Add</string>
     <string name="vehicle_category_label">Vehicle Category</string>
@@ -51,5 +51,4 @@
     <string name="vehicle_sub_category_label">Vehicle Sub Category</string>
     <string name="save_button_text">Save</string>
     <string name="option_button_text">Option</string>
-    <string name="small_luggage_label">Number of Small Luggage</string>
 </resources>

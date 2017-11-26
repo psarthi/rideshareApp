@@ -4,12 +4,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
@@ -91,6 +94,7 @@ public class RidesOptionFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((HomePageActivity)getActivity()).showBackButton(true);
         if (mRideType.equals(RideType.OfferRide)){
             getActivity().setTitle(OFFER_RIDE_OPTION_TITLE);
         } else {
