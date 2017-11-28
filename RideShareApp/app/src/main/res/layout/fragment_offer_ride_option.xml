@@ -9,7 +9,7 @@
 
     <include layout="@layout/seat_luggage_layout" android:id="@+id/seat_luggage_layout"/>
 
-    <LinearLayout android:id="@+id/rides_option_vehicle_name_layout"
+    <LinearLayout android:id="@+id/offer_ride_option_vehicle_name_layout"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:padding="@dimen/default_padding"
@@ -18,13 +18,13 @@
                   android:layout_below="@id/seat_luggage_layout">
 
         <TextView
-            android:id="@+id/rides_option_vehicle_name_label"
+            android:id="@+id/offer_ride_option_vehicle_name_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/vehicle_number_label"
             android:textSize="@dimen/standard_text_size"/>
 
-        <Spinner android:id="@+id/rides_option_vehicle_name_spinner"
+        <Spinner android:id="@+id/offer_ride_option_vehicle_name_spinner"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:textAlignment="viewEnd"/>

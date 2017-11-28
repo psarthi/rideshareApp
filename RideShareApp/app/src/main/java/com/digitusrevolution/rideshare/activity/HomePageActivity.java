@@ -115,7 +115,9 @@ public class HomePageActivity extends BaseActivity
         int id = item.getItemId();
         //This will remove all the fragment from backstack and would start from clean slate
         //So that we don't have too many backstacks items when user clicks on navigation items from anywhere
-        while(getSupportFragmentManager().popBackStackImmediate()){};
+        while(getSupportFragmentManager().popBackStackImmediate()){
+            Log.d(TAG,"Backstack Entry Count is:"+getSupportFragmentManager().getBackStackEntryCount());
+        };
         Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
         if (id == R.id.nav_home) {
             loadHomePageWithCurrentRidesFragment();
@@ -254,7 +256,7 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.option_menu_item, menu);
+        //getMenuInflater().inflate(R.menu.option_menu_item, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

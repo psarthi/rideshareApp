@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -129,6 +131,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         //((HomePageActivity)getActivity()).showBackButton(false);
         //Its important to set Title here else while loading fragment from backstack, title would not change
         getActivity().setTitle(TITLE);
+        Log.d(TAG,"Inside OnResume");
+        showBackStackDetails();
     }
 
     private void setRidesLayoutVisibility() {
@@ -184,6 +188,9 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
     @Override
     public void onSetCurrentLocationOnMap(LatLng latLng) {
         Log.d(TAG,"Recieved Callback with LatLng:"+latLng.latitude+","+latLng.latitude);
+        //This will move the camera to cover current location. Reason behind having it here as in BaseFragment
+        //we have removed move camera option so that it can support create rides as well as home page fragment together
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
     }
 
     /**

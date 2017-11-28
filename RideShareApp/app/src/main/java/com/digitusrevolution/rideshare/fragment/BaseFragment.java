@@ -65,8 +65,8 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(latLng)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
-                        //Calling back the interface implementor i.e. whatever has been set in BaseFragmentListener member variable,
+                        // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
+                        // Calling back the interface implementor i.e. whatever has been set in BaseFragmentListener member variable,
                         // it will get call back
                         mBaseFragmentListener.onSetCurrentLocationOnMap(latLng);
                     } else {
@@ -131,6 +131,17 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
     public interface BaseFragmentListener {
 
         void onSetCurrentLocationOnMap(LatLng latLng);
+    }
+
+    public void showBackStackDetails(){
+
+        int count = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+        Log.d(TAG,"Fragment count in backstack is:"+count);
+        for (int i=0; i< count;i++){
+            String name = getActivity().getSupportFragmentManager().getBackStackEntryAt(i).getName();
+            int id = getActivity().getSupportFragmentManager().getBackStackEntryAt(i).getId();
+            Log.d(TAG, "Backstack entry [name,id] at index "+i+":"+name+","+id);
+        }
     }
 
 }

@@ -144,7 +144,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         super.onCreate(savedInstanceState);
         //This will append items option menu by invoking fragment onCreateOptionMenu
         //So that you can have customer option menu for each fragment
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
         if (getArguments() != null) {
             mData = getArguments().getString(ARG_DATA);
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
@@ -155,17 +155,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         mBaseFragmentListener = this;
         //Setting calender to current time
         mStartTimeCalendar = Calendar.getInstance();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //Its important to set Title here else while loading fragment from backstack, title would not change
-        if (mRideType.equals(RideType.OfferRide)){
-            getActivity().setTitle(OFFER_RIDE_TITLE);
-        } else {
-            getActivity().setTitle(REQUEST_RIDE_TITLE);
-        }
     }
 
     @Override
@@ -216,6 +205,19 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Its important to set Title here else while loading fragment from backstack, title would not change
+        if (mRideType.equals(RideType.OfferRide)){
+            getActivity().setTitle(OFFER_RIDE_TITLE);
+        } else {
+            getActivity().setTitle(REQUEST_RIDE_TITLE);
+        }
+        Log.d(TAG,"Inside OnResume");
+        showBackStackDetails();
     }
 
 
@@ -427,10 +429,14 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
                 Log.d(TAG, "Success Response:" + response);
                 mGoogleDirection = new Gson().fromJson(response.toString(), GoogleDirection.class);
                 //Draw Route
-                List<LatLng> latLngs = PolyUtil.decode(mGoogleDirection.getRoutes().get(0).getOverview_polyline().getPoints());
-                mMap.addPolyline(new PolylineOptions().addAll(latLngs));
-                //Move Camera to cover all markers on Map
-                moveCamera();
+                if (mGoogleDirection.getStatus().equals("OK")){
+                    List<LatLng> latLngs = PolyUtil.decode(mGoogleDirection.getRoutes().get(0).getOverview_polyline().getPoints());
+                    mMap.addPolyline(new PolylineOptions().addAll(latLngs));
+                    //Move Camera to cover all markers on Map
+                    moveCamera();
+                } else {
+                    Toast.makeText(getActivity(),"No valid route found, please enter alternate location",Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -523,6 +529,11 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         Log.d(TAG,"Recieved Callback with LatLng:"+latLng.latitude+","+latLng.latitude);
         mFromLatLng = latLng;
         mFromAddressTextView.setText(Constant.CURRENT_LOCATION_TEXT);
+        //This will get called whenever map is reloaded and camera needs to be moved accordingly
+        //Otherwise what would happen on backpress, camera move would not happen for all markers on the map
+        //as it would assume there is only one marked which is current location marker and move camera accordinlgy
+        //as per the initial fragment load logic
+        moveCamera();
     }
 
     @Override

@@ -88,6 +88,14 @@ public class RidesOptionFragment extends BaseFragment {
         Log.d(TAG,"RideType:"+mRideType);
         view.findViewById(R.id.trust_category_layout).setVisibility(View.GONE);
 
+        View buttonView = view.findViewById(R.id.button_layout);
+        buttonView.findViewById(R.id.rides_option_save_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
+            }
+        });
+
         return view;
     }
 
@@ -100,6 +108,8 @@ public class RidesOptionFragment extends BaseFragment {
         } else {
             getActivity().setTitle(REQUEST_RIDE_OPTION_TITLE);
         }
+        Log.d(TAG,"Inside OnResume");
+        showBackStackDetails();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -140,4 +150,5 @@ public class RidesOptionFragment extends BaseFragment {
         // TODO: Update argument type and name
         void onPreferenceFragmentInteraction(Uri uri);
     }
+
 }
