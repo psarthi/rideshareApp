@@ -10,13 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
+import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
@@ -25,9 +30,12 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -52,6 +60,15 @@ public class AddVehicleFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
     private BasicUser mUser;
+    private Vehicle mVehicle = new Vehicle();
+    private Button mAddButton;
+    private Spinner mVehicleCategorySpinner;
+    private Spinner mVehicleSubCategorySpinner;
+    private EditText mRegistrationNumberText;
+    private EditText mModelText;
+    private TextView mSeatCapacityText;
+    private TextView mSmallLuggageCapacityText;
+
 
     public AddVehicleFragment() {
         // Required empty public constructor
@@ -87,11 +104,61 @@ public class AddVehicleFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_vehicle, container, false);
 
-        Spinner vehicleCategotySpinner = view.findViewById(R.id.vehicle_category_spinner);
-        Spinner vehicleSubCategotySpinner = view.findViewById(R.id.vehicle_sub_category_spinner);
-        setVehicleCategoriesSpinner(vehicleCategotySpinner, vehicleSubCategotySpinner);
+        mVehicleCategorySpinner = view.findViewById(R.id.vehicle_category_spinner);
+        mVehicleSubCategorySpinner = view.findViewById(R.id.vehicle_sub_category_spinner);
+        setVehicleCategoriesSpinner(mVehicleCategorySpinner, mVehicleSubCategorySpinner);
+
+        mRegistrationNumberText = view.findViewById(R.id.add_vehicle_number_text);
+        mModelText = view.findViewById(R.id.add_vehicle_model_text);
+
+        View seatLuggageView = view.findViewById(R.id.seat_luggage_layout);
+        mSeatCapacityText = seatLuggageView.findViewById(R.id.seat_count_text);
+        mSmallLuggageCapacityText = seatLuggageView.findViewById(R.id.luggage_count_text);
+
+        mAddButton = view.findViewById(R.id.add_vehicle_add_button);
+        setAddButtonOnClickListener();
 
         return view;
+    }
+
+    private void setAddButtonOnClickListener() {
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String ADD_VEHICLE_URL = APIUrl.ADD_VEHICLE_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()));
+                setVehicle();
+                RESTClient.post(getActivity(),ADD_VEHICLE_URL, mVehicle, new JsonHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        mUser = new Gson().fromJson(response.toString(), BasicUser.class);
+                        updateUser(mUser);
+                        Log.d(TAG, "Vehicle Added");
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Log.d(TAG, "Unable to Add Vehicle"+errorResponse);
+                    }
+                });
+            }
+        });
+    }
+
+    private void setVehicle() {
+        int vehicleCategoryIndex = mVehicleCategorySpinner.getSelectedItemPosition();
+        mVehicle.setVehicleCategory(mVehicleCategories.get(vehicleCategoryIndex));
+        for (VehicleSubCategory vehicleSubCategory : mVehicleCategories.get(vehicleCategoryIndex).getSubCategories()){
+            if (vehicleSubCategory.getName().equals(mVehicleSubCategorySpinner.getSelectedItem())){
+                mVehicle.setVehicleSubCategory(vehicleSubCategory);
+            }
+        }
+        mVehicle.setRegistrationNumber(mRegistrationNumberText.getText().toString());
+        mVehicle.setModel(mModelText.getText().toString());
+        mVehicle.setSeatCapacity(Integer.parseInt(mSeatCapacityText.getText().toString()));
+        mVehicle.setSmallLuggageCapacity(Integer.parseInt(mSmallLuggageCapacityText.getText().toString()));
     }
 
     // TODO: Rename method, update argument and hook method into UI event

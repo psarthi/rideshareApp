@@ -31,6 +31,7 @@ public class APIUrl {
     public static final String GET_OTP_URL = BASE_URL_USER_SYSTEM + "/users/getotp/{mobileNumber}";
     public static final String VALIDATE_OTP_URL = BASE_URL_USER_SYSTEM + "/users/validateotp/{mobileNumber}/{otp}";
     public static final String USER_REGISTRATION_URL = BASE_URL_USER_SYSTEM + "/users";
+    public static final String ADD_VEHICLE_URL = BASE_URL_USER_SYSTEM + "/users/{id}/vehicles";
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +
             "&destination={destinationLat},{destinationLng}&departure_time={departureEpochSecond}&key={key}";

@@ -34,6 +34,7 @@ import com.digitusrevolution.rideshare.model.dto.google.Bounds;
 import com.digitusrevolution.rideshare.model.dto.google.GoogleDirection;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.user.domain.Role;
 import com.digitusrevolution.rideshare.model.user.domain.RoleName;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
@@ -150,7 +151,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
             mData = getArguments().getString(ARG_DATA);
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
         }
-        mUser = getUser();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //This will assign this fragment to base fragment for callbacks.
         mBaseFragmentListener = this;
@@ -197,7 +197,15 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         view.findViewById(R.id.create_rides_confirm_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mUser.getRoles().contains(RoleName.Driver)){
+                boolean driverStatus = false;
+                //Reason for not using contains directly as it was not working
+                for (Role role : mUser.getRoles()){
+                    if (role.getName().equals(RoleName.Driver)){
+                        driverStatus = true;
+                        break;
+                    }
+                }
+                if (!driverStatus){
                     loadAddVehicleFragment();
                 } else {
                     Log.d(TAG, "User is a driver, so create ride directly");
@@ -217,6 +225,8 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         } else {
             getActivity().setTitle(REQUEST_RIDE_TITLE);
         }
+        mUser = getUser();
+        Log.d(TAG,"User Name is:"+mUser.getFirstName());
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
     }
