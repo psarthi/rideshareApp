@@ -13,6 +13,9 @@ public class Constant {
     //This would be appended with getPackageName(), that's why it starts with .
     public static final String SHARED_PREFS_KEY_FILE = ".rideshare";
     public static final String SHARED_PREFS_TOKEN_KEY = "token";
+    public static final String SHARED_PREFS_USER_KEY = "user";
+    public static final String SHARED_PREFS_CURRENT_RIDE_KEY = "currentRide";
+    public static final String SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY = "currentRideRequest";
     public static final int ACCESS_FINE_LOCATION_REQUEST_CODE=1;
     public static final float MAP_SINGLE_LOCATION_ZOOM_LEVEL = 15;
     public static final double LAT_LNG_TOP_PADDING_PERCENT = 0.30;

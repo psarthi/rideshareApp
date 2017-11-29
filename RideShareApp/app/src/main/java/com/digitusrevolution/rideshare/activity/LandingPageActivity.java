@@ -203,7 +203,7 @@ public class LandingPageActivity extends BaseActivity{
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                         super.onSuccess(statusCode, headers, response);
                                         UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
-                                        saveAccessToken(userSignInResult);
+                                        saveUserSignInResult(userSignInResult);
                                         startHomePageActivity(userSignInResult);
                                     }
                                     @Override

@@ -207,7 +207,7 @@ public class OtpVerificationActivity extends BaseActivity {
                 UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                 Log.d(TAG,"User has been successfully registered, Redirect to Home Page");
                 Log.d(TAG,"Access Token:"+userSignInResult.getToken());
-                saveAccessToken(userSignInResult);
+                saveUserSignInResult(userSignInResult);
                 startHomePageActivity(userSignInResult);
             }
 

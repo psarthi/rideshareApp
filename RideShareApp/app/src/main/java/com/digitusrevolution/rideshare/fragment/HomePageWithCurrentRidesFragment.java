@@ -14,6 +14,9 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,10 +44,11 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
 
     // TODO: Rename and change types of parameters
     private String mData;
-
+    private BasicUser mUser;
+    private FullRide mCurrentRide;
+    private FullRideRequest mCurrentRideRequest;
     private OnFragmentInteractionListener mListener;
     private TextView mTextView;
-    private UserSignInResult mUserSignInResult;
     private LinearLayout mCurrentRideLinearLayout;
     private LinearLayout mCurrentRideRequestLinearLayout;
 
@@ -74,7 +78,9 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         if (getArguments() != null) {
             mData = getArguments().getString(ARG_DATA);
         }
-        mUserSignInResult = new Gson().fromJson(mData,UserSignInResult.class);
+        mUser = getUser();
+        mCurrentRide = getCurrentRide();
+        mCurrentRideRequest = getCurrentRideRequest();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //This will assign this fragment to base fragment for callbacks.
         mBaseFragmentListener = this;
@@ -117,7 +123,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
     }
 
     private void loadCreatesRideFragment(RideType rideType) {
-        Fragment createRidesFragment = CreateRidesFragment.newInstance(rideType, new Gson().toJson(mUserSignInResult));
+        Fragment createRidesFragment = CreateRidesFragment.newInstance(rideType, null);
         //Add to back stack as user may want to go back to home page and choose alternate option
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_page_container,createRidesFragment, CreateRidesFragment.TAG)
@@ -136,8 +142,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
     }
 
     private void setRidesLayoutVisibility() {
-        if (mUserSignInResult.getCurrentRide()!=null && mUserSignInResult.getCurrentRideRequest()!=null){
-            if (mUserSignInResult.getCurrentRide().getStartTime().before(mUserSignInResult.getCurrentRideRequest().getPickupTime())) {
+        if (mCurrentRide!=null && mCurrentRideRequest!=null){
+            if (mCurrentRide.getStartTime().before(mCurrentRideRequest.getPickupTime())) {
                 Log.d(TAG,"Load Current Ride as its before Ride Request");
                 mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
                 showRidesLayoutVisibilityStatusForDebugging();
@@ -147,12 +153,12 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
                 showRidesLayoutVisibilityStatusForDebugging();
             }
         }
-        else if (mUserSignInResult.getCurrentRide()!=null){
+        else if (mCurrentRide!=null){
             Log.d(TAG,"Load Current Ride as there is no Ride Request");
             mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
             showRidesLayoutVisibilityStatusForDebugging();
         }
-        else if (mUserSignInResult.getCurrentRideRequest()!=null){
+        else if (mCurrentRideRequest!=null){
             Log.d(TAG,"Load Current Ride Request as there is no Ride");
             mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
             showRidesLayoutVisibilityStatusForDebugging();

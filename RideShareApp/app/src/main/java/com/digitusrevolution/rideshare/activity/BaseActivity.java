@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 
@@ -24,26 +27,33 @@ public class BaseActivity extends AppCompatActivity {
         return getPackageName() + Constant.INTENT_EXTRA_DATA_KEY;
     }
 
-    public void saveAccessToken(UserSignInResult userSignInResult) {
-        SharedPreferences sharedPref = getSharedPreferences(getPackageName() + Constant.SHARED_PREFS_KEY_FILE, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Constant.SHARED_PREFS_TOKEN_KEY, userSignInResult.getToken());
-        editor.commit();
-        String token = sharedPref.getString(Constant.SHARED_PREFS_TOKEN_KEY, null);
-        Log.d(TAG, "Token Saved is:" + token);
-    }
-
     public void startHomePageActivity(UserSignInResult userSignInResult){
         Intent intent = new Intent(this, HomePageActivity.class);
-        intent.putExtra(getExtraDataKey(), new Gson().toJson(userSignInResult));
         startActivity(intent);
     }
 
-    public String getAccessToken() {
-        SharedPreferences sharedPref = getSharedPreferences(getPackageName()+Constant.SHARED_PREFS_KEY_FILE,Context.MODE_PRIVATE);
-        String token = sharedPref.getString(Constant.SHARED_PREFS_TOKEN_KEY,null);
-        Log.d(TAG,"Token from SharedPrefs:"+token);
-        return token;
+    public void saveUserSignInResult(UserSignInResult userSignInResult) {
+        saveInSharedPref(Constant.SHARED_PREFS_TOKEN_KEY,userSignInResult.getToken());
+        saveInSharedPref(Constant.SHARED_PREFS_USER_KEY,new Gson().toJson(userSignInResult.getUserProfile()));
+        saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_KEY,new Gson().toJson(userSignInResult.getCurrentRide()));
+        saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY,new Gson().toJson(userSignInResult.getCurrentRideRequest()));
     }
 
+    public void saveInSharedPref(String key, String value) {
+        SharedPreferences sharedPref = getSharedPreferences();
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(key, value);
+        editor.commit();
+        String savedValue = getSharedPreferences().getString(key,null);
+        Log.d(TAG, "Saved Key/Value - " + key+":"+savedValue);
+    }
+
+    private SharedPreferences getSharedPreferences() {
+        return getSharedPreferences(getPackageName() + Constant.SHARED_PREFS_KEY_FILE, Context.MODE_PRIVATE);
+    }
+
+    public BasicUser getUser() {
+        String user = getSharedPreferences().getString(Constant.SHARED_PREFS_USER_KEY,null);
+        return new Gson().fromJson(user, BasicUser.class);
+    }
 }

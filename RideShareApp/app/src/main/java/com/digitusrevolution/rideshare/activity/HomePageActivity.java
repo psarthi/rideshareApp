@@ -21,12 +21,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.DummyFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -42,7 +44,7 @@ public class HomePageActivity extends BaseActivity
     private static final String TAG = HomePageActivity.class.getName();
 
     private Toolbar mToolbar;
-    private UserSignInResult mUserSignInResult;
+    private BasicUser mUser;
     private ImageView mProfilePhotoImageView;
     private TextView mUserNameTextView;
     private TextView mUserEmailTextView;
@@ -69,11 +71,6 @@ public class HomePageActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Log.d(TAG,"Access Token retrieved from mCommonFunctions:"+ getAccessToken());
-        Intent intent = getIntent();
-        String data = intent.getStringExtra(getExtraDataKey());
-        mUserSignInResult = new Gson().fromJson(data,UserSignInResult.class);
-        Log.d(TAG,"Token from Intent:" + mUserSignInResult.getToken());
         setNavHeader(navigationView);
         loadHomePageWithCurrentRidesFragment();
     }
@@ -85,14 +82,14 @@ public class HomePageActivity extends BaseActivity
         View headerView = navigationView.getHeaderView(0);
 
         mProfilePhotoImageView = headerView.findViewById(R.id.userPhotoImageView);
-        Picasso.with(this).load(mUserSignInResult.getUserProfile().getPhoto().getImageLocation()).into(mProfilePhotoImageView);
+        Picasso.with(this).load(mUser.getPhoto().getImageLocation()).into(mProfilePhotoImageView);
 
         mUserNameTextView = headerView.findViewById(R.id.userNameTextView);
-        mUserNameTextView.setText(mUserSignInResult.getUserProfile().getFirstName()+" "
-                +mUserSignInResult.getUserProfile().getLastName());
+        mUserNameTextView.setText(mUser.getFirstName()+" "
+                +mUser.getLastName());
 
         mUserEmailTextView = headerView.findViewById(R.id.userEmailTextView);
-        mUserEmailTextView.setText(mUserSignInResult.getUserProfile().getEmail());
+        mUserEmailTextView.setText(mUser.getEmail());
     }
 
     //This method is just to close drawer if system back button is pressed
@@ -145,7 +142,7 @@ public class HomePageActivity extends BaseActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         HomePageWithCurrentRidesFragment homePageWithCurrentRidesFragment = HomePageWithCurrentRidesFragment.
-                newInstance(new Gson().toJson(mUserSignInResult));
+                newInstance(null);
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, homePageWithCurrentRidesFragment, HomePageWithCurrentRidesFragment.TAG);
         fragmentTransaction.commit();
@@ -155,7 +152,7 @@ public class HomePageActivity extends BaseActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         AddVehicleFragment addVehicleFragment = AddVehicleFragment.
-                newInstance(new Gson().toJson(mUserSignInResult),null);
+                newInstance(null);
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG);
         fragmentTransaction.addToBackStack(AddVehicleFragment.TAG);
@@ -166,7 +163,7 @@ public class HomePageActivity extends BaseActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         RidesOptionFragment ridesOptionFragment = RidesOptionFragment.
-                newInstance(RideType.RequestRide,new Gson().toJson(mUserSignInResult));
+                newInstance(RideType.RequestRide,null);
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG);
         fragmentTransaction.addToBackStack(RidesOptionFragment.TAG);

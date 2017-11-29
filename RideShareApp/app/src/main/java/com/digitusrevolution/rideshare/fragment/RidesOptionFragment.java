@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 
@@ -41,7 +42,7 @@ public class RidesOptionFragment extends BaseFragment {
     private String mData;
 
     private OnFragmentInteractionListener mListener;
-    private UserSignInResult mUserSignInResult;
+    private BasicUser mUser;
 
     public RidesOptionFragment() {
         // Required empty public constructor
@@ -72,7 +73,7 @@ public class RidesOptionFragment extends BaseFragment {
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
             mData = getArguments().getString(ARG_PARAM2);
         }
-        mUserSignInResult = new Gson().fromJson(mData,UserSignInResult.class);
+        mUser = getUser();
     }
 
     @Override
