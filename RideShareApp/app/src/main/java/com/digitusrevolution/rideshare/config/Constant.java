@@ -21,5 +21,7 @@ public class Constant {
     public static final double LAT_LNG_TOP_PADDING_PERCENT = 0.30;
     public static final double LAT_LNG_STANDARD_PADDING_PERCENT = 0.05;
     public static final String CURRENT_LOCATION_TEXT = "Current Location";
-
+    public static final int PICKUP_TIME_MAX_VALUE = 60;
+    public static final int PICKUP_POINT_DISTANCE_MAX_VALUE = 1000;
+    public static final int DROP_POINT_DISTANCE_MAX_VALUE = 1000;
 }

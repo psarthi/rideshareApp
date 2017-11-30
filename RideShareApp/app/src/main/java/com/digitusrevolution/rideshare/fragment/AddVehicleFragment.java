@@ -133,23 +133,25 @@ public class AddVehicleFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 String ADD_VEHICLE_URL = APIUrl.ADD_VEHICLE_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()));
-                setVehicle();
-                RESTClient.post(getActivity(),ADD_VEHICLE_URL, mVehicle, new JsonHttpResponseHandler(){
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mUser = new Gson().fromJson(response.toString(), BasicUser.class);
-                        updateUser(mUser);
-                        Log.d(TAG, "Vehicle Added");
-                        loadRidesOptionFragment(mRideType, null);
-                    }
+                if (validateInput()){
+                    setVehicle();
+                    RESTClient.post(getActivity(),ADD_VEHICLE_URL, mVehicle, new JsonHttpResponseHandler(){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            super.onSuccess(statusCode, headers, response);
+                            mUser = new Gson().fromJson(response.toString(), BasicUser.class);
+                            updateUser(mUser);
+                            Log.d(TAG, "Vehicle Added");
+                            loadRidesOptionFragment(mRideType, null);
+                        }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Log.d(TAG, "Unable to Add Vehicle"+errorResponse);
-                    }
-                });
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                            Log.d(TAG, "Unable to Add Vehicle"+errorResponse);
+                        }
+                    });
+                }
             }
         });
     }
@@ -166,6 +168,14 @@ public class AddVehicleFragment extends BaseFragment {
         mVehicle.setModel(mModelText.getText().toString());
         mVehicle.setSeatCapacity(Integer.parseInt(mSeatCapacityText.getText().toString()));
         mVehicle.setSmallLuggageCapacity(Integer.parseInt(mSmallLuggageCapacityText.getText().toString()));
+    }
+
+    private boolean validateInput(){
+        if (mRegistrationNumberText.getText().length() == 0 || mModelText.getText().length() == 0){
+            Toast.makeText(getActivity(), "Please ensure input is valid",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

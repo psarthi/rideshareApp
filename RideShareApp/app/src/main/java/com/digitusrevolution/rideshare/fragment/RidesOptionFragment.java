@@ -10,11 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
@@ -48,6 +52,17 @@ public class RidesOptionFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     private BasicUser mUser;
     private Spinner mVehicleSpinner;
+    private Preference mRidesOption;
+    private TextView mSeatTextView;
+    private TextView mLuggageTextView;
+    private Spinner mVehicleCategorySpinner;
+    private Spinner mVehicleSubCategorySpinner;
+    private SeekBar mPickupTimeVariationSeekBar;
+    private SeekBar mPickupPointVariationSeekBar;
+    private SeekBar mDropPointVariationSeekBar;
+    private TextView mPickupTimeVariationProgressTextView;
+    private TextView mPickupPointVariationProgressTextView;
+    private TextView mDropPointVariationProgressTextView;
 
     public RidesOptionFragment() {
         // Required empty public constructor
@@ -79,42 +94,175 @@ public class RidesOptionFragment extends BaseFragment {
             mData = getArguments().getString(ARG_PARAM2);
         }
         mUser = getUser();
+        //This will default preference of user which will be the default option for the ride
+        mRidesOption = mUser.getPreference();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view;
-        // Inflate the layout for this fragment
-        if (mRideType.equals(RideType.OfferRide)){
-            view = inflater.inflate(R.layout.fragment_offer_ride_option, container, false);
-            mVehicleSpinner = view.findViewById(R.id.offer_ride_option_vehicle_name_spinner);
-            ArrayList<String> vehicleNameList = new ArrayList<>();
-            for (Vehicle vehicle : mUser.getVehicles()){
-                vehicleNameList.add(vehicle.getRegistrationNumber());
-            }
-
-            if (vehicleNameList.size() > 0){
-                populateSpinner(vehicleNameList, mVehicleSpinner);
-            } else {
-                view.findViewById(R.id.offer_ride_option_vehicle_name_layout).setVisibility(View.GONE);
-            }
-        } else {
-            view = inflater.inflate(R.layout.fragment_ride_request_option, container, false);
-        }
         Log.d(TAG,"RideType:"+mRideType);
+        if (mRideType.equals(RideType.OfferRide)){
+            // Inflate the layout for this fragment
+            view = inflater.inflate(R.layout.fragment_offer_ride_option, container, false);
+            setOfferRideView(view);
+
+        } else {
+            // Inflate the layout for this fragment
+            view = inflater.inflate(R.layout.fragment_ride_request_option, container, false);
+            setRideRequestView(view);
+        }
+        //This will disable trust category layout in Rides Option for this fragment
         view.findViewById(R.id.trust_category_layout).setVisibility(View.GONE);
 
-        View buttonView = view.findViewById(R.id.button_layout);
-        buttonView.findViewById(R.id.rides_option_cancel_button).setOnClickListener(new View.OnClickListener() {
+        setButtonsOnClickListener(view);
+        setInitialValue();
+
+        return view;
+    }
+
+    private void setRideRequestView(View view) {
+        View seatLuggageSingleRowLayout = view.findViewById(R.id.seat_luggage_single_row_layout);
+        mSeatTextView = seatLuggageSingleRowLayout.findViewById(R.id.seat_count_text);
+        mLuggageTextView = seatLuggageSingleRowLayout.findViewById(R.id.luggage_count_text);
+
+        mVehicleCategorySpinner = view.findViewById(R.id.vehicle_category_spinner);
+        mVehicleSubCategorySpinner = view.findViewById(R.id.vehicle_sub_category_spinner);
+        mPickupTimeVariationSeekBar = view.findViewById(R.id.rides_option_pickup_time_variation_seekBar);
+        mPickupPointVariationSeekBar = view.findViewById(R.id.rides_option_pickup_distance_variation_seekBar);
+        mDropPointVariationSeekBar = view.findViewById(R.id.rides_option_drop_distance_variation_seekBar);
+
+        mPickupTimeVariationProgressTextView = view.findViewById(R.id.rides_option_pickup_time_variation_seekBar_progress_text);
+        mPickupPointVariationProgressTextView = view.findViewById(R.id.rides_option_pickup_distance_variation_seekBar_progress_text);
+        mDropPointVariationProgressTextView = view.findViewById(R.id.rides_option_drop_distance_variation_seekBar_progress_text);
+
+        //This will populate the vehicle category and sub category drop down
+        setVehicleCategoriesSpinner(mVehicleCategorySpinner, mVehicleSubCategorySpinner);
+        setSeekBarsChangeListener();
+    }
+
+    private void setOfferRideView(View view) {
+        //This is not same for Ride Request Option as there we are using single line seat luggage
+        View seatLuggageView = view.findViewById(R.id.seat_luggage_layout);
+        mSeatTextView = seatLuggageView.findViewById(R.id.seat_count_text);
+        mLuggageTextView = seatLuggageView.findViewById(R.id.luggage_count_text);
+
+        mVehicleSpinner = view.findViewById(R.id.offer_ride_option_vehicle_name_spinner);
+        ArrayList<String> vehicleNameList = new ArrayList<>();
+        for (Vehicle vehicle : mUser.getVehicles()){
+            vehicleNameList.add(vehicle.getRegistrationNumber());
+        }
+        //This will make Vehicle List available or unavailable
+        if (vehicleNameList.size() > 0){
+            populateSpinner(vehicleNameList, mVehicleSpinner);
+        } else {
+            view.findViewById(R.id.offer_ride_option_vehicle_name_layout).setVisibility(View.GONE);
+        }
+    }
+
+    private void setInitialValue(){
+
+        if (mRideType.equals(RideType.OfferRide)){
+            mSeatTextView.setText(String.valueOf(mRidesOption.getSeatOffered()));
+            mLuggageTextView.setText(String.valueOf(mRidesOption.getLuggageCapacityOffered()));
+        } else {
+            mSeatTextView.setText(String.valueOf(mRidesOption.getSeatRequired()));
+            mLuggageTextView.setText(String.valueOf(mRidesOption.getLuggageCapacityRequired()));
+
+            //TODO Set Spinner Selection as well as per the preference value
+
+            //IMP - Note the sequence of setMax and Progress. First you should set the value of Max and then progress,
+            //otherwise progress value gets changed if the sequence is not correct
+            mPickupPointVariationSeekBar.setMax(Constant.PICKUP_POINT_DISTANCE_MAX_VALUE);
+            mPickupPointVariationSeekBar.setProgress(mRidesOption.getPickupPointVariation());
+
+            mDropPointVariationSeekBar.setMax(Constant.DROP_POINT_DISTANCE_MAX_VALUE);
+            mDropPointVariationSeekBar.setProgress(mRidesOption.getDropPointVariation());
+
+            //This will get minute value from LocalTime of 00:30 format
+            int pickupTimeVariation = Integer.parseInt(mRidesOption.getPickupTimeVariation().split(":")[1]);
+
+            mPickupTimeVariationSeekBar.setMax(Constant.PICKUP_TIME_MAX_VALUE);
+            mPickupTimeVariationSeekBar.setProgress(pickupTimeVariation);
+
+            Log.d(TAG, "Pickup Time Seekbar value - Current, Max:"+mPickupTimeVariationSeekBar.getProgress() +","+mPickupTimeVariationSeekBar.getMax());
+            Log.d(TAG, "Pickup Seekbar value - Current, Max:"+mPickupPointVariationSeekBar.getProgress() +","+mPickupPointVariationSeekBar.getMax());
+            Log.d(TAG, "Drop Seekbar value - Current, Max:"+mDropPointVariationSeekBar.getProgress() +","+mDropPointVariationSeekBar.getMax());
+        }
+    }
+
+    private void setSeekBarsChangeListener(){
+        mPickupTimeVariationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    mPickupTimeVariationProgressTextView.setText(Integer.toString(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mPickupPointVariationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mPickupPointVariationProgressTextView.setText(Integer.toString(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mDropPointVariationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mDropPointVariationProgressTextView.setText(Integer.toString(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
+    private void setButtonsOnClickListener(View view) {
+        View buttonLayoutView = view.findViewById(R.id.button_layout);
+
+        buttonLayoutView.findViewById(R.id.rides_option_cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //This will pop all fragments from the top till CreateRidesFragment. Reason for not doing just pop as this can be called from multiple places
+                // e.g. from AddVehicle as well as CreateRides. In case of AddVehicle, if we do pop then it will go back to AddVehicle which is wrong
                 getActivity().getSupportFragmentManager().popBackStack(CreateRidesFragment.TAG, 0);
             }
         });
 
-
-        return view;
+        buttonLayoutView.findViewById(R.id.rides_option_save_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Rides Option Saved");
+            }
+        });
     }
 
     @Override

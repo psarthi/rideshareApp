@@ -34,6 +34,7 @@ import com.digitusrevolution.rideshare.model.dto.google.Bounds;
 import com.digitusrevolution.rideshare.model.dto.google.GoogleDirection;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.domain.Role;
 import com.digitusrevolution.rideshare.model.user.domain.RoleName;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -118,7 +119,8 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     private boolean mTimeInPast;
     private static final int BUFFER_TIME_IN_MINUTE = 5;
     private BasicUser mUser;
-
+    private boolean ridesOptionUpdated = false;
+    private Preference mUpdatedRidesOption;
 
     public CreateRidesFragment() {
         // Required empty public constructor
@@ -129,7 +131,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
      * this fragment using the provided parameters.
      *
      * @param rideType Type of ride e.g. Offer Ride or Request Ride
-     * @param data  Data in Json format
+     * @param data Data in Json format
      * @return A new instance of fragment CreateRidesFragment.
      */
     public static CreateRidesFragment newInstance(RideType rideType, String data) {
@@ -232,13 +234,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         Log.d(TAG,"User Name is:"+mUser.getFirstName());
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
-    }
-
-    private void setOfferRide(){
-
-    }
-    private void setRequestRide(){
-
     }
 
     private void setTrustCategoryViews(View view) {

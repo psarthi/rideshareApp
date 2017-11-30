@@ -187,6 +187,8 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
+                //Getting the value in Arraylist would ensure that position would always remains the same
+                //as compared to HashSet etc.
                 Type listType = new TypeToken<ArrayList<VehicleCategory>>(){}.getType();
                 mVehicleCategories = new Gson().fromJson(response.toString(), listType);
                 ArrayList<String> vehicleCategoryNames = new ArrayList<>();
@@ -273,7 +275,7 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
 
     public void loadRidesOptionFragment(RideType rideType, String data) {
         RidesOptionFragment ridesOptionFragment = RidesOptionFragment.
-                newInstance(rideType,null);
+                newInstance(rideType,data);
 
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG)
@@ -283,7 +285,7 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
 
     public void loadAddVehicleFragment(RideType rideType, String data) {
         AddVehicleFragment addVehicleFragment = AddVehicleFragment.
-                newInstance(rideType, null);
+                newInstance(rideType, data);
 
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG)
@@ -292,7 +294,7 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
     }
 
     public void loadCreatesRideFragment(RideType rideType, String data) {
-        Fragment createRidesFragment = CreateRidesFragment.newInstance(rideType, null);
+        Fragment createRidesFragment = CreateRidesFragment.newInstance(rideType, data);
         //Add to back stack as user may want to go back to home page and choose alternate option
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_page_container,createRidesFragment, CreateRidesFragment.TAG)
