@@ -195,7 +195,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         view.findViewById(R.id.create_rides_option_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadRidesOptionFragment();
+                loadRidesOptionFragment(mRideType, null);
             }
         });
 
@@ -211,7 +211,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
                     }
                 }
                 if (!driverStatus){
-                    loadAddVehicleFragment();
+                    loadAddVehicleFragment(mRideType, null);
                 } else {
                     Log.d(TAG, "User is a driver, so create ride directly");
                 }
@@ -602,25 +602,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onCreateRideFragmentInteraction(Uri uri);
-    }
-
-    private void loadRidesOptionFragment() {
-        RidesOptionFragment ridesOptionFragment = RidesOptionFragment.
-                newInstance(mRideType,null);
-
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG)
-                .addToBackStack(RidesOptionFragment.TAG).commit();
-    }
-
-    private void loadAddVehicleFragment() {
-        AddVehicleFragment addVehicleFragment = AddVehicleFragment.
-                newInstance(mRideType, null);
-
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG)
-                .addToBackStack(AddVehicleFragment.TAG)
-                .commit();
     }
 
     @Override

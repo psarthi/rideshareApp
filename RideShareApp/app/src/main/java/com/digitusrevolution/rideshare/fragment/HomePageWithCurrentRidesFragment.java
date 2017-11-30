@@ -108,27 +108,18 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         view.findViewById(R.id.home_page_offer_ride_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadCreatesRideFragment(RideType.OfferRide);
+                loadCreatesRideFragment(RideType.OfferRide, null);
             }
         });
 
         view.findViewById(R.id.home_page_request_ride_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadCreatesRideFragment(RideType.RequestRide);            }
+                loadCreatesRideFragment(RideType.RequestRide, null);            }
         });
 
 
         return view;
-    }
-
-    private void loadCreatesRideFragment(RideType rideType) {
-        Fragment createRidesFragment = CreateRidesFragment.newInstance(rideType, null);
-        //Add to back stack as user may want to go back to home page and choose alternate option
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.home_page_container,createRidesFragment, CreateRidesFragment.TAG)
-                .addToBackStack(CreateRidesFragment.TAG)
-                .commit();
     }
 
     @Override

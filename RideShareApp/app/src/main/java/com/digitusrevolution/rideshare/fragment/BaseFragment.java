@@ -19,6 +19,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
@@ -268,5 +269,34 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
 
     public void updateCurrentRideRequest(FullRideRequest currentRideRequest){
         updateInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY,new Gson().toJson(currentRideRequest));
+    }
+
+    public void loadRidesOptionFragment(RideType rideType, String data) {
+        RidesOptionFragment ridesOptionFragment = RidesOptionFragment.
+                newInstance(rideType,null);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG)
+                .addToBackStack(RidesOptionFragment.TAG)
+                .commit();
+    }
+
+    public void loadAddVehicleFragment(RideType rideType, String data) {
+        AddVehicleFragment addVehicleFragment = AddVehicleFragment.
+                newInstance(rideType, null);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG)
+                .addToBackStack(AddVehicleFragment.TAG)
+                .commit();
+    }
+
+    public void loadCreatesRideFragment(RideType rideType, String data) {
+        Fragment createRidesFragment = CreateRidesFragment.newInstance(rideType, null);
+        //Add to back stack as user may want to go back to home page and choose alternate option
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_page_container,createRidesFragment, CreateRidesFragment.TAG)
+                .addToBackStack(CreateRidesFragment.TAG)
+                .commit();
     }
 }

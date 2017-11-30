@@ -141,7 +141,7 @@ public class AddVehicleFragment extends BaseFragment {
                         mUser = new Gson().fromJson(response.toString(), BasicUser.class);
                         updateUser(mUser);
                         Log.d(TAG, "Vehicle Added");
-                        loadRidesOptionFragment();
+                        loadRidesOptionFragment(mRideType, null);
                     }
 
                     @Override
@@ -152,15 +152,6 @@ public class AddVehicleFragment extends BaseFragment {
                 });
             }
         });
-    }
-
-    private void loadRidesOptionFragment() {
-        RidesOptionFragment ridesOptionFragment = RidesOptionFragment.
-                newInstance(mRideType,null);
-
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG)
-                .addToBackStack(RidesOptionFragment.TAG).commit();
     }
 
     private void setVehicle() {

@@ -7,6 +7,7 @@ import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
 import com.digitusrevolution.rideshare.model.user.domain.City;
 import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
+import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.domain.Role;
 import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.State;
@@ -29,6 +30,7 @@ public class BasicUser {
 	private float profileRating;
 	private Collection<Role> roles = new HashSet<Role>();
 	private Collection<Account> accounts = new HashSet<Account>();
+	private Preference preference;
 
 	public int getId() {
 		return id;
@@ -120,9 +122,13 @@ public class BasicUser {
 	public void setAccounts(Collection<Account> accounts) {
 		this.accounts = accounts;
 	}
-	
+	public Preference getPreference() {
+		return preference;
+	}
+	public void setPreference(Preference preference) {
+		this.preference = preference;
+	}
 
-	
 }
 
 
