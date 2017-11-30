@@ -28,6 +28,7 @@ import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.ride.domain.core.Ride;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
@@ -154,7 +155,7 @@ public class HomePageActivity extends BaseActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         AddVehicleFragment addVehicleFragment = AddVehicleFragment.
-                newInstance(null);
+                newInstance(RideType.RequestRide, null);
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG);
         fragmentTransaction.addToBackStack(AddVehicleFragment.TAG);

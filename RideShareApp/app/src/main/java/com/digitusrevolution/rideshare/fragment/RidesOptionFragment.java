@@ -10,13 +10,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +47,7 @@ public class RidesOptionFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
     private BasicUser mUser;
+    private Spinner mVehicleSpinner;
 
     public RidesOptionFragment() {
         // Required empty public constructor
@@ -83,6 +88,17 @@ public class RidesOptionFragment extends BaseFragment {
         // Inflate the layout for this fragment
         if (mRideType.equals(RideType.OfferRide)){
             view = inflater.inflate(R.layout.fragment_offer_ride_option, container, false);
+            mVehicleSpinner = view.findViewById(R.id.offer_ride_option_vehicle_name_spinner);
+            ArrayList<String> vehicleNameList = new ArrayList<>();
+            for (Vehicle vehicle : mUser.getVehicles()){
+                vehicleNameList.add(vehicle.getRegistrationNumber());
+            }
+
+            if (vehicleNameList.size() > 0){
+                populateSpinner(vehicleNameList, mVehicleSpinner);
+            } else {
+                view.findViewById(R.id.offer_ride_option_vehicle_name_layout).setVisibility(View.GONE);
+            }
         } else {
             view = inflater.inflate(R.layout.fragment_ride_request_option, container, false);
         }
@@ -90,12 +106,13 @@ public class RidesOptionFragment extends BaseFragment {
         view.findViewById(R.id.trust_category_layout).setVisibility(View.GONE);
 
         View buttonView = view.findViewById(R.id.button_layout);
-        buttonView.findViewById(R.id.rides_option_save_button).setOnClickListener(new View.OnClickListener() {
+        buttonView.findViewById(R.id.rides_option_cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
+                getActivity().getSupportFragmentManager().popBackStack(CreateRidesFragment.TAG, 0);
             }
         });
+
 
         return view;
     }

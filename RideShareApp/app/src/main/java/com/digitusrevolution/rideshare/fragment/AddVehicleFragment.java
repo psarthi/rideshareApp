@@ -14,11 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
@@ -54,8 +56,10 @@ public class AddVehicleFragment extends BaseFragment {
     public static final String TITLE = "Add Vehicle";
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_RIDE_TYPE = "rideType";
     private static final String ARG_DATA = "data";
 
+    private RideType mRideType;
     private String mData;
 
     private OnFragmentInteractionListener mListener;
@@ -78,12 +82,14 @@ public class AddVehicleFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
+     * @param rideType Type of ride e.g. Offer Ride or Request Ride
      * @param data  Data in Json format
      * @return A new instance of fragment AddVehicleFragment.
      */
-    public static AddVehicleFragment newInstance(String data) {
+    public static AddVehicleFragment newInstance(RideType rideType,  String data) {
         AddVehicleFragment fragment = new AddVehicleFragment();
         Bundle args = new Bundle();
+        args.putString(ARG_RIDE_TYPE, rideType.toString());
         args.putString(ARG_DATA, data);
         fragment.setArguments(args);
         return fragment;
@@ -93,6 +99,7 @@ public class AddVehicleFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
             mData = getArguments().getString(ARG_DATA);
         }
         mUser = getUser();
@@ -134,7 +141,7 @@ public class AddVehicleFragment extends BaseFragment {
                         mUser = new Gson().fromJson(response.toString(), BasicUser.class);
                         updateUser(mUser);
                         Log.d(TAG, "Vehicle Added");
-                        getActivity().getSupportFragmentManager().popBackStack();
+                        loadRidesOptionFragment();
                     }
 
                     @Override
@@ -145,6 +152,15 @@ public class AddVehicleFragment extends BaseFragment {
                 });
             }
         });
+    }
+
+    private void loadRidesOptionFragment() {
+        RidesOptionFragment ridesOptionFragment = RidesOptionFragment.
+                newInstance(mRideType,null);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG)
+                .addToBackStack(RidesOptionFragment.TAG).commit();
     }
 
     private void setVehicle() {
@@ -172,6 +188,8 @@ public class AddVehicleFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(TITLE);
+        Log.d(TAG,"Inside OnResume");
+        showBackStackDetails();
     }
 
     @Override

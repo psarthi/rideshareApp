@@ -186,7 +186,12 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         mAllSelected = true;
         updateTrustCategoryItemsColor();
         setTrustCategoryOnClickListener(view);
+        setButtonsOnClickListener(view);
 
+        return view;
+    }
+
+    private void setButtonsOnClickListener(View view) {
         view.findViewById(R.id.create_rides_option_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,8 +217,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
                 }
             }
         });
-
-        return view;
     }
 
     @Override
@@ -231,6 +234,12 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         showBackStackDetails();
     }
 
+    private void setOfferRide(){
+
+    }
+    private void setRequestRide(){
+
+    }
 
     private void setTrustCategoryViews(View view) {
         mAllImageView = view.findViewById(R.id.trust_category_all_image);
@@ -606,7 +615,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
 
     private void loadAddVehicleFragment() {
         AddVehicleFragment addVehicleFragment = AddVehicleFragment.
-                newInstance(null);
+                newInstance(mRideType, null);
 
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG)
