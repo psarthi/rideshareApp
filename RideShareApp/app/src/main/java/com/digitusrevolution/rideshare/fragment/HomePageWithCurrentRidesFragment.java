@@ -11,18 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +29,7 @@ import com.google.gson.Gson;
  * Use the {@link HomePageWithCurrentRidesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomePageWithCurrentRidesFragment extends BaseFragment implements BaseFragment.BaseFragmentListener {
+public class HomePageWithCurrentRidesFragment extends BaseFragment implements BaseFragment.OnSetCurrentLocationOnMapListener {
 
     public static final String TAG = HomePageWithCurrentRidesFragment.class.getName();
     public static final String TITLE = "Ride Share";
@@ -83,7 +80,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         mCurrentRideRequest = getCurrentRideRequest();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //This will assign this fragment to base fragment for callbacks.
-        mBaseFragmentListener = this;
+        mOnSetCurrentLocationOnMapListener = this;
     }
 
     @Override
@@ -172,7 +169,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement BaseFragmentListener");
+                    + " must implement OnSetCurrentLocationOnMapListener");
         }
     }
 

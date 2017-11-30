@@ -94,7 +94,7 @@ public class DummyFragment extends Fragment {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement BaseFragmentListener");
+                    + " must implement OnSetCurrentLocationOnMapListener");
         }
     }
 

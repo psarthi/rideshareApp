@@ -3,7 +3,6 @@ package com.digitusrevolution.rideshare.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -26,7 +25,6 @@ import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -59,13 +57,14 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
     public static final String TAG = BaseFragment.class.getName();
     GoogleMap mMap;
     FusedLocationProviderClient mFusedLocationProviderClient;
-    BaseFragmentListener mBaseFragmentListener;
+    OnSetCurrentLocationOnMapListener mOnSetCurrentLocationOnMapListener;
+    OnVehicleCategoriesReadyListener mOnVehicleCategoriesReadyListener;
     List<VehicleCategory> mVehicleCategories;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (mBaseFragmentListener instanceof CreateRidesFragment){
+        if (mOnSetCurrentLocationOnMapListener instanceof CreateRidesFragment){
             Log.d(TAG,"Setting Padding");
             setPadding();
         }
@@ -92,9 +91,9 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
                         mMap.addMarker(new MarkerOptions().position(latLng)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                         // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
-                        // Calling back the interface implementor i.e. whatever has been set in BaseFragmentListener member variable,
+                        // Calling back the interface implementor i.e. whatever has been set in OnSetCurrentLocationOnMapListener member variable,
                         // it will get call back
-                        mBaseFragmentListener.onSetCurrentLocationOnMap(latLng);
+                        mOnSetCurrentLocationOnMapListener.onSetCurrentLocationOnMap(latLng);
                     } else {
                         Log.d(TAG, "Location is null");
                     }
@@ -152,9 +151,7 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
         return hour+":"+min+" "+AM_PM;
     }
 
-
-
-    public interface BaseFragmentListener {
+    public interface OnSetCurrentLocationOnMapListener {
 
         void onSetCurrentLocationOnMap(LatLng latLng);
     }
@@ -214,6 +211,7 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
                     Log.d(TAG,"Vehicle Sub Category Name:"+ vehicleSubCategory.getName());
                 }
                 populateSpinner(vehicleSubCategoryNames,vehicleSubCategotySpinner);
+                mOnVehicleCategoriesReadyListener.OnVehicleCategoriesReady();
             }
 
             @Override
@@ -300,5 +298,9 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
                 .replace(R.id.home_page_container,createRidesFragment, CreateRidesFragment.TAG)
                 .addToBackStack(CreateRidesFragment.TAG)
                 .commit();
+    }
+
+    public interface OnVehicleCategoriesReadyListener{
+        void OnVehicleCategoriesReady();
     }
 }

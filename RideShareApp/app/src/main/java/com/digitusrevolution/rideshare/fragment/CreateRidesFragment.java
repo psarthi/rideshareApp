@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +24,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
@@ -38,7 +36,6 @@ import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.domain.Role;
 import com.digitusrevolution.rideshare.model.user.domain.RoleName;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -75,7 +72,7 @@ import cz.msebera.android.httpclient.Header;
  * Use the {@link CreateRidesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateRidesFragment extends BaseFragment implements BaseFragment.BaseFragmentListener,
+public class CreateRidesFragment extends BaseFragment implements BaseFragment.OnSetCurrentLocationOnMapListener,
         TimePickerFragment.TimePickerFragmentListener, DatePickerFragment.DatePickerFragmentListener {
 
     public static final String TAG = CreateRidesFragment.class.getName();
@@ -119,8 +116,9 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
     private boolean mTimeInPast;
     private static final int BUFFER_TIME_IN_MINUTE = 5;
     private BasicUser mUser;
-    private boolean ridesOptionUpdated = false;
+    private boolean mRidesOptionUpdated = false;
     private Preference mUpdatedRidesOption;
+    private String mVehicleRegistrationNumber;
 
     public CreateRidesFragment() {
         // Required empty public constructor
@@ -155,7 +153,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
         }
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //This will assign this fragment to base fragment for callbacks.
-        mBaseFragmentListener = this;
+        mOnSetCurrentLocationOnMapListener = this;
         //Setting calender to current time
         mStartTimeCalendar = Calendar.getInstance();
     }
@@ -529,7 +527,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement BaseFragmentListener");
+                    + " must implement OnSetCurrentLocationOnMapListener");
         }
     }
 
@@ -632,5 +630,16 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.Ba
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void updateRidesOption(Preference ridesOption, String vehicleRegistrationNumber){
+        Log.d(TAG, "Ride Option has been updated");
+        mRidesOptionUpdated = true;
+        mUpdatedRidesOption = ridesOption;
+        if (mRideType.equals(RideType.OfferRide)){
+            mVehicleRegistrationNumber = vehicleRegistrationNumber;
+        }
+        Log.d(TAG,"Updated Value is:"+new Gson().toJson(ridesOption));
+
     }
 }

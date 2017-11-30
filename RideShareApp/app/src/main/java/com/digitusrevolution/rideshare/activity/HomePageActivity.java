@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -29,6 +30,7 @@ import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.domain.core.Ride;
+import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
@@ -204,11 +206,6 @@ public class HomePageActivity extends BaseActivity
 
     }
 
-    @Override
-    public void onPreferenceFragmentInteraction(Uri uri) {
-
-    }
-
     public void showBackButton(boolean show) {
 
         // To keep states of ActionBar and ActionBarDrawerToggle synchronized,
@@ -273,5 +270,13 @@ public class HomePageActivity extends BaseActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRidesOptionFragmentInteraction(Preference ridesOption, String vehicleRegistrationNumber) {
+
+        CreateRidesFragment createRidesFragment = (CreateRidesFragment) getSupportFragmentManager().findFragmentByTag(CreateRidesFragment.TAG);
+        createRidesFragment.updateRidesOption(ridesOption, vehicleRegistrationNumber);
+        getSupportFragmentManager().popBackStack();
     }
 }

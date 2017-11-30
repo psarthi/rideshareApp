@@ -1,11 +1,8 @@
 package com.digitusrevolution.rideshare.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +12,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
+import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
+import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -34,7 +30,7 @@ import java.util.ArrayList;
  * Use the {@link RidesOptionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RidesOptionFragment extends BaseFragment {
+public class RidesOptionFragment extends BaseFragment implements BaseFragment.OnVehicleCategoriesReadyListener{
 
     public static final String TAG = RidesOptionFragment.class.getName();
     public static final String OFFER_RIDE_OPTION_TITLE = "Offer Ride Option";
@@ -76,7 +72,6 @@ public class RidesOptionFragment extends BaseFragment {
      * @param data  Data in Json format
      * @return A new instance of fragment RidesOptionFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static RidesOptionFragment newInstance(RideType rideType, String data) {
         RidesOptionFragment fragment = new RidesOptionFragment();
         Bundle args = new Bundle();
@@ -96,6 +91,8 @@ public class RidesOptionFragment extends BaseFragment {
         mUser = getUser();
         //This will default preference of user which will be the default option for the ride
         mRidesOption = mUser.getPreference();
+        //This will set this fragment for vehicle categories ready listener callback
+        mOnVehicleCategoriesReadyListener = this;
     }
 
     @Override
@@ -170,8 +167,6 @@ public class RidesOptionFragment extends BaseFragment {
             mSeatTextView.setText(String.valueOf(mRidesOption.getSeatRequired()));
             mLuggageTextView.setText(String.valueOf(mRidesOption.getLuggageCapacityRequired()));
 
-            //TODO Set Spinner Selection as well as per the preference value
-
             //IMP - Note the sequence of setMax and Progress. First you should set the value of Max and then progress,
             //otherwise progress value gets changed if the sequence is not correct
             mPickupPointVariationSeekBar.setMax(Constant.PICKUP_POINT_DISTANCE_MAX_VALUE);
@@ -192,11 +187,31 @@ public class RidesOptionFragment extends BaseFragment {
         }
     }
 
+    private void setRidesOption(){
+
+        if (mRideType.equals(RideType.OfferRide)){
+            mRidesOption.setSeatOffered(Integer.parseInt(mSeatTextView.getText().toString()));
+            mRidesOption.setLuggageCapacityOffered(Integer.parseInt(mLuggageTextView.getText().toString()));
+        } else {
+            mRidesOption.setSeatRequired(Integer.parseInt(mSeatTextView.getText().toString()));
+            mRidesOption.setLuggageCapacityRequired(Integer.parseInt(mLuggageTextView.getText().toString()));
+            mRidesOption.setPickupTimeVariation("00:"+mPickupTimeVariationProgressTextView.getText().toString());
+            mRidesOption.setPickupPointVariation(Integer.parseInt(mPickupPointVariationProgressTextView.getText().toString()));
+            mRidesOption.setDropPointVariation(Integer.parseInt(mDropPointVariationProgressTextView.getText().toString()));
+            VehicleCategory vehicleCategory = new VehicleCategory();
+            vehicleCategory.setName(mVehicleCategorySpinner.getSelectedItem().toString());
+            mRidesOption.setVehicleCategory(vehicleCategory);
+            VehicleSubCategory vehicleSubCategory = new VehicleSubCategory();
+            vehicleSubCategory.setName(mVehicleSubCategorySpinner.getSelectedItem().toString());
+            mRidesOption.setVehicleSubCategory(vehicleSubCategory);
+        }
+    }
+
     private void setSeekBarsChangeListener(){
         mPickupTimeVariationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    mPickupTimeVariationProgressTextView.setText(Integer.toString(progress));
+                mPickupTimeVariationProgressTextView.setText(Integer.toString(progress));
             }
 
             @Override
@@ -261,6 +276,14 @@ public class RidesOptionFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Rides Option Saved");
+                setRidesOption();
+                if (mListener != null) {
+                    if (mRideType.equals(RideType.OfferRide)){
+                        mListener.onRidesOptionFragmentInteraction(mRidesOption, mVehicleSpinner.getSelectedItem().toString());
+                    } else {
+                        mListener.onRidesOptionFragmentInteraction(mRidesOption, null);
+                    }
+                }
             }
         });
     }
@@ -276,13 +299,6 @@ public class RidesOptionFragment extends BaseFragment {
         }
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onPreferenceFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -302,6 +318,25 @@ public class RidesOptionFragment extends BaseFragment {
         mListener = null;
     }
 
+    @Override
+    public void OnVehicleCategoriesReady() {
+        for (int i=0; i<mVehicleCategorySpinner.getCount();i++){
+            if (mVehicleCategorySpinner.getItemAtPosition(i).equals(mRidesOption.getVehicleCategory().getName())){
+                mVehicleCategorySpinner.setSelection(i);
+                Log.d(TAG, "Setting Default value of Vehicle Category as:"+mRidesOption.getVehicleCategory().getName());
+                break;
+            }
+        }
+
+        for (int i=0; i<mVehicleSubCategorySpinner.getCount();i++){
+            if (mVehicleSubCategorySpinner.getItemAtPosition(i).equals(mRidesOption.getVehicleSubCategory().getName())){
+                mVehicleSubCategorySpinner.setSelection(i);
+                Log.d(TAG, "Setting Default value of Vehicle Sub Category as:"+mRidesOption.getVehicleSubCategory().getName());
+                break;
+            }
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -313,8 +348,7 @@ public class RidesOptionFragment extends BaseFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onPreferenceFragmentInteraction(Uri uri);
+        void onRidesOptionFragmentInteraction(Preference ridesOption, String vehicleRegistrationNumber);
     }
 
 }
