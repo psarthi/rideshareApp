@@ -36,5 +36,6 @@ public class APIUrl {
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +
             "&destination={destinationLat},{destinationLng}&departure_time={departureEpochSecond}&key={key}";
 
+    public static final String OFFER_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/rides";
 
 }

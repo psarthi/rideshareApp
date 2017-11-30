@@ -30,11 +30,19 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.dto.google.Bounds;
 import com.digitusrevolution.rideshare.model.dto.google.GoogleDirection;
+import com.digitusrevolution.rideshare.model.ride.domain.Point;
+import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
+import com.digitusrevolution.rideshare.model.ride.domain.TrustCategory;
+import com.digitusrevolution.rideshare.model.ride.domain.TrustCategoryName;
+import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.ride.dto.RideOfferInfo;
+import com.digitusrevolution.rideshare.model.ride.dto.RideOfferResult;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.domain.Role;
 import com.digitusrevolution.rideshare.model.user.domain.RoleName;
+import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -95,8 +103,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     private TextView mToAddressTextView;
     private LatLng mFromLatLng;
     private LatLng mToLatLng;
-    private BasicRide mBasicRide;
-    private BasicRideRequest mBasicRideRequest;
     private TextView mDateTextView;
     private TextView mTimeTextView;
     private boolean mAllSelected;
@@ -119,6 +125,9 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     private boolean mRidesOptionUpdated = false;
     private Preference mUpdatedRidesOption;
     private String mVehicleRegistrationNumber;
+    private BasicRide mBasicRide = new BasicRide();
+    private RideOfferInfo mRideOfferInfo = new RideOfferInfo();
+    private BasicRideRequest mBasicRideRequest = new BasicRideRequest();
 
     public CreateRidesFragment() {
         // Required empty public constructor
@@ -214,9 +223,79 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
                     loadAddVehicleFragment(mRideType, null);
                 } else {
                     Log.d(TAG, "User is a driver, so create ride directly");
+                    setRideOffer();
+                    RESTClient.post(getActivity(), APIUrl.OFFER_RIDE_URL, mRideOfferInfo, new JsonHttpResponseHandler(){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            super.onSuccess(statusCode, headers, response);
+                            RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
+                            Log.d(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
+                            if (rideOfferResult.isCurrentRide()){
+                                updateCurrentRide(rideOfferResult.getRide());
+                                Log.d(TAG, "Updated Current Ride");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                        }
+                    });
                 }
             }
         });
+    }
+
+    private void setRideOffer(){
+
+        //mRideOfferInfo.setGoogleDirection(mGoogleDirection);
+        mRideOfferInfo.setRide(mBasicRide);
+        mBasicRide.setStartTime(mStartTimeCalendar.getTime());
+        RidePoint startRidePoint = new RidePoint();
+        Point startPoint = new Point(mToLatLng.longitude, mToLatLng.latitude);
+        startRidePoint.setPoint(startPoint);
+        mBasicRide.setStartPoint(startRidePoint);
+        RidePoint endRidePoint = new RidePoint();
+        Point endPoint = new Point(mFromLatLng.longitude, mFromLatLng.latitude);
+        endRidePoint.setPoint(endPoint);
+        mBasicRide.setEndPoint(endRidePoint);
+        TrustNetwork trustNetwork = new TrustNetwork();
+        mBasicRide.setTrustNetwork(trustNetwork);
+        if (mAllSelected) {
+            TrustCategory trustCategory = new TrustCategory();
+            trustCategory.setName(TrustCategoryName.Anonymous);
+            trustNetwork.getTrustCategories().add(trustCategory);
+        }
+        if (mGroupsSelected) {
+            TrustCategory trustCategory = new TrustCategory();
+            trustCategory.setName(TrustCategoryName.Groups);
+            trustNetwork.getTrustCategories().add(trustCategory);
+        }
+        if (mFriendsSelected) {
+            TrustCategory trustCategory = new TrustCategory();
+            trustCategory.setName(TrustCategoryName.Friends);
+            trustNetwork.getTrustCategories().add(trustCategory);
+        }
+        mBasicRide.setDriver(mUser);
+        if (mRidesOptionUpdated){
+            mBasicRide.setSeatOffered(mUpdatedRidesOption.getSeatOffered());
+            mBasicRide.setLuggageCapacityOffered(mUpdatedRidesOption.getLuggageCapacityOffered());
+            for (Vehicle vehicle : mUser.getVehicles()){
+                if (vehicle.getRegistrationNumber().equals(mVehicleRegistrationNumber)){
+                    mBasicRide.setVehicle(vehicle);
+                    break;
+                }
+            }
+        } else {
+            mBasicRide.setSeatOffered(mUser.getPreference().getSeatOffered());
+            mBasicRide.setLuggageCapacityOffered(mUser.getPreference().getLuggageCapacityOffered());
+            List<Vehicle> vehicles = (List<Vehicle>) mUser.getVehicles();
+            mBasicRide.setVehicle(vehicles.get(0));
+        }
+    }
+
+    private void setRideRequest(){
+
     }
 
     @Override
@@ -439,7 +518,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                Log.d(TAG, "Success Response:" + response);
+                Log.d(TAG, "Google Direction Success Response:" + response);
                 mGoogleDirection = new Gson().fromJson(response.toString(), GoogleDirection.class);
                 //Draw Route
                 if (mGoogleDirection.getStatus().equals("OK")){
@@ -640,6 +719,5 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
             mVehicleRegistrationNumber = vehicleRegistrationNumber;
         }
         Log.d(TAG,"Updated Value is:"+new Gson().toJson(ridesOption));
-
     }
 }

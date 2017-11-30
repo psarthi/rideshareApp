@@ -50,6 +50,7 @@ public class RESTClient {
             e.printStackTrace();
         }
         Log.d(TAG,"POST URL:"+url);
+        Log.d(TAG, "POST Message:"+json);
         client.post(context, url, entity, "application/json", responseHandler);
     }
 
