@@ -8,6 +8,7 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.TimePicker;
 
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.model.app.RideType;
 
 import java.util.Calendar;
@@ -35,6 +36,8 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         // Use the current time as the default values for the picker
         final Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
+        //This will add extra time from current time, so that we don't get into issues of creating rides in the past
+        c.add(Calendar.MINUTE, Constant.START_TIME_INCREMENT);
         int minute = c.get(Calendar.MINUTE);
 
         // Create a new instance of TimePickerDialog and return it

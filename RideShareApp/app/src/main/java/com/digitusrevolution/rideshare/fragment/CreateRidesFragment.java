@@ -123,7 +123,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     private GoogleDirection mGoogleDirection;
     private Calendar mStartTimeCalendar;
     private boolean mTimeInPast;
-    private static final int BUFFER_TIME_IN_MINUTE = 5;
     private BasicUser mUser;
     private boolean mRidesOptionUpdated = false;
     private Preference mUpdatedRidesOption;
@@ -131,6 +130,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     private BasicRide mRide = new BasicRide();
     private RideOfferInfo mRideOfferInfo = new RideOfferInfo();
     private BasicRideRequest mRideRequest = new BasicRideRequest();
+    private Date mMinStartTime;
 
     public CreateRidesFragment() {
         // Required empty public constructor
@@ -168,6 +168,9 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         mOnSetCurrentLocationOnMapListener = this;
         //Setting calender to current time
         mStartTimeCalendar = Calendar.getInstance();
+        //This will increment the start time by lets say 10 mins, so that we don't get into issues of google API trying to get data of the past time
+        mStartTimeCalendar.add(Calendar.MINUTE, Constant.START_TIME_INCREMENT);
+        mMinStartTime = mStartTimeCalendar.getTime();
     }
 
     @Override
@@ -720,11 +723,8 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
 
     //This will validate if start time is valid or not
     private void validateStartTime() {
-        Calendar currentTime = Calendar.getInstance();
-        //This will subtract 5 minutes to the current time for comparision of selected time vs current time
-        currentTime.add(Calendar.MINUTE,-BUFFER_TIME_IN_MINUTE);
-        if (mStartTimeCalendar.getTime().before(currentTime.getTime())){
-            Toast.makeText(getActivity(),"Start Time can't be in the past",Toast.LENGTH_SHORT).show();
+        if (mStartTimeCalendar.getTime().before(mMinStartTime)){
+            Toast.makeText(getActivity(),"Earliest start time can be "+Constant.START_TIME_INCREMENT+"mins from now",Toast.LENGTH_SHORT).show();
             mTimeTextView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             mTimeInPast = true;
         } else {
