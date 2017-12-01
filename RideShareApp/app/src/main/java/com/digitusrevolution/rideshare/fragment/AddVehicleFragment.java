@@ -36,7 +36,7 @@ import cz.msebera.android.httpclient.Header;
  * Use the {@link AddVehicleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddVehicleFragment extends BaseFragment {
+public class AddVehicleFragment extends BaseFragment{
 
     public static final String TAG = AddVehicleFragment.class.getName();
     public static final String TITLE = "Add Vehicle";
@@ -58,6 +58,7 @@ public class AddVehicleFragment extends BaseFragment {
     private EditText mModelText;
     private TextView mSeatCapacityText;
     private TextView mSmallLuggageCapacityText;
+    private Button mCancelButton;
 
 
     public AddVehicleFragment() {
@@ -110,12 +111,20 @@ public class AddVehicleFragment extends BaseFragment {
         mSmallLuggageCapacityText = seatLuggageView.findViewById(R.id.luggage_count_text);
 
         mAddButton = view.findViewById(R.id.add_vehicle_add_button);
-        setAddButtonOnClickListener();
+        mCancelButton = view.findViewById(R.id.add_vehicle_cancel_button);
+        setButtonsOnClickListener();
 
         return view;
     }
 
-    private void setAddButtonOnClickListener() {
+    private void setButtonsOnClickListener() {
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,7 +138,13 @@ public class AddVehicleFragment extends BaseFragment {
                             mUser = new Gson().fromJson(response.toString(), BasicUser.class);
                             updateUser(mUser);
                             Log.d(TAG, "Vehicle Added");
-                            loadRidesOptionFragment(mRideType, null);
+                            //This will ensure that only when its first time adding vehicle through create rides flow, this will load Rides Option Fragment
+                            //So that it can show the added vehicle to the user for other cases, we need to handle differently
+                            if (mRideType.equals(RideType.OfferRide)){
+                                loadRidesOptionFragment(mRideType, null);
+                            } else {
+                                getActivity().getSupportFragmentManager().popBackStack();
+                            }
                         }
 
                         @Override

@@ -153,6 +153,14 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
         //This will make Vehicle List available or unavailable
         if (vehicleNameList.size() > 0){
             populateSpinner(vehicleNameList, mVehicleSpinner);
+            int i = 0;
+            for (Vehicle vehicle:mUser.getVehicles()){
+                if (vehicle.equals(mUser.getPreference().getDefaultVehicle())){
+                    break;
+                }
+                i++;
+            }
+            mVehicleSpinner.setSelection(i);
         } else {
             view.findViewById(R.id.offer_ride_option_vehicle_name_layout).setVisibility(View.GONE);
         }

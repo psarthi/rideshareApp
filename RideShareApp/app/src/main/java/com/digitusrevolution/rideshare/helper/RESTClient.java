@@ -12,9 +12,16 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpHeaders;
+import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 /**
@@ -43,14 +50,13 @@ public class RESTClient {
                 .create();
         String json = gson.toJson(model);
 
-        StringEntity entity = null;
-        try {
-            entity = new StringEntity(json);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        //VERY IMP - By default json would be encoded with charset Text/Plain and we need to use UTF-8 encoding,
+        //so we need to specify explicity else google api result would fail in json parsing as its not a standard text
+        //Default way to convert to entity is = new StringEntity(json). This would be wrong for UTF-8 encoding
+        StringEntity entity = new StringEntity(json, "UTF-8");
         Log.d(TAG,"POST URL:"+url);
         Log.d(TAG, "POST Message:"+json);
+
         client.post(context, url, entity, "application/json", responseHandler);
     }
 

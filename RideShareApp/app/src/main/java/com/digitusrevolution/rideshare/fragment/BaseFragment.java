@@ -93,7 +93,7 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
                         // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
                         // Calling back the interface implementor i.e. whatever has been set in OnSetCurrentLocationOnMapListener member variable,
                         // it will get call back
-                        mOnSetCurrentLocationOnMapListener.onSetCurrentLocationOnMap(latLng);
+                        if (mOnSetCurrentLocationOnMapListener!=null) mOnSetCurrentLocationOnMapListener.onSetCurrentLocationOnMap(latLng);
                     } else {
                         Log.d(TAG, "Location is null");
                     }
@@ -211,7 +211,7 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
                     Log.d(TAG,"Vehicle Sub Category Name:"+ vehicleSubCategory.getName());
                 }
                 populateSpinner(vehicleSubCategoryNames,vehicleSubCategotySpinner);
-                mOnVehicleCategoriesReadyListener.OnVehicleCategoriesReady();
+                if (mOnVehicleCategoriesReadyListener!=null) mOnVehicleCategoriesReadyListener.OnVehicleCategoriesReady();
             }
 
             @Override

@@ -280,7 +280,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
 
     private void setRideOffer(){
 
-        //mRideOfferInfo.setGoogleDirection(mGoogleDirection);
+        mRideOfferInfo.setGoogleDirection(mGoogleDirection);
         mRideOfferInfo.setRide(mRide);
         mRide.setStartTime(mStartTimeCalendar.getTime());
         RidePoint startPoint = new RidePoint();
@@ -724,7 +724,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     //This will validate if start time is valid or not
     private void validateStartTime() {
         if (mStartTimeCalendar.getTime().before(mMinStartTime)){
-            Toast.makeText(getActivity(),"Earliest start time can be "+Constant.START_TIME_INCREMENT+"mins from now",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Earliest start time can be "+Constant.START_TIME_INCREMENT+"mins from now",Toast.LENGTH_LONG).show();
             mTimeTextView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             mTimeInPast = true;
         } else {
