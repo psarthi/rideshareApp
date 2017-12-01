@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.ColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -32,6 +33,7 @@ import com.digitusrevolution.rideshare.model.dto.google.Bounds;
 import com.digitusrevolution.rideshare.model.dto.google.GoogleDirection;
 import com.digitusrevolution.rideshare.model.ride.domain.Point;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
+import com.digitusrevolution.rideshare.model.ride.domain.RideRequestPoint;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustCategory;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustCategoryName;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
@@ -125,9 +127,9 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     private boolean mRidesOptionUpdated = false;
     private Preference mUpdatedRidesOption;
     private String mVehicleRegistrationNumber;
-    private BasicRide mBasicRide = new BasicRide();
+    private BasicRide mRide = new BasicRide();
     private RideOfferInfo mRideOfferInfo = new RideOfferInfo();
-    private BasicRideRequest mBasicRideRequest = new BasicRideRequest();
+    private BasicRideRequest mRideRequest = new BasicRideRequest();
 
     public CreateRidesFragment() {
         // Required empty public constructor
@@ -211,36 +213,62 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         view.findViewById(R.id.create_rides_confirm_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean driverStatus = false;
-                //Reason for not using contains directly as it was not working
-                for (Role role : mUser.getRoles()){
-                    if (role.getName().equals(RoleName.Driver)){
-                        driverStatus = true;
-                        break;
+                if (mRideType.equals(RideType.OfferRide)){
+                    boolean driverStatus = false;
+                    //Reason for not using contains directly as it was not working
+                    for (Role role : mUser.getRoles()){
+                        if (role.getName().equals(RoleName.Driver)){
+                            driverStatus = true;
+                            break;
+                        }
                     }
-                }
-                if (!driverStatus){
-                    loadAddVehicleFragment(mRideType, null);
-                } else {
-                    Log.d(TAG, "User is a driver, so create ride directly");
-                    setRideOffer();
-                    RESTClient.post(getActivity(), APIUrl.OFFER_RIDE_URL, mRideOfferInfo, new JsonHttpResponseHandler(){
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
-                            Log.d(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
-                            if (rideOfferResult.isCurrentRide()){
-                                updateCurrentRide(rideOfferResult.getRide());
-                                Log.d(TAG, "Updated Current Ride");
-                            }
-                        }
+                    if (!driverStatus){
+                        loadAddVehicleFragment(mRideType, null);
+                    } else {
+                        Log.d(TAG, "User is a driver, so create ride directly");
+                        if (validateInput()){
+                            setRideOffer();
+                            RESTClient.post(getActivity(), APIUrl.OFFER_RIDE_URL, mRideOfferInfo, new JsonHttpResponseHandler(){
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
+                                    Log.d(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
+                                    if (rideOfferResult.isCurrentRide()){
+                                        updateCurrentRide(rideOfferResult.getRide());
+                                        Log.d(TAG, "Updated Current Ride");
+                                    }
+                                }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                                }
+                            });
                         }
-                    });
+                    }
+                } else {
+                    if (validateInput()){
+                        setRideRequest();
+                        RESTClient.post(getActivity(), APIUrl.REQUEST_RIDE_URL, mRideRequest, new JsonHttpResponseHandler(){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
+                                Log.d(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
+                                if (rideOfferResult.isCurrentRide()){
+                                    updateCurrentRide(rideOfferResult.getRide());
+                                    Log.d(TAG, "Updated Current Ride");
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                super.onFailure(statusCode, headers, throwable, errorResponse);
+                            }
+                        });
+                    }
+
                 }
             }
         });
@@ -249,18 +277,65 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     private void setRideOffer(){
 
         //mRideOfferInfo.setGoogleDirection(mGoogleDirection);
-        mRideOfferInfo.setRide(mBasicRide);
-        mBasicRide.setStartTime(mStartTimeCalendar.getTime());
-        RidePoint startRidePoint = new RidePoint();
-        Point startPoint = new Point(mToLatLng.longitude, mToLatLng.latitude);
-        startRidePoint.setPoint(startPoint);
-        mBasicRide.setStartPoint(startRidePoint);
-        RidePoint endRidePoint = new RidePoint();
-        Point endPoint = new Point(mFromLatLng.longitude, mFromLatLng.latitude);
-        endRidePoint.setPoint(endPoint);
-        mBasicRide.setEndPoint(endRidePoint);
+        mRideOfferInfo.setRide(mRide);
+        mRide.setStartTime(mStartTimeCalendar.getTime());
+        RidePoint startPoint = new RidePoint();
+        startPoint.setPoint(getStartPoint());
+        mRide.setStartPoint(startPoint);
+        RidePoint endPoint = new RidePoint();
+        endPoint.setPoint(getEndPoint());
+        mRide.setEndPoint(endPoint);
+        mRide.setTrustNetwork(getTrustNetwork());
+        mRide.setDriver(mUser);
+        if (mRidesOptionUpdated){
+            mRide.setSeatOffered(mUpdatedRidesOption.getSeatOffered());
+            mRide.setLuggageCapacityOffered(mUpdatedRidesOption.getLuggageCapacityOffered());
+            for (Vehicle vehicle : mUser.getVehicles()){
+                if (vehicle.getRegistrationNumber().equals(mVehicleRegistrationNumber)){
+                    mRide.setVehicle(vehicle);
+                    break;
+                }
+            }
+        } else {
+            mRide.setSeatOffered(mUser.getPreference().getSeatOffered());
+            mRide.setLuggageCapacityOffered(mUser.getPreference().getLuggageCapacityOffered());
+            mRide.setVehicle(mUser.getPreference().getDefaultVehicle());
+        }
+    }
+
+    private void setRideRequest(){
+
+        mRideRequest.setPassenger(mUser);
+        RideRequestPoint pickupPoint = new RideRequestPoint();
+        pickupPoint.setPoint(getStartPoint());
+        mRideRequest.setPickupPoint(pickupPoint);
+        RideRequestPoint dropPoint = new RideRequestPoint();
+        dropPoint.setPoint(getEndPoint());
+        mRideRequest.setDropPoint(dropPoint);
+        mRideRequest.setPickupTime(mStartTimeCalendar.getTime());
+        mRideRequest.setTrustNetwork(getTrustNetwork());
+
+        if (mRidesOptionUpdated){
+            mRideRequest.setSeatRequired(mUpdatedRidesOption.getSeatRequired());
+            mRideRequest.setLuggageCapacityRequired(mUpdatedRidesOption.getLuggageCapacityRequired());
+            mRideRequest.setPickupTimeVariation(mUpdatedRidesOption.getPickupTimeVariation());
+            mRideRequest.setPickupPointVariation(mUpdatedRidesOption.getPickupPointVariation());
+            mRideRequest.setDropPointVariation(mUpdatedRidesOption.getDropPointVariation());
+            mRideRequest.setVehicleCategory(mUpdatedRidesOption.getVehicleCategory());
+            mRideRequest.setVehicleSubCategory(mUpdatedRidesOption.getVehicleSubCategory());
+        } else {
+            mRideRequest.setSeatRequired(mUser.getPreference().getSeatRequired());
+            mRideRequest.setLuggageCapacityRequired(mUser.getPreference().getLuggageCapacityRequired());
+            mRideRequest.setPickupTimeVariation(mUser.getPreference().getPickupTimeVariation());
+            mRideRequest.setPickupPointVariation(mUser.getPreference().getPickupPointVariation());
+            mRideRequest.setDropPointVariation(mUser.getPreference().getDropPointVariation());
+            mRideRequest.setVehicleCategory(mUser.getPreference().getVehicleCategory());
+            mRideRequest.setVehicleSubCategory(mUser.getPreference().getVehicleSubCategory());
+        }
+    }
+
+    private TrustNetwork getTrustNetwork() {
         TrustNetwork trustNetwork = new TrustNetwork();
-        mBasicRide.setTrustNetwork(trustNetwork);
         if (mAllSelected) {
             TrustCategory trustCategory = new TrustCategory();
             trustCategory.setName(TrustCategoryName.Anonymous);
@@ -276,26 +351,28 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
             trustCategory.setName(TrustCategoryName.Friends);
             trustNetwork.getTrustCategories().add(trustCategory);
         }
-        mBasicRide.setDriver(mUser);
-        if (mRidesOptionUpdated){
-            mBasicRide.setSeatOffered(mUpdatedRidesOption.getSeatOffered());
-            mBasicRide.setLuggageCapacityOffered(mUpdatedRidesOption.getLuggageCapacityOffered());
-            for (Vehicle vehicle : mUser.getVehicles()){
-                if (vehicle.getRegistrationNumber().equals(mVehicleRegistrationNumber)){
-                    mBasicRide.setVehicle(vehicle);
-                    break;
-                }
-            }
-        } else {
-            mBasicRide.setSeatOffered(mUser.getPreference().getSeatOffered());
-            mBasicRide.setLuggageCapacityOffered(mUser.getPreference().getLuggageCapacityOffered());
-            List<Vehicle> vehicles = (List<Vehicle>) mUser.getVehicles();
-            mBasicRide.setVehicle(vehicles.get(0));
-        }
+        return trustNetwork;
     }
 
-    private void setRideRequest(){
+    @NonNull
+    private Point getEndPoint() {
+        Point point = new Point(mFromLatLng.longitude, mFromLatLng.latitude);
+        return point;
+    }
 
+    @NonNull
+    private Point getStartPoint() {
+        Point point = new Point(mToLatLng.longitude, mToLatLng.latitude);
+        return point;
+    }
+
+    private boolean validateInput(){
+
+        if (mToLatLng ==null || mFromLatLng == null || mTimeInPast){
+            Toast.makeText(getActivity(), "Please ensure input is valid",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -637,6 +714,11 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         mStartTimeCalendar.set(Calendar.MINUTE, minute);
         Log.d(TAG,"Selected Date:"+mStartTimeCalendar.getTime());
         Log.d(TAG,"Current Date:"+Calendar.getInstance().getTime());
+        validateStartTime();
+    }
+
+    //This will validate if start time is valid or not
+    private void validateStartTime() {
         Calendar currentTime = Calendar.getInstance();
         //This will subtract 5 minutes to the current time for comparision of selected time vs current time
         currentTime.add(Calendar.MINUTE,-BUFFER_TIME_IN_MINUTE);
@@ -659,6 +741,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         String formattedDate = getFormattedDateString(date);
         mDateTextView.setText(formattedDate);
         mStartTimeCalendar.set(year,month,day);
+        validateStartTime();
     }
 
     /**

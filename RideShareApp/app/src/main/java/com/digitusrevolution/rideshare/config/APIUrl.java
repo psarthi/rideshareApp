@@ -37,5 +37,6 @@ public class APIUrl {
             "&destination={destinationLat},{destinationLng}&departure_time={departureEpochSecond}&key={key}";
 
     public static final String OFFER_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/rides";
+    public static final String REQUEST_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/riderequests";
 
 }

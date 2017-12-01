@@ -108,7 +108,7 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
         } else {
             // Inflate the layout for this fragment
             view = inflater.inflate(R.layout.fragment_ride_request_option, container, false);
-            setRideRequestView(view);
+            setRequestRideView(view);
         }
         //This will disable trust category layout in Rides Option for this fragment
         view.findViewById(R.id.trust_category_layout).setVisibility(View.GONE);
@@ -119,7 +119,7 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
         return view;
     }
 
-    private void setRideRequestView(View view) {
+    private void setRequestRideView(View view) {
         View seatLuggageSingleRowLayout = view.findViewById(R.id.seat_luggage_single_row_layout);
         mSeatTextView = seatLuggageSingleRowLayout.findViewById(R.id.seat_count_text);
         mLuggageTextView = seatLuggageSingleRowLayout.findViewById(R.id.luggage_count_text);
@@ -198,12 +198,18 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
             mRidesOption.setPickupTimeVariation("00:"+mPickupTimeVariationProgressTextView.getText().toString());
             mRidesOption.setPickupPointVariation(Integer.parseInt(mPickupPointVariationProgressTextView.getText().toString()));
             mRidesOption.setDropPointVariation(Integer.parseInt(mDropPointVariationProgressTextView.getText().toString()));
-            VehicleCategory vehicleCategory = new VehicleCategory();
-            vehicleCategory.setName(mVehicleCategorySpinner.getSelectedItem().toString());
-            mRidesOption.setVehicleCategory(vehicleCategory);
-            VehicleSubCategory vehicleSubCategory = new VehicleSubCategory();
-            vehicleSubCategory.setName(mVehicleSubCategorySpinner.getSelectedItem().toString());
-            mRidesOption.setVehicleSubCategory(vehicleSubCategory);
+            for (VehicleCategory vehicleCategory: mVehicleCategories){
+                if (vehicleCategory.getName().equals(mVehicleCategorySpinner.getSelectedItem().toString())){
+                    mRidesOption.setVehicleCategory(vehicleCategory);
+                    for (VehicleSubCategory vehicleSubCategory: vehicleCategory.getSubCategories()){
+                        if (vehicleSubCategory.getName().equals(mVehicleSubCategorySpinner.getSelectedItem().toString())) {
+                            mRidesOption.setVehicleSubCategory(vehicleSubCategory);
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
         }
     }
 
