@@ -7,7 +7,7 @@
               tools:showIn="@layout/fragment_ride_request_option">
 
     <LinearLayout
-        android:id="@+id/vehicle_category_layout"
+        android:id="@+id/vehicle_category_sub_category_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/default_padding"

@@ -48,6 +48,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
     private TextView mTextView;
     private LinearLayout mCurrentRideLinearLayout;
     private LinearLayout mCurrentRideRequestLinearLayout;
+    private TextView mCurrentRideTextView;
+    private TextView mCurrentRideRequestTextView;
 
     public HomePageWithCurrentRidesFragment() {
         // Required empty public constructor
@@ -90,14 +92,13 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
         mCurrentRideLinearLayout = view.findViewById(R.id.current_ride_layout);
         mCurrentRideRequestLinearLayout = view.findViewById(R.id.current_ride_request_layout);
+        mCurrentRideTextView = view.findViewById(R.id.current_ride_text);
+        mCurrentRideRequestTextView = view.findViewById(R.id.current_ride_request_text);
 
         //Make Ride & Ride Request layout invisible
         mCurrentRideLinearLayout.setVisibility(View.GONE);
         mCurrentRideRequestLinearLayout.setVisibility(View.GONE);
         showRidesLayoutVisibilityStatusForDebugging();
-
-        //This will make appropriate layout visible
-        setRidesLayoutVisibility();
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.home_page_map);
         mapFragment.getMapAsync(this);
@@ -125,29 +126,35 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         //((HomePageActivity)getActivity()).showBackButton(false);
         //Its important to set Title here else while loading fragment from backstack, title would not change
         getActivity().setTitle(TITLE);
+        //This will set appropriate view and set its visibility accordingly
+        setRidesLayoutView();
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
     }
 
-    private void setRidesLayoutVisibility() {
+    private void setRidesLayoutView() {
         if (mCurrentRide!=null && mCurrentRideRequest!=null){
             if (mCurrentRide.getStartTime().before(mCurrentRideRequest.getPickupTime())) {
                 Log.d(TAG,"Load Current Ride as its before Ride Request");
+                setCurrentRideView();
                 mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
                 showRidesLayoutVisibilityStatusForDebugging();
             } else {
                 Log.d(TAG,"Load Current Ride Request as its before Ride");
+                setCurrentRideRequestView();
                 mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
                 showRidesLayoutVisibilityStatusForDebugging();
             }
         }
         else if (mCurrentRide!=null){
             Log.d(TAG,"Load Current Ride as there is no Ride Request");
+            setCurrentRideView();
             mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
             showRidesLayoutVisibilityStatusForDebugging();
         }
         else if (mCurrentRideRequest!=null){
             Log.d(TAG,"Load Current Ride Request as there is no Ride");
+            setCurrentRideRequestView();
             mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
             showRidesLayoutVisibilityStatusForDebugging();
         }
@@ -160,6 +167,15 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
     private void showRidesLayoutVisibilityStatusForDebugging(){
         Log.d(TAG,"Current Ride Visibility: " + Integer.toString(mCurrentRideLinearLayout.getVisibility()));
         Log.d(TAG,"Current Ride Request Visibility: " + Integer.toString(mCurrentRideRequestLinearLayout.getVisibility()));
+    }
+
+    private void setCurrentRideView(){
+        mCurrentRideTextView.setText("Current Ride Id: "+mCurrentRide.getId());
+    }
+
+    private void setCurrentRideRequestView(){
+        mCurrentRideRequestTextView.setText("Current Ride Request Id: "+mCurrentRideRequest.getId());
+
     }
 
     @Override

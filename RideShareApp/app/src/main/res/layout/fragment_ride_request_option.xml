@@ -9,7 +9,7 @@
 
     <include layout="@layout/seat_luggage_single_row_layout" android:id="@+id/seat_luggage_single_row_layout"/>
 
-    <include layout="@layout/vehicle_category_layout" android:id="@+id/vehicle_category_layout"
+    <include layout="@layout/vehicle_category_sub_category_layout" android:id="@+id/vehicle_category_sub_category_layout"
              android:layout_below="@id/seat_luggage_single_row_layout"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@id/vehicle_category_layout">
+        android:layout_below="@id/vehicle_category_sub_category_layout">
 
         <LinearLayout android:id="@+id/rides_option_pickup_time_variation_layout"
                       android:layout_width="match_parent"

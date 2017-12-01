@@ -41,6 +41,7 @@ import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.RideOfferInfo;
 import com.digitusrevolution.rideshare.model.ride.dto.RideOfferResult;
+import com.digitusrevolution.rideshare.model.ride.dto.RideRequestResult;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.domain.Role;
 import com.digitusrevolution.rideshare.model.user.domain.RoleName;
@@ -254,11 +255,11 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);
-                                RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
-                                Log.d(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
-                                if (rideOfferResult.isCurrentRide()){
-                                    updateCurrentRide(rideOfferResult.getRide());
-                                    Log.d(TAG, "Updated Current Ride");
+                                RideRequestResult rideRequestResult = new Gson().fromJson(response.toString(), RideRequestResult.class);
+                                Log.d(TAG, "Ride Request Successfully created with id:"+rideRequestResult.getRideRequest().getId());
+                                if (rideRequestResult.isCurrentRideRequest()){
+                                    updateCurrentRideRequest(rideRequestResult.getRideRequest());
+                                    Log.d(TAG, "Updated Current Ride Request");
                                 }
                             }
 

@@ -18,7 +18,7 @@
                       android:paddingBottom="@dimen/large_margin"
                       android:background="@android:color/white">
 
-            <TextView android:id="@+id/textView"
+            <TextView android:id="@+id/current_ride_text"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_weight="1"
@@ -34,7 +34,7 @@
                       android:paddingBottom="@dimen/small_block_height"
                       android:background="@android:color/white">
 
-            <TextView android:id="@+id/textView-1"
+            <TextView android:id="@+id/current_ride_request_text"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_weight="1"

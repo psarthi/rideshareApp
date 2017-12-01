@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -18,27 +16,15 @@ import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
-import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
-import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -110,9 +96,10 @@ public class AddVehicleFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_vehicle, container, false);
+        View vehicleCatSubCatLayout = view.findViewById(R.id.vehicle_category_sub_category_layout);
 
-        mVehicleCategorySpinner = view.findViewById(R.id.vehicle_category_spinner);
-        mVehicleSubCategorySpinner = view.findViewById(R.id.vehicle_sub_category_spinner);
+        mVehicleCategorySpinner = vehicleCatSubCatLayout.findViewById(R.id.vehicle_category_spinner);
+        mVehicleSubCategorySpinner = vehicleCatSubCatLayout.findViewById(R.id.vehicle_sub_category_spinner);
         setVehicleCategoriesSpinner(mVehicleCategorySpinner, mVehicleSubCategorySpinner);
 
         mRegistrationNumberText = view.findViewById(R.id.add_vehicle_number_text);

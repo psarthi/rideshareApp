@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:layout_marginTop="@dimen/default_margin">
 
-    <include layout="@layout/vehicle_category_layout" android:id="@+id/vehicle_category_layout"/>
+    <include layout="@layout/vehicle_category_sub_category_layout" android:id="@+id/vehicle_category_sub_category_layout"/>
 
     <LinearLayout android:id="@+id/add_vehicle_number_layout"
                   android:layout_width="match_parent"
