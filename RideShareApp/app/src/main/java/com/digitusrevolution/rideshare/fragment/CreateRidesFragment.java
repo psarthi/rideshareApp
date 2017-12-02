@@ -166,6 +166,8 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //This will assign this fragment to base fragment for callbacks.
         mOnSetCurrentLocationOnMapListener = this;
+        mUser = getUser();
+        Log.d(TAG,"User Name is:"+mUser.getFirstName());
         //Setting calender to current time
         mStartTimeCalendar = Calendar.getInstance();
         //This will increment the start time by lets say 10 mins, so that we don't get into issues of google API trying to get data of the past time
@@ -359,16 +361,17 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     }
 
     @NonNull
-    private Point getEndPoint() {
+    private Point getStartPoint() {
         Point point = new Point(mFromLatLng.longitude, mFromLatLng.latitude);
         return point;
     }
 
     @NonNull
-    private Point getStartPoint() {
+    private Point getEndPoint() {
         Point point = new Point(mToLatLng.longitude, mToLatLng.latitude);
         return point;
     }
+
 
     private boolean validateInput(){
 
@@ -388,8 +391,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         } else {
             getActivity().setTitle(REQUEST_RIDE_TITLE);
         }
-        mUser = getUser();
-        Log.d(TAG,"User Name is:"+mUser.getFirstName());
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
     }

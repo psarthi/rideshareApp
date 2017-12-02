@@ -130,6 +130,19 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         setRidesLayoutView();
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
+        showChildFragmentDetails();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "Inside Destroy View");
+        showChildFragmentDetails();
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.home_page_map);
+        if (mapFragment != null) {
+            //This needs to be called if you are facing duplicate map id on fragment reload
+            //getActivity().getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
+        }
     }
 
     private void setRidesLayoutView() {

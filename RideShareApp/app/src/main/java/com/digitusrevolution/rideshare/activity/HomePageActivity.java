@@ -27,6 +27,7 @@ import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.DummyFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
+import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.domain.core.Ride;
@@ -42,7 +43,8 @@ public class HomePageActivity extends BaseActivity
         CreateRidesFragment.OnFragmentInteractionListener,
         DummyFragment.OnFragmentInteractionListener,
         AddVehicleFragment.OnFragmentInteractionListener,
-        RidesOptionFragment.OnFragmentInteractionListener{
+        RidesOptionFragment.OnFragmentInteractionListener,
+        RideInfoFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -124,7 +126,7 @@ public class HomePageActivity extends BaseActivity
         if (id == R.id.nav_home) {
             loadHomePageWithCurrentRidesFragment();
         } else if (id == R.id.nav_rides) {
-            loadDummyFragment();
+            loadRideInfoFragment();
 
         } else if (id == R.id.nav_payments) {
 
@@ -174,6 +176,17 @@ public class HomePageActivity extends BaseActivity
         fragmentTransaction.addToBackStack(RidesOptionFragment.TAG);
         fragmentTransaction.commit();
     }
+
+    private void loadRideInfoFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        RideInfoFragment rideInfoFragment = RideInfoFragment.
+                newInstance(new Gson().toJson(getCurrentRide()));
+        //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
+        fragmentTransaction.replace(R.id.home_page_container, rideInfoFragment, RideInfoFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
 
     private void loadDummyFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -278,5 +291,10 @@ public class HomePageActivity extends BaseActivity
         CreateRidesFragment createRidesFragment = (CreateRidesFragment) getSupportFragmentManager().findFragmentByTag(CreateRidesFragment.TAG);
         createRidesFragment.updateRidesOption(ridesOption, vehicleRegistrationNumber);
         getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onRideInfoFragmentInteraction(Uri uri) {
+
     }
 }

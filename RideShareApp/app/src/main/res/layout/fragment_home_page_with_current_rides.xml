@@ -45,6 +45,7 @@
 
     </RelativeLayout>
 
+    <!-- Note Its very important to change the name of Fragment from MapFragment to SupportMapFragment as we are using that-->
     <fragment android:id="@+id/home_page_map"
               xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
