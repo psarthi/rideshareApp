@@ -1,6 +1,5 @@
 package com.digitusrevolution.rideshare.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -55,7 +54,7 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
         if (convertView == null){
             viewHolder = new CoTravellerAdapter.ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.co_traveller_layout, parent, false);
+            convertView = inflater.inflate(R.layout.ride_co_traveller_layout, parent, false);
             //text1 is the id of the TextView configured in spinner_item
             viewHolder.mTextView = (TextView) convertView.findViewById(R.id.co_travller_info_text);
             convertView.setTag(viewHolder);

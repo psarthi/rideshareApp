@@ -9,43 +9,24 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content">
 
-        <RelativeLayout android:id="@+id/ride_info_basic_info_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/medium_block_height">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Basic Info"/>
+        <include layout="@layout/basic_ride_layout" android:id="@+id/basic_ride_layout"/>
 
-        </RelativeLayout>
-
-
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        <fragment android:id="@+id/ride_info_map"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:map="http://schemas.android.com/apk/res-auto"
                   android:name="com.google.android.gms.maps.SupportMapFragment"
-                  android:id="@+id/ride_info_map"
                   android:layout_width="match_parent"
-                  android:layout_height="@dimen/medium_block_height"
-                  map:cameraZoom="5"
+                  android:layout_height="@dimen/lite_map_fragment_height"
+                  map:cameraZoom="13"
                   map:mapType="normal"
                   map:liteMode="true"/>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/ride_info_co_traveller_layout">
-
+        <LinearLayout android:id="@+id/ride_info_co_traveller_layout"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
 
         </LinearLayout>
-
-        <!--    <ListView android:id="@+id/ride_info_co_traveller_list"
-                      android:layout_width="match_parent"
-                      android:layout_height="0dp"
-                      android:layout_weight="3">
-            </ListView> -->
 
     </LinearLayout>
 

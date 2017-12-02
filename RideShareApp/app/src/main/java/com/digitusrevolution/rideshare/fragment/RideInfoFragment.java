@@ -41,7 +41,6 @@ public class RideInfoFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
     private FullRide mRide;
-    private ListView mCoTravellerListView;
     private LinearLayout mCoTravellerLinearLayout;
 
     public RideInfoFragment() {
@@ -79,21 +78,14 @@ public class RideInfoFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_info, container, false);
         mCoTravellerLinearLayout = view.findViewById(R.id.ride_info_co_traveller_layout);
-
+        //Note - We are using the same adapter which is also applicable for listview,
+        //but this can be used for our own prupose and in this case, its the best suitable option
         ArrayAdapter<BasicRideRequest> coTravellerAdapter = new CoTravellerAdapter(getActivity(), (List<BasicRideRequest>) mRide.getAcceptedRideRequests());
-
         for (int i=0; i<coTravellerAdapter.getCount(); i++){
             View coTravellerView = null;
             coTravellerView = coTravellerAdapter.getView(i, coTravellerView, container);
             mCoTravellerLinearLayout.addView(coTravellerView);
         }
-
-
-        //mCoTravellerListView = view.findViewById(R.id.ride_info_co_traveller_list);
-        //mCoTravellerListView.setAdapter(coTravellerAdapter);
-
-
-
         return view;
     }
 
