@@ -63,8 +63,6 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
             viewHolder = (CoTravellerAdapter.ViewHolder) convertView.getTag();
         }
 
-        // Reason for adding "+" in the code as while sending the GET request for getting OTP with +91,
-        // somehow + gets omitted, so we are storing the data without + and while sending OTP we can add + from backend
         viewHolder.mTextView.setText(rideRequest.getPassenger().getFirstName());
         return convertView;
     }

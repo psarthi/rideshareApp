@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.digitusrevolution.rideshare.R;
@@ -41,6 +42,7 @@ public class RideInfoFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     private FullRide mRide;
     private ListView mCoTravellerListView;
+    private LinearLayout mCoTravellerLinearLayout;
 
     public RideInfoFragment() {
         // Required empty public constructor
@@ -76,9 +78,22 @@ public class RideInfoFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_info, container, false);
-        mCoTravellerListView = view.findViewById(R.id.ride_info_co_traveller_list);
+        mCoTravellerLinearLayout = view.findViewById(R.id.ride_info_co_traveller_layout);
+
         ArrayAdapter<BasicRideRequest> coTravellerAdapter = new CoTravellerAdapter(getActivity(), (List<BasicRideRequest>) mRide.getAcceptedRideRequests());
-        mCoTravellerListView.setAdapter(coTravellerAdapter);
+
+        for (int i=0; i<coTravellerAdapter.getCount(); i++){
+            View coTravellerView = null;
+            coTravellerView = coTravellerAdapter.getView(i, coTravellerView, container);
+            mCoTravellerLinearLayout.addView(coTravellerView);
+        }
+
+
+        //mCoTravellerListView = view.findViewById(R.id.ride_info_co_traveller_list);
+        //mCoTravellerListView.setAdapter(coTravellerAdapter);
+
+
+
         return view;
     }
 
