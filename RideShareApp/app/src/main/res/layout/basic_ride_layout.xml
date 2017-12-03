@@ -1,6 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:paddingTop="@dimen/default_padding"
+              android:paddingLeft="@dimen/default_padding"
+              android:paddingRight="@dimen/default_padding"
+              tools:showIn="@layout/fragment_ride_info">
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView android:id="@+id/ride_id_text"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Offered Ride No. 1234"
+                  android:textStyle="bold"
+                  android:textColor="@color/colorPrimaryDark"/>
+
+        <TextView android:id="@+id/ride_status"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Planned"
+                  android:gravity="end"
+                  android:textStyle="bold|italic"
+                  android:textAllCaps="true"
+                  android:textColor="@color/colorPrimaryDark"/>
+
+    </LinearLayout>
+
+    <TextView android:id="@+id/ride_start_time_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Sat Dec 2, 9:00 AM"
+              android:textStyle="bold|italic"
+              android:layout_marginBottom="@dimen/default_margin"/>
+
+
+    <TextView android:id="@+id/ride_start_point_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Gopalan Grandeur, Hoodi, Bangalore"
+              android:gravity="center_vertical"
+              android:drawableLeft="@drawable/ic_green_marker"/>
+
+    <TextView android:id="@+id/ride_end_point_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Ajmera Infinity, Electronic City, Bangalore"
+              android:gravity="center_vertical"
+              android:drawableLeft="@drawable/ic_red_marker"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start">
+
+        <Button android:id="@+id/ride_cancel_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:textColor="@color/colorAccent"/>
+
+        <Button android:id="@+id/ride_start_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:textColor="@color/colorAccent"/>
+
+        <Button android:id="@+id/ride_end_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:textColor="@color/colorAccent"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

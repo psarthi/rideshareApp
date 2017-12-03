@@ -1,12 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/small_block_height">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingTop="@dimen/default_padding"
+              android:paddingLeft="@dimen/default_padding"
+              android:paddingRight="@dimen/default_padding"
+              android:orientation="vertical">
 
-    <TextView android:id="@+id/co_travller_info_text"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Co-Traveller Info"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="@dimen/default_margin">
 
-</RelativeLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/co_traveller_profile_imageView"
+            android:layout_width="@dimen/user_profile_icon_size"
+            android:layout_height="@dimen/user_profile_icon_size"
+            android:src="@drawable/ic_profile"
+            android:layout_marginEnd="@dimen/default_margin"/>
+
+
+        <TextView android:id="@+id/co_traveller_name_text"
+                  android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:text="Partha Sarthi"
+                  android:textStyle="bold"
+                  android:textSize="@dimen/heading3_text_size"
+                  android:gravity="center_vertical"
+                  android:layout_marginEnd="@dimen/default_margin"/>
+
+        <TextView android:id="@+id/co_traveller_rating_text"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="4.5"
+                  android:textStyle="bold"
+                  android:gravity="center_vertical"
+                  android:drawableEnd="@drawable/ic_stars"
+                  android:layout_marginEnd="@dimen/default_margin"/>
+
+
+        <ImageView android:id="@+id/co_traveller_mobile_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_phone"
+            android:background="@android:color/transparent"/>
+
+    </LinearLayout>
+
+    <TextView android:id="@+id/co_traveller_pickup_point_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gopalan Grandeur, Hoodi, Bangalore"
+        android:gravity="center_vertical"
+        android:drawableLeft="@drawable/ic_green_flag"/>
+
+    <TextView android:id="@+id/co_traveller_drop_point_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ajmera Infinity, Electronic City, Bangalore"
+        android:gravity="center_vertical"
+        android:drawableLeft="@drawable/ic_red_flag"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start">
+
+        <Button
+            android:id="@+id/co_traveller_cancel_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:text="Cancel"
+            android:textColor="@color/colorAccent"/>
+
+        <Button
+            android:id="@+id/co_traveller_pickup_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pickup"
+            android:textColor="@color/colorAccent"
+            android:layout_marginEnd="@dimen/default_margin"/>
+
+        <Button
+            android:id="@+id/co_traveller_drop_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Drop"
+            android:textColor="@color/colorAccent"
+            android:layout_marginEnd="@dimen/default_margin"/>
+
+    </LinearLayout>
+
+</LinearLayout>
