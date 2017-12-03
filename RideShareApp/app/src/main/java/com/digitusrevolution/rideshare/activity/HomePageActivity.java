@@ -1,17 +1,13 @@
 package com.digitusrevolution.rideshare.activity;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -22,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.DummyFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
@@ -31,10 +26,8 @@ import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.model.app.RideType;
-import com.digitusrevolution.rideshare.model.ride.domain.core.Ride;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -90,14 +83,14 @@ public class HomePageActivity extends BaseActivity
         // default drawerlayout view doesn't contain image view directly and its inside the headerlayout
         View headerView = navigationView.getHeaderView(0);
 
-        mProfilePhotoImageView = headerView.findViewById(R.id.userPhotoImageView);
+        mProfilePhotoImageView = headerView.findViewById(R.id.user_profile_imageView);
         Picasso.with(this).load(mUser.getPhoto().getImageLocation()).into(mProfilePhotoImageView);
 
-        mUserNameTextView = headerView.findViewById(R.id.userNameTextView);
+        mUserNameTextView = headerView.findViewById(R.id.user_name_text);
         mUserNameTextView.setText(mUser.getFirstName()+" "
                 +mUser.getLastName());
 
-        mUserEmailTextView = headerView.findViewById(R.id.userEmailTextView);
+        mUserEmailTextView = headerView.findViewById(R.id.user_email_text);
         mUserEmailTextView.setText(mUser.getEmail());
     }
 

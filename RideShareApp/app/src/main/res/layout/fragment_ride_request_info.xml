@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-              android:orientation="vertical"
-             tools:context="com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:context="com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment">
 
     <include layout="@layout/basic_ride_request_layout" android:id="@+id/basic_ride_request_layout"/>
 
@@ -18,7 +18,7 @@
     <include layout="@layout/ride_owner_layout" android:id="@+id/ride_owner_layout" android:layout_below="@id/basic_ride_request_layout"
              android:layout_height="wrap_content"
              android:layout_width="match_parent"
-        android:layout_marginTop="1dp"/>
+             android:layout_marginTop="1dp"/>
 
 
     <fragment android:id="@+id/ride_request_info_map" android:layout_below="@id/ride_owner_layout"

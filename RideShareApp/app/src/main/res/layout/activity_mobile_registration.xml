@@ -19,8 +19,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/photo"
-        android:layout_width="@dimen/profile_photo_small_diameter"
-        android:layout_height="@dimen/profile_photo_small_diameter"
+        android:layout_width="@dimen/user_mobile_registration_photo_size"
+        android:layout_height="@dimen/user_mobile_registration_photo_size"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/default_margin"

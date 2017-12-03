@@ -8,38 +8,52 @@
     tools:context="com.digitusrevolution.rideshare.activity.LandingPageActivity">
 
     <RelativeLayout android:id="@+id/home_page_rides_layout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
         <LinearLayout android:id="@+id/current_ride_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:paddingTop="@dimen/large_margin"
-                      android:paddingBottom="@dimen/large_margin"
-                      android:background="@android:color/white">
+                      android:orientation="vertical">
 
-            <TextView android:id="@+id/current_ride_text"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_weight="1"
-                      android:text="Current Ride"
-                      android:textAlignment="center"/>
+
+            <include layout="@layout/basic_ride_layout" android:id="@+id/basic_ride_layout"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/line_seperator_thickness"
+                android:background="@color/light_gray"
+                android:layout_margin="@dimen/default_margin"/>
+
+            <android.support.v7.widget.RecyclerView android:id="@+id/current_ride_co_traveller_list"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:scrollbars="horizontal">
+
+            </android.support.v7.widget.RecyclerView>
+
 
         </LinearLayout>
 
         <LinearLayout android:id="@+id/current_ride_request_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:paddingTop="@dimen/small_block_height"
-                      android:paddingBottom="@dimen/small_block_height"
-                      android:background="@android:color/white">
+                      android:orientation="vertical"
+                      android:visibility="gone">
 
-            <TextView android:id="@+id/current_ride_request_text"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_weight="1"
-                      android:text="Current Ride Request"
-                      android:textAlignment="center"/>
+            <include layout="@layout/basic_ride_request_layout" android:id="@+id/basic_ride_request_layout"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/line_seperator_thickness"
+                android:background="@color/light_gray"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"/>
+
+            <include layout="@layout/user_profile_single_row_layout" android:id="@+id/ride_owner_layout"
+                     android:layout_margin="@dimen/default_margin"
+                     android:layout_height="wrap_content" android:layout_width="match_parent"/>
+
         </LinearLayout>
 
 

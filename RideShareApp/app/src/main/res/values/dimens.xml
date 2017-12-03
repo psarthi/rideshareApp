@@ -19,13 +19,14 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="profile_photo_diameter">70dp</dimen>
-    <dimen name="profile_photo_small_diameter">50dp</dimen>
+    <dimen name="user_nav_header_photo_size">70dp</dimen>
+    <dimen name="user_mobile_registration_photo_size">50dp</dimen>
     <dimen name="date_time_text_size">12sp</dimen>
     <dimen name="standard_text_size">14sp</dimen>
     <dimen name="large_text_size">20sp</dimen>
     <dimen name="medium_block_height">150dp</dimen>
     <dimen name="lite_map_fragment_height">150dp</dimen>
-    <dimen name="user_profile_icon_size">40dp</dimen>
+    <dimen name="user_photo_icon_size">40dp</dimen>
     <dimen name="line_seperator_thickness">1dp</dimen>
+    <dimen name="co_traveller_photo_icon_size">70dp</dimen>
 </resources>

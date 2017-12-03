@@ -40,7 +40,6 @@
               android:textStyle="bold|italic"
               android:layout_marginBottom="@dimen/default_margin"/>
 
-
     <TextView android:id="@+id/ride_start_point_text"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"

@@ -3,6 +3,8 @@ package com.digitusrevolution.rideshare.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.adapter.CoTravellerBasicAdapter;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -20,6 +24,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +56,9 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
     private LinearLayout mCurrentRideRequestLinearLayout;
     private TextView mCurrentRideTextView;
     private TextView mCurrentRideRequestTextView;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public HomePageWithCurrentRidesFragment() {
         // Required empty public constructor
@@ -92,8 +101,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
         mCurrentRideLinearLayout = view.findViewById(R.id.current_ride_layout);
         mCurrentRideRequestLinearLayout = view.findViewById(R.id.current_ride_request_layout);
-        mCurrentRideTextView = view.findViewById(R.id.current_ride_text);
-        mCurrentRideRequestTextView = view.findViewById(R.id.current_ride_request_text);
+        mCurrentRideTextView = view.findViewById(R.id.ride_id_text);
+        mCurrentRideRequestTextView = view.findViewById(R.id.ride_request_id_text);
 
         //Make Ride & Ride Request layout invisible
         mCurrentRideLinearLayout.setVisibility(View.GONE);
@@ -116,6 +125,13 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
                 loadCreatesRideFragment(RideType.RequestRide, null);            }
         });
 
+
+        mRecyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new CoTravellerBasicAdapter(getActivity(), (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
+        mRecyclerView.setAdapter(mAdapter);
 
         return view;
     }
