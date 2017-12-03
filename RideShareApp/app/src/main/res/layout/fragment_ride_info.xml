@@ -26,15 +26,6 @@
                       android:layout_height="wrap_content"
                       android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Co-Traveller"
-                android:textStyle="bold"
-                android:layout_marginTop="@dimen/default_margin"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
-                android:textColor="@color/colorPrimaryDark"/>
         </LinearLayout>
 
     </LinearLayout>

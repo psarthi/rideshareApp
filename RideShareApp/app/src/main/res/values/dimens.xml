@@ -27,4 +27,5 @@
     <dimen name="medium_block_height">150dp</dimen>
     <dimen name="lite_map_fragment_height">150dp</dimen>
     <dimen name="user_profile_icon_size">40dp</dimen>
+    <dimen name="line_seperator_thickness">1dp</dimen>
 </resources>

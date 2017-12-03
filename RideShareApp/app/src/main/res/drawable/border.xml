@@ -9,7 +9,7 @@
 
     <!-- View border color and width -->
     <stroke
-        android:width="0dp"
+        android:width="4dp"
         android:color="@android:color/black" >
     </stroke>
 
@@ -17,5 +17,4 @@
     <corners
         android:radius="2dp"   >
     </corners>
-
 </shape>

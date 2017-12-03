@@ -28,6 +28,7 @@ import com.digitusrevolution.rideshare.fragment.DummyFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
+import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.domain.core.Ride;
@@ -44,7 +45,8 @@ public class HomePageActivity extends BaseActivity
         DummyFragment.OnFragmentInteractionListener,
         AddVehicleFragment.OnFragmentInteractionListener,
         RidesOptionFragment.OnFragmentInteractionListener,
-        RideInfoFragment.OnFragmentInteractionListener{
+        RideInfoFragment.OnFragmentInteractionListener,
+        RideRequestInfoFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -129,7 +131,7 @@ public class HomePageActivity extends BaseActivity
             loadRideInfoFragment();
 
         } else if (id == R.id.nav_payments) {
-
+            loadRideRequestInfoFragment();
         } else if (id == R.id.nav_friends) {
 
         } else if (id == R.id.nav_groups) {
@@ -182,8 +184,18 @@ public class HomePageActivity extends BaseActivity
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         RideInfoFragment rideInfoFragment = RideInfoFragment.
                 newInstance(new Gson().toJson(getCurrentRide()));
-        //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, rideInfoFragment, RideInfoFragment.TAG);
+        fragmentTransaction.addToBackStack(RideInfoFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    private void loadRideRequestInfoFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        RideRequestInfoFragment rideRequestInfoFragment = RideRequestInfoFragment.
+                newInstance(new Gson().toJson(getCurrentRideRequest()));
+        fragmentTransaction.replace(R.id.home_page_container, rideRequestInfoFragment, RideRequestInfoFragment.TAG);
+        fragmentTransaction.addToBackStack(RideRequestInfoFragment.TAG);
         fragmentTransaction.commit();
     }
 
@@ -295,6 +307,11 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onRideInfoFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onRideRequestInfoFragmentInteraction(Uri uri) {
 
     }
 }

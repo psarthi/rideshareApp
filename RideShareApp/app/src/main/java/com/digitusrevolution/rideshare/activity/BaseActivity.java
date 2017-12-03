@@ -61,4 +61,9 @@ public class BaseActivity extends AppCompatActivity {
         String currentRide = getSharedPreferences().getString(Constant.SHARED_PREFS_CURRENT_RIDE_KEY,null);
         return new Gson().fromJson(currentRide, FullRide.class);
     }
+
+    public FullRideRequest getCurrentRideRequest() {
+        String currentRideRequest = getSharedPreferences().getString(Constant.SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY,null);
+        return new Gson().fromJson(currentRideRequest,FullRideRequest.class);
+    }
 }

@@ -56,7 +56,7 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.ride_co_traveller_layout, parent, false);
             //text1 is the id of the TextView configured in spinner_item
-            viewHolder.mTextView = (TextView) convertView.findViewById(R.id.co_traveller_name_text);
+            viewHolder.mTextView = (TextView) convertView.findViewById(R.id.user_name_text);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (CoTravellerAdapter.ViewHolder) convertView.getTag();

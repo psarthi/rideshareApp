@@ -1,6 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:paddingTop="@dimen/default_padding"
+              android:paddingLeft="@dimen/default_padding"
+              android:paddingRight="@dimen/default_padding"
+              tools:showIn="@layout/fragment_ride_request_info">
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView android:id="@+id/ride_request_id_text"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Ride Request No. 1234"
+                  android:textStyle="bold"
+                  android:textColor="@color/colorPrimaryDark"/>
+
+        <TextView android:id="@+id/ride_request_status_text"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Unfulfilled"
+                  android:gravity="end"
+                  android:textStyle="bold|italic"
+                  android:textAllCaps="true"
+                  android:textColor="@color/colorPrimaryDark"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView android:id="@+id/ride_request_pickup_time_text"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Sat Dec 2, 9:00 AM"
+                  android:textStyle="bold|italic"/>
+
+        <TextView android:id="@+id/ride_request_confirmation_code_text"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Code 1234"
+                  android:gravity="end"
+                  android:textStyle="bold|italic"
+                  android:textAllCaps="true"/>
+
+    </LinearLayout>
+
+    <TextView android:id="@+id/ride_request_pickup_point_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Gopalan Grandeur, Hoodi, Bangalore"
+              android:gravity="center_vertical"
+              android:drawableLeft="@drawable/ic_green_flag"/>
+
+    <TextView android:id="@+id/ride_request_drop_point_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Ajmera Infinity, Electronic City, Bangalore"
+              android:gravity="center_vertical"
+              android:drawableLeft="@drawable/ic_red_flag"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start">
+
+        <Button android:id="@+id/ride_request_cancel_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:textColor="@color/colorAccent"/>
+
+        <Button android:id="@+id/ride_request_navigate_to_destination_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Destination"
+                android:drawableStart="@drawable/ic_navigation"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:textColor="@color/colorAccent"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

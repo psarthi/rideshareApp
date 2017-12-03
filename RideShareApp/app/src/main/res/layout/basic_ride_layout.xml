@@ -18,11 +18,11 @@
         <TextView android:id="@+id/ride_id_text"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:text="Offered Ride No. 1234"
+                  android:text="Ride Offer No. 1234"
                   android:textStyle="bold"
                   android:textColor="@color/colorPrimaryDark"/>
 
-        <TextView android:id="@+id/ride_status"
+        <TextView android:id="@+id/ride_status_text"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:text="Planned"
