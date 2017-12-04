@@ -29,5 +29,5 @@
     <dimen name="lite_map_fragment_height">150dp</dimen>
     <dimen name="user_photo_icon_size">40dp</dimen>
     <dimen name="line_seperator_thickness">1dp</dimen>
-    <dimen name="co_traveller_photo_icon_size">70dp</dimen>
+    <dimen name="co_traveller_photo_icon_size">50dp</dimen>
 </resources>

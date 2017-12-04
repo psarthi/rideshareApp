@@ -25,10 +25,11 @@
                 android:background="@color/light_gray"
                 android:layout_margin="@dimen/default_margin"/>
 
-            <android.support.v7.widget.RecyclerView android:id="@+id/current_ride_co_traveller_list"
-                                                    android:layout_width="match_parent"
-                                                    android:layout_height="wrap_content"
-                                                    android:scrollbars="horizontal">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/current_ride_co_traveller_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="horizontal">
 
             </android.support.v7.widget.RecyclerView>
 

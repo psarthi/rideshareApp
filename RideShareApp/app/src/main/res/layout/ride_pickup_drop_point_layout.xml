@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:showIn="@layout/ride_co_traveller_layout">
+
+    <TextView
+        android:id="@+id/ride_pickup_point_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gopalan Grandeur, Hoodi, Bangalore"
+        android:gravity="center_vertical"
+        android:drawableLeft="@drawable/ic_green_person_marker"/>
+
+    <TextView
+        android:id="@+id/ride_drop_point_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ajmera Infinity, Electronic City, Bangalore"
+        android:gravity="center_vertical"
+        android:drawableLeft="@drawable/ic_red_person_marker"/>
+
+
+</LinearLayout>
+
+    
