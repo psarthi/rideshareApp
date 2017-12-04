@@ -89,53 +89,44 @@
 
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/mutual_friends_layout"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:padding="@dimen/default_padding"
-                  android:orientation="vertical">
+    <!-- IMP - Don't insert this inside linear layout/Relative layout,
+    somehow its having some weird behavior with Recycler view and some time
+    name is showing up and sometimes its missing -->
 
-        <TextView android:id="@+id/mutual_friends_count_text"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Mutual Friends - 10 (See All)"
-                  android:drawableStart="@drawable/ic_friends"
-                  android:drawablePadding="@dimen/default_padding"
-                  android:textStyle="bold|italic"/>
+    <TextView android:id="@+id/mutual_friends_count_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Mutual Friends - 10 (See All)"
+              android:drawableStart="@drawable/ic_friends"
+              android:drawablePadding="@dimen/default_padding"
+              android:textStyle="bold|italic"
+              android:layout_marginLeft="@dimen/default_margin"
+              android:layout_marginRight="@dimen/default_margin"
+              android:layout_marginBottom="@dimen/default_margin"
+              android:layout_marginTop="@dimen/small_margin"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/mutual_friends_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <View android:layout_width="match_parent"
-              android:layout_marginTop="@dimen/default_margin"
-              android:layout_height="@dimen/line_seperator_thickness"
-              android:background="@color/colorGrayLight"/>
-
-    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mutual_friends_list"
+        android:layout_margin="@dimen/default_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
-    <LinearLayout android:id="@+id/common_groups_layout"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:padding="@dimen/default_padding"
-                  android:orientation="vertical">
+    <TextView android:id="@+id/common_groups_count_text"
+              android:layout_margin="@dimen/default_margin"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Common Groups - 10 (See All)"
+              android:drawableStart="@drawable/ic_group"
+              android:drawablePadding="@dimen/default_padding"
+              android:textStyle="bold|italic"/>
 
-        <TextView android:id="@+id/common_group_count_text"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Common Groups - 10 (See All)"
-                  android:drawableStart="@drawable/ic_group"
-                  android:drawablePadding="@dimen/default_padding"
-                  android:textStyle="bold|italic"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/common_groups_list"
+        android:layout_margin="@dimen/default_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/common_groups_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
 
 </LinearLayout>
 

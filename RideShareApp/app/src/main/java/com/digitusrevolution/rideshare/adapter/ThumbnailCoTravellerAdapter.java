@@ -2,6 +2,7 @@ package com.digitusrevolution.rideshare.adapter;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.squareup.picasso.Picasso;
@@ -21,6 +23,7 @@ import java.util.List;
 
 public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailCoTravellerAdapter.ViewHolder> {
 
+    public static final String TAG = ThumbnailCoTravellerAdapter.class.getName();
     private List<BasicRideRequest> mRideRequests;
     private FragmentActivity mContext;
     private ThumbnailCoTravellerAdapterListener mListener;
@@ -54,6 +57,7 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
 
     @Override
     public void onBindViewHolder(ThumbnailCoTravellerAdapter.ViewHolder holder, final int position) {
+        Log.d(TAG, "Text Name:"+mRideRequests.get(position).getPassenger().getFirstName());
         holder.mTextView.setText(mRideRequests.get(position).getPassenger().getFirstName());
         Picasso.with(mContext).load(mRideRequests.get(position).getPassenger().getPhoto().getImageLocation()).into(holder.mImageView);
 
