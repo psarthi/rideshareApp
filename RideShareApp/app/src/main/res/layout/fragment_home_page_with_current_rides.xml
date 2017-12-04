@@ -22,7 +22,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/line_seperator_thickness"
-                android:background="@color/light_gray"/>
+                android:background="@color/colorGrayLight"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/current_ride_co_traveller_list"
@@ -46,7 +46,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/line_seperator_thickness"
-                android:background="@color/light_gray"
+                android:background="@color/colorGrayLight"
                 android:layout_marginLeft="@dimen/default_margin"
                 android:layout_marginRight="@dimen/default_margin"/>
 

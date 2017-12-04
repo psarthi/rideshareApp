@@ -16,7 +16,7 @@
         android:layout_marginTop="@dimen/default_margin"
         android:layout_marginBottom="@dimen/default_margin"
         android:layout_height="@dimen/line_seperator_thickness"
-        android:background="@color/light_gray"/>
+        android:background="@color/colorGrayLight"/>
 
     <RadioGroup
         android:layout_width="match_parent"
