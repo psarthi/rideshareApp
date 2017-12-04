@@ -101,13 +101,14 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
         mCurrentRideLinearLayout = view.findViewById(R.id.current_ride_layout);
         mCurrentRideRequestLinearLayout = view.findViewById(R.id.current_ride_request_layout);
-        mCurrentRideTextView = view.findViewById(R.id.ride_id_text);
-        mCurrentRideRequestTextView = view.findViewById(R.id.ride_request_id_text);
 
         //Make Ride & Ride Request layout invisible
         mCurrentRideLinearLayout.setVisibility(View.GONE);
         mCurrentRideRequestLinearLayout.setVisibility(View.GONE);
         showRidesLayoutVisibilityStatusForDebugging();
+
+        //This will set appropriate view and set its visibility accordingly
+        setRidesLayoutView(view);
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.home_page_map);
         mapFragment.getMapAsync(this);
@@ -125,14 +126,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
                 loadCreatesRideFragment(RideType.RequestRide, null);            }
         });
 
-
-        mRecyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new CoTravellerBasicAdapter(getActivity(), (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
-        mRecyclerView.setAdapter(mAdapter);
-
         return view;
     }
 
@@ -142,8 +135,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         //((HomePageActivity)getActivity()).showBackButton(false);
         //Its important to set Title here else while loading fragment from backstack, title would not change
         getActivity().setTitle(TITLE);
-        //This will set appropriate view and set its visibility accordingly
-        setRidesLayoutView();
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
         showChildFragmentDetails();
@@ -161,29 +152,29 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         }
     }
 
-    private void setRidesLayoutView() {
+    private void setRidesLayoutView(View view) {
         if (mCurrentRide!=null && mCurrentRideRequest!=null){
             if (mCurrentRide.getStartTime().before(mCurrentRideRequest.getPickupTime())) {
                 Log.d(TAG,"Load Current Ride as its before Ride Request");
-                setCurrentRideView();
+                setCurrentRideView(view);
                 mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
                 showRidesLayoutVisibilityStatusForDebugging();
             } else {
                 Log.d(TAG,"Load Current Ride Request as its before Ride");
-                setCurrentRideRequestView();
+                setCurrentRideRequestView(view);
                 mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
                 showRidesLayoutVisibilityStatusForDebugging();
             }
         }
         else if (mCurrentRide!=null){
             Log.d(TAG,"Load Current Ride as there is no Ride Request");
-            setCurrentRideView();
+            setCurrentRideView(view);
             mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
             showRidesLayoutVisibilityStatusForDebugging();
         }
         else if (mCurrentRideRequest!=null){
             Log.d(TAG,"Load Current Ride Request as there is no Ride");
-            setCurrentRideRequestView();
+            setCurrentRideRequestView(view);
             mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
             showRidesLayoutVisibilityStatusForDebugging();
         }
@@ -198,11 +189,22 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         Log.d(TAG,"Current Ride Request Visibility: " + Integer.toString(mCurrentRideRequestLinearLayout.getVisibility()));
     }
 
-    private void setCurrentRideView(){
+    private void setCurrentRideView(View view){
+        mCurrentRideTextView = view.findViewById(R.id.ride_id_text);
         mCurrentRideTextView.setText("Current Ride Id: "+mCurrentRide.getId());
+        mRecyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new CoTravellerBasicAdapter(getActivity(), (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
+        mRecyclerView.setAdapter(mAdapter);
+
+
     }
 
-    private void setCurrentRideRequestView(){
+    private void setCurrentRideRequestView(View view){
+        mCurrentRideRequestTextView = view.findViewById(R.id.ride_request_id_text);
         mCurrentRideRequestTextView.setText("Current Ride Request Id: "+mCurrentRideRequest.getId());
 
     }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    tools:showIn="@layout/ride_co_traveller_layout">
+
+    <TextView
+        android:id="@+id/pickup_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sat Dec 2, 9:00 AM"
+        android:textStyle="bold|italic"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/fare_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rs 45/-"
+        android:textAlignment="viewEnd"
+        android:textStyle="bold|italic"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/bill_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Paid"
+        android:gravity="center_vertical|end"
+        android:drawableEnd="@drawable/ic_receipt"
+        android:textAllCaps="true"
+        android:layout_weight="1"
+        android:textStyle="bold|italic"/>
+
+</LinearLayout>

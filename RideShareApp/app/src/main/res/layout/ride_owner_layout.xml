@@ -1,35 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
-              android:paddingTop="@dimen/default_padding"
               android:paddingLeft="@dimen/default_padding"
               android:paddingRight="@dimen/default_padding"
+              android:paddingTop="@dimen/default_padding"
               tools:showIn="@layout/fragment_ride_request_info">
 
-    <include layout="@layout/user_profile_single_row_layout" android:id="@+id/user_profile_layout"
-             android:layout_marginBottom="@dimen/default_margin"
-             android:layout_height="wrap_content" android:layout_width="match_parent"/>
+    <include
+        android:id="@+id/user_profile_layout"
+        layout="@layout/user_profile_single_row_layout"/>
+
+    <include
+        android:id="@+id/pickup_time_bill_layout"
+        layout="@layout/pickup_time_bill_layout"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin">
+        android:layout_height="wrap_content">
 
-        <TextView android:id="@+id/ride_owner_pickup_time_text"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Sat Dec 2, 9:00 AM"
-                  android:textStyle="bold|italic"/>
+        <TextView
+            android:id="@+id/ride_pickup_point_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:drawableStart="@drawable/ic_green_marker"
+            android:gravity="center_vertical"
+            android:text="Gopalan Grandeur, Hoodi, Bangalore"/>
 
-        <TextView android:id="@+id/ride_request_fare_text"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="Rs 45/-"
-                  android:gravity="end"
-                  android:textStyle="bold|italic"/>
+        <TextView
+            android:id="@+id/ride_pickup_point_variation_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:gravity="end"
+            android:text="300 mtrs"/>
 
     </LinearLayout>
 
@@ -37,41 +44,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView android:id="@+id/ride_pickup_point_text"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:text="Gopalan Grandeur, Hoodi, Bangalore"
-                  android:gravity="center_vertical"
-                  android:drawableStart="@drawable/ic_green_marker"
-                  android:layout_weight="0.8"/>
+        <TextView
+            android:id="@+id/ride_drop_point_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:drawableStart="@drawable/ic_red_marker"
+            android:gravity="center_vertical"
+            android:text="Ajmera Infinity, Electronic City, Bangalore"/>
 
-        <TextView android:id="@+id/ride_pickup_point_variation_text"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:gravity="end"
-                  android:text="300 mtrs"
-                  android:layout_weight="0.2"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView android:id="@+id/ride_drop_point_text"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:text="Ajmera Infinity, Electronic City, Bangalore"
-                  android:gravity="center_vertical"
-                  android:drawableStart="@drawable/ic_red_marker"
-                  android:layout_weight="0.8"/>
-
-        <TextView android:id="@+id/ride_drop_point_variation_text"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:gravity="end"
-                  android:text="300 mtrs"
-                  android:layout_weight="0.2"/>
+        <TextView
+            android:id="@+id/ride_drop_point_variation_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:gravity="end"
+            android:text="300 mtrs"/>
 
     </LinearLayout>
 
@@ -89,14 +77,15 @@
             android:text="Reject"
             android:textColor="@color/colorAccent"/>
 
-        <Button android:id="@+id/ride_request_navigate_to_ride_pickup_point_button"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pickup Point"
-                android:drawableStart="@drawable/ic_navigation"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:textColor="@color/colorAccent"/>
+        <Button
+            android:id="@+id/ride_request_navigate_to_ride_pickup_point_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:drawableStart="@drawable/ic_navigation"
+            android:text="Pickup Point"
+            android:textColor="@color/colorAccent"/>
 
     </LinearLayout>
 
