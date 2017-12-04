@@ -54,4 +54,6 @@
     <string name="drop_distance_variation">Drop Distance Variation (mts)</string>
     <string name="pickup_distance_variation">Pickup Distance Variation (mts)</string>
     <string name="pickup_time_variation">Pickup Time Variation (min)</string>
+    <string name="from_adress_hint">From</string>
+    <string name="to_address_hint">To</string>
 </resources>

@@ -18,39 +18,39 @@
               android:layout_above="@id/create_rides_bottom_layout"/>
 
     <TextView android:id="@+id/create_rides_from_address_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="@dimen/large_margin"
-        android:layout_marginRight="@dimen/large_margin"
-        android:layout_marginTop="@dimen/small_margin"
-        android:background="@android:color/white"
-        android:padding="@dimen/default_padding"
-        android:text="@string/from_address_label"
-        android:textAlignment="viewStart"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_centerHorizontal="true"
+              android:layout_marginLeft="@dimen/large_margin"
+              android:layout_marginRight="@dimen/large_margin"
+              android:layout_marginTop="@dimen/small_margin"
+              android:background="@android:color/white"
+              android:padding="@dimen/default_padding"
+              android:hint="@string/from_adress_hint"
+              android:textAlignment="viewStart"
         />
 
     <TextView android:id="@+id/create_rides_to_address_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="@dimen/large_margin"
-        android:layout_marginTop="@dimen/default_margin"
-        android:layout_marginRight="@dimen/large_margin"
-        android:background="@android:color/white"
-        android:text="@string/to_address_label"
-        android:textAlignment="viewStart"
-        android:padding="@dimen/default_padding"
-        android:layout_below="@id/create_rides_from_address_text"/>
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_centerHorizontal="true"
+              android:layout_marginLeft="@dimen/large_margin"
+              android:layout_marginTop="@dimen/default_margin"
+              android:layout_marginRight="@dimen/large_margin"
+              android:background="@android:color/white"
+              android:hint="@string/to_address_hint"
+              android:textAlignment="viewStart"
+              android:padding="@dimen/default_padding"
+              android:layout_below="@id/create_rides_from_address_text"/>
 
     <LinearLayout android:id="@+id/create_rides_datetime_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/create_rides_to_address_text"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/default_margin"
-        android:layout_marginStart="@dimen/large_margin"
-        android:layout_marginEnd="@dimen/large_margin">
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@id/create_rides_to_address_text"
+                  android:orientation="horizontal"
+                  android:layout_marginTop="@dimen/default_margin"
+                  android:layout_marginStart="@dimen/large_margin"
+                  android:layout_marginEnd="@dimen/large_margin">
 
         <TextView
             android:id="@+id/create_rides_date_text"
@@ -77,19 +77,19 @@
     </LinearLayout>
 
     <LinearLayout android:id="@+id/create_rides_bottom_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true">
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_alignParentBottom="true">
 
         <TextView android:id="@+id/create_rides_fare_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Fare Rs 45/-"
-            android:gravity="center"
-            android:background="@color/colorPrimary"
-            android:textColor="@android:color/white"
-            android:padding="@dimen/default_padding"/>
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Fare Rs 45/-"
+                  android:gravity="center"
+                  android:background="@color/colorPrimary"
+                  android:textColor="@android:color/white"
+                  android:padding="@dimen/default_padding"/>
 
         <include layout="@layout/trust_category_layout" android:id="@+id/trust_category_layout"/>
 

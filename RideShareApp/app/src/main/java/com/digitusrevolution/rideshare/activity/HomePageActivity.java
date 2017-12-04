@@ -83,10 +83,10 @@ public class HomePageActivity extends BaseActivity
         // default drawerlayout view doesn't contain image view directly and its inside the headerlayout
         View headerView = navigationView.getHeaderView(0);
 
-        mProfilePhotoImageView = headerView.findViewById(R.id.user_profile_imageView);
+        mProfilePhotoImageView = headerView.findViewById(R.id.thumbnail_image);
         Picasso.with(this).load(mUser.getPhoto().getImageLocation()).into(mProfilePhotoImageView);
 
-        mUserNameTextView = headerView.findViewById(R.id.user_name_text);
+        mUserNameTextView = headerView.findViewById(R.id.thumbnail_name_text);
         mUserNameTextView.setText(mUser.getFirstName()+" "
                 +mUser.getLastName());
 

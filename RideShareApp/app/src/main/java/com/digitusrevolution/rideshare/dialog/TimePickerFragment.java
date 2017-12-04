@@ -1,4 +1,4 @@
-package com.digitusrevolution.rideshare.fragment;
+package com.digitusrevolution.rideshare.dialog;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.TimePicker;
 
 import com.digitusrevolution.rideshare.config.Constant;
-import com.digitusrevolution.rideshare.model.app.RideType;
 
 import java.util.Calendar;
 

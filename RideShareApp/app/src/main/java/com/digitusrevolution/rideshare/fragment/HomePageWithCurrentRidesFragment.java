@@ -5,15 +5,19 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.adapter.CoTravellerBasicAdapter;
+import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
@@ -195,9 +199,10 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         mRecyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mLayoutManager.setAutoMeasureEnabled(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new CoTravellerBasicAdapter(getActivity(), (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
+        mAdapter = new ThumbnailCoTravellerAdapter(getActivity(), (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
         mRecyclerView.setAdapter(mAdapter);
 
 

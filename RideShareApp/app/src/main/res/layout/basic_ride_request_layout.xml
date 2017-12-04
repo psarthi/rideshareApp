@@ -47,7 +47,7 @@
         <TextView android:id="@+id/ride_request_confirmation_code_text"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="Code 1234"
+                  android:text="Payment Code 1234"
                   android:gravity="end"
                   android:textStyle="bold|italic"
                   android:textAllCaps="true"/>
@@ -68,7 +68,7 @@
               android:gravity="center_vertical"
               android:drawableLeft="@drawable/ic_red_flag"/>
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/ride_request_buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start">

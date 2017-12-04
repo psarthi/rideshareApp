@@ -63,13 +63,14 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/ride_owner_buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start">
+        android:gravity="start"
+        android:visibility="gone">
 
         <Button
-            android:id="@+id/co_traveller_reject_button"
+            android:id="@+id/ride_owner_reject_button"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,7 +79,7 @@
             android:textColor="@color/colorAccent"/>
 
         <Button
-            android:id="@+id/ride_request_navigate_to_ride_pickup_point_button"
+            android:id="@+id/navigate_to_ride_pickup_point_button"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -88,5 +89,10 @@
             android:textColor="@color/colorAccent"/>
 
     </LinearLayout>
+
+    <RatingBar android:id="@+id/ride_owner_rating_bar"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"/>
 
 </LinearLayout>

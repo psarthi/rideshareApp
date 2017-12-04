@@ -1,5 +1,6 @@
 package com.digitusrevolution.rideshare.fragment;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RatingBar;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.CoTravellerAdapter;
-import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
+import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
+import com.digitusrevolution.rideshare.dialog.RejectCoTravellerFragment;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -30,7 +33,9 @@ import java.util.List;
  * Use the {@link RideInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RideInfoFragment extends BaseFragment {
+public class RideInfoFragment extends BaseFragment implements
+        DropCoTravellerFragment.DropCoTravellerFragmentListener,
+        RejectCoTravellerFragment.RejectCoTravellerFragmentListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RIDE = "ride";
@@ -85,6 +90,23 @@ public class RideInfoFragment extends BaseFragment {
         for (int i=0; i<coTravellerAdapter.getCount(); i++){
             View coTravellerView = null;
             coTravellerView = coTravellerAdapter.getView(i, coTravellerView, container);
+            coTravellerView.findViewById(R.id.co_traveller_drop_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DropCoTravellerFragment dropCoTravellerFragment = DropCoTravellerFragment.newInstance(
+                            RideInfoFragment.this, "Partha", "1234");
+                    dropCoTravellerFragment.show(getActivity().getFragmentManager(), DropCoTravellerFragment.TAG);
+                }
+            });
+            coTravellerView.findViewById(R.id.co_traveller_reject_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RejectCoTravellerFragment rejectCoTravellerFragment = RejectCoTravellerFragment.newInstance(
+                            RideInfoFragment.this, "Partha");
+                    rejectCoTravellerFragment.show(getActivity().getFragmentManager(), RejectCoTravellerFragment.TAG);
+                }
+            });
+
             mCoTravellerLinearLayout.addView(coTravellerView);
         }
         return view;
@@ -132,6 +154,34 @@ public class RideInfoFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onPositiveClickOfDropCoTravellerFragment(DialogFragment dialogFragment) {
+        //IMP - Don't use getView else it will throw nullpointer. Right option is to use getDialog
+        RadioButton paidRideButton = (RadioButton) dialogFragment.getDialog().findViewById(R.id.paid_ride_radio_button);
+        RadioButton freeRideButton = (RadioButton) dialogFragment.getDialog().findViewById(R.id.free_ride_radio_button);
+        Log.d(TAG, "CoTraveller Dropped");
+        Log.d(TAG, "Paid Ride Status:"+paidRideButton.isChecked());
+        Log.d(TAG, "Free Ride Status:"+freeRideButton.isChecked());
+
+    }
+
+    @Override
+    public void onNegativeClickOfDropCoTravellerFragment(DialogFragment dialogFragment) {
+        Log.d(TAG, "CoTraveller Not Dropped");
+    }
+
+    @Override
+    public void onPositiveClickOfRejectCoTravellerFragment(DialogFragment dialogFragment) {
+        RatingBar ratingBar = (RatingBar) dialogFragment.getDialog().findViewById(R.id.rating_bar);
+        Log.d(TAG, "CoTraveller Rejected");
+        Log.d(TAG, "Rating"+ratingBar.getRating());
+    }
+
+    @Override
+    public void onNegativeClickOfRejectCoTravellerFragment(DialogFragment dialogFragment) {
+
     }
 
     /**

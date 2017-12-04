@@ -27,6 +27,8 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.dialog.DatePickerFragment;
+import com.digitusrevolution.rideshare.dialog.TimePickerFragment;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.dto.google.Bounds;
@@ -480,7 +482,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
             @Override
             public void onClick(View v) {
                 DialogFragment dialogFragment = DatePickerFragment.newInstance(CreateRidesFragment.this);
-                dialogFragment.show(getActivity().getSupportFragmentManager(),"datePicker" );
+                dialogFragment.show(getActivity().getSupportFragmentManager(), DatePickerFragment.TAG);
             }
         });
 
@@ -488,7 +490,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
             @Override
             public void onClick(View v) {
                 DialogFragment dialogFragment = TimePickerFragment.newInstance(CreateRidesFragment.this);
-                dialogFragment.show(getActivity().getSupportFragmentManager(),"timePicker" );
+                dialogFragment.show(getActivity().getSupportFragmentManager(), TimePickerFragment.TAG );
             }
         });
     }

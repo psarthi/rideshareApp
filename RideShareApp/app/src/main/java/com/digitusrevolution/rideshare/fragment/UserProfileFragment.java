@@ -34,6 +34,7 @@ public class UserProfileFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
     private BasicUser mUser;
+    private BasicUser mSignedInUser;
 
     public UserProfileFragment() {
         // Required empty public constructor

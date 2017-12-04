@@ -11,7 +11,7 @@
         android:padding="@dimen/default_padding">
 
 
-        <ImageView android:id="@+id/user_profile_imageView"
+        <ImageView android:id="@+id/thumbnail_image"
                    android:layout_width="match_parent"
                    android:layout_height="@dimen/large_block_height"
                    android:src="@drawable/ic_profile"/>
@@ -30,7 +30,7 @@
                        android:src="@drawable/ic_add_friend_large"
                        android:layout_marginRight="@dimen/default_margin"/>
 
-            <TextView android:id="@+id/user_name_text"
+            <TextView android:id="@+id/thumbnail_name_text"
                       android:layout_width="wrap_content"
                       android:layout_height="match_parent"
                       android:text="Partha Sarthi"

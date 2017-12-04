@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="@dimen/default_padding">
+
+    <TextView android:id="@+id/title_text"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Drop CoTraveller"
+              android:textSize="@dimen/heading3_text_size"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:background="@color/light_gray"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton android:id="@+id/paid_ride_radio_button"
+                     android:layout_width="0dp"
+                     android:layout_height="wrap_content"
+                     android:text="Paid Ride"
+                     android:layout_weight="1"
+                     android:checked="true"/>
+
+        <RadioButton android:id="@+id/free_ride_radio_button"
+                     android:layout_width="0dp"
+                     android:layout_height="wrap_content"
+                     android:text="Free Ride"
+                     android:layout_weight="1"/>
+
+    </RadioGroup>
+
+    <EditText android:id="@+id/payment_code_text"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="Payment Code"/>
+
+</LinearLayout>
