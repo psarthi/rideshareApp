@@ -25,6 +25,7 @@ import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
+import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -39,7 +40,8 @@ public class HomePageActivity extends BaseActivity
         AddVehicleFragment.OnFragmentInteractionListener,
         RidesOptionFragment.OnFragmentInteractionListener,
         RideInfoFragment.OnFragmentInteractionListener,
-        RideRequestInfoFragment.OnFragmentInteractionListener{
+        RideRequestInfoFragment.OnFragmentInteractionListener,
+        UserProfileFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -305,6 +307,11 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onRideRequestInfoFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onUserProfileFragmentInteraction(Uri uri) {
 
     }
 }

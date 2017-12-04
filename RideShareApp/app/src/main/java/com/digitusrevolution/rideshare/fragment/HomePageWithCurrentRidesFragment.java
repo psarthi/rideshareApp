@@ -28,6 +28,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -39,7 +40,9 @@ import java.util.List;
  * Use the {@link HomePageWithCurrentRidesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomePageWithCurrentRidesFragment extends BaseFragment implements BaseFragment.OnSetCurrentLocationOnMapListener {
+public class HomePageWithCurrentRidesFragment extends BaseFragment
+        implements BaseFragment.OnSetCurrentLocationOnMapListener,
+                    ThumbnailCoTravellerAdapter.ThumbnailCoTravellerAdapterListener{
 
     public static final String TAG = HomePageWithCurrentRidesFragment.class.getName();
     public static final String TITLE = "Ride Share";
@@ -202,9 +205,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         mLayoutManager.setAutoMeasureEnabled(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new ThumbnailCoTravellerAdapter(getActivity(), (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
+        mAdapter = new ThumbnailCoTravellerAdapter(getActivity(), HomePageWithCurrentRidesFragment.this, (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
         mRecyclerView.setAdapter(mAdapter);
-
 
     }
 
@@ -237,6 +239,11 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment implements Ba
         //This will move the camera to cover current location. Reason behind having it here as in BaseFragment
         //we have removed move camera option so that it can support create rides as well as home page fragment together
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
+    }
+
+    @Override
+    public void onClickOfThumbnailCoTravellerAdapter(BasicUser user) {
+        loadUserProfileFragment(new Gson().toJson(user), null);
     }
 
     /**

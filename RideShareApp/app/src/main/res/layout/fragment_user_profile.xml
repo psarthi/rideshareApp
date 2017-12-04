@@ -1,28 +1,24 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+              android:orientation="vertical"
             tools:context="com.digitusrevolution.rideshare.fragment.UserProfileFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/default_padding">
 
-
-        <ImageView android:id="@+id/thumbnail_image"
+        <ImageView android:id="@+id/user_profile_large_image"
                    android:layout_width="match_parent"
-                   android:layout_height="@dimen/large_block_height"
-                   android:src="@drawable/ic_profile"/>
-
+                   android:layout_height="150dp"
+                   android:src="@drawable/ic_profile"
+            android:background="@color/colorPrimary"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/default_padding"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/small_margin"
-            android:gravity="center">
+            android:gravity="center"
+            android:background="#8C9EFF">
 
             <ImageView android:id="@+id/add_friend_image"
                        android:layout_width="wrap_content"
@@ -37,8 +33,7 @@
                       android:textStyle="bold"
                       android:gravity="center_vertical"
                       android:textSize="@dimen/heading3_text_size"
-                      android:layout_marginEnd="@dimen/default_margin"
-                      android:textColor="@color/colorPrimaryDark"/>
+                      android:layout_marginEnd="@dimen/default_margin"/>
 
             <TextView android:id="@+id/user_rating_text"
                       android:layout_width="wrap_content"
@@ -65,9 +60,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:orientation="horizontal">
+            android:padding="@dimen/default_padding"
+            android:orientation="horizontal"
+            android:background="#E8EAF6">
 
             <TextView android:id="@+id/rides_offered_text"
                       android:layout_width="wrap_content"
@@ -94,85 +89,48 @@
         <LinearLayout android:id="@+id/mutual_friends_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
+                      android:padding="@dimen/default_padding"
                       android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/line_seperator_thickness"
-                android:background="@color/light_gray"/>
 
             <TextView android:id="@+id/mutual_friends_count_text"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="Mutual Friends - 10"
+                      android:text="Mutual Friends - 10 (See All)"
                       android:drawableStart="@drawable/ic_friends"
                       android:drawablePadding="@dimen/default_padding"
-                      android:layout_gravity="center"
-                      android:gravity="center_vertical"
-                      android:textStyle="bold|italic"
-                      android:layout_marginTop="@dimen/small_margin"
-                      android:layout_marginBottom="@dimen/default_margin"/>
+                      android:textStyle="bold|italic"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/mutual_friends_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/line_seperator_thickness"
-                android:background="@color/light_gray"/>
-
-            <Button android:id="@+id/see_all_friends_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="?android:borderlessButtonStyle"
-                    android:text="See All Friends"
-                    android:textColor="@color/colorAccent"/>
+            <View android:layout_width="match_parent"
+                  android:layout_height="@dimen/line_seperator_thickness"
+                  android:background="@color/light_gray"/>
 
         </LinearLayout>
+
 
         <LinearLayout android:id="@+id/common_groups_layout"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
+                      android:padding="@dimen/default_padding"
                       android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/line_seperator_thickness"
-                android:background="@color/light_gray"/>
 
             <TextView android:id="@+id/common_group_count_text"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="Common Groups - 10"
+                      android:text="Common Groups - 10 (See All)"
                       android:drawableStart="@drawable/ic_group"
                       android:drawablePadding="@dimen/default_padding"
-                      android:layout_gravity="center"
-                      android:gravity="center_vertical"
-                      android:textStyle="bold|italic"
-                      android:layout_marginTop="@dimen/default_margin"
-                      android:layout_marginBottom="@dimen/default_margin"/>
+                      android:textStyle="bold|italic"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/common_groups_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/line_seperator_thickness"
-                android:background="@color/light_gray"/>
-
-            <Button android:id="@+id/see_all_groups_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="?android:borderlessButtonStyle"
-                    android:text="See All Groups"
-                    android:textColor="@color/colorAccent"/>
-
         </LinearLayout>
 
     </LinearLayout>
-
-</ScrollView>

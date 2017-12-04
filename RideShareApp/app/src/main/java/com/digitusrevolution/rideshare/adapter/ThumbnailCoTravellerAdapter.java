@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
 
     private List<BasicRideRequest> mRideRequests;
     private FragmentActivity mContext;
+    private ThumbnailCoTravellerAdapterListener mListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextView;
@@ -34,9 +36,11 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
         }
     }
 
-    public ThumbnailCoTravellerAdapter(FragmentActivity context, List<BasicRideRequest> rideRequests) {
+    public ThumbnailCoTravellerAdapter(FragmentActivity context, ThumbnailCoTravellerAdapterListener listener,
+                                       List<BasicRideRequest> rideRequests) {
         mRideRequests = rideRequests;
         mContext = context;
+        mListener = listener;
     }
 
     @Override
@@ -49,13 +53,26 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
     }
 
     @Override
-    public void onBindViewHolder(ThumbnailCoTravellerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ThumbnailCoTravellerAdapter.ViewHolder holder, final int position) {
         holder.mTextView.setText(mRideRequests.get(position).getPassenger().getFirstName());
         Picasso.with(mContext).load(mRideRequests.get(position).getPassenger().getPhoto().getImageLocation()).into(holder.mImageView);
+
+
+        holder.mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClickOfThumbnailCoTravellerAdapter(mRideRequests.get(position).getPassenger());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return mRideRequests.size();
     }
+
+    public interface ThumbnailCoTravellerAdapterListener{
+        public void onClickOfThumbnailCoTravellerAdapter(BasicUser user);
+    }
+
 }

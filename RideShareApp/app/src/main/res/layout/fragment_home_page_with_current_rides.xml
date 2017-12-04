@@ -22,8 +22,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/line_seperator_thickness"
-                android:background="@color/light_gray"
-                android:layout_margin="@dimen/default_margin"/>
+                android:background="@color/light_gray"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/current_ride_co_traveller_list"

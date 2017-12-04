@@ -310,6 +310,16 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
                 .commit();
     }
 
+    public void loadUserProfileFragment(String user, String data) {
+        Fragment userProfileFragment = UserProfileFragment.newInstance(user, data);
+        //Add to back stack as user may want to go back to home page and choose alternate option
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_page_container,userProfileFragment, UserProfileFragment.TAG)
+                .addToBackStack(UserProfileFragment.TAG)
+                .commit();
+    }
+
+
     public interface OnVehicleCategoriesReadyListener{
         void OnVehicleCategoriesReady();
     }
