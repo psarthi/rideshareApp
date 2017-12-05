@@ -18,25 +18,7 @@
         android:layout_height="@dimen/line_seperator_thickness"
         android:background="@color/colorGrayLight"/>
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton android:id="@+id/paid_ride_radio_button"
-                     android:layout_width="0dp"
-                     android:layout_height="wrap_content"
-                     android:text="Paid Ride"
-                     android:layout_weight="1"
-                     android:checked="true"/>
-
-        <RadioButton android:id="@+id/free_ride_radio_button"
-                     android:layout_width="0dp"
-                     android:layout_height="wrap_content"
-                     android:text="Free Ride"
-                     android:layout_weight="1"/>
-
-    </RadioGroup>
+    <include layout="@layout/ride_mode_layout" android:id="@+id/ride_mode_layout"/>
 
     <EditText android:id="@+id/payment_code_text"
               android:layout_width="match_parent"

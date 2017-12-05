@@ -14,7 +14,7 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/ride_request_time_distance_variation_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -24,7 +24,9 @@
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
-                      android:padding="@dimen/default_padding">
+                      android:paddingTop="@dimen/default_padding"
+                      android:paddingLeft="@dimen/default_padding"
+                      android:paddingRight="@dimen/default_padding">
 
             <TextView android:id="@+id/rides_option_pickup_time_variation_label"
                       android:layout_width="wrap_content"
@@ -61,7 +63,9 @@
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
-                      android:padding="@dimen/default_padding">
+                      android:paddingTop="@dimen/default_padding"
+                      android:paddingLeft="@dimen/default_padding"
+                      android:paddingRight="@dimen/default_padding">
 
             <TextView android:id="@+id/rides_option_pickup_distance_variation_label"
                       android:layout_width="wrap_content"
@@ -97,7 +101,9 @@
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
-                      android:padding="@dimen/default_padding">
+                      android:paddingTop="@dimen/default_padding"
+                      android:paddingLeft="@dimen/default_padding"
+                      android:paddingRight="@dimen/default_padding">
 
             <TextView android:id="@+id/rides_option_drop_distance_variation_label"
                       android:layout_width="wrap_content"
@@ -130,6 +136,14 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <include layout="@layout/ride_mode_layout" android:id="@+id/ride_mode_layout"
+             android:layout_marginTop="@dimen/default_margin"
+             android:layout_marginLeft="@dimen/default_margin"
+             android:layout_marginRight="@dimen/default_margin"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_below="@+id/ride_request_time_distance_variation_layout"/>
 
     <include layout="@layout/trust_category_layout" android:id="@+id/trust_category_layout"
              android:layout_above="@id/button_layout"

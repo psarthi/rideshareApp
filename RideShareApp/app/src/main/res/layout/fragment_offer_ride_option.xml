@@ -7,6 +7,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.digitusrevolution.rideshare.fragment.RidesOptionFragment">
 
+    <include layout="@layout/seat_luggage_layout" android:id="@+id/seat_luggage_layout"/>
+
     <LinearLayout android:id="@+id/offer_ride_option_vehicle_name_layout"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -30,7 +32,13 @@
                  android:gravity="center_vertical"/>
     </LinearLayout>
 
-    <include layout="@layout/seat_luggage_layout" android:id="@+id/seat_luggage_layout"/>
+    <include layout="@layout/ride_mode_layout" android:id="@+id/ride_mode_layout"
+             android:layout_marginTop="@dimen/small_margin"
+             android:layout_marginLeft="@dimen/default_margin"
+             android:layout_marginRight="@dimen/default_margin"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_below="@id/offer_ride_option_vehicle_name_layout"/>
 
     <include layout="@layout/trust_category_layout" android:id="@+id/trust_category_layout"
              android:layout_above="@id/button_layout"
