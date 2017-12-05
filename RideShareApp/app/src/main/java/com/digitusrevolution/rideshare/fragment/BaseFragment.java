@@ -13,12 +13,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
@@ -113,8 +115,10 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
         Log.d(TAG, "Width Pixel:"+width+",Heigth Pixel:"+height+",Padding Pixel:"+topPadding);
 
         if (standard){
+            Log.d(TAG, "Setting Standard Padding");
             mMap.setPadding(standardPaddding,standardPaddding, standardPaddding,standardPaddding);
         } else {
+            Log.d(TAG, "Setting Custom Padding");
             //This is very important to customize the visibility range of camera
             mMap.setPadding(standardPaddding,topPadding, standardPaddding,standardPaddding);
         }
@@ -349,6 +353,67 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
             latLngBoundsBuilder.include(latLng);
         }
         return latLngBoundsBuilder.build();
+    }
+
+    public void setRideView(View view, FullRide ride){
+
+        View basic_ride_layout = view.findViewById(R.id.basic_ride_layout);
+        TextView rideIdTextView = basic_ride_layout.findViewById(R.id.ride_id_text);
+        String rideIdText = getResources().getString(R.string.ride_offer_id_text) + " " +ride.getId();
+        rideIdTextView.setText(rideIdText);
+        TextView rideStatusTextView = basic_ride_layout.findViewById(R.id.ride_status_text);
+        rideStatusTextView.setText(ride.getStatus().toString());
+        TextView rideStartTimeTextView = basic_ride_layout.findViewById(R.id.ride_start_time_text);
+        rideStartTimeTextView.setText(getFormattedDateTimeString(ride.getStartTime()));
+        TextView rideStartPointTextView = basic_ride_layout.findViewById(R.id.ride_start_point_text);
+        rideStartPointTextView.setText(ride.getStartPointAddress());
+        TextView rideEndPointTextView = basic_ride_layout.findViewById(R.id.ride_end_point_text);
+        rideEndPointTextView.setText(ride.getEndPointAddress());
+
+        //This will set the visibility of ride buttons
+        setRideButtonsVisibility(basic_ride_layout, ride);
+        //This will set listeners for ride buttons
+        setRideButtonsOnClickListener(basic_ride_layout, ride);
+    }
+
+    private void setRideButtonsOnClickListener(final View basic_ride_layout, final FullRide ride) {
+
+        basic_ride_layout.findViewById(R.id.ride_cancel_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Ride Cancelled");
+                setRideButtonsVisibility(basic_ride_layout, ride);
+            }
+        });
+
+        basic_ride_layout.findViewById(R.id.ride_start_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Ride Started");
+                setRideButtonsVisibility(basic_ride_layout, ride);
+            }
+        });
+
+        basic_ride_layout.findViewById(R.id.ride_end_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Ride Ended");
+                setRideButtonsVisibility(basic_ride_layout, ride);
+            }
+        });
+    }
+
+    private void setRideButtonsVisibility(View basic_ride_layout, FullRide ride){
+        if (ride.getStatus().equals(RideStatus.Planned)){
+            basic_ride_layout.findViewById(R.id.ride_end_button).setVisibility(View.GONE);
+        }
+        if (ride.getStatus().equals(RideStatus.Started)){
+            basic_ride_layout.findViewById(R.id.ride_cancel_button).setVisibility(View.GONE);
+            basic_ride_layout.findViewById(R.id.ride_start_button).setVisibility(View.GONE);
+        }
+        if (ride.getStatus().equals(RideStatus.Finished) || ride.getStatus().equals(RideStatus.Cancelled)){
+            basic_ride_layout.findViewById(R.id.ride_buttons_layout).setVisibility(View.GONE);
+        }
     }
 
 }

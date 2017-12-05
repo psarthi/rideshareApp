@@ -197,8 +197,9 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     }
 
     private void setCurrentRideView(View view){
-        mCurrentRideTextView = view.findViewById(R.id.ride_id_text);
-        mCurrentRideTextView.setText("Current Ride Id: "+mCurrentRide.getId());
+
+        setRideView(view, mCurrentRide);
+
         mRecyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);

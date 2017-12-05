@@ -71,10 +71,6 @@ public class RideInfoFragment extends BaseFragment implements
     private OnFragmentInteractionListener mListener;
     private FullRide mRide;
     private LinearLayout mCoTravellerLinearLayout;
-    Button mRideCancelButton;
-    Button mRideStartButton;
-    Button mRideEndButton;
-    LinearLayout mRideButtonLinearLayout;
 
     public RideInfoFragment() {
         // Required empty public constructor
@@ -110,7 +106,7 @@ public class RideInfoFragment extends BaseFragment implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_info, container, false);
-        setRideView(view);
+        setRideView(view, mRide);
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_info_map);
         mapFragment.getMapAsync(this);
@@ -157,8 +153,8 @@ public class RideInfoFragment extends BaseFragment implements
         latLngs.add(toLatLng);
 
         //This will add marker for start and end point
-        mMap.addMarker(new MarkerOptions().position(fromLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_green_marker)));
-        mMap.addMarker(new MarkerOptions().position(toLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_red_marker)));
+        mMap.addMarker(new MarkerOptions().position(fromLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.addMarker(new MarkerOptions().position(toLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
         //This will draw polyline for route
         Collection<RidePoint> ridePoints = mRide.getRoute().getRidePoints();
@@ -175,77 +171,11 @@ public class RideInfoFragment extends BaseFragment implements
             LatLng pickupPointLatLng = new LatLng(rideRequest.getRidePickupPoint().getPoint().getLatitude(),
                     rideRequest.getRidePickupPoint().getPoint().getLongitude());
             latLngs.add(pickupPointLatLng);
-            mMap.addMarker(new MarkerOptions().position(pickupPointLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_green_person_marker)));
+            mMap.addMarker(new MarkerOptions().position(pickupPointLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
         }
 
         LatLngBounds latLngBounds = getBounds(latLngs);
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
-    }
-
-    private void setRideView(View view){
-
-        View basic_ride_layout = view.findViewById(R.id.basic_ride_layout);
-        TextView rideIdTextView = basic_ride_layout.findViewById(R.id.ride_id_text);
-        String rideIdText = getResources().getString(R.string.ride_offer_id_text) + mRide.getId();
-        rideIdTextView.setText(rideIdText);
-        TextView rideStatusTextView = basic_ride_layout.findViewById(R.id.ride_status_text);
-        rideStatusTextView.setText(mRide.getStatus().toString());
-        TextView rideStartTimeTextView = basic_ride_layout.findViewById(R.id.ride_start_time_text);
-        rideStartTimeTextView.setText(getFormattedDateTimeString(mRide.getStartTime()));
-        TextView rideStartPointTextView = basic_ride_layout.findViewById(R.id.ride_start_point_text);
-        rideStartPointTextView.setText(mRide.getStartPointAddress());
-        TextView rideEndPointTextView = basic_ride_layout.findViewById(R.id.ride_end_point_text);
-        rideEndPointTextView.setText(mRide.getEndPointAddress());
-
-        mRideButtonLinearLayout = basic_ride_layout.findViewById(R.id.ride_buttons_layout);
-        mRideCancelButton = basic_ride_layout.findViewById(R.id.ride_cancel_button);
-        mRideStartButton = basic_ride_layout.findViewById(R.id.ride_start_button);
-        mRideEndButton = basic_ride_layout.findViewById(R.id.ride_end_button);
-        //This will set the visibility of ride buttons
-        setRideButtonsVisibility();
-        //This will set listeners for ride buttons
-        setRideButtonsOnClickListener(basic_ride_layout);
-
-    }
-
-    private void setRideButtonsOnClickListener(View basic_ride_layout) {
-
-        mRideCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Ride Cancelled");
-                setRideButtonsVisibility();
-            }
-        });
-
-        mRideStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Ride Started");
-                setRideButtonsVisibility();
-            }
-        });
-
-        mRideEndButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Ride Ended");
-                setRideButtonsVisibility();
-            }
-        });
-    }
-
-    private void setRideButtonsVisibility(){
-        if (mRide.getStatus().equals(RideStatus.Planned)){
-            mRideEndButton.setVisibility(View.GONE);
-        }
-        if (mRide.getStatus().equals(RideStatus.Started)){
-            mRideCancelButton.setVisibility(View.GONE);
-            mRideStartButton.setVisibility(View.GONE);
-        }
-        if (mRide.getStatus().equals(RideStatus.Finished) || mRide.getStatus().equals(RideStatus.Cancelled)){
-            mRideButtonLinearLayout.setVisibility(View.GONE);
-        }
     }
 
     private void setCoTraveller(View view){
