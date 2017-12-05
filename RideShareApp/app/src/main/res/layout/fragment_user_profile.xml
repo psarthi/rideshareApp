@@ -23,6 +23,7 @@
         android:orientation="horizontal"
         android:gravity="center">
 
+
         <ImageView android:id="@+id/add_friend_image"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
@@ -44,8 +45,7 @@
                   android:text="4.5"
                   android:textStyle="bold"
                   android:gravity="center_vertical"
-                  android:drawableEnd="@drawable/ic_stars"
-                  android:textColor="@color/colorPrimaryDark"/>
+                  android:drawableEnd="@drawable/ic_stars"/>
 
         <ImageView android:id="@+id/friend_image"
                    android:layout_width="wrap_content"
@@ -93,37 +93,45 @@
     somehow its having some weird behavior with Recycler view and some time
     name is showing up and sometimes its missing -->
 
+
     <TextView android:id="@+id/mutual_friends_count_text"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="Mutual Friends - 10 (See All)"
+              android:text="Mutual Friends - 10"
               android:drawableStart="@drawable/ic_friends"
               android:drawablePadding="@dimen/default_padding"
               android:textStyle="bold|italic"
-              android:layout_marginLeft="@dimen/default_margin"
-              android:layout_marginRight="@dimen/default_margin"
+              android:layout_marginTop="@dimen/default_margin"
               android:layout_marginBottom="@dimen/default_margin"
-              android:layout_marginTop="@dimen/small_margin"/>
+              android:layout_marginStart="@dimen/default_margin"
+              android:layout_gravity="start"/>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mutual_friends_list"
-        android:layout_margin="@dimen/default_margin"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:background="@color/colorGrayLight"/>
 
     <TextView android:id="@+id/common_groups_count_text"
-              android:layout_margin="@dimen/default_margin"
+              android:layout_marginTop="@dimen/default_margin"
+              android:layout_marginBottom="@dimen/default_margin"
+              android:layout_marginStart="@dimen/default_margin"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="Common Groups - 10 (See All)"
+              android:text="Common Groups - 10"
               android:drawableStart="@drawable/ic_group"
               android:drawablePadding="@dimen/default_padding"
-              android:textStyle="bold|italic"/>
+              android:textStyle="bold|italic"
+              android:layout_gravity="start"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/common_groups_list"
-        android:layout_margin="@dimen/default_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
