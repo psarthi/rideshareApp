@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
@@ -59,6 +61,8 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
     private TextView mPickupTimeVariationProgressTextView;
     private TextView mPickupPointVariationProgressTextView;
     private TextView mDropPointVariationProgressTextView;
+    private RadioButton mPaidRideRadioButton;
+    private RadioButton mFreeRideRadioButton;
 
     public RidesOptionFragment() {
         // Required empty public constructor
@@ -113,6 +117,12 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
         //This will disable trust category layout in Rides Option for this fragment
         view.findViewById(R.id.trust_category_layout).setVisibility(View.GONE);
 
+
+        //Common for both the ride Type - offer ride and request ride
+        View ride_mode_layout = view.findViewById(R.id.ride_mode_layout);
+        mPaidRideRadioButton = ride_mode_layout.findViewById(R.id.paid_ride_radio_button);
+        mFreeRideRadioButton = ride_mode_layout.findViewById(R.id.free_ride_radio_button);
+
         setButtonsOnClickListener(view);
         setInitialValue();
 
@@ -153,14 +163,20 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
         //This will make Vehicle List available or unavailable
         if (vehicleNameList.size() > 0){
             populateSpinner(vehicleNameList, mVehicleSpinner);
+            boolean defaultVehicleFound = false;
             int i = 0;
             for (Vehicle vehicle:mUser.getVehicles()){
                 if (vehicle.equals(mUser.getPreference().getDefaultVehicle())){
+                    defaultVehicleFound = true;
                     break;
                 }
                 i++;
             }
-            mVehicleSpinner.setSelection(i);
+            //This is important as sometimes if there is no default vehicle, then system would crash as
+            // value of i would be size + 1 due to i++ and while setting the selection, it would throw IndexOutOfBoundException
+            if (defaultVehicleFound){
+                mVehicleSpinner.setSelection(i);
+            }
         } else {
             view.findViewById(R.id.offer_ride_option_vehicle_name_layout).setVisibility(View.GONE);
         }
@@ -196,6 +212,13 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
     }
 
     private void setRidesOption(){
+
+        //Common for both Ride Type
+        if (mPaidRideRadioButton.isChecked()){
+            mRidesOption.setRideMode(RideMode.Paid);
+        } else {
+            mRidesOption.setRideMode(RideMode.Free);
+        }
 
         if (mRideType.equals(RideType.OfferRide)){
             mRidesOption.setSeatOffered(Integer.parseInt(mSeatTextView.getText().toString()));

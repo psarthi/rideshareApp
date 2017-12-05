@@ -39,6 +39,7 @@ public class Ride {
 	private Collection<RideRequest> rejectedRideRequests = new HashSet<RideRequest>();
 	private Collection<RideRequest> cancelledRideRequests = new HashSet<RideRequest>();
 	private int travelDistance;
+	private RideMode rideMode;
 	
 	public int getId() {
 		return id;
@@ -242,5 +243,13 @@ public class Ride {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public RideMode getRideMode() {
+		return rideMode;
+	}
+
+	public void setRideMode(RideMode rideMode) {
+		this.rideMode = rideMode;
 	}
 }

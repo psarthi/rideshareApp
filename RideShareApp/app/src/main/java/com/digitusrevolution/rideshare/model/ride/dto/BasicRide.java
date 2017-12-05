@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideSeatStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
 import com.digitusrevolution.rideshare.model.user.domain.Sex;
@@ -30,6 +31,7 @@ public class BasicRide {
 	private BasicUser driver;
 	private Collection<BasicRidePassenger> ridePassengers = new HashSet<BasicRidePassenger>();
 	private int travelDistance;
+	private RideMode rideMode;
 	
 	public int getId() {
 		return id;
@@ -122,5 +124,13 @@ public class BasicRide {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+	}
+
+	public RideMode getRideMode() {
+		return rideMode;
+	}
+
+	public void setRideMode(RideMode rideMode) {
+		this.rideMode = rideMode;
 	}
 }

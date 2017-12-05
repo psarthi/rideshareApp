@@ -1,6 +1,7 @@
 package com.digitusrevolution.rideshare.model.user.domain;
 
 import com.digitusrevolution.rideshare.model.ride.domain.TrustCategory;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 
 public class Preference {
@@ -24,6 +25,7 @@ public class Preference {
 	private TrustCategory trustCategory;
 	private Sex sexPreference;
 	private float minProfileRating;
+	private RideMode rideMode;
 	
 	public VehicleCategory getVehicleCategory() {
 		return vehicleCategory;
@@ -109,5 +111,13 @@ public class Preference {
 	}
 	public void setDefaultVehicle(Vehicle defaultVehicle) {
 		this.defaultVehicle = defaultVehicle;
+	}
+
+	public RideMode getRideMode() {
+		return rideMode;
+	}
+
+	public void setRideMode(RideMode rideMode) {
+		this.rideMode = rideMode;
 	}
 }

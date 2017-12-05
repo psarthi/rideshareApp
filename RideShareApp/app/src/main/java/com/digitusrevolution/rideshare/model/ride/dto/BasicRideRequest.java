@@ -5,6 +5,7 @@ import java.util.Date;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.domain.RideRequestPoint;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
@@ -34,6 +35,7 @@ public class BasicRideRequest {
 	private int travelTime;
 	private int travelDistance;
 	private BasicRide acceptedRide;
+	private RideMode rideMode;
 	
 	public int getId() {
 		return id;
@@ -160,5 +162,13 @@ public class BasicRideRequest {
 	}
 	public void setAcceptedRide(BasicRide acceptedRide) {
 		this.acceptedRide = acceptedRide;
+	}
+
+	public RideMode getRideMode() {
+		return rideMode;
+	}
+
+	public void setRideMode(RideMode rideMode) {
+		this.rideMode = rideMode;
 	}
 }

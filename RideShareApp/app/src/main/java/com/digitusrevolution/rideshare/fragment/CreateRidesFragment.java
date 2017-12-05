@@ -298,6 +298,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         if (mRidesOptionUpdated){
             mRide.setSeatOffered(mUpdatedRidesOption.getSeatOffered());
             mRide.setLuggageCapacityOffered(mUpdatedRidesOption.getLuggageCapacityOffered());
+            mRide.setRideMode(mUpdatedRidesOption.getRideMode());
             for (Vehicle vehicle : mUser.getVehicles()){
                 if (vehicle.getRegistrationNumber().equals(mVehicleRegistrationNumber)){
                     mRide.setVehicle(vehicle);
@@ -308,6 +309,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
             mRide.setSeatOffered(mUser.getPreference().getSeatOffered());
             mRide.setLuggageCapacityOffered(mUser.getPreference().getLuggageCapacityOffered());
             mRide.setVehicle(mUser.getPreference().getDefaultVehicle());
+            mRide.setRideMode(mUser.getPreference().getRideMode());
         }
     }
 
@@ -331,6 +333,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
             mRideRequest.setDropPointVariation(mUpdatedRidesOption.getDropPointVariation());
             mRideRequest.setVehicleCategory(mUpdatedRidesOption.getVehicleCategory());
             mRideRequest.setVehicleSubCategory(mUpdatedRidesOption.getVehicleSubCategory());
+            mRideRequest.setRideMode(mUpdatedRidesOption.getRideMode());
         } else {
             mRideRequest.setSeatRequired(mUser.getPreference().getSeatRequired());
             mRideRequest.setLuggageCapacityRequired(mUser.getPreference().getLuggageCapacityRequired());
@@ -339,6 +342,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
             mRideRequest.setDropPointVariation(mUser.getPreference().getDropPointVariation());
             mRideRequest.setVehicleCategory(mUser.getPreference().getVehicleCategory());
             mRideRequest.setVehicleSubCategory(mUser.getPreference().getVehicleSubCategory());
+            mRideRequest.setRideMode(mUser.getPreference().getRideMode());
         }
     }
 
