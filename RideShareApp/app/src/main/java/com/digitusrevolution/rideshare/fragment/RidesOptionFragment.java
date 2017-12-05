@@ -184,6 +184,16 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
 
     private void setInitialValue(){
 
+        //Common for both Ride Type
+        if (mRidesOption.getRideMode().equals(RideMode.Paid)){
+            mPaidRideRadioButton.setChecked(true);
+            Log.d(TAG, "Paid Ride is the user default ride mode");
+        } else {
+            mFreeRideRadioButton.setChecked(true);
+            Log.d(TAG, "Free Ride is the user default ride mode");
+        }
+
+        //Specific for Ride Types
         if (mRideType.equals(RideType.OfferRide)){
             mSeatTextView.setText(String.valueOf(mRidesOption.getSeatOffered()));
             mLuggageTextView.setText(String.valueOf(mRidesOption.getLuggageCapacityOffered()));
@@ -220,6 +230,7 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
             mRidesOption.setRideMode(RideMode.Free);
         }
 
+        //Specific for Ride Types
         if (mRideType.equals(RideType.OfferRide)){
             mRidesOption.setSeatOffered(Integer.parseInt(mSeatTextView.getText().toString()));
             mRidesOption.setLuggageCapacityOffered(Integer.parseInt(mLuggageTextView.getText().toString()));

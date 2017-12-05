@@ -9,7 +9,10 @@
 
     <include layout="@layout/user_profile_single_row_layout" android:id="@+id/user_profile_layout"/>
 
-    <include layout="@layout/pickup_time_bill_layout" android:id="@+id/pickup_time_bill_layout"/>
+    <include layout="@layout/pickup_time_bill_layout" android:id="@+id/pickup_time_bill_layout"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <include layout="@layout/ride_pickup_drop_point_layout" android:id="@+id/ride_pickup_drop_point_layout"/>
 

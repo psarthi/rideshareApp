@@ -15,7 +15,10 @@
 
     <include
         android:id="@+id/pickup_time_bill_layout"
-        layout="@layout/pickup_time_bill_layout"/>
+        layout="@layout/pickup_time_bill_layout"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,10 +67,10 @@
     </LinearLayout>
 
     <LinearLayout android:id="@+id/ride_owner_buttons_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:visibility="gone">
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="start"
+                  android:visibility="gone">
 
         <Button
             android:id="@+id/ride_owner_reject_button"

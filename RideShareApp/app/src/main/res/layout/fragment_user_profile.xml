@@ -2,6 +2,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+
               tools:context="com.digitusrevolution.rideshare.fragment.UserProfileFragment"
               android:orientation="vertical">
 
@@ -14,58 +15,20 @@
         android:padding="@dimen/default_padding"
         android:layout_gravity="center"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_padding"
-        android:paddingRight="@dimen/default_padding"
-        android:paddingBottom="@dimen/default_padding"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-
-        <ImageView android:id="@+id/add_friend_image"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/ic_add_friend_large"
-                   android:layout_marginRight="@dimen/default_margin"/>
-
-        <TextView android:id="@+id/thumbnail_name_text"
-                  android:layout_width="wrap_content"
-                  android:layout_height="match_parent"
-                  android:text="Partha Sarthi"
-                  android:textStyle="bold"
-                  android:gravity="center_vertical"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:layout_marginEnd="@dimen/default_margin"/>
-
-        <TextView android:id="@+id/user_rating_text"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="4.5"
-                  android:textStyle="bold"
-                  android:gravity="center_vertical"
-                  android:drawableEnd="@drawable/ic_stars"/>
-
-        <ImageView android:id="@+id/friend_image"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/ic_friend_standard"/>
-
-        <ImageView android:id="@+id/user_mobile_imageView"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/ic_phone"
-                   android:background="@android:color/transparent"/>
-
-    </LinearLayout>
+    <include layout="@layout/user_profile_single_row_layout" android:id="@+id/user_profile_single_row_layout"
+             android:layout_gravity="center_horizontal"
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/default_padding"
         android:orientation="horizontal"
-        android:background="@color/colorPrimaryLight">
+        android:background="@color/colorPrimaryLight_shade1">
 
         <TextView android:id="@+id/rides_offered_text"
                   android:layout_width="wrap_content"
@@ -95,23 +58,25 @@
 
 
     <TextView android:id="@+id/mutual_friends_count_text"
-              android:layout_width="wrap_content"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:text="Mutual Friends - 10"
               android:drawableStart="@drawable/ic_friends"
               android:drawablePadding="@dimen/default_padding"
               android:textStyle="bold|italic"
-              android:layout_marginTop="@dimen/default_margin"
-              android:layout_marginBottom="@dimen/default_margin"
-              android:layout_marginStart="@dimen/default_margin"
-              android:layout_gravity="start"/>
+              android:paddingTop="@dimen/default_margin"
+              android:paddingBottom="@dimen/default_margin"
+              android:paddingStart="@dimen/default_margin"
+              android:layout_gravity="start"
+              android:background="@color/colorPrimaryLight_shade2"/>
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mutual_friends_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin"/>
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"/>
 
     <View
         android:layout_width="match_parent"
@@ -119,21 +84,23 @@
         android:background="@color/colorGrayLight"/>
 
     <TextView android:id="@+id/common_groups_count_text"
-              android:layout_marginTop="@dimen/default_margin"
-              android:layout_marginBottom="@dimen/default_margin"
-              android:layout_marginStart="@dimen/default_margin"
-              android:layout_width="wrap_content"
+              android:paddingTop="@dimen/default_margin"
+              android:paddingBottom="@dimen/default_margin"
+              android:paddingStart="@dimen/default_margin"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:text="Common Groups - 10"
               android:drawableStart="@drawable/ic_group"
               android:drawablePadding="@dimen/default_padding"
               android:textStyle="bold|italic"
-              android:layout_gravity="start"/>
+              android:layout_gravity="start"
+              android:background="@color/colorPrimaryLight_shade2"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/common_groups_list"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"/>
 
 
 </LinearLayout>
