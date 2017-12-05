@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:text="Gopalan Grandeur, Hoodi, Bangalore"
         android:gravity="center_vertical"
-        android:drawableLeft="@drawable/ic_green_person_marker"/>
+        android:drawableLeft="@drawable/ic_green_person_marker"
+        android:maxLines="2"/>
 
     <TextView
         android:id="@+id/ride_drop_point_text"
@@ -23,7 +24,8 @@
         android:layout_height="wrap_content"
         android:text="Ajmera Infinity, Electronic City, Bangalore"
         android:gravity="center_vertical"
-        android:drawableLeft="@drawable/ic_red_person_marker"/>
+        android:drawableLeft="@drawable/ic_red_person_marker"
+        android:maxLines="2"/>
 
 
 </LinearLayout>

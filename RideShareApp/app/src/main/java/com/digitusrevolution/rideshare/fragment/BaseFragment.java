@@ -29,6 +29,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
@@ -65,8 +66,8 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (mOnSetCurrentLocationOnMapListener instanceof CreateRidesFragment){
-            Log.d(TAG,"Setting Padding");
-            setPadding();
+            Log.d(TAG,"Setting Custom Padding");
+            setPadding(false);
         }
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Location Permission not there");
@@ -102,7 +103,7 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
         }
     }
 
-    private void setPadding(){
+    public void setPadding(boolean standard){
 
         int width = getResources().getDisplayMetrics().widthPixels;
         //This is here for experience purpose, we can use either heigth or width whichever make sense
@@ -111,8 +112,12 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
         int standardPaddding = (int) (height * Constant.LAT_LNG_STANDARD_PADDING_PERCENT);
         Log.d(TAG, "Width Pixel:"+width+",Heigth Pixel:"+height+",Padding Pixel:"+topPadding);
 
-        //This is very important to customize the visibility range of camera
-        mMap.setPadding(standardPaddding,topPadding, standardPaddding,standardPaddding);
+        if (standard){
+            mMap.setPadding(standardPaddding,standardPaddding, standardPaddding,standardPaddding);
+        } else {
+            //This is very important to customize the visibility range of camera
+            mMap.setPadding(standardPaddding,topPadding, standardPaddding,standardPaddding);
+        }
     }
 
     @Override
@@ -323,4 +328,27 @@ public class BaseFragment extends Fragment implements OnMapReadyCallback{
     public interface OnVehicleCategoriesReadyListener{
         void OnVehicleCategoriesReady();
     }
+
+    public Calendar getCalendarFromDate(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
+
+    public String getFormattedDateTimeString(Date date){
+        Calendar calendar = getCalendarFromDate(date);
+        String dateTimeString = getFormattedDateString(date) + " "+
+                getTimeIn12HrFormat(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        return dateTimeString;
+    }
+
+    public LatLngBounds getBounds(List<LatLng> latLngs){
+        LatLngBounds.Builder latLngBoundsBuilder = new LatLngBounds.Builder();
+
+        for (LatLng latLng:latLngs){
+            latLngBoundsBuilder.include(latLng);
+        }
+        return latLngBoundsBuilder.build();
+    }
+
 }

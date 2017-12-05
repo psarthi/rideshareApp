@@ -17,6 +17,8 @@ public class RideRequest {
 	private int id;
 	private RideRequestPoint pickupPoint = new RideRequestPoint();
 	private RideRequestPoint dropPoint = new RideRequestPoint();
+	private String pickupPointAddress;
+	private String dropPointAddress;
 	private Date pickupTime;
 	private String pickupTimeVariation;
 	private VehicleCategory vehicleCategory;
@@ -34,6 +36,8 @@ public class RideRequest {
 	private Ride acceptedRide;
 	private RidePoint ridePickupPoint = new RidePoint();
 	private RidePoint rideDropPoint = new RidePoint();
+	private String ridePickupPointAddress;
+	private String rideDropPointAddress;
 	private int travelTime;
 	private int travelDistance;
 	private Collection<Ride> cancelledRides = new HashSet<Ride>();
@@ -226,5 +230,37 @@ public class RideRequest {
 
 	public void setRideMode(RideMode rideMode) {
 		this.rideMode = rideMode;
+	}
+
+	public String getPickupPointAddress() {
+		return pickupPointAddress;
+	}
+
+	public void setPickupPointAddress(String pickupPointAddress) {
+		this.pickupPointAddress = pickupPointAddress;
+	}
+
+	public String getDropPointAddress() {
+		return dropPointAddress;
+	}
+
+	public void setDropPointAddress(String dropPointAddress) {
+		this.dropPointAddress = dropPointAddress;
+	}
+
+	public String getRidePickupPointAddress() {
+		return ridePickupPointAddress;
+	}
+
+	public void setRidePickupPointAddress(String ridePickupPointAddress) {
+		this.ridePickupPointAddress = ridePickupPointAddress;
+	}
+
+	public String getRideDropPointAddress() {
+		return rideDropPointAddress;
+	}
+
+	public void setRideDropPointAddress(String rideDropPointAddress) {
+		this.rideDropPointAddress = rideDropPointAddress;
 	}
 }
