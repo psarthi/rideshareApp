@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -20,8 +21,10 @@ import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.RejectCoTravellerFragment;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRidePassenger;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -54,6 +57,8 @@ public class RideInfoFragment extends BaseFragment implements
     private FullRide mRide;
     private LinearLayout mCoTravellerLinearLayout;
     private GoogleMap mMap;
+    private MapComp mMapComp;
+    private View mMapView;
 
     public RideInfoFragment() {
         // Required empty public constructor
@@ -94,43 +99,42 @@ public class RideInfoFragment extends BaseFragment implements
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_info_map);
         mapFragment.getMapAsync(this);
+        mMapView = view.findViewById(R.id.ride_info_map);
 
         mCoTravellerLinearLayout = view.findViewById(R.id.ride_info_co_traveller_layout);
         //Note - We are using the same adapter which is also applicable for listview,
         //but this can be used for our own prupose and in this case, its the best suitable option
-        ArrayAdapter<BasicRideRequest> coTravellerAdapter = new CoTravellerAdapter(getActivity(), (List<BasicRideRequest>) mRide.getAcceptedRideRequests());
+        ArrayAdapter<BasicRideRequest> coTravellerAdapter = new CoTravellerAdapter(
+                this, (List<BasicRideRequest>) mRide.getAcceptedRideRequests(), (List<BasicRidePassenger>) mRide.getRidePassengers());
         for (int i=0; i<coTravellerAdapter.getCount(); i++){
-            View coTravellerView = null;
-            coTravellerView = coTravellerAdapter.getView(i, coTravellerView, container);
-            coTravellerView.findViewById(R.id.co_traveller_drop_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DropCoTravellerFragment dropCoTravellerFragment = DropCoTravellerFragment.newInstance(
-                            RideInfoFragment.this, "Partha", "1234");
-                    dropCoTravellerFragment.show(getActivity().getFragmentManager(), DropCoTravellerFragment.TAG);
-                }
-            });
-            coTravellerView.findViewById(R.id.co_traveller_reject_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    RejectCoTravellerFragment rejectCoTravellerFragment = RejectCoTravellerFragment.newInstance(
-                            RideInfoFragment.this, "Partha");
-                    rejectCoTravellerFragment.show(getActivity().getFragmentManager(), RejectCoTravellerFragment.TAG);
-                }
-            });
-
+            View coTravellerView = coTravellerAdapter.getView(i, null, container);
             mCoTravellerLinearLayout.addView(coTravellerView);
         }
+
         return view;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        MapComp mapComp = new MapComp(this, googleMap);
+        mMapComp = new MapComp(this, googleMap);
         //This will set standard padding for the map
-        mapComp.setPadding(true);
-        mapComp.setRideOnMap(mRide);
+        mMapComp.setPadding(true);
+        //TODO think on how to move this in common location so that we don't have to repeat this
+        //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
+        //Ref - https://stackoverflow.com/questions/7733813/how-can-you-tell-when-a-layout-has-been-drawn
+        mMapView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                //IMP - This is very important to remove the listener else it will get called many times for every view's
+                // and your setRideOnMap would also be called that many times
+                //This will ensure only once this is called
+                mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                Log.d(TAG, "Map Layout is ready");
+                mMapComp.setRideOnMap(mRide);
+            }
+        });
+
     }
 
 
@@ -209,6 +213,7 @@ public class RideInfoFragment extends BaseFragment implements
     public void onNegativeClickOfRejectCoTravellerFragment(DialogFragment dialogFragment) {
 
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

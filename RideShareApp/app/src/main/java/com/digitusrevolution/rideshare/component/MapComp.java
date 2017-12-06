@@ -6,6 +6,7 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.ViewTreeObserver;
 
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
@@ -40,6 +41,9 @@ public class MapComp{
     BaseFragment mBaseFragment;
     private CommonUtil mCommonUtil;
     private GoogleMap mMap;
+    private int mWidth;
+    private int mHeight;
+    private int mStandardPadding;
 
     public MapComp(BaseFragment fragment, GoogleMap map){
         mBaseFragment = fragment;
@@ -58,24 +62,26 @@ public class MapComp{
 
     public void setPadding(boolean standard){
 
-        int width = mBaseFragment.getResources().getDisplayMetrics().widthPixels;
+        mWidth = mBaseFragment.getResources().getDisplayMetrics().widthPixels;
         //This is here for experience purpose, we can use either heigth or width whichever make sense
-        int height = mBaseFragment.getResources().getDisplayMetrics().heightPixels;
-        int topPadding = (int) (height * Constant.LAT_LNG_TOP_PADDING_PERCENT); // offset from edges of the map 10% of screen
-        int standardPaddding = (int) (height * Constant.LAT_LNG_STANDARD_PADDING_PERCENT);
-        Log.d(TAG, "Width Pixel:"+width+",Heigth Pixel:"+height+",Padding Pixel:"+topPadding);
+        mHeight = mBaseFragment.getResources().getDisplayMetrics().heightPixels;
+        int topPadding = (int) (mHeight * Constant.LAT_LNG_TOP_PADDING_PERCENT); // offset from edges of the map 10% of screen
+        mStandardPadding = (int) (mHeight * Constant.LAT_LNG_STANDARD_PADDING_PERCENT);
+        Log.d(TAG, "Width Pixel:"+mWidth+",Heigth Pixel:"+mHeight+",Customm Top Padding Pixel:"+topPadding+",Standard Padding Pixel:"+mStandardPadding);
 
         if (standard){
             Log.d(TAG, "Setting Standard Padding");
-            mMap.setPadding(standardPaddding,standardPaddding, standardPaddding,standardPaddding);
+            mMap.setPadding(mStandardPadding,mStandardPadding, mStandardPadding,mStandardPadding);
         } else {
             Log.d(TAG, "Setting Custom Padding");
             //This is very important to customize the visibility range of camera
-            mMap.setPadding(standardPaddding,topPadding, standardPaddding,standardPaddding);
+            mMap.setPadding(mStandardPadding,topPadding, mStandardPadding,mStandardPadding);
         }
     }
 
     public void setRideOnMap(FullRide ride){
+
+        Log.d(TAG,"Setting Ride on Map");
 
         List<LatLng> latLngs = new ArrayList<>();
         LatLng fromLatLng = new LatLng(ride.getStartPoint().getPoint().getLatitude(), ride.getStartPoint().getPoint().getLongitude());
@@ -106,7 +112,10 @@ public class MapComp{
         }
 
         LatLngBounds latLngBounds = getBounds(latLngs);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
-    }
 
+        //Don't use newLatLngBounds(bounds,0) option as its throwing error Error using newLatLngBounds(LatLngBounds, int): Map size can't be 0
+        //Use this only with mMapView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() in calling function
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,mWidth, mHeight, mStandardPadding));
+    }
 }

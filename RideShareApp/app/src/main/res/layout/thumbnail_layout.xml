@@ -7,18 +7,18 @@
     android:padding="@dimen/default_padding">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/thumbnail_image"
+        android:id="@+id/user_profile_image"
         android:layout_width="@dimen/thumbnail_image_size"
         android:layout_height="@dimen/thumbnail_image_size"
         android:src="@drawable/ic_profile"
         android:layout_centerHorizontal="true"/>
 
-    <TextView android:id="@+id/thumbnail_name_text"
+    <TextView android:id="@+id/user_name_text"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="Partha"
               android:textStyle="bold"
               android:layout_centerHorizontal="true"
-              android:layout_below="@id/thumbnail_image"/>
+              android:layout_below="@id/user_profile_image"/>
 
 </RelativeLayout>

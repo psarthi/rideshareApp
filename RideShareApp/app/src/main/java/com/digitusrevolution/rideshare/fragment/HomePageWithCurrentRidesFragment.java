@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -81,6 +82,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     private GoogleMap mMap;
     private MapComp mMapComp;
     private CurrentRidesStatus mCurrentRidesStatus;
+    private View mMapView;
 
     public HomePageWithCurrentRidesFragment() {
         // Required empty public constructor
@@ -138,6 +140,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.home_page_map);
         mapFragment.getMapAsync(this);
+        mMapView = view.findViewById(R.id.home_page_map);
 
         view.findViewById(R.id.home_page_offer_ride_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +166,20 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mMapComp.setPadding(true);
 
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
-            mMapComp.setRideOnMap(mCurrentRide);
+            //TODO think on how to move this in common location so that we don't have to repeat this
+            //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
+            //Ref - https://stackoverflow.com/questions/7733813/how-can-you-tell-when-a-layout-has-been-drawn
+            mMapView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    //IMP - This is very important to remove the listener else it will get called many times for every view's
+                    // and your setRideOnMap would also be called that many times
+                    //This will ensure only once this is called
+                    mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    Log.d(TAG, "Map Layout is ready");
+                    mMapComp.setRideOnMap(mCurrentRide);
+                }
+            });
         }
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
             setCurrentLocation();

@@ -4,12 +4,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRidePassenger;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 
 /**
@@ -54,7 +57,7 @@ public class RideComp {
         mEndButton = basic_ride_layout.findViewById(R.id.ride_end_button);
         mButtonsLayout = basic_ride_layout.findViewById(R.id.ride_buttons_layout);
 
-        //This will set the visibility of ride buttons
+        //This will set the visibility of ride buttons initially
         updateBasicRideLayoutButtonsVisibility();
         //This will set listeners for ride buttons
         setBasicRideLayoutButtonsOnClickListener();
@@ -100,3 +103,26 @@ public class RideComp {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

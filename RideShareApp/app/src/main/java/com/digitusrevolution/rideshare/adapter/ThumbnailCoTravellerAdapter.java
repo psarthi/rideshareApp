@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.squareup.picasso.Picasso;
@@ -34,8 +33,8 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
 
         public ViewHolder(View v) {
             super(v);
-            mTextView = v.findViewById(R.id.thumbnail_name_text);
-            mImageView = v.findViewById(R.id.thumbnail_image);
+            mTextView = v.findViewById(R.id.user_name_text);
+            mImageView = v.findViewById(R.id.user_profile_image);
         }
     }
 
