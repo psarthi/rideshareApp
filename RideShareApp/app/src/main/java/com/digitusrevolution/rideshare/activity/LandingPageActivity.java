@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
@@ -44,6 +45,7 @@ public class LandingPageActivity extends BaseActivity{
     private SignInButton mGoogleSignInButton;
     private Button mSignUpButton;
     private Button mSignInButton;
+    private CommonUtil mCommonUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class LandingPageActivity extends BaseActivity{
         setContentView(R.layout.activity_landing_page);
         getSupportActionBar().hide();
 
+        mCommonUtil = new CommonUtil(this);
         mGoogleSignInButton = findViewById(R.id.google_sign_in_button);
         mSignUpButton = findViewById(R.id.sign_up_button);
         mSignInButton = findViewById(R.id.sign_in_button);
@@ -203,7 +206,7 @@ public class LandingPageActivity extends BaseActivity{
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                         super.onSuccess(statusCode, headers, response);
                                         UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
-                                        saveUserSignInResult(userSignInResult);
+                                        mCommonUtil.saveUserSignInResult(userSignInResult);
                                         startHomePageActivity(userSignInResult);
                                     }
                                     @Override

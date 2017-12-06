@@ -1,7 +1,12 @@
 package com.digitusrevolution.rideshare.fragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,16 +23,26 @@ import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
+import com.digitusrevolution.rideshare.component.MapComp;
+import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.FragmentUtil;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -41,8 +56,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class HomePageWithCurrentRidesFragment extends BaseFragment
-        implements BaseFragment.OnSetCurrentLocationOnMapListener,
-                    ThumbnailCoTravellerAdapter.ThumbnailCoTravellerAdapterListener{
+        implements ThumbnailCoTravellerAdapter.ThumbnailCoTravellerAdapterListener, OnMapReadyCallback{
 
     public static final String TAG = HomePageWithCurrentRidesFragment.class.getName();
     public static final String TITLE = "Ride Share";
@@ -66,6 +80,10 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private CommonUtil mCommonUtil;
+    private FragmentUtil mFragmentUtil;
+    private GoogleMap mMap;
+    private MapComp mMapComp;
 
     public HomePageWithCurrentRidesFragment() {
         // Required empty public constructor
@@ -93,12 +111,11 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         if (getArguments() != null) {
             mData = getArguments().getString(ARG_DATA);
         }
-        mUser = getUser();
-        mCurrentRide = getCurrentRide();
-        mCurrentRideRequest = getCurrentRideRequest();
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        //This will assign this fragment to base fragment for callbacks.
-        mOnSetCurrentLocationOnMapListener = this;
+        mFragmentUtil = new FragmentUtil(this);
+        mCommonUtil = new CommonUtil(this);
+        mUser = mCommonUtil.getUser();
+        mCurrentRide = mCommonUtil.getCurrentRide();
+        mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
     }
 
     @Override
@@ -123,17 +140,72 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         view.findViewById(R.id.home_page_offer_ride_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadCreatesRideFragment(RideType.OfferRide, null);
+                mFragmentUtil.loadCreatesRideFragment(RideType.OfferRide, null);
             }
         });
 
         view.findViewById(R.id.home_page_request_ride_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadCreatesRideFragment(RideType.RequestRide, null);            }
-        });
+                mFragmentUtil.loadCreatesRideFragment(RideType.RequestRide, null);
+            }});
 
         return view;
+    }
+
+    //Keep this here instead of moving to BaseFragment, so that you have better control
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMapComp = new MapComp(this, googleMap);
+        mMapComp.setPadding(true);
+        setCurrentLocation();
+    }
+
+    // Don't move this to BaseFragment or MapComp for resuse, as this will unnecessarily required additional callbacks and lots of complication
+    // Apart from that you can customize the marker icon, move camera to different zoom level which may be required for different fragements
+    private void setCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Location Permission not there");
+            //This is important for Fragment and not we are not using Activity requestPermissions method but we are using Fragment requestPermissions,
+            // so that request can be handled in this class itself instead of handling it in Activity class
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constant.ACCESS_FINE_LOCATION_REQUEST_CODE);
+        } else {
+            Log.d(TAG, "Location Permission already there");
+            FusedLocationProviderClient locationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+            locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        Log.d(TAG, "Current Location:"+location.getLatitude()+","+location.getLongitude());
+                        // Add a marker in User Current Location, and move the camera.
+                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(latLng)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
+                    } else {
+                        Log.d(TAG, "Location is null");
+                    }
+                }
+            });
+        }
+    }
+
+    //Keep this here instead of moving to BaseFragment, so that you have better control
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d(TAG, "Permission Result Recieved");
+        switch (requestCode) {
+            case Constant.ACCESS_FINE_LOCATION_REQUEST_CODE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Log.d(TAG, "Location Permission granted");
+                    setCurrentLocation();
+                } else {
+                    Log.d(TAG, "Location Permission denied");
+                }
+            }
+        }
     }
 
     @Override
@@ -198,7 +270,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     private void setCurrentRideView(View view){
 
-        setRideView(view, mCurrentRide);
+        RideComp rideComp = new RideComp(this, mCurrentRide);
+        rideComp.setRideView(view);
 
         mRecyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
         mRecyclerView.setHasFixedSize(true);
@@ -235,16 +308,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     }
 
     @Override
-    public void onSetCurrentLocationOnMap(LatLng latLng) {
-        Log.d(TAG,"Recieved Callback with LatLng:"+latLng.latitude+","+latLng.latitude);
-        //This will move the camera to cover current location. Reason behind having it here as in BaseFragment
-        //we have removed move camera option so that it can support create rides as well as home page fragment together
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
-    }
-
-    @Override
     public void onClickOfThumbnailCoTravellerAdapter(BasicUser user) {
-        loadUserProfileFragment(new Gson().toJson(user), null);
+        mFragmentUtil.loadUserProfileFragment(new Gson().toJson(user), null);
     }
 
     /**

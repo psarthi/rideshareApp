@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.CoTravellerAdapter;
+import com.digitusrevolution.rideshare.component.MapComp;
+import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.RejectCoTravellerFragment;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
@@ -71,6 +73,7 @@ public class RideInfoFragment extends BaseFragment implements
     private OnFragmentInteractionListener mListener;
     private FullRide mRide;
     private LinearLayout mCoTravellerLinearLayout;
+    private GoogleMap mMap;
 
     public RideInfoFragment() {
         // Required empty public constructor
@@ -106,7 +109,8 @@ public class RideInfoFragment extends BaseFragment implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_info, container, false);
-        setRideView(view, mRide);
+        RideComp rideComp = new RideComp(this, mRide);
+        rideComp.setRideView(view);
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_info_map);
         mapFragment.getMapAsync(this);
@@ -143,8 +147,9 @@ public class RideInfoFragment extends BaseFragment implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        MapComp mapComp = new MapComp(this, googleMap);
         //This will set standard padding for the map
-        setPadding(true);
+        mapComp.setPadding(true);
         List<LatLng> latLngs = new ArrayList<>();
 
         LatLng fromLatLng = new LatLng(mRide.getStartPoint().getPoint().getLatitude(), mRide.getStartPoint().getPoint().getLongitude());
@@ -174,7 +179,7 @@ public class RideInfoFragment extends BaseFragment implements
             mMap.addMarker(new MarkerOptions().position(pickupPointLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
         }
 
-        LatLngBounds latLngBounds = getBounds(latLngs);
+        LatLngBounds latLngBounds = mapComp.getBounds(latLngs);
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
     }
 

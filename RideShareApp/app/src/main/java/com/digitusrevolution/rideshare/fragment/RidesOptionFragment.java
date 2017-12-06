@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.FragmentUtil;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
@@ -63,6 +65,8 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
     private TextView mDropPointVariationProgressTextView;
     private RadioButton mPaidRideRadioButton;
     private RadioButton mFreeRideRadioButton;
+    private CommonUtil mCommonUtil;
+    private FragmentUtil mFragmentUtil;
 
     public RidesOptionFragment() {
         // Required empty public constructor
@@ -92,7 +96,9 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
             mData = getArguments().getString(ARG_PARAM2);
         }
-        mUser = getUser();
+        mCommonUtil = new CommonUtil(this);
+        mFragmentUtil = new FragmentUtil(this);
+        mUser = mCommonUtil.getUser();
         //This will default preference of user which will be the default option for the ride
         mRidesOption = mUser.getPreference();
         //This will set this fragment for vehicle categories ready listener callback

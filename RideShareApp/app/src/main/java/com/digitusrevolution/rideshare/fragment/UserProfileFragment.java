@@ -14,6 +14,8 @@ import android.widget.ImageView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.FragmentUtil;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -46,6 +48,8 @@ public class UserProfileFragment extends BaseFragment implements ThumbnailCoTrav
     private BasicUser mUser;
     private BasicUser mSignedInUser;
     private FullRide mCurrentRide;
+    private CommonUtil mCommonUtil;
+    private FragmentUtil mFragmentUtil;
 
     public UserProfileFragment() {
         // Required empty public constructor
@@ -78,7 +82,9 @@ public class UserProfileFragment extends BaseFragment implements ThumbnailCoTrav
         }
         mUser = new Gson().fromJson(mUserData, BasicUser.class);
         Log.d(TAG, "User Profile loaded for user Id:"+mUser.getId());
-        mCurrentRide = getCurrentRide();
+        mCommonUtil = new CommonUtil(this);
+        mFragmentUtil = new FragmentUtil(this);
+        mCurrentRide = mCommonUtil.getCurrentRide();
     }
 
     @Override

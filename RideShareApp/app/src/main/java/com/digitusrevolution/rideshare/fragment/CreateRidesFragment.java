@@ -1,15 +1,17 @@
 package com.digitusrevolution.rideshare.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.ColorFilter;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,16 +21,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.component.MapComp;
+import com.digitusrevolution.rideshare.component.TrustNetworkComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.dialog.DatePickerFragment;
 import com.digitusrevolution.rideshare.dialog.TimePickerFragment;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.FragmentUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.dto.google.Bounds;
@@ -36,9 +41,6 @@ import com.digitusrevolution.rideshare.model.dto.google.GoogleDirection;
 import com.digitusrevolution.rideshare.model.ride.domain.Point;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.domain.RideRequestPoint;
-import com.digitusrevolution.rideshare.model.ride.domain.TrustCategory;
-import com.digitusrevolution.rideshare.model.ride.domain.TrustCategoryName;
-import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.RideOfferInfo;
@@ -52,10 +54,13 @@ import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -63,6 +68,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.android.SphericalUtil;
@@ -85,7 +91,7 @@ import cz.msebera.android.httpclient.Header;
  * Use the {@link CreateRidesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreateRidesFragment extends BaseFragment implements BaseFragment.OnSetCurrentLocationOnMapListener,
+public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallback,
         TimePickerFragment.TimePickerFragmentListener, DatePickerFragment.DatePickerFragmentListener {
 
     public static final String TAG = CreateRidesFragment.class.getName();
@@ -110,18 +116,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     private LatLng mToLatLng;
     private TextView mDateTextView;
     private TextView mTimeTextView;
-    private boolean mAllSelected;
-    private boolean mGroupsSelected;
-    private boolean mFriendsSelected;
-    private ImageView mAllImageView;
-    private ImageView mGroupsImageView;
-    private ImageView mFriendsImageView;
-    private TextView mAllTextView;
-    private TextView mGroupsTextView;
-    private TextView mFriendsTextView;
-    private int mSelectedColor;
-    private int mDefaultTextColor;
-    private ColorFilter mDefaultImageTint;
     private GoogleDirection mGoogleDirection;
     private Calendar mStartTimeCalendar;
     private boolean mTimeInPast;
@@ -133,6 +127,12 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     private RideOfferInfo mRideOfferInfo = new RideOfferInfo();
     private BasicRideRequest mRideRequest = new BasicRideRequest();
     private Date mMinStartTime;
+    private TrustNetworkComp mTrustNetworkComp;
+    private int mDefaultTextColor;
+    private CommonUtil mCommonUtil;
+    private FragmentUtil mFragmentUtil;
+    private GoogleMap mMap;
+    private MapComp mMapComp;
 
     public CreateRidesFragment() {
         // Required empty public constructor
@@ -165,10 +165,9 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
             mData = getArguments().getString(ARG_DATA);
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
         }
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        //This will assign this fragment to base fragment for callbacks.
-        mOnSetCurrentLocationOnMapListener = this;
-        mUser = getUser();
+        mCommonUtil = new CommonUtil(this);
+        mFragmentUtil = new FragmentUtil(this);
+        mUser = mCommonUtil.getUser();
         Log.d(TAG,"User Name is:"+mUser.getFirstName());
         //Setting calender to current time
         mStartTimeCalendar = Calendar.getInstance();
@@ -190,31 +189,92 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.create_rides_map);
         mapFragment.getMapAsync(this);
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         mDateTextView = view.findViewById(R.id.create_rides_date_text);
         mTimeTextView = view.findViewById(R.id.create_rides_time_text);
-        //Set current time
-        mDateTextView.setText(getFormattedDateString(mStartTimeCalendar.getTime()));
-        mTimeTextView.setText(getTimeIn12HrFormat(mStartTimeCalendar.get(Calendar.HOUR_OF_DAY),mStartTimeCalendar.get(Calendar.MINUTE)));
+        mDefaultTextColor = mTimeTextView.getTextColors().getDefaultColor();
+                //Set current time
+        mDateTextView.setText(mCommonUtil.getFormattedDateString(mStartTimeCalendar.getTime()));
+        mTimeTextView.setText(mCommonUtil.getTimeIn12HrFormat(mStartTimeCalendar.get(Calendar.HOUR_OF_DAY),mStartTimeCalendar.get(Calendar.MINUTE)));
         Log.d(TAG,"Current Time in Millis:"+mStartTimeCalendar.getTimeInMillis());
         setDateTimeOnClickListener();
 
-        setTrustCategoryViews(view);
-        //Initial value on home page
-        mAllSelected = true;
-        updateTrustCategoryItemsColor();
-        setTrustCategoryOnClickListener(view);
+        mTrustNetworkComp = new TrustNetworkComp(this, null);
+        mTrustNetworkComp.setTrustCategoryViews(view);
         setButtonsOnClickListener(view);
 
         return view;
+    }
+
+    //Keep this here instead of moving to BaseFragment, so that you have better control
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMapComp = new MapComp(this, googleMap);
+        mMapComp.setPadding(false);
+
+        setCurrentLocation();
+    }
+
+    // Don't move this to BaseFragment or MapComp for resuse, as this will unnecessarily required additional callbacks and lots of complication
+    // Apart from that you can customize the marker icon, move camera to different zoom level which may be required for different fragements
+    private void setCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Location Permission not there");
+            //This is important for Fragment and not we are not using Activity requestPermissions method but we are using Fragment requestPermissions,
+            // so that request can be handled in this class itself instead of handling it in Activity class
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constant.ACCESS_FINE_LOCATION_REQUEST_CODE);
+        } else {
+            Log.d(TAG, "Location Permission already there");
+            FusedLocationProviderClient locationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+            locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        Log.d(TAG, "Current Location:"+location.getLatitude()+","+location.getLongitude());
+                        // Add a marker in User Current Location, and move the camera.
+                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(latLng)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+                        mFromLatLng = latLng;
+                        mFromAddressTextView.setText(Constant.CURRENT_LOCATION_TEXT);
+                        //This will get called whenever map is reloaded and camera needs to be moved accordingly
+                        //Otherwise what would happen on backpress, camera move would not happen for all markers on the map
+                        //as it would assume there is only one marked which is current location marker and move camera accordinlgy
+                        //as per the initial fragment load logic
+                        moveCamera();
+
+                    } else {
+                        Log.d(TAG, "Location is null");
+                    }
+                }
+            });
+        }
+    }
+
+    //Keep this here instead of moving to BaseFragment, so that you have better control
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d(TAG, "Permission Result Recieved");
+        switch (requestCode) {
+            case Constant.ACCESS_FINE_LOCATION_REQUEST_CODE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Log.d(TAG, "Location Permission granted");
+                    setCurrentLocation();
+                } else {
+                    Log.d(TAG, "Location Permission denied");
+                }
+            }
+        }
     }
 
     private void setButtonsOnClickListener(View view) {
         view.findViewById(R.id.create_rides_option_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadRidesOptionFragment(mRideType, null);
+                mFragmentUtil.loadRidesOptionFragment(mRideType, null);
             }
         });
 
@@ -231,7 +291,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
                         }
                     }
                     if (!driverStatus){
-                        loadAddVehicleFragment(mRideType, null);
+                        mFragmentUtil.loadAddVehicleFragment(mRideType, null);
                     } else {
                         Log.d(TAG, "User is a driver, so create ride directly");
                         if (validateInput()){
@@ -243,7 +303,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
                                     RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
                                     Log.d(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
                                     if (rideOfferResult.isCurrentRide()){
-                                        updateCurrentRide(rideOfferResult.getRide());
+                                        mCommonUtil.updateCurrentRide(rideOfferResult.getRide());
                                         Log.d(TAG, "Updated Current Ride");
                                     }
                                 }
@@ -265,7 +325,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
                                 RideRequestResult rideRequestResult = new Gson().fromJson(response.toString(), RideRequestResult.class);
                                 Log.d(TAG, "Ride Request Successfully created with id:"+rideRequestResult.getRideRequest().getId());
                                 if (rideRequestResult.isCurrentRideRequest()){
-                                    updateCurrentRideRequest(rideRequestResult.getRideRequest());
+                                    mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
                                     Log.d(TAG, "Updated Current Ride Request");
                                 }
                             }
@@ -293,7 +353,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         RidePoint endPoint = new RidePoint();
         endPoint.setPoint(getEndPoint());
         mRide.setEndPoint(endPoint);
-        mRide.setTrustNetwork(getTrustNetwork());
+        mRide.setTrustNetwork(mTrustNetworkComp.getTrustNetworkFromView());
         mRide.setDriver(mUser);
         if (mRidesOptionUpdated){
             mRide.setSeatOffered(mUpdatedRidesOption.getSeatOffered());
@@ -323,7 +383,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         dropPoint.setPoint(getEndPoint());
         mRideRequest.setDropPoint(dropPoint);
         mRideRequest.setPickupTime(mStartTimeCalendar.getTime());
-        mRideRequest.setTrustNetwork(getTrustNetwork());
+        mRideRequest.setTrustNetwork(mTrustNetworkComp.getTrustNetworkFromView());
 
         if (mRidesOptionUpdated){
             mRideRequest.setSeatRequired(mUpdatedRidesOption.getSeatRequired());
@@ -346,25 +406,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         }
     }
 
-    private TrustNetwork getTrustNetwork() {
-        TrustNetwork trustNetwork = new TrustNetwork();
-        if (mAllSelected) {
-            TrustCategory trustCategory = new TrustCategory();
-            trustCategory.setName(TrustCategoryName.Anonymous);
-            trustNetwork.getTrustCategories().add(trustCategory);
-        }
-        if (mGroupsSelected) {
-            TrustCategory trustCategory = new TrustCategory();
-            trustCategory.setName(TrustCategoryName.Groups);
-            trustNetwork.getTrustCategories().add(trustCategory);
-        }
-        if (mFriendsSelected) {
-            TrustCategory trustCategory = new TrustCategory();
-            trustCategory.setName(TrustCategoryName.Friends);
-            trustNetwork.getTrustCategories().add(trustCategory);
-        }
-        return trustNetwork;
-    }
 
     @NonNull
     private Point getStartPoint() {
@@ -399,86 +440,6 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         }
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
-    }
-
-    private void setTrustCategoryViews(View view) {
-        mAllImageView = view.findViewById(R.id.trust_category_all_image);
-        mAllTextView = view.findViewById(R.id.trust_category_all_text);
-        mGroupsImageView = view.findViewById(R.id.trust_category_groups_image);
-        mGroupsTextView = view.findViewById(R.id.trust_category_groups_text);
-        mFriendsImageView = view.findViewById(R.id.trust_category_friends_image);
-        mFriendsTextView = view.findViewById(R.id.trust_category_friends_text);
-
-        mSelectedColor = ContextCompat.getColor(getActivity(), R.color.colorAccent);
-        mDefaultTextColor = mAllTextView.getTextColors().getDefaultColor();
-        mDefaultImageTint = mAllImageView.getColorFilter();
-        Log.d(TAG,"Text Default color:"+ mDefaultTextColor+":Image Default Tint:"+mAllImageView.getColorFilter());
-    }
-
-    private void setTrustCategoryOnClickListener(View view) {
-        mAllImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Clicked on the All Image View: Selected Status:" + mAllSelected);
-                mAllSelected = !mAllSelected;
-                //If all is selected then by default Groups and Friends is already included, so no need to select them individually
-                if (mAllSelected){
-                    mFriendsSelected = false;
-                    mGroupsSelected = false;
-                }
-                updateTrustCategoryItemsColor();
-            }
-        });
-        mGroupsImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Clicked on the Groups Image View: Selected Status:" + mGroupsSelected);
-                mGroupsSelected = !mGroupsSelected;
-                if (mGroupsSelected){
-                    mAllSelected = false;
-                }
-                updateTrustCategoryItemsColor();
-            }
-        });
-        mFriendsImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Clicked on the Friends Image View: Selected Status:" + mFriendsImageView);
-                mFriendsSelected = !mFriendsSelected;
-                if (mFriendsSelected){
-                    mAllSelected = false;
-                }
-                updateTrustCategoryItemsColor();
-            }
-        });
-    }
-
-    private void updateTrustCategoryItemsColor(){
-
-        if (mAllSelected){
-            mAllImageView.setColorFilter(mSelectedColor);
-            mAllTextView.setTextColor(mSelectedColor);
-        } else {
-            mAllImageView.setColorFilter(mDefaultImageTint);
-            mAllTextView.setTextColor(mDefaultTextColor);
-
-        }
-        if (mGroupsSelected){
-            mGroupsImageView.setColorFilter(mSelectedColor);
-            mGroupsTextView.setTextColor(mSelectedColor);
-        } else {
-            mGroupsImageView.setColorFilter(mDefaultImageTint);
-            mGroupsTextView.setTextColor(mDefaultTextColor);
-        }
-        if (mFriendsSelected){
-            mFriendsImageView.setColorFilter(mSelectedColor);
-            mFriendsTextView.setTextColor(mSelectedColor);
-        } else {
-            mFriendsImageView.setColorFilter(mDefaultImageTint);
-            mFriendsTextView.setTextColor(mDefaultTextColor);
-        }
-
-
     }
 
     private void setDateTimeOnClickListener() {
@@ -705,21 +666,9 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
     }
 
     @Override
-    public void onSetCurrentLocationOnMap(LatLng latLng) {
-        Log.d(TAG,"Recieved Callback with LatLng:"+latLng.latitude+","+latLng.latitude);
-        mFromLatLng = latLng;
-        mFromAddressTextView.setText(Constant.CURRENT_LOCATION_TEXT);
-        //This will get called whenever map is reloaded and camera needs to be moved accordingly
-        //Otherwise what would happen on backpress, camera move would not happen for all markers on the map
-        //as it would assume there is only one marked which is current location marker and move camera accordinlgy
-        //as per the initial fragment load logic
-        moveCamera();
-    }
-
-    @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Log.d(TAG,"Recieved callback. Value of HH:MM-"+hourOfDay+":"+minute);
-        String timeIn12HrFormat = getTimeIn12HrFormat(hourOfDay, minute);
+        String timeIn12HrFormat = mCommonUtil.getTimeIn12HrFormat(hourOfDay, minute);
         mTimeTextView.setText(timeIn12HrFormat);
         mStartTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         mStartTimeCalendar.set(Calendar.MINUTE, minute);
@@ -746,7 +695,7 @@ public class CreateRidesFragment extends BaseFragment implements BaseFragment.On
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.set(year, month, day);
         Date date = calendar.getTime();
-        String formattedDate = getFormattedDateString(date);
+        String formattedDate = mCommonUtil.getFormattedDateString(date);
         mDateTextView.setText(formattedDate);
         mStartTimeCalendar.set(year,month,day);
         validateStartTime();

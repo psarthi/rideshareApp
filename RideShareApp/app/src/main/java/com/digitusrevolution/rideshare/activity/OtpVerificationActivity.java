@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
@@ -207,7 +208,8 @@ public class OtpVerificationActivity extends BaseActivity {
                 UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                 Log.d(TAG,"User has been successfully registered, Redirect to Home Page");
                 Log.d(TAG,"Access Token:"+userSignInResult.getToken());
-                saveUserSignInResult(userSignInResult);
+                CommonUtil commonUtil = new CommonUtil(OtpVerificationActivity.this);
+                commonUtil.saveUserSignInResult(userSignInResult);
                 startHomePageActivity(userSignInResult);
             }
 

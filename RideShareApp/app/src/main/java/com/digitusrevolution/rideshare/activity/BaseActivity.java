@@ -32,38 +32,4 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void saveUserSignInResult(UserSignInResult userSignInResult) {
-        saveInSharedPref(Constant.SHARED_PREFS_TOKEN_KEY,userSignInResult.getToken());
-        saveInSharedPref(Constant.SHARED_PREFS_USER_KEY,new Gson().toJson(userSignInResult.getUserProfile()));
-        saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_KEY,new Gson().toJson(userSignInResult.getCurrentRide()));
-        saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY,new Gson().toJson(userSignInResult.getCurrentRideRequest()));
-    }
-
-    public void saveInSharedPref(String key, String value) {
-        SharedPreferences sharedPref = getSharedPreferences();
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(key, value);
-        editor.commit();
-        String savedValue = getSharedPreferences().getString(key,null);
-        Log.d(TAG, "Saved Key/Value - " + key+":"+savedValue);
-    }
-
-    private SharedPreferences getSharedPreferences() {
-        return getSharedPreferences(getPackageName() + Constant.SHARED_PREFS_KEY_FILE, Context.MODE_PRIVATE);
-    }
-
-    public BasicUser getUser() {
-        String user = getSharedPreferences().getString(Constant.SHARED_PREFS_USER_KEY,null);
-        return new Gson().fromJson(user, BasicUser.class);
-    }
-
-    public FullRide getCurrentRide() {
-        String currentRide = getSharedPreferences().getString(Constant.SHARED_PREFS_CURRENT_RIDE_KEY,null);
-        return new Gson().fromJson(currentRide, FullRide.class);
-    }
-
-    public FullRideRequest getCurrentRideRequest() {
-        String currentRideRequest = getSharedPreferences().getString(Constant.SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY,null);
-        return new Gson().fromJson(currentRideRequest,FullRideRequest.class);
-    }
 }

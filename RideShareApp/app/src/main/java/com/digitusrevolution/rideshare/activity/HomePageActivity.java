@@ -3,8 +3,6 @@ package com.digitusrevolution.rideshare.activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,24 +17,23 @@ import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
-import com.digitusrevolution.rideshare.fragment.DummyFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.FragmentUtil;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 public class HomePageActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HomePageWithCurrentRidesFragment.OnFragmentInteractionListener,
         CreateRidesFragment.OnFragmentInteractionListener,
-        DummyFragment.OnFragmentInteractionListener,
         AddVehicleFragment.OnFragmentInteractionListener,
         RidesOptionFragment.OnFragmentInteractionListener,
         RideInfoFragment.OnFragmentInteractionListener,
@@ -53,6 +50,8 @@ public class HomePageActivity extends BaseActivity
     private ActionBarDrawerToggle mDrawerToggle;
     private boolean mToolBarNavigationListenerIsRegistered = false;
     private DrawerLayout mDrawer;
+    private CommonUtil mCommonUtil;
+    private FragmentUtil mFragmentUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +72,12 @@ public class HomePageActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mUser = getUser();
+        mCommonUtil = new CommonUtil(this);
+        mFragmentUtil = new FragmentUtil(this);
+        mUser = mCommonUtil.getUser();
 
         setNavHeader(navigationView);
-        loadHomePageWithCurrentRidesFragment();
+        mFragmentUtil.loadHomePageWithCurrentRidesFragment();
     }
 
     private void setNavHeader(NavigationView navigationView) {
@@ -121,20 +122,20 @@ public class HomePageActivity extends BaseActivity
         };
         Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
         if (id == R.id.nav_home) {
-            loadHomePageWithCurrentRidesFragment();
+            mFragmentUtil.loadHomePageWithCurrentRidesFragment();
         } else if (id == R.id.nav_rides) {
-            loadRideInfoFragment();
+            mFragmentUtil.loadRideInfoFragment();
 
         } else if (id == R.id.nav_payments) {
-            loadRideRequestInfoFragment();
+            mFragmentUtil.loadRideRequestInfoFragment();
         } else if (id == R.id.nav_friends) {
 
         } else if (id == R.id.nav_groups) {
 
         } else if (id == R.id.nav_vehicles) {
-            loadAddVehicleFragment();
+            mFragmentUtil.loadAddVehicleFragment(RideType.RequestRide,null);
         } else if (id == R.id.nav_preference) {
-            loadRidesOptionFragment();
+            mFragmentUtil.loadRidesOptionFragment(RideType.OfferRide, null);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -142,78 +143,10 @@ public class HomePageActivity extends BaseActivity
         return true;
     }
 
-    private void loadHomePageWithCurrentRidesFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        HomePageWithCurrentRidesFragment homePageWithCurrentRidesFragment = HomePageWithCurrentRidesFragment.
-                newInstance(null);
-        //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
-        fragmentTransaction.replace(R.id.home_page_container, homePageWithCurrentRidesFragment, HomePageWithCurrentRidesFragment.TAG);
-        fragmentTransaction.commit();
-    }
-
-    private void loadAddVehicleFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        AddVehicleFragment addVehicleFragment = AddVehicleFragment.
-                newInstance(RideType.RequestRide, null);
-        //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
-        fragmentTransaction.replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG);
-        fragmentTransaction.addToBackStack(AddVehicleFragment.TAG);
-        fragmentTransaction.commit();
-    }
-
-    private void loadRidesOptionFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        RidesOptionFragment ridesOptionFragment = RidesOptionFragment.
-                newInstance(RideType.RequestRide,null);
-        //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
-        fragmentTransaction.replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG);
-        fragmentTransaction.addToBackStack(RidesOptionFragment.TAG);
-        fragmentTransaction.commit();
-    }
-
-    private void loadRideInfoFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        RideInfoFragment rideInfoFragment = RideInfoFragment.
-                newInstance(new Gson().toJson(getCurrentRide()));
-        fragmentTransaction.replace(R.id.home_page_container, rideInfoFragment, RideInfoFragment.TAG);
-        fragmentTransaction.addToBackStack(RideInfoFragment.TAG);
-        fragmentTransaction.commit();
-    }
-
-    private void loadRideRequestInfoFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        RideRequestInfoFragment rideRequestInfoFragment = RideRequestInfoFragment.
-                newInstance(new Gson().toJson(getCurrentRideRequest()));
-        fragmentTransaction.replace(R.id.home_page_container, rideRequestInfoFragment, RideRequestInfoFragment.TAG);
-        fragmentTransaction.addToBackStack(RideRequestInfoFragment.TAG);
-        fragmentTransaction.commit();
-    }
-
-
-    private void loadDummyFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        DummyFragment dummyFragment = DummyFragment.newInstance("Dummy Data 1st Param","Dummy Data 2nd Param");
-        fragmentTransaction.add(R.id.home_page_container, dummyFragment, DummyFragment.TAG).addToBackStack(DummyFragment.TAG);
-        fragmentTransaction.commit();
-        mToolbar.setTitle("DummyFragment");
-    }
-
     @Override
     public void onHomePageWithCurrentRidesFragmentInteraction(String data) {
         Log.d(TAG,"Value returned to activity from Blank Fragment:"+data);
-        loadDummyFragment();
 
-    }
-
-    @Override
-    public void onDummyFragmentInteraction(String data) {
-        Log.d(TAG,"Value returned to activity from Ride Fragment:"+data);
     }
 
     @Override

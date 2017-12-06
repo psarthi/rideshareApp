@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.FragmentUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
@@ -59,6 +61,8 @@ public class AddVehicleFragment extends BaseFragment{
     private TextView mSeatCapacityText;
     private TextView mSmallLuggageCapacityText;
     private Button mCancelButton;
+    private CommonUtil mCommonUtil;
+    private FragmentUtil mFragmentUtil;
 
 
     public AddVehicleFragment() {
@@ -89,7 +93,9 @@ public class AddVehicleFragment extends BaseFragment{
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
             mData = getArguments().getString(ARG_DATA);
         }
-        mUser = getUser();
+        mCommonUtil = new CommonUtil(this);
+        mUser = mCommonUtil.getUser();
+        mFragmentUtil = new FragmentUtil(this);
     }
 
     @Override
@@ -136,12 +142,12 @@ public class AddVehicleFragment extends BaseFragment{
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
                             mUser = new Gson().fromJson(response.toString(), BasicUser.class);
-                            updateUser(mUser);
+                            mCommonUtil.updateUser(mUser);
                             Log.d(TAG, "Vehicle Added");
                             //This will ensure that only when its first time adding vehicle through create rides flow, this will load Rides Option Fragment
                             //So that it can show the added vehicle to the user for other cases, we need to handle differently
                             if (mRideType.equals(RideType.OfferRide)){
-                                loadRidesOptionFragment(mRideType, null);
+                                mFragmentUtil.loadRidesOptionFragment(mRideType, null);
                             } else {
                                 getActivity().getSupportFragmentManager().popBackStack();
                             }
