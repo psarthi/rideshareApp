@@ -33,7 +33,7 @@ import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.dialog.DatePickerFragment;
 import com.digitusrevolution.rideshare.dialog.TimePickerFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.helper.FragmentUtil;
+import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.dto.google.Bounds;
@@ -130,7 +130,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private TrustNetworkComp mTrustNetworkComp;
     private int mDefaultTextColor;
     private CommonUtil mCommonUtil;
-    private FragmentUtil mFragmentUtil;
+    private FragmentLoader mFragmentLoader;
     private GoogleMap mMap;
     private MapComp mMapComp;
 
@@ -166,7 +166,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
         }
         mCommonUtil = new CommonUtil(this);
-        mFragmentUtil = new FragmentUtil(this);
+        mFragmentLoader = new FragmentLoader(this);
         mUser = mCommonUtil.getUser();
         Log.d(TAG,"User Name is:"+mUser.getFirstName());
         //Setting calender to current time
@@ -274,7 +274,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         view.findViewById(R.id.create_rides_option_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentUtil.loadRidesOptionFragment(mRideType, null);
+                mFragmentLoader.loadRidesOptionFragment(mRideType, null);
             }
         });
 
@@ -291,7 +291,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         }
                     }
                     if (!driverStatus){
-                        mFragmentUtil.loadAddVehicleFragment(mRideType, null);
+                        mFragmentLoader.loadAddVehicleFragment(mRideType, null);
                     } else {
                         Log.d(TAG, "User is a driver, so create ride directly");
                         if (validateInput()){

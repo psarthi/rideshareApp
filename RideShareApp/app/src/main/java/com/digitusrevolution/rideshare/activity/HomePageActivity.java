@@ -24,7 +24,7 @@ import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.helper.FragmentUtil;
+import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -51,7 +51,7 @@ public class HomePageActivity extends BaseActivity
     private boolean mToolBarNavigationListenerIsRegistered = false;
     private DrawerLayout mDrawer;
     private CommonUtil mCommonUtil;
-    private FragmentUtil mFragmentUtil;
+    private FragmentLoader mFragmentLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +73,11 @@ public class HomePageActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         mCommonUtil = new CommonUtil(this);
-        mFragmentUtil = new FragmentUtil(this);
+        mFragmentLoader = new FragmentLoader(this);
         mUser = mCommonUtil.getUser();
 
         setNavHeader(navigationView);
-        mFragmentUtil.loadHomePageWithCurrentRidesFragment();
+        mFragmentLoader.loadHomePageWithCurrentRidesFragment();
     }
 
     private void setNavHeader(NavigationView navigationView) {
@@ -122,20 +122,20 @@ public class HomePageActivity extends BaseActivity
         };
         Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
         if (id == R.id.nav_home) {
-            mFragmentUtil.loadHomePageWithCurrentRidesFragment();
+            mFragmentLoader.loadHomePageWithCurrentRidesFragment();
         } else if (id == R.id.nav_rides) {
-            mFragmentUtil.loadRideInfoFragment();
+            mFragmentLoader.loadRideInfoFragment();
 
         } else if (id == R.id.nav_payments) {
-            mFragmentUtil.loadRideRequestInfoFragment();
+            mFragmentLoader.loadRideRequestInfoFragment();
         } else if (id == R.id.nav_friends) {
 
         } else if (id == R.id.nav_groups) {
 
         } else if (id == R.id.nav_vehicles) {
-            mFragmentUtil.loadAddVehicleFragment(RideType.RequestRide,null);
+            mFragmentLoader.loadAddVehicleFragment(RideType.RequestRide,null);
         } else if (id == R.id.nav_preference) {
-            mFragmentUtil.loadRidesOptionFragment(RideType.OfferRide, null);
+            mFragmentLoader.loadRidesOptionFragment(RideType.OfferRide, null);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

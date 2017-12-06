@@ -13,9 +13,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.component.CommonComp;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.helper.FragmentUtil;
+import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
@@ -25,6 +26,7 @@ import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,7 +36,7 @@ import java.util.ArrayList;
  * Use the {@link RidesOptionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RidesOptionFragment extends BaseFragment implements BaseFragment.OnVehicleCategoriesReadyListener{
+public class RidesOptionFragment extends BaseFragment implements CommonComp.onVehicleCategoriesReadyListener{
 
     public static final String TAG = RidesOptionFragment.class.getName();
     public static final String OFFER_RIDE_OPTION_TITLE = "Offer Ride Option";
@@ -66,7 +68,9 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
     private RadioButton mPaidRideRadioButton;
     private RadioButton mFreeRideRadioButton;
     private CommonUtil mCommonUtil;
-    private FragmentUtil mFragmentUtil;
+    private FragmentLoader mFragmentLoader;
+    private CommonComp mCommonComp;
+    private List<VehicleCategory> mVehicleCategories;
 
     public RidesOptionFragment() {
         // Required empty public constructor
@@ -97,12 +101,14 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
             mData = getArguments().getString(ARG_PARAM2);
         }
         mCommonUtil = new CommonUtil(this);
-        mFragmentUtil = new FragmentUtil(this);
+        mFragmentLoader = new FragmentLoader(this);
         mUser = mCommonUtil.getUser();
         //This will default preference of user which will be the default option for the ride
         mRidesOption = mUser.getPreference();
+
+        mCommonComp = new CommonComp(this);
         //This will set this fragment for vehicle categories ready listener callback
-        mOnVehicleCategoriesReadyListener = this;
+        mCommonComp.mOnVehicleCategoriesReadyListener = this;
     }
 
     @Override
@@ -151,7 +157,7 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
         mDropPointVariationProgressTextView = view.findViewById(R.id.rides_option_drop_distance_variation_seekBar_progress_text);
 
         //This will populate the vehicle category and sub category drop down
-        setVehicleCategoriesSpinner(mVehicleCategorySpinner, mVehicleSubCategorySpinner);
+        mCommonComp.setVehicleCategoriesSpinner(mVehicleCategorySpinner, mVehicleSubCategorySpinner);
         setSeekBarsChangeListener();
     }
 
@@ -373,7 +379,8 @@ public class RidesOptionFragment extends BaseFragment implements BaseFragment.On
     }
 
     @Override
-    public void OnVehicleCategoriesReady() {
+    public void onVehicleCategoriesReady(List<VehicleCategory> vehicleCategories) {
+        mVehicleCategories = vehicleCategories;
         for (int i=0; i<mVehicleCategorySpinner.getCount();i++){
             if (mVehicleCategorySpinner.getItemAtPosition(i).equals(mRidesOption.getVehicleCategory().getName())){
                 mVehicleCategorySpinner.setSelection(i);

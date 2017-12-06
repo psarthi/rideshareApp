@@ -1,4 +1,4 @@
-package com.digitusrevolution.rideshare.helper;
+package com.digitusrevolution.rideshare.component;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +14,7 @@ import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.google.gson.Gson;
 
@@ -21,20 +22,20 @@ import com.google.gson.Gson;
  * Created by psarthi on 12/6/17.
  */
 
-public class FragmentUtil {
+public class FragmentLoader {
 
-    public static final String TAG = FragmentUtil.class.getName();
+    public static final String TAG = FragmentLoader.class.getName();
 
     private BaseFragment mBaseFragment;
     private BaseActivity mBaseActivity;
     private CommonUtil mCommonUtil;
 
-    public FragmentUtil(BaseFragment fragment){
+    public FragmentLoader(BaseFragment fragment){
         mBaseFragment = fragment;
         mCommonUtil = new CommonUtil(fragment);
     }
 
-    public FragmentUtil(BaseActivity activity){
+    public FragmentLoader(BaseActivity activity){
         mBaseActivity = activity;
         mCommonUtil = new CommonUtil(activity);
     }

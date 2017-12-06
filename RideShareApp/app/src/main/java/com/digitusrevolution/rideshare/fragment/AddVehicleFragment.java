@@ -15,11 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.component.CommonComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.helper.FragmentUtil;
+import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -27,6 +29,8 @@ import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -38,7 +42,7 @@ import cz.msebera.android.httpclient.Header;
  * Use the {@link AddVehicleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddVehicleFragment extends BaseFragment{
+public class AddVehicleFragment extends BaseFragment implements CommonComp.onVehicleCategoriesReadyListener{
 
     public static final String TAG = AddVehicleFragment.class.getName();
     public static final String TITLE = "Add Vehicle";
@@ -62,7 +66,9 @@ public class AddVehicleFragment extends BaseFragment{
     private TextView mSmallLuggageCapacityText;
     private Button mCancelButton;
     private CommonUtil mCommonUtil;
-    private FragmentUtil mFragmentUtil;
+    private FragmentLoader mFragmentLoader;
+    private CommonComp mCommonComp;
+    private List<VehicleCategory> mVehicleCategories;
 
 
     public AddVehicleFragment() {
@@ -95,7 +101,10 @@ public class AddVehicleFragment extends BaseFragment{
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        mFragmentUtil = new FragmentUtil(this);
+        mFragmentLoader = new FragmentLoader(this);
+        mCommonComp = new CommonComp(this);
+        //This will set this fragment for vehicle categories ready listener callback
+        mCommonComp.mOnVehicleCategoriesReadyListener = this;
     }
 
     @Override
@@ -107,7 +116,7 @@ public class AddVehicleFragment extends BaseFragment{
 
         mVehicleCategorySpinner = vehicleCatSubCatLayout.findViewById(R.id.vehicle_category_spinner);
         mVehicleSubCategorySpinner = vehicleCatSubCatLayout.findViewById(R.id.vehicle_sub_category_spinner);
-        setVehicleCategoriesSpinner(mVehicleCategorySpinner, mVehicleSubCategorySpinner);
+        mCommonComp.setVehicleCategoriesSpinner(mVehicleCategorySpinner, mVehicleSubCategorySpinner);
 
         mRegistrationNumberText = view.findViewById(R.id.add_vehicle_number_text);
         mModelText = view.findViewById(R.id.add_vehicle_model_text);
@@ -147,7 +156,7 @@ public class AddVehicleFragment extends BaseFragment{
                             //This will ensure that only when its first time adding vehicle through create rides flow, this will load Rides Option Fragment
                             //So that it can show the added vehicle to the user for other cases, we need to handle differently
                             if (mRideType.equals(RideType.OfferRide)){
-                                mFragmentUtil.loadRidesOptionFragment(mRideType, null);
+                                mFragmentLoader.loadRidesOptionFragment(mRideType, null);
                             } else {
                                 getActivity().getSupportFragmentManager().popBackStack();
                             }
@@ -216,6 +225,11 @@ public class AddVehicleFragment extends BaseFragment{
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onVehicleCategoriesReady(List<VehicleCategory> vehicleCategories) {
+        mVehicleCategories = vehicleCategories;
     }
 
     /**

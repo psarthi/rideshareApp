@@ -10,12 +10,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -27,7 +23,7 @@ import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.helper.FragmentUtil;
+import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
@@ -81,7 +77,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private CommonUtil mCommonUtil;
-    private FragmentUtil mFragmentUtil;
+    private FragmentLoader mFragmentLoader;
     private GoogleMap mMap;
     private MapComp mMapComp;
     private CurrentRidesStatus mCurrentRidesStatus;
@@ -112,7 +108,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         if (getArguments() != null) {
             mData = getArguments().getString(ARG_DATA);
         }
-        mFragmentUtil = new FragmentUtil(this);
+        mFragmentLoader = new FragmentLoader(this);
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
         mCurrentRide = mCommonUtil.getCurrentRide();
@@ -146,14 +142,14 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         view.findViewById(R.id.home_page_offer_ride_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentUtil.loadCreatesRideFragment(RideType.OfferRide, null);
+                mFragmentLoader.loadCreatesRideFragment(RideType.OfferRide, null);
             }
         });
 
         view.findViewById(R.id.home_page_request_ride_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentUtil.loadCreatesRideFragment(RideType.RequestRide, null);
+                mFragmentLoader.loadCreatesRideFragment(RideType.RequestRide, null);
             }});
 
         return view;
@@ -282,7 +278,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
 
         RideComp rideComp = new RideComp(this, mCurrentRide);
-        rideComp.setRideView(view);
+        rideComp.setBasicRideLayout(view);
 
         mRecyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
         mRecyclerView.setHasFixedSize(true);
@@ -324,7 +320,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     @Override
     public void onClickOfThumbnailCoTravellerAdapter(BasicUser user) {
-        mFragmentUtil.loadUserProfileFragment(new Gson().toJson(user), null);
+        mFragmentLoader.loadUserProfileFragment(new Gson().toJson(user), null);
     }
 
     /**

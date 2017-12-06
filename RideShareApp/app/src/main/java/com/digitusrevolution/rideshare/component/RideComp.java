@@ -1,6 +1,5 @@
 package com.digitusrevolution.rideshare.component;
 
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +34,7 @@ public class RideComp {
         mCommonUtil = new CommonUtil(fragment);
     }
 
-    public void setRideView(View view){
+    public void setBasicRideLayout(View view){
 
         View basic_ride_layout = view.findViewById(R.id.basic_ride_layout);
         TextView rideIdTextView = basic_ride_layout.findViewById(R.id.ride_id_text);
@@ -56,18 +55,18 @@ public class RideComp {
         mButtonsLayout = basic_ride_layout.findViewById(R.id.ride_buttons_layout);
 
         //This will set the visibility of ride buttons
-        updateRideButtonsVisibility();
+        updateBasicRideLayoutButtonsVisibility();
         //This will set listeners for ride buttons
-        setRideButtonsOnClickListener();
+        setBasicRideLayoutButtonsOnClickListener();
     }
 
-    private void setRideButtonsOnClickListener() {
+    private void setBasicRideLayoutButtonsOnClickListener() {
 
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Ride Cancelled");
-                updateRideButtonsVisibility();
+                updateBasicRideLayoutButtonsVisibility();
             }
         });
 
@@ -75,7 +74,7 @@ public class RideComp {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Ride Started");
-                updateRideButtonsVisibility();
+                updateBasicRideLayoutButtonsVisibility();
             }
         });
 
@@ -83,12 +82,12 @@ public class RideComp {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Ride Ended");
-                updateRideButtonsVisibility();
+                updateBasicRideLayoutButtonsVisibility();
             }
         });
     }
 
-    private void updateRideButtonsVisibility(){
+    private void updateBasicRideLayoutButtonsVisibility(){
         if (mRide.getStatus().equals(RideStatus.Planned)){
             mEndButton.setVisibility(View.GONE);
         }

@@ -58,8 +58,6 @@ import cz.msebera.android.httpclient.Header;
 public class BaseFragment extends Fragment{
 
     public static final String TAG = BaseFragment.class.getName();
-    OnVehicleCategoriesReadyListener mOnVehicleCategoriesReadyListener;
-    List<VehicleCategory> mVehicleCategories;
 
     public void showBackStackDetails(){
 
@@ -91,53 +89,6 @@ public class BaseFragment extends Fragment{
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
 
-    }
-
-    public void setVehicleCategoriesSpinner(final Spinner vehicleCategotySpinner, final Spinner vehicleSubCategotySpinner) {
-
-        RESTClient.get(APIUrl.GET_VEHICLE_CATEGORIES_URL,null,new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                //Getting the value in Arraylist would ensure that position would always remains the same
-                //as compared to HashSet etc.
-                Type listType = new TypeToken<ArrayList<VehicleCategory>>(){}.getType();
-                mVehicleCategories = new Gson().fromJson(response.toString(), listType);
-                ArrayList<String> vehicleCategoryNames = new ArrayList<>();
-                for (VehicleCategory vehicleCategory : mVehicleCategories){
-                    vehicleCategoryNames.add(vehicleCategory.getName());
-                    Log.d(TAG,"Vehicle Category Name:"+vehicleCategory.getName());
-                }
-                populateSpinner(vehicleCategoryNames,vehicleCategotySpinner);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
-
-        vehicleCategotySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ArrayList<String> vehicleSubCategoryNames = new ArrayList<>();
-                for (VehicleSubCategory vehicleSubCategory : mVehicleCategories.get(position).getSubCategories()){
-                    vehicleSubCategoryNames.add(vehicleSubCategory.getName());
-                    Log.d(TAG,"Vehicle Sub Category Name:"+ vehicleSubCategory.getName());
-                }
-                populateSpinner(vehicleSubCategoryNames,vehicleSubCategotySpinner);
-                if (mOnVehicleCategoriesReadyListener!=null) mOnVehicleCategoriesReadyListener.OnVehicleCategoriesReady();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    public interface OnVehicleCategoriesReadyListener{
-        void OnVehicleCategoriesReady();
     }
 
 }
