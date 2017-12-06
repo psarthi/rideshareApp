@@ -11,6 +11,8 @@ import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -21,8 +23,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -68,6 +73,40 @@ public class MapComp{
             //This is very important to customize the visibility range of camera
             mMap.setPadding(standardPaddding,topPadding, standardPaddding,standardPaddding);
         }
+    }
+
+    public void setRideOnMap(FullRide ride){
+
+        List<LatLng> latLngs = new ArrayList<>();
+        LatLng fromLatLng = new LatLng(ride.getStartPoint().getPoint().getLatitude(), ride.getStartPoint().getPoint().getLongitude());
+        LatLng toLatLng = new LatLng(ride.getEndPoint().getPoint().getLatitude(), ride.getEndPoint().getPoint().getLongitude());
+        latLngs.add(fromLatLng);
+        latLngs.add(toLatLng);
+
+        //This will add marker for start and end point
+        mMap.addMarker(new MarkerOptions().position(fromLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.addMarker(new MarkerOptions().position(toLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+        //This will draw polyline for route
+        Collection<RidePoint> ridePoints = ride.getRoute().getRidePoints();
+        List<LatLng> routeLatLngs = new ArrayList<>();
+        for (RidePoint ridePoint: ridePoints){
+            routeLatLngs.add(new LatLng(ridePoint.getPoint().getLatitude(), ridePoint.getPoint().getLongitude()));
+        }
+        latLngs.addAll(routeLatLngs);
+        mMap.addPolyline(new PolylineOptions().addAll(routeLatLngs));
+
+        //This will add markers for all pickup points
+        Collection<BasicRideRequest> acceptedRideRequests = ride.getAcceptedRideRequests();
+        for (BasicRideRequest rideRequest: acceptedRideRequests){
+            LatLng pickupPointLatLng = new LatLng(rideRequest.getRidePickupPoint().getPoint().getLatitude(),
+                    rideRequest.getRidePickupPoint().getPoint().getLongitude());
+            latLngs.add(pickupPointLatLng);
+            mMap.addMarker(new MarkerOptions().position(pickupPointLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        }
+
+        LatLngBounds latLngBounds = getBounds(latLngs);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
     }
 
 }

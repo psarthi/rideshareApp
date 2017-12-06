@@ -84,6 +84,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     private FragmentUtil mFragmentUtil;
     private GoogleMap mMap;
     private MapComp mMapComp;
+    private CurrentRidesStatus mCurrentRidesStatus;
 
     public HomePageWithCurrentRidesFragment() {
         // Required empty public constructor
@@ -116,6 +117,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mUser = mCommonUtil.getUser();
         mCurrentRide = mCommonUtil.getCurrentRide();
         mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
+        mCurrentRidesStatus = getCurrentRidesStatus();
     }
 
     @Override
@@ -131,8 +133,12 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mCurrentRideRequestLinearLayout.setVisibility(View.GONE);
         showRidesLayoutVisibilityStatusForDebugging();
 
-        //This will set appropriate view and set its visibility accordingly
-        setRidesLayoutView(view);
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
+            setCurrentRideView(view);
+        }
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)){
+            setCurrentRideRequestView(view);
+        }
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.home_page_map);
         mapFragment.getMapAsync(this);
@@ -159,7 +165,13 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mMap = googleMap;
         mMapComp = new MapComp(this, googleMap);
         mMapComp.setPadding(true);
-        setCurrentLocation();
+
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
+            mMapComp.setRideOnMap(mCurrentRide);
+        }
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
+            setCurrentLocation();
+        }
     }
 
     // Don't move this to BaseFragment or MapComp for resuse, as this will unnecessarily required additional callbacks and lots of complication
@@ -231,35 +243,31 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         }
     }
 
-    private void setRidesLayoutView(View view) {
+    private enum CurrentRidesStatus{
+        CurrentRide, CurrentRideRequest, NoRide;
+    }
+
+    private CurrentRidesStatus getCurrentRidesStatus() {
         if (mCurrentRide!=null && mCurrentRideRequest!=null){
             if (mCurrentRide.getStartTime().before(mCurrentRideRequest.getPickupTime())) {
-                Log.d(TAG,"Load Current Ride as its before Ride Request");
-                setCurrentRideView(view);
-                mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
-                showRidesLayoutVisibilityStatusForDebugging();
+                Log.d(TAG,"Status - Current Ride as its before Ride Request");
+                return CurrentRidesStatus.CurrentRide;
             } else {
-                Log.d(TAG,"Load Current Ride Request as its before Ride");
-                setCurrentRideRequestView(view);
-                mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
-                showRidesLayoutVisibilityStatusForDebugging();
+                Log.d(TAG,"Status - Current Ride Request as its before Ride");
+                return CurrentRidesStatus.CurrentRideRequest;
             }
         }
         else if (mCurrentRide!=null){
-            Log.d(TAG,"Load Current Ride as there is no Ride Request");
-            setCurrentRideView(view);
-            mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
-            showRidesLayoutVisibilityStatusForDebugging();
+            Log.d(TAG,"Status - Current Ride as there is no Ride Request");
+            return CurrentRidesStatus.CurrentRide;
         }
         else if (mCurrentRideRequest!=null){
-            Log.d(TAG,"Load Current Ride Request as there is no Ride");
-            setCurrentRideRequestView(view);
-            mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
-            showRidesLayoutVisibilityStatusForDebugging();
+            Log.d(TAG,"Status - Current Ride Request as there is no Ride");
+            return CurrentRidesStatus.CurrentRideRequest;
         }
         else {
-            Log.d(TAG,"Load Home Page with No Rides");
-            showRidesLayoutVisibilityStatusForDebugging();
+            Log.d(TAG,"Status - Home Page with No Rides");
+            return CurrentRidesStatus.NoRide;
         }
     }
 
@@ -269,6 +277,9 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     }
 
     private void setCurrentRideView(View view){
+
+        //This will make Ride layout visible which was set to Gone at the start
+        mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
 
         RideComp rideComp = new RideComp(this, mCurrentRide);
         rideComp.setRideView(view);
@@ -285,6 +296,10 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     }
 
     private void setCurrentRideRequestView(View view){
+
+        //This will make Ride Request layout visible which was set to Gone at the start
+        mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
+
         mCurrentRideRequestTextView = view.findViewById(R.id.ride_request_id_text);
         mCurrentRideRequestTextView.setText("Current Ride Request Id: "+mCurrentRideRequest.getId());
 
