@@ -27,6 +27,7 @@ import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 public class HomePageActivity extends BaseActivity
@@ -123,10 +124,10 @@ public class HomePageActivity extends BaseActivity
         if (id == R.id.nav_home) {
             mFragmentLoader.loadHomePageWithCurrentRidesFragment();
         } else if (id == R.id.nav_rides) {
-            mFragmentLoader.loadRideInfoFragment();
+            mFragmentLoader.loadRideInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRide()));
 
         } else if (id == R.id.nav_payments) {
-            mFragmentLoader.loadRideRequestInfoFragment();
+            mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRideRequest()));
         } else if (id == R.id.nav_friends) {
 
         } else if (id == R.id.nav_groups) {

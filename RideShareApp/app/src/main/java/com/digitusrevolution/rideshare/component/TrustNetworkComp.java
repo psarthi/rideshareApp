@@ -40,6 +40,8 @@ public class TrustNetworkComp {
     public TrustNetworkComp(BaseFragment fragment, TrustNetwork trustNetwork){
         mBaseFragment = fragment;
         mTrustNetwork = trustNetwork;
+        //Initial value on home page. It would be only set once so that on fragment reload it would not get reset and maintain its previous state
+        mAllSelected = true;
     }
 
     public void setTrustCategoryViews(View view) {
@@ -57,8 +59,6 @@ public class TrustNetworkComp {
 
         setTrustCategoryOnClickListener(view);
 
-        //Initial value on home page
-        mAllSelected = true;
         updateTrustCategoryItemsColor();
     }
 

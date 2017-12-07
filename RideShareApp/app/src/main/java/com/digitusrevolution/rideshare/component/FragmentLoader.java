@@ -3,6 +3,7 @@ package com.digitusrevolution.rideshare.component;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.BaseActivity;
@@ -93,19 +94,19 @@ public class FragmentLoader {
         fragmentTransaction.commit();
     }
 
-    public void loadRideInfoFragment() {
+    public void loadRideInfoFragment(String ride) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         RideInfoFragment rideInfoFragment = RideInfoFragment.
-                newInstance(new Gson().toJson(mCommonUtil.getCurrentRide()));
+                newInstance(ride);
         fragmentTransaction.replace(R.id.home_page_container, rideInfoFragment, RideInfoFragment.TAG);
         fragmentTransaction.addToBackStack(RideInfoFragment.TAG);
         fragmentTransaction.commit();
     }
 
-    public void loadRideRequestInfoFragment() {
+    public void loadRideRequestInfoFragment(String rideRequest) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         RideRequestInfoFragment rideRequestInfoFragment = RideRequestInfoFragment.
-                newInstance(new Gson().toJson(mCommonUtil.getCurrentRideRequest()));
+                newInstance(rideRequest);
         fragmentTransaction.replace(R.id.home_page_container, rideRequestInfoFragment, RideRequestInfoFragment.TAG);
         fragmentTransaction.addToBackStack(RideRequestInfoFragment.TAG);
         fragmentTransaction.commit();

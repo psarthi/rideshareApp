@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +30,6 @@ import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
-import com.digitusrevolution.rideshare.model.user.domain.core.User;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -43,7 +41,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -59,7 +56,9 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         implements OnMapReadyCallback{
 
     public static final String TAG = HomePageWithCurrentRidesFragment.class.getName();
-    public static final String TITLE = "Ride Share";
+    public static final String NO_RIDE_TITLE = "Ride Share";
+    public static final String CURRENT_RIDE_TITLE = "Current Ride";
+    public static final String CURRENT_RIDE_REQUEST_TITLE = "Current Ride Request";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -109,6 +108,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate Called");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mData = getArguments().getString(ARG_DATA);
@@ -116,14 +116,19 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mFragmentLoader = new FragmentLoader(this);
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        mCurrentRide = mCommonUtil.getCurrentRide();
-        mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
-        mCurrentRidesStatus = getCurrentRidesStatus();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView Called");
+
+        //Reason for putting it here, so that whenever the fragment get loaded either new or from backstack, onCreateView would get the latest
+        //Otherwise, it was showing old ride information
+        mCurrentRide = mCommonUtil.getCurrentRide();
+        mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
+        mCurrentRidesStatus = getCurrentRidesStatus();
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
         mCurrentRideLinearLayout = view.findViewById(R.id.current_ride_layout);
@@ -135,9 +140,11 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         showRidesLayoutVisibilityStatusForDebugging();
 
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
+            Log.d(TAG, "Setting Current Ride View");
             setCurrentRideView(view);
         }
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)){
+            Log.d(TAG, "Setting Current Ride Request View");
             setCurrentRideRequestView(view);
         }
 
@@ -164,6 +171,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     //Keep this here instead of moving to BaseFragment, so that you have better control
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "onMapReady called");
         mMap = googleMap;
         mMapComp = new MapComp(this, googleMap);
         mMapComp.setPadding(true);
@@ -180,12 +188,15 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
                 mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 Log.d(TAG, "Map Layout is ready");
                 if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)) {
+                    Log.d(TAG, "Setting Ride On Map");
                     mMapComp.setRideOnMap(mCurrentRide);
                 }
                 if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)) {
+                    Log.d(TAG, "Setting Ride Request On Map");
                     mMapComp.setRideRequestOnMap(mCurrentRideRequest);
                 }
                 if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
+                    Log.d(TAG, "No Ride On Map");
                     setCurrentLocation();
                 }
             }
@@ -243,7 +254,16 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         super.onResume();
         //((HomePageActivity)getActivity()).showBackButton(false);
         //Its important to set Title here else while loading fragment from backstack, title would not change
-        getActivity().setTitle(TITLE);
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
+            getActivity().setTitle(CURRENT_RIDE_TITLE);
+        }
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)){
+            getActivity().setTitle(CURRENT_RIDE_REQUEST_TITLE);
+        }
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
+            getActivity().setTitle(NO_RIDE_TITLE);
+        }
+
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
         showChildFragmentDetails();
@@ -318,6 +338,9 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         if (mCurrentRideRequest.getAcceptedRide()!=null){
             UserComp userComp = new UserComp(this, null);
             userComp.setUserProfileSingleRow(view, mCurrentRideRequest.getAcceptedRide().getDriver());
+        } else {
+            //This will take care of ride request where there is no accepted ride
+            view.findViewById(R.id.user_profile_single_row_layout).setVisibility(View.GONE);
         }
 
     }

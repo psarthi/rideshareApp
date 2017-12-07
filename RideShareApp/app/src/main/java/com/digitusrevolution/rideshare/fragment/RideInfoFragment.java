@@ -21,10 +21,8 @@ import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.RejectCoTravellerFragment;
-import com.digitusrevolution.rideshare.model.ride.dto.BasicRidePassenger;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
-import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -47,6 +45,7 @@ public class RideInfoFragment extends BaseFragment implements
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RIDE = "ride";
+    private static final String TITLE = "Offered Ride Info";
 
     public static final String TAG = RideInfoFragment.class.getName();
 
@@ -153,6 +152,7 @@ public class RideInfoFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
+        getActivity().setTitle(TITLE);
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
         showChildFragmentDetails();

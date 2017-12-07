@@ -34,6 +34,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RIDE_REQUEST = "rideRequest";
     public static final String TAG = RideRequestInfoFragment.class.getName();
+    private static final String TITLE = "Requested Ride Info";
 
     // TODO: Rename and change types of parameters
     private String mRideRequestData;
@@ -100,6 +101,12 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
 
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(TITLE);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

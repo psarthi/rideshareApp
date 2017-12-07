@@ -43,6 +43,7 @@ public class UserProfileFragment extends BaseFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_USER = "user";
     private static final String ARG_PARAM2 = "param2";
+    public static final String TITLE = "User Profile";
 
     // TODO: Rename and change types of parameters
     private String mUserData;
@@ -128,6 +129,12 @@ public class UserProfileFragment extends BaseFragment {
         if (mListener != null) {
             mListener.onUserProfileFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(TITLE);
     }
 
     @Override

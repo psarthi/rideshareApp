@@ -26,6 +26,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.TrustNetworkComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
@@ -133,8 +134,11 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private FragmentLoader mFragmentLoader;
     private GoogleMap mMap;
     private MapComp mMapComp;
+    private Place mFromPlace;
+    private Place mToPlace;
 
     public CreateRidesFragment() {
+        Log.d(TAG, "CreateRidesFragment() Called");
         // Required empty public constructor
     }
 
@@ -147,6 +151,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
      * @return A new instance of fragment CreateRidesFragment.
      */
     public static CreateRidesFragment newInstance(RideType rideType, String data) {
+        Log.d(TAG, "newInstance Called");
         CreateRidesFragment fragment = new CreateRidesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_RIDE_TYPE, rideType.toString());
@@ -157,6 +162,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate Called");
         super.onCreate(savedInstanceState);
         //This will append items option menu by invoking fragment onCreateOptionMenu
         //So that you can have customer option menu for each fragment
@@ -174,11 +180,16 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         //This will increment the start time by lets say 10 mins, so that we don't get into issues of google API trying to get data of the past time
         mStartTimeCalendar.add(Calendar.MINUTE, Constant.START_TIME_INCREMENT);
         mMinStartTime = mStartTimeCalendar.getTime();
+        mTrustNetworkComp = new TrustNetworkComp(this, null);
+
+        //This will enable or disable back button
+        //((HomePageActivity) getActivity()).showBackButton(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView Called");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_rides, container, false);
         //Make fare view invisible initially and make it visible later for ride request cases only
@@ -186,6 +197,14 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         mFromAddressTextView = view.findViewById(R.id.create_rides_from_address_text);
         mToAddressTextView = view.findViewById(R.id.create_rides_to_address_text);
         setAddressOnClickListener();
+
+        //This will take care of reloading fragment
+        if (mFromPlace!=null){
+            mFromAddressTextView.setText(mFromPlace.getName());
+        }
+        if (mToPlace!=null){
+            mToAddressTextView.setText(mToPlace.getName());
+        }
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.create_rides_map);
         mapFragment.getMapAsync(this);
@@ -199,7 +218,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         Log.d(TAG,"Current Time in Millis:"+mStartTimeCalendar.getTimeInMillis());
         setDateTimeOnClickListener();
 
-        mTrustNetworkComp = new TrustNetworkComp(this, null);
+        //Since TrustnetworkComp has been initialized in OnCreate so member variable values would not get reset and state of trust category would be maintained
         mTrustNetworkComp.setTrustCategoryViews(view);
         setButtonsOnClickListener(view);
 
@@ -209,6 +228,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     //Keep this here instead of moving to BaseFragment, so that you have better control
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "onMapReady Called");
         mMap = googleMap;
         mMapComp = new MapComp(this, googleMap);
         mMapComp.setPadding(false);
@@ -230,7 +250,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    if (location != null) {
+                    //Reason for checking mFromPlace to consider reload scenario
+                    if (location != null && mFromPlace == null) {
                         Log.d(TAG, "Current Location:"+location.getLatitude()+","+location.getLongitude());
                         // Add a marker in User Current Location, and move the camera.
                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -305,6 +326,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                     if (rideOfferResult.isCurrentRide()){
                                         mCommonUtil.updateCurrentRide(rideOfferResult.getRide());
                                         Log.d(TAG, "Updated Current Ride");
+                                        getActivity().getSupportFragmentManager().popBackStack();
+                                    } else {
+                                        //This will ensure on backpress user see a clean map
+                                        //Reason i am not putting this outside so that it will take care validation of input as well
+                                        mMap.clear();
+                                        mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
                                     }
                                 }
 
@@ -327,6 +354,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                 if (rideRequestResult.isCurrentRideRequest()){
                                     mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
                                     Log.d(TAG, "Updated Current Ride Request");
+                                    getActivity().getSupportFragmentManager().popBackStack();
+                                } else {
+                                    //This will ensure on backpress user see a clean map
+                                    //Reason i am not putting this outside so that it will take care validation of input as well
+                                    mMap.clear();
+                                    mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
                                 }
                             }
 
@@ -406,7 +439,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         }
     }
 
-
     @NonNull
     private Point getStartPoint() {
         Point point = new Point(mFromLatLng.longitude, mFromLatLng.latitude);
@@ -430,7 +462,13 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
     public void onResume() {
+        Log.d(TAG,"onResume Called");
         super.onResume();
         //Its important to set Title here else while loading fragment from backstack, title would not change
         if (mRideType.equals(RideType.OfferRide)){
@@ -438,7 +476,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         } else {
             getActivity().setTitle(REQUEST_RIDE_TITLE);
         }
-        Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
     }
 
@@ -497,10 +534,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
         if (requestCode == PLACE_FROM_ADDRESS_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                Place fromPlace = PlaceAutocomplete.getPlace(getActivity(), data);
-                Log.i(TAG, "From Place: " + fromPlace.getName());
-                mFromAddressTextView.setText(fromPlace.getName());
-                mFromLatLng = fromPlace.getLatLng();
+                mFromPlace = PlaceAutocomplete.getPlace(getActivity(), data);
+                Log.i(TAG, "From Place: " + mFromPlace.getName());
+                mFromAddressTextView.setText(mFromPlace.getName());
+                mFromLatLng = mFromPlace.getLatLng();
                 drawOnMap();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
@@ -514,10 +551,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
         if (requestCode == PLACE_TO_ADDRESS_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                Place toPlace = PlaceAutocomplete.getPlace(getActivity(), data);
-                Log.i(TAG, "To Place: " + toPlace.getName());
-                mToAddressTextView.setText(toPlace.getName());
-                mToLatLng = toPlace.getLatLng();
+                mToPlace = PlaceAutocomplete.getPlace(getActivity(), data);
+                Log.i(TAG, "To Place: " + mToPlace.getName());
+                mToAddressTextView.setText(mToPlace.getName());
+                mToLatLng = mToPlace.getLatLng();
                 drawOnMap();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
@@ -625,7 +662,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             if (mFromLatLng!=null) mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mFromLatLng,Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
             if (mToLatLng!=null) mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mToLatLng,Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
         } else {
-            LatLngBounds bounds = getBounds();
+                LatLngBounds bounds = getBounds();
             //Note - padding should be "0" as we have already set padding on map seperately using setPadding()
             mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,0));
             Log.d(TAG, "To Field exist, so using latlng bounds camera zoom");
@@ -641,6 +678,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     @Override
     public void onAttach(Context context) {
+        Log.d(TAG,"onAttach Called");
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -652,6 +690,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     @Override
     public void onDetach() {
+        Log.d(TAG,"onDetach Called");
         super.onDetach();
         mListener = null;
     }
