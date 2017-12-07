@@ -115,11 +115,8 @@ public class HomePageActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        //This will remove all the fragment from backstack and would start from clean slate
-        //So that we don't have too many backstacks items when user clicks on navigation items from anywhere
-        while(getSupportFragmentManager().popBackStackImmediate()){
-            Log.d(TAG,"Backstack Entry Count is:"+getSupportFragmentManager().getBackStackEntryCount());
-        };
+        removeAllBackStacks();
+
         //Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
         if (id == R.id.nav_home) {
             mFragmentLoader.loadHomePageWithCurrentRidesFragment();
@@ -143,6 +140,16 @@ public class HomePageActivity extends BaseActivity
         return true;
     }
 
+    private void removeAllBackStacks() {
+        //This will remove all the fragment from backstack and would start from clean slate
+        //So that we don't have too many backstacks items when user clicks on navigation items from anywhere
+        while(getSupportFragmentManager().popBackStackImmediate()){
+            Log.d(TAG,"Backstack Entry Count is:"+getSupportFragmentManager().getBackStackEntryCount());
+        }
+        ;
+    }
+
+
     @Override
     public void onHomePageWithCurrentRidesFragmentInteraction(String data) {
         Log.d(TAG,"Value returned to activity from Blank Fragment:"+data);
@@ -150,8 +157,14 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onCreateRideFragmentInteraction(Uri uri) {
-
+    public void onCreateRideFragmentInteraction(String data) {
+        Log.d(TAG, "Recieved callback post Create Rides Fragment");
+        //This will clean up all back stacks and start from fresh
+        //Reason for not doing popback as map was not getting reloaded properly and viewtreeobserver was not getting callback
+        //which was causing old map to show up with previous markers/lines
+        removeAllBackStacks();
+        FragmentLoader fragmentLoader = new FragmentLoader(this);
+        fragmentLoader.loadHomePageWithCurrentRidesFragment();
     }
 
     @Override

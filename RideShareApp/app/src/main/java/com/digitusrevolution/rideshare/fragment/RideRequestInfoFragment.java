@@ -90,6 +90,8 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
 
         if (mRideRequest.getAcceptedRide()!=null){
             rideRequestComp.setRideOwnerLayout(view);
+        } else {
+            view.findViewById(R.id.ride_owner_layout).setVisibility(View.GONE);
         }
 
         //This will adjust height of map

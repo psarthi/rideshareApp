@@ -326,11 +326,9 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                     if (rideOfferResult.isCurrentRide()){
                                         mCommonUtil.updateCurrentRide(rideOfferResult.getRide());
                                         Log.d(TAG, "Updated Current Ride");
-                                        getActivity().getSupportFragmentManager().popBackStack();
+                                        mListener.onCreateRideFragmentInteraction(null);
                                     } else {
-                                        //This will ensure on backpress user see a clean map
-                                        //Reason i am not putting this outside so that it will take care validation of input as well
-                                        mMap.clear();
+                                        //This will load the Ride Info fragment
                                         mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
                                     }
                                 }
@@ -354,11 +352,9 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                 if (rideRequestResult.isCurrentRideRequest()){
                                     mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
                                     Log.d(TAG, "Updated Current Ride Request");
-                                    getActivity().getSupportFragmentManager().popBackStack();
+                                    mListener.onCreateRideFragmentInteraction(null);
                                 } else {
-                                    //This will ensure on backpress user see a clean map
-                                    //Reason i am not putting this outside so that it will take care validation of input as well
-                                    mMap.clear();
+                                    //This will load the Ride Request Info fragment
                                     mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
                                 }
                             }
@@ -669,13 +665,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onCreateRideFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         Log.d(TAG,"onAttach Called");
@@ -743,7 +732,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onCreateRideFragmentInteraction(Uri uri);
+        void onCreateRideFragmentInteraction(String data);
     }
 
     @Override

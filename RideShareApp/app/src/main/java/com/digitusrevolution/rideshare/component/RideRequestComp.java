@@ -110,8 +110,8 @@ public class RideRequestComp{
         ((TextView) view.findViewById(R.id.ride_pickup_point_text)).setText(mRideRequest.getRidePickupPointAddress());
         ((TextView) view.findViewById(R.id.ride_drop_point_text)).setText(mRideRequest.getRideDropPointAddress());
 
-        String pickupDistance = Double.toString(mRideRequest.getRidePickupPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
-        String dropDistance = Double.toString(mRideRequest.getRideDropPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
+        String pickupDistance = Integer.toString((int)mRideRequest.getRidePickupPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
+        String dropDistance = Integer.toString((int)mRideRequest.getRideDropPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
         ((TextView) view.findViewById(R.id.ride_pickup_point_variation_text)).setText(pickupDistance);
         ((TextView) view.findViewById(R.id.ride_drop_point_variation_text)).setText(dropDistance);
 
