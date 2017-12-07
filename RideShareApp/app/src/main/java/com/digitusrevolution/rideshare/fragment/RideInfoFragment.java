@@ -106,9 +106,17 @@ public class RideInfoFragment extends BaseFragment implements
         //but this can be used for our own prupose and in this case, its the best suitable option
         ArrayAdapter<BasicRideRequest> coTravellerAdapter = new CoTravellerAdapter(
                 this, (List<BasicRideRequest>) mRide.getAcceptedRideRequests());
-        for (int i=0; i<coTravellerAdapter.getCount(); i++){
+
+        for (int i=0; i<mRide.getAcceptedRideRequests().size(); i++){
             View coTravellerView = coTravellerAdapter.getView(i, null, container);
             mCoTravellerLinearLayout.addView(coTravellerView);
+        }
+
+        //This will adjust height of map
+        if (mRide.getAcceptedRideRequests().size()==0){
+            ViewGroup.LayoutParams layoutParams = mMapView.getLayoutParams();
+            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            mMapView.setLayoutParams(layoutParams);
         }
 
         return view;

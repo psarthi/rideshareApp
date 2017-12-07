@@ -40,6 +40,8 @@ public class RideRequest {
 	private RidePoint rideDropPoint = new RidePoint();
 	private String ridePickupPointAddress;
 	private String rideDropPointAddress;
+	private double ridePickupPointDistance;
+	private double rideDropPointDistance;
 	private int travelTime;
 	private int travelDistance;
 	private Collection<Ride> cancelledRides = new HashSet<Ride>();
@@ -281,5 +283,19 @@ public class RideRequest {
 
 	public void setPassengerStatus(PassengerStatus passengerStatus) {
 		this.passengerStatus = passengerStatus;
+	}
+	public double getRidePickupPointDistance() {
+		return ridePickupPointDistance;
+	}
+	public void setRidePickupPointDistance(double ridePickupPointDistance) {
+		this.ridePickupPointDistance = ridePickupPointDistance;
+	}
+
+	public double getRideDropPointDistance() {
+		return rideDropPointDistance;
+	}
+
+	public void setRideDropPointDistance(double rideDropPointDistance) {
+		this.rideDropPointDistance = rideDropPointDistance;
 	}
 }

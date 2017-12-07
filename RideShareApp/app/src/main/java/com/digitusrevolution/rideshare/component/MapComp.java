@@ -15,17 +15,20 @@ import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -118,4 +121,82 @@ public class MapComp{
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
         //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,mWidth, mHeight, mStandardPadding));
     }
+
+    public void setRideRequestOnMap(FullRideRequest rideRequest){
+
+        List<LatLng> latLngs = new ArrayList<>();
+        LatLng pickupPoint = new LatLng(rideRequest.getPickupPoint().getPoint().getLatitude(), rideRequest.getPickupPoint().getPoint().getLongitude());
+        LatLng dropPoint = new LatLng(rideRequest.getDropPoint().getPoint().getLatitude(), rideRequest.getDropPoint().getPoint().getLongitude());
+        LatLng ridePickupPoint = new LatLng(rideRequest.getRidePickupPoint().getPoint().getLatitude(), rideRequest.getRidePickupPoint().getPoint().getLongitude());
+        LatLng rideDropPoint = new LatLng(rideRequest.getRideDropPoint().getPoint().getLatitude(), rideRequest.getRideDropPoint().getPoint().getLongitude());
+        int pickupPointVariation = rideRequest.getPickupPointVariation();
+        int dropPointVariation = rideRequest.getDropPointVariation();
+
+        //Draw Pickup and Drop Point Marker
+        mMap.addMarker(new MarkerOptions().position(pickupPoint).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.addMarker(new MarkerOptions().position(dropPoint).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+        //Draw Ride Pickup and Ride Drop Point Marker
+        mMap.addMarker(new MarkerOptions().position(ridePickupPoint).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        mMap.addMarker(new MarkerOptions().position(rideDropPoint).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+
+        //Draw Circle with Pickup Distance and Drop Distance Variation
+        mMap.addCircle(new CircleOptions().center(pickupPoint).radius(pickupPointVariation));
+        mMap.addCircle(new CircleOptions().center(dropPoint).radius(dropPointVariation));
+
+        //Get Bound covering all points
+        LatLngBounds pickupZonelatLngBounds = getCircleBounds(pickupPoint, pickupPointVariation);
+        latLngs.add(pickupZonelatLngBounds.northeast);
+        latLngs.add(pickupZonelatLngBounds.southwest);
+        LatLngBounds dropZonelatLngBounds = getCircleBounds(dropPoint, dropPointVariation);
+        latLngs.add(dropZonelatLngBounds.northeast);
+        latLngs.add(dropZonelatLngBounds.southwest);
+
+        LatLngBounds latLngBounds = getBounds(latLngs);
+
+        //Move Camera
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
+    }
+
+    public LatLngBounds getCircleBounds(LatLng center, double radiusInMeters) {
+        double distanceFromCenterToCorner = radiusInMeters * Math.sqrt(2.0);
+        LatLng southwestCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 225.0);
+        LatLng northeastCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 45.0);
+        return new LatLngBounds(southwestCorner, northeastCorner);
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

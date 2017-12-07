@@ -11,9 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
+import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
@@ -21,6 +23,8 @@ import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -32,7 +36,7 @@ import java.util.List;
  * Use the {@link UserProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserProfileFragment extends BaseFragment implements ThumbnailCoTravellerAdapter.ThumbnailCoTravellerAdapterListener {
+public class UserProfileFragment extends BaseFragment {
 
     public static final String TAG = UserProfileFragment.class.getName();
     // TODO: Rename parameter arguments, choose names that match
@@ -96,26 +100,25 @@ public class UserProfileFragment extends BaseFragment implements ThumbnailCoTrav
         Picasso.with(getActivity()).load(mUser.getPhoto().getImageLocation())
                 .into(userProfileImageView);
 
+        UserComp userComp = new UserComp(this, null);
+        userComp.setUserProfileSingleRow(view, mUser);
+
+        View user_profile_layout = view.findViewById(R.id.user_profile_single_row_layout);
+        //This will make small user image invisible
+        user_profile_layout.findViewById(R.id.user_image).setVisibility(View.GONE);
+
+        //TODO This should be set according to backend implementation to see if its a friend or not
+        user_profile_layout.findViewById(R.id.add_friend_image).setVisibility(View.VISIBLE);
+
+
+        //TODO load additional view's once we get fulluser from backend properly. Below recycler view is for dummy
         RecyclerView friendRecyclerView = view.findViewById(R.id.mutual_friends_list);
         RecyclerView groupsRecyclerView = view.findViewById(R.id.common_groups_list);
-
-        friendRecyclerView.setHasFixedSize(true);
-        groupsRecyclerView.setHasFixedSize(true);
-
-        RecyclerView.LayoutManager friendLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        friendLayoutManager.setAutoMeasureEnabled(true);
-
-        RecyclerView.LayoutManager groupsLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        groupsLayoutManager.setAutoMeasureEnabled(true);
-
-        friendRecyclerView.setLayoutManager(friendLayoutManager);
-        groupsRecyclerView.setLayoutManager(groupsLayoutManager);
-
-        RecyclerView.Adapter adapter = new ThumbnailCoTravellerAdapter(getActivity(), UserProfileFragment.this,
+        RecyclerView.Adapter adapter = new ThumbnailCoTravellerAdapter(this,
                 (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
 
-        friendRecyclerView.setAdapter(adapter);
-        groupsRecyclerView.setAdapter(adapter);
+        setRecyclerView(friendRecyclerView, adapter);
+        setRecyclerView(groupsRecyclerView, adapter);
 
         return view;
     }
@@ -144,11 +147,6 @@ public class UserProfileFragment extends BaseFragment implements ThumbnailCoTrav
         mListener = null;
     }
 
-    @Override
-    public void onClickOfThumbnailCoTravellerAdapter(BasicUser user) {
-
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -162,5 +160,9 @@ public class UserProfileFragment extends BaseFragment implements ThumbnailCoTrav
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onUserProfileFragmentInteraction(Uri uri);
+    }
+
+    public int getUserId(){
+        return mUser.getId();
     }
 }

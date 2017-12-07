@@ -18,7 +18,7 @@
         <TextView android:id="@+id/ride_request_id_text"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:text="Ride Request No. 1234"
+                  android:text="@string/ride_request_id_text"
                   android:textStyle="bold"
                   android:textColor="@color/colorPrimaryDark"/>
 

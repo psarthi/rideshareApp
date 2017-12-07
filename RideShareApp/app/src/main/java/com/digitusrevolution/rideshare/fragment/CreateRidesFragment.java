@@ -605,27 +605,18 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         //TODO Replace with actual radius of rides
         if (mRideType.equals(RideType.RequestRide)){
             if (mFromLatLng!=null) {
-                latLngBounds = getCircleBounds(mFromLatLng,500);
+                latLngBounds = mMapComp.getCircleBounds(mFromLatLng,mRideRequest.getPickupPointVariation());
                 latLngBoundsBuilder.include(latLngBounds.northeast);
                 latLngBoundsBuilder.include(latLngBounds.southwest);
             }
             if (mToLatLng!=null) {
-                latLngBounds = getCircleBounds(mToLatLng,500);
+                latLngBounds = mMapComp.getCircleBounds(mToLatLng,mRideRequest.getDropPointVariation());
                 latLngBoundsBuilder.include(latLngBounds.northeast);
                 latLngBoundsBuilder.include(latLngBounds.southwest);
             }
         }
         latLngBounds = latLngBoundsBuilder.build();
         return latLngBounds;
-    }
-
-    private LatLngBounds getCircleBounds(LatLng center, double radiusInMeters) {
-        double distanceFromCenterToCorner = radiusInMeters * Math.sqrt(2.0);
-        LatLng southwestCorner =
-                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 225.0);
-        LatLng northeastCorner =
-                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 45.0);
-        return new LatLngBounds(southwestCorner, northeastCorner);
     }
 
     private void moveCamera() {

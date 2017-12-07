@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
@@ -86,10 +85,10 @@ public class HomePageActivity extends BaseActivity
         // default drawerlayout view doesn't contain image view directly and its inside the headerlayout
         View headerView = navigationView.getHeaderView(0);
 
-        mProfilePhotoImageView = headerView.findViewById(R.id.user_profile_image);
+        mProfilePhotoImageView = headerView.findViewById(R.id.thumbnail_image);
         Picasso.with(this).load(mUser.getPhoto().getImageLocation()).into(mProfilePhotoImageView);
 
-        mUserNameTextView = headerView.findViewById(R.id.user_name_text);
+        mUserNameTextView = headerView.findViewById(R.id.thumbnail_name_text);
         mUserNameTextView.setText(mUser.getFirstName()+" "
                 +mUser.getLastName());
 
@@ -120,7 +119,7 @@ public class HomePageActivity extends BaseActivity
         while(getSupportFragmentManager().popBackStackImmediate()){
             Log.d(TAG,"Backstack Entry Count is:"+getSupportFragmentManager().getBackStackEntryCount());
         };
-        Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
         if (id == R.id.nav_home) {
             mFragmentLoader.loadHomePageWithCurrentRidesFragment();
         } else if (id == R.id.nav_rides) {

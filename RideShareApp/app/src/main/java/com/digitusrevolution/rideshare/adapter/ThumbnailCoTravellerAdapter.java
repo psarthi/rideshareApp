@@ -10,8 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.fragment.BaseFragment;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -24,8 +28,7 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
 
     public static final String TAG = ThumbnailCoTravellerAdapter.class.getName();
     private List<BasicRideRequest> mRideRequests;
-    private FragmentActivity mContext;
-    private ThumbnailCoTravellerAdapterListener mListener;
+    private BaseFragment mBaseFragment;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextView;
@@ -33,16 +36,14 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
 
         public ViewHolder(View v) {
             super(v);
-            mTextView = v.findViewById(R.id.user_name_text);
-            mImageView = v.findViewById(R.id.user_profile_image);
+            mTextView = v.findViewById(R.id.thumbnail_name_text);
+            mImageView = v.findViewById(R.id.thumbnail_image);
         }
     }
 
-    public ThumbnailCoTravellerAdapter(FragmentActivity context, ThumbnailCoTravellerAdapterListener listener,
-                                       List<BasicRideRequest> rideRequests) {
+    public ThumbnailCoTravellerAdapter(BaseFragment fragment, List<BasicRideRequest> rideRequests) {
         mRideRequests = rideRequests;
-        mContext = context;
-        mListener = listener;
+        mBaseFragment = fragment;
     }
 
     @Override
@@ -56,26 +57,27 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
 
     @Override
     public void onBindViewHolder(ThumbnailCoTravellerAdapter.ViewHolder holder, final int position) {
-        Log.d(TAG, "Text Name:"+mRideRequests.get(position).getPassenger().getFirstName());
-        holder.mTextView.setText(mRideRequests.get(position).getPassenger().getFirstName());
-        Picasso.with(mContext).load(mRideRequests.get(position).getPassenger().getPhoto().getImageLocation()).into(holder.mImageView);
-
+        final BasicRideRequest rideRequest = getItem(position);
+        holder.mTextView.setText(rideRequest.getPassenger().getFirstName());
+        Picasso.with(mBaseFragment.getActivity()).load(rideRequest.getPassenger().getPhoto().getImageLocation()).into(holder.mImageView);
 
         holder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onClickOfThumbnailCoTravellerAdapter(mRideRequests.get(position).getPassenger());
+                FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                fragmentLoader.loadUserProfileFragment(new Gson().toJson(rideRequest.getPassenger()), null);
             }
         });
+
+    }
+
+    private BasicRideRequest getItem(int position){
+        return mRideRequests.get(position);
     }
 
     @Override
     public int getItemCount() {
         return mRideRequests.size();
-    }
-
-    public interface ThumbnailCoTravellerAdapterListener{
-        public void onClickOfThumbnailCoTravellerAdapter(BasicUser user);
     }
 
 }

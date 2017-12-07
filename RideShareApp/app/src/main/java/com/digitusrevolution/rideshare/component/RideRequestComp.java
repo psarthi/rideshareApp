@@ -3,19 +3,20 @@ package com.digitusrevolution.rideshare.component;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
-import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
-import com.digitusrevolution.rideshare.model.ride.dto.BasicRidePassenger;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
-import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.google.android.gms.auth.GoogleAuthException;
 
 import java.util.Date;
 
@@ -30,93 +31,132 @@ public class RideRequestComp{
     private FullRideRequest mRideRequest;
     private CommonUtil mCommonUtil;
 
+    private Button mCancelButton;
+    private Button mDestinationNavigationButton;
+    private LinearLayout mBasicRideRequestButtonsLayout;
+    private Button mRejectButton;
+    private Button mPickupPointNavigationButton;
+    private LinearLayout mRideOwnerButtonsLayout;
+
     public RideRequestComp(BaseFragment fragment, FullRideRequest rideRequest){
         mBaseFragment = fragment;
         mRideRequest = rideRequest;
         mCommonUtil = new CommonUtil(fragment);
     }
 
-    public void setPickupTimeAndBillLayout(View view, BasicRideRequest rideRequest){
-        View layout = view.findViewById(R.id.pickup_time_bill_layout);
-        TextView pickupTimeTextView = layout.findViewById(R.id.pickup_time_text);
-        Date pickupTime = rideRequest.getRidePickupPoint().getRidePointProperties().get(0).getDateTime();
-        String pickupTimeString = mCommonUtil.getFormattedDateTimeString(pickupTime);
-        pickupTimeTextView.setText(pickupTimeString);
+    public void setRideRequestBasicLayout(View view){
+        View layout = view.findViewById(R.id.basic_ride_request_layout);
+        String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)+ mRideRequest.getId();
+        ((TextView) layout.findViewById(R.id.ride_request_id_text)).setText(rideRequestNumberText);
+        ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(mRideRequest.getStatus().toString());
+        String pickupTime = mCommonUtil.getFormattedDateTimeString(mRideRequest.getPickupTime());
+        ((TextView) layout.findViewById(R.id.ride_request_pickup_time_text)).setText(pickupTime);
+        //TODO get confirmation code post backend finalization
+        //((TextView) layout.findViewById(R.id.ride_request_confirmation_code_text)).setText();
 
-        TextView fareTextView = layout.findViewById(R.id.fare_text);
-        //String amount = Float.toString(rideRequest.getBill().getAmount());
-        //fareTextView.setText(amount);
+        ((TextView) layout.findViewById(R.id.ride_request_pickup_point_text)).setText(mRideRequest.getPickupPointAddress());
+        ((TextView) layout.findViewById(R.id.ride_request_drop_point_text)).setText(mRideRequest.getDropPointAddress());
 
-        TextView billStatusTextView = layout.findViewById(R.id.bill_status);
-        //billStatusTextView.setText(rideRequest.getBill().getStatus().toString());
+        mCancelButton = layout.findViewById(R.id.ride_request_cancel_button);
+        mDestinationNavigationButton = layout.findViewById(R.id.ride_request_navigate_to_destination_button);
+        mBasicRideRequestButtonsLayout = layout.findViewById(R.id.ride_request_buttons_layout);
+
+        //This will setup initial button visibility
+        updateRideRequestBasicLayoutButtonsVisiblity();
+        setRideRequestBasicLayoutButtonsOnClickListener();
     }
 
-    public void setRidePickupDropPointsLayout(View view, BasicRideRequest rideRequest){
-        View layout = view.findViewById(R.id.ride_pickup_drop_point_layout);
-        TextView pickupPointTextView = layout.findViewById(R.id.ride_pickup_point_text);
-        pickupPointTextView.setText(rideRequest.getRidePickupPointAddress());
-
-        TextView dropPointTextView = layout.findViewById(R.id.ride_drop_point_text);
-        dropPointTextView.setText(rideRequest.getRideDropPointAddress());
-
-    }
-
-    public void setCoTravellerButtonsOnClickListener(final View view, final BasicRideRequest rideRequest){
-        //Don't get on layout as its not an external layout which is used as include, get on view.findviewbyId
-        Button rejectButton = view.findViewById(R.id.co_traveller_reject_button);
-        Button pickupButton = view.findViewById(R.id.co_traveller_pickup_button);
-        Button dropButton = view.findViewById(R.id.co_traveller_drop_button);
-
-        rejectButton.setOnClickListener(new View.OnClickListener() {
+    private void setRideRequestBasicLayoutButtonsOnClickListener(){
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"Passenger Rejected - " + rideRequest.getPassenger().getFirstName());
-                updateCoTravellerButtonsVisibility(view, rideRequest);
+                Log.d(TAG, "Ride Request Cancelled for id:"+mRideRequest.getId());
+                updateRideRequestBasicLayoutButtonsVisiblity();
             }
         });
-
-        pickupButton.setOnClickListener(new View.OnClickListener() {
+        mDestinationNavigationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"Passenger Picked - " + rideRequest.getPassenger().getFirstName());
-                updateCoTravellerButtonsVisibility(view, rideRequest);
-            }
-        });
-
-        dropButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Passenger Dropped - " + rideRequest.getPassenger().getFirstName());
-                updateCoTravellerButtonsVisibility(view, rideRequest);
+                Log.d(TAG, "Navigate to Destination for Id:"+mRideRequest.getId());
+                updateRideRequestBasicLayoutButtonsVisiblity();
             }
         });
     }
 
-    public void updateCoTravellerButtonsVisibility(View view, final BasicRideRequest rideRequest){
-
-        //Don't get on layout as its not an external layout which is used as include, get on view.findviewbyId
-        Button rejectButton = view.findViewById(R.id.co_traveller_reject_button);
-        Button pickupButton = view.findViewById(R.id.co_traveller_pickup_button);
-        Button dropButton = view.findViewById(R.id.co_traveller_drop_button);
-        RatingBar ratingBar = view.findViewById(R.id.co_traveller_rating_bar);
-        View buttonsLayout = view.findViewById(R.id.co_traveller_buttons_layout);
-
-        //Intial value of rating bar
-        ratingBar.setVisibility(View.GONE);
-
-        if (rideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
-            pickupButton.setVisibility(View.GONE);
-            dropButton.setVisibility(View.GONE);
+    private void updateRideRequestBasicLayoutButtonsVisiblity(){
+        if (mRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)) {
+            mDestinationNavigationButton.setVisibility(View.GONE);
         }
-        if (rideRequest.getPassengerStatus().equals(PassengerStatus.Picked)){
-            rejectButton.setVisibility(View.GONE);
-            pickupButton.setVisibility(View.GONE);
+        if (mRideRequest.getStatus().equals(RideRequestStatus.Cancelled)){
+            mBasicRideRequestButtonsLayout.setVisibility(View.GONE);
         }
-        if (rideRequest.getPassengerStatus().equals(PassengerStatus.Dropped)){
-            buttonsLayout.setVisibility(View.GONE);
-            ratingBar.setVisibility(View.VISIBLE);
+        if (mRideRequest.getStatus().equals(RideRequestStatus.Fulfilled)){
+            if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
+                mDestinationNavigationButton.setVisibility(View.GONE);
+            } else {
+                mCancelButton.setVisibility(View.GONE);
+            }
         }
     }
+
+    public void setRideOwnerLayout(View view){
+
+        UserComp userComp = new UserComp(mBaseFragment, null);
+        userComp.setUserProfileSingleRow(view, mRideRequest.getAcceptedRide().getDriver());
+
+        RideComp rideComp = new RideComp(mBaseFragment, null);
+        rideComp.setPickupTimeAndBillLayout(view, (BasicRideRequest) mRideRequest);
+
+        ((TextView) view.findViewById(R.id.ride_pickup_point_text)).setText(mRideRequest.getRidePickupPointAddress());
+        ((TextView) view.findViewById(R.id.ride_drop_point_text)).setText(mRideRequest.getRideDropPointAddress());
+
+        String pickupDistance = Double.toString(mRideRequest.getRidePickupPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
+        String dropDistance = Double.toString(mRideRequest.getRideDropPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
+        ((TextView) view.findViewById(R.id.ride_pickup_point_variation_text)).setText(pickupDistance);
+        ((TextView) view.findViewById(R.id.ride_drop_point_variation_text)).setText(dropDistance);
+
+        mRideOwnerButtonsLayout = view.findViewById(R.id.ride_owner_buttons_layout);
+        mRejectButton = view.findViewById(R.id.ride_owner_reject_button);
+        mPickupPointNavigationButton = view.findViewById(R.id.navigate_to_ride_pickup_point_button);
+
+        updateRideOwnerLayoutButtonsVisiblity(view);
+        setRideOwnerLayoutButtonsOnClickListener(view);
+
+    }
+
+    private void setRideOwnerLayoutButtonsOnClickListener(final View view){
+
+        mRejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Ride Owner Rejected:"+mRideRequest.getAcceptedRide().getDriver().getFirstName());
+                updateRideOwnerLayoutButtonsVisiblity(view);
+            }
+        });
+
+        mPickupPointNavigationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Navigate to Pickup Point for Id:"+mRideRequest.getId());
+                updateRideOwnerLayoutButtonsVisiblity(view);
+            }
+        });
+    }
+
+    private void updateRideOwnerLayoutButtonsVisiblity(View view){
+
+        RatingBar ratingBar = view.findViewById(R.id.ride_owner_rating_bar);
+
+        //This means that only when passenger is in confirmed state i.e. he/she has not been picked up, he can reject / navigate
+        //As far as rating is concerned, he can rate post pickup up or if reject. In case of Reject, we will ask for rating in dialog bar itself
+        if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
+            ratingBar.setVisibility(View.GONE);
+        } else {
+            mRideOwnerButtonsLayout.setVisibility(View.GONE);
+        }
+
+    }
+
 }
 
 

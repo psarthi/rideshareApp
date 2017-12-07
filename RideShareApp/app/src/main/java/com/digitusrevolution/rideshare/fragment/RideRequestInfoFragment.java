@@ -4,12 +4,21 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.component.MapComp;
+import com.digitusrevolution.rideshare.component.RideRequestComp;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.gson.Gson;
 
 /**
@@ -20,7 +29,7 @@ import com.google.gson.Gson;
  * Use the {@link RideRequestInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RideRequestInfoFragment extends BaseFragment {
+public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyCallback{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RIDE_REQUEST = "rideRequest";
@@ -31,6 +40,10 @@ public class RideRequestInfoFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
     private FullRideRequest mRideRequest;
+    private GoogleMap mMap;
+    private MapComp mMapComp;
+    private View mMapView;
+
 
     public RideRequestInfoFragment() {
         // Required empty public constructor
@@ -65,7 +78,28 @@ public class RideRequestInfoFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ride_request_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_ride_request_info, container, false);
+        RideRequestComp rideRequestComp = new RideRequestComp(this, mRideRequest);
+        rideRequestComp.setRideRequestBasicLayout(view);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_request_info_map);
+        mapFragment.getMapAsync(this);
+        mMapView = view.findViewById(R.id.ride_request_info_map);
+
+
+        if (mRideRequest.getAcceptedRide()!=null){
+            rideRequestComp.setRideOwnerLayout(view);
+        }
+
+        //This will adjust height of map
+        if (mRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)){
+            ViewGroup.LayoutParams layoutParams = mMapView.getLayoutParams();
+            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            mMapView.setLayoutParams(layoutParams);
+        }
+
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -90,6 +124,29 @@ public class RideRequestInfoFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMapComp = new MapComp(this, googleMap);
+        //This will set standard padding for the map
+        mMapComp.setPadding(true);
+        //TODO think on how to move this in common location so that we don't have to repeat this
+        //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
+        //Ref - https://stackoverflow.com/questions/7733813/how-can-you-tell-when-a-layout-has-been-drawn
+        mMapView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                //IMP - This is very important to remove the listener else it will get called many times for every view's
+                // and your setRideOnMap would also be called that many times
+                //This will ensure only once this is called
+                mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                Log.d(TAG, "Map Layout is ready");
+                mMapComp.setRideRequestOnMap(mRideRequest);
+            }
+        });
+
     }
 
     /**

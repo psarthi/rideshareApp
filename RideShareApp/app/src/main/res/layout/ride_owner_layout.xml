@@ -10,7 +10,7 @@
               tools:showIn="@layout/fragment_ride_request_info">
 
     <include
-        android:id="@+id/user_profile_layout"
+        android:id="@+id/user_profile_single_row_layout"
         layout="@layout/user_profile_single_row_layout"/>
 
     <include
@@ -31,7 +31,8 @@
             android:layout_weight="0.8"
             android:drawableStart="@drawable/ic_green_person_marker"
             android:gravity="center_vertical"
-            android:text="Gopalan Grandeur, Hoodi, Bangalore"/>
+            android:text="Gopalan Grandeur, Hoodi, Bangalore"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/ride_pickup_point_variation_text"
@@ -54,7 +55,8 @@
             android:layout_weight="0.8"
             android:drawableStart="@drawable/ic_red_person_marker"
             android:gravity="center_vertical"
-            android:text="Ajmera Infinity, Electronic City, Bangalore"/>
+            android:text="Ajmera Infinity, Electronic City, Bangalore"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/ride_drop_point_variation_text"
@@ -69,8 +71,7 @@
     <LinearLayout android:id="@+id/ride_owner_buttons_layout"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:gravity="start"
-                  android:visibility="gone">
+                  android:gravity="start">
 
         <Button
             android:id="@+id/ride_owner_reject_button"

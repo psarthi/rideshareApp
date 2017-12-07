@@ -9,7 +9,7 @@
     tools:showIn="@layout/ride_co_traveller_layout">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/user_profile_image"
+        android:id="@+id/user_image"
         android:layout_width="@dimen/user_photo_icon_size"
         android:layout_height="@dimen/user_photo_icon_size"
         android:src="@drawable/ic_profile"

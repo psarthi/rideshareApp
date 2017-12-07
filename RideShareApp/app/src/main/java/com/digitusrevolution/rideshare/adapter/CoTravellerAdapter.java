@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.RatingBar;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
@@ -59,14 +60,13 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
         UserComp userComp = new UserComp(mBaseFragment, null);
         userComp.setUserProfileSingleRow(convertView, rideRequest.getPassenger());
 
-        RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, null);
-        rideRequestComp.setPickupTimeAndBillLayout(convertView, rideRequest);
-        rideRequestComp.setRidePickupDropPointsLayout(convertView, rideRequest);
+        RideComp rideComp = new RideComp(mBaseFragment, null);
+        rideComp.setPickupTimeAndBillLayout(convertView, rideRequest);
+        rideComp.setRidePickupDropPointsLayout(convertView, rideRequest);
         //This will set the visibility of co traveller buttons initially
-        rideRequestComp.updateCoTravellerButtonsVisibility(convertView, rideRequest);
+        rideComp.updateCoTravellerButtonsVisibility(convertView, rideRequest);
         //This will set the listeners on co traveller buttons
-        rideRequestComp.setCoTravellerButtonsOnClickListener(convertView, rideRequest);
-
+        rideComp.setCoTravellerButtonsOnClickListener(convertView, rideRequest);
 
 
         RatingBar ratingBar = convertView.findViewById(R.id.co_traveller_rating_bar);

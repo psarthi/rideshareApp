@@ -1,20 +1,18 @@
 package com.digitusrevolution.rideshare.component;
 
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
+import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
-import com.digitusrevolution.rideshare.model.ride.dto.BasicRidePassenger;
-import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.FullUser;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -37,7 +35,7 @@ public class UserComp {
     public void setUserProfileSingleRow(View view, final BasicUser user){
 
         View user_profile_layout = view.findViewById(R.id.user_profile_single_row_layout);
-        ImageView userProfileImageView = user_profile_layout.findViewById(R.id.user_profile_image);
+        ImageView userProfileImageView = user_profile_layout.findViewById(R.id.user_image);
         Picasso.with(mBaseFragment.getActivity()).load(user.getPhoto().getImageLocation()).into(userProfileImageView);
         TextView userNameTextView = user_profile_layout.findViewById(R.id.user_name_text);
         String userName = user.getFirstName() + " " + user.getLastName();
@@ -59,5 +57,19 @@ public class UserComp {
         //to backend to check user relationship with signed in user
         user_profile_layout.findViewById(R.id.add_friend_image).setVisibility(View.GONE);
         user_profile_layout.findViewById(R.id.friend_image).setVisibility(View.GONE);
+
+        userProfileImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserProfileFragment fragment = (UserProfileFragment) mBaseFragment.getActivity().getSupportFragmentManager().findFragmentByTag(UserProfileFragment.TAG);
+                if (fragment!=null && user.getId() == fragment.getUserId()){
+                    Log.d(TAG, "User Profile is already loaded for same user");
+                }
+                else {
+                    FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                    fragmentLoader.loadUserProfileFragment(new Gson().toJson(user), null);
+                }
+            }
+        });
     }
 }

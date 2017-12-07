@@ -22,6 +22,8 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
 import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideComp;
+import com.digitusrevolution.rideshare.component.RideRequestComp;
+import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
@@ -29,6 +31,7 @@ import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
+import com.digitusrevolution.rideshare.model.user.domain.core.User;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -53,7 +56,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class HomePageWithCurrentRidesFragment extends BaseFragment
-        implements ThumbnailCoTravellerAdapter.ThumbnailCoTravellerAdapterListener, OnMapReadyCallback{
+        implements OnMapReadyCallback{
 
     public static final String TAG = HomePageWithCurrentRidesFragment.class.getName();
     public static final String TITLE = "Ride Share";
@@ -165,29 +168,32 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mMapComp = new MapComp(this, googleMap);
         mMapComp.setPadding(true);
 
-        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
-            //TODO think on how to move this in common location so that we don't have to repeat this
-            //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
-            //Ref - https://stackoverflow.com/questions/7733813/how-can-you-tell-when-a-layout-has-been-drawn
-            mMapView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    //IMP - This is very important to remove the listener else it will get called many times for every view's
-                    // and your setRideOnMap would also be called that many times
-                    //This will ensure only once this is called
-                    mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    Log.d(TAG, "Map Layout is ready");
+        //TODO think on how to move this in common location so that we don't have to repeat this
+        //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
+        //Ref - https://stackoverflow.com/questions/7733813/how-can-you-tell-when-a-layout-has-been-drawn
+        mMapView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                //IMP - This is very important to remove the listener else it will get called many times for every view's
+                // and your setRideOnMap would also be called that many times
+                //This will ensure only once this is called
+                mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                Log.d(TAG, "Map Layout is ready");
+                if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)) {
                     mMapComp.setRideOnMap(mCurrentRide);
                 }
-            });
-        }
-        if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
-            setCurrentLocation();
-        }
+                if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)) {
+                    mMapComp.setRideRequestOnMap(mCurrentRideRequest);
+                }
+                if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
+                    setCurrentLocation();
+                }
+            }
+        });
     }
 
     // Don't move this to BaseFragment or MapComp for resuse, as this will unnecessarily required additional callbacks and lots of complication
-    // Apart from that you can customize the marker icon, move camera to different zoom level which may be required for different fragements
+// Apart from that you can customize the marker icon, move camera to different zoom level which may be required for different fragements
     private void setCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Location Permission not there");
@@ -297,14 +303,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         rideComp.setBasicRideLayout(view);
 
         mRecyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        mLayoutManager.setAutoMeasureEnabled(true);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mAdapter = new ThumbnailCoTravellerAdapter(getActivity(), HomePageWithCurrentRidesFragment.this, (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
-        mRecyclerView.setAdapter(mAdapter);
-
+        mAdapter = new ThumbnailCoTravellerAdapter(this, (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
+        setRecyclerView(mRecyclerView, mAdapter);
     }
 
     private void setCurrentRideRequestView(View view){
@@ -312,8 +312,13 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         //This will make Ride Request layout visible which was set to Gone at the start
         mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
 
-        mCurrentRideRequestTextView = view.findViewById(R.id.ride_request_id_text);
-        mCurrentRideRequestTextView.setText("Current Ride Request Id: "+mCurrentRideRequest.getId());
+        RideRequestComp rideRequestComp = new RideRequestComp(this, mCurrentRideRequest);
+        rideRequestComp.setRideRequestBasicLayout(view);
+
+        if (mCurrentRideRequest.getAcceptedRide()!=null){
+            UserComp userComp = new UserComp(this, null);
+            userComp.setUserProfileSingleRow(view, mCurrentRideRequest.getAcceptedRide().getDriver());
+        }
 
     }
 
@@ -332,11 +337,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onClickOfThumbnailCoTravellerAdapter(BasicUser user) {
-        mFragmentLoader.loadUserProfileFragment(new Gson().toJson(user), null);
     }
 
     /**

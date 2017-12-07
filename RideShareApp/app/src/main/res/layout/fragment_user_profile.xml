@@ -18,7 +18,7 @@
     <include layout="@layout/user_profile_single_row_layout" android:id="@+id/user_profile_single_row_layout"
              android:layout_gravity="center_horizontal"
              android:layout_height="wrap_content"
-             android:layout_width="match_parent"
+             android:layout_width="wrap_content"
         android:layout_marginStart="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
         android:layout_marginBottom="@dimen/default_margin"/>
@@ -60,13 +60,13 @@
 
 
     <TextView android:id="@+id/mutual_friends_count_text"
-              android:layout_width="match_parent"
+              android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="Mutual Friends - 10"
               android:drawableStart="@drawable/ic_friends"
               android:drawablePadding="@dimen/default_padding"
               android:textStyle="bold|italic"
-              android:paddingTop="@dimen/default_margin"
+              android:paddingTop="@dimen/small_margin"
               android:paddingBottom="@dimen/default_margin"
               android:paddingStart="@dimen/default_margin"
               android:layout_gravity="start"/>
@@ -88,7 +88,7 @@
               android:paddingTop="@dimen/default_margin"
               android:paddingBottom="@dimen/default_margin"
               android:paddingStart="@dimen/default_margin"
-              android:layout_width="match_parent"
+              android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="Common Groups - 10"
               android:drawableStart="@drawable/ic_group"

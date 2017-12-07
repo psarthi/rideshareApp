@@ -56,5 +56,7 @@
     <string name="pickup_time_variation">Pickup Time Variation (min)</string>
     <string name="from_adress_hint">From</string>
     <string name="to_address_hint">To</string>
-    <string name="ride_offer_id_text">Ride Offer No.</string>
+    <string name="ride_offer_id_text">"Ride Offer No. "</string>
+    <string name="ride_request_id_text">"Ride Request No. "</string>
+    <string name="distance_metrics">" mtrs"</string>
 </resources>
