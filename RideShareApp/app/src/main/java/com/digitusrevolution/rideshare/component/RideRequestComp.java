@@ -27,7 +27,7 @@ public class RideRequestComp{
 
     public static final String TAG = RideRequestComp.class.getName();
     BaseFragment mBaseFragment;
-    FullRideRequest mRideRequest;
+    private FullRideRequest mRideRequest;
     private CommonUtil mCommonUtil;
 
     public RideRequestComp(BaseFragment fragment, FullRideRequest rideRequest){
@@ -35,7 +35,6 @@ public class RideRequestComp{
         mRideRequest = rideRequest;
         mCommonUtil = new CommonUtil(fragment);
     }
-
 
     public void setPickupTimeAndBillLayout(View view, BasicRideRequest rideRequest){
         View layout = view.findViewById(R.id.pickup_time_bill_layout);
@@ -60,6 +59,63 @@ public class RideRequestComp{
         TextView dropPointTextView = layout.findViewById(R.id.ride_drop_point_text);
         dropPointTextView.setText(rideRequest.getRideDropPointAddress());
 
+    }
+
+    public void setCoTravellerButtonsOnClickListener(final View view, final BasicRideRequest rideRequest){
+        //Don't get on layout as its not an external layout which is used as include, get on view.findviewbyId
+        Button rejectButton = view.findViewById(R.id.co_traveller_reject_button);
+        Button pickupButton = view.findViewById(R.id.co_traveller_pickup_button);
+        Button dropButton = view.findViewById(R.id.co_traveller_drop_button);
+
+        rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Passenger Rejected - " + rideRequest.getPassenger().getFirstName());
+                updateCoTravellerButtonsVisibility(view, rideRequest);
+            }
+        });
+
+        pickupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Passenger Picked - " + rideRequest.getPassenger().getFirstName());
+                updateCoTravellerButtonsVisibility(view, rideRequest);
+            }
+        });
+
+        dropButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Passenger Dropped - " + rideRequest.getPassenger().getFirstName());
+                updateCoTravellerButtonsVisibility(view, rideRequest);
+            }
+        });
+    }
+
+    public void updateCoTravellerButtonsVisibility(View view, final BasicRideRequest rideRequest){
+
+        //Don't get on layout as its not an external layout which is used as include, get on view.findviewbyId
+        Button rejectButton = view.findViewById(R.id.co_traveller_reject_button);
+        Button pickupButton = view.findViewById(R.id.co_traveller_pickup_button);
+        Button dropButton = view.findViewById(R.id.co_traveller_drop_button);
+        RatingBar ratingBar = view.findViewById(R.id.co_traveller_rating_bar);
+        View buttonsLayout = view.findViewById(R.id.co_traveller_buttons_layout);
+
+        //Intial value of rating bar
+        ratingBar.setVisibility(View.GONE);
+
+        if (rideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
+            pickupButton.setVisibility(View.GONE);
+            dropButton.setVisibility(View.GONE);
+        }
+        if (rideRequest.getPassengerStatus().equals(PassengerStatus.Picked)){
+            rejectButton.setVisibility(View.GONE);
+            pickupButton.setVisibility(View.GONE);
+        }
+        if (rideRequest.getPassengerStatus().equals(PassengerStatus.Dropped)){
+            buttonsLayout.setVisibility(View.GONE);
+            ratingBar.setVisibility(View.VISIBLE);
+        }
     }
 }
 

@@ -32,6 +32,7 @@ public class RideRequest {
 	private int dropPointVariation;
 	private RideRequestStatus status;
 	private User passenger;
+	private PassengerStatus passengerStatus;
 	private boolean ridePreference;
 	private Collection<Ride> preferredRides = new HashSet<Ride>();
 	private Ride acceptedRide;
@@ -272,5 +273,13 @@ public class RideRequest {
 
 	public void setBill(Bill bill) {
 		this.bill = bill;
+	}
+
+	public PassengerStatus getPassengerStatus() {
+		return passengerStatus;
+	}
+
+	public void setPassengerStatus(PassengerStatus passengerStatus) {
+		this.passengerStatus = passengerStatus;
 	}
 }

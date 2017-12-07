@@ -16,6 +16,7 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRidePassenger;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 
 import java.util.List;
 
@@ -27,14 +28,12 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
 
     public static final String TAG = CoTravellerAdapter.class.getName();
     private List<BasicRideRequest> mRideRequests;
-    private List<BasicRidePassenger> mRidePassengers;
     private BaseFragment mBaseFragment;
 
-    public CoTravellerAdapter(BaseFragment fragment, List<BasicRideRequest> rideRequests, List<BasicRidePassenger> passengers){
+    public CoTravellerAdapter(BaseFragment fragment, List<BasicRideRequest> rideRequests){
         super(fragment.getActivity(),-1,rideRequests);
         mRideRequests = rideRequests;
         mBaseFragment = fragment;
-        mRidePassengers = passengers;
     }
 
     @Override
@@ -57,19 +56,18 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
         LayoutInflater inflater = LayoutInflater.from(mBaseFragment.getActivity());
         convertView = inflater.inflate(R.layout.ride_co_traveller_layout, parent, false);
 
-        UserComp userComp = new UserComp(mBaseFragment, rideRequest.getPassenger());
-        userComp.setUserProfileSingleRow(convertView);
-
-        //Note - ridePassenger is different than passenger, so sending with function
-        BasicRidePassenger ridePassenger = getPassenger(rideRequest);
-        //This will set the visibility of co traveller buttons initially
-        userComp.updateCoTravellerButtonsVisibility(convertView, ridePassenger);
-        //This will set the listeners on co traveller buttons
-        userComp.setCoTravellerButtonsOnClickListener(convertView,ridePassenger);
+        UserComp userComp = new UserComp(mBaseFragment, null);
+        userComp.setUserProfileSingleRow(convertView, rideRequest.getPassenger());
 
         RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, null);
         rideRequestComp.setPickupTimeAndBillLayout(convertView, rideRequest);
         rideRequestComp.setRidePickupDropPointsLayout(convertView, rideRequest);
+        //This will set the visibility of co traveller buttons initially
+        rideRequestComp.updateCoTravellerButtonsVisibility(convertView, rideRequest);
+        //This will set the listeners on co traveller buttons
+        rideRequestComp.setCoTravellerButtonsOnClickListener(convertView, rideRequest);
+
+
 
         RatingBar ratingBar = convertView.findViewById(R.id.co_traveller_rating_bar);
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -80,15 +78,5 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
         });
 
         return convertView;
-    }
-
-    private BasicRidePassenger getPassenger(BasicRideRequest rideRequest) {
-        for (BasicRidePassenger ridePassenger: mRidePassengers){
-            //Don't do ridePassenger.getId which would be wrong as Passenger is inside RidePassenger
-            if (ridePassenger.getPassenger().getId() == rideRequest.getPassenger().getId()){
-                return ridePassenger;
-            }
-        }
-        return null;
     }
 }
