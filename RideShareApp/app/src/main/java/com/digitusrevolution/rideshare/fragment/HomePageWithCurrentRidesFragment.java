@@ -1,6 +1,7 @@
 package com.digitusrevolution.rideshare.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -206,6 +207,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     // Don't move this to BaseFragment or MapComp for resuse, as this will unnecessarily required additional callbacks and lots of complication
 // Apart from that you can customize the marker icon, move camera to different zoom level which may be required for different fragements
     private void setCurrentLocation() {
+        Context context = getActivity();
+        Activity activity = getActivity();
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Location Permission not there");
             //This is important for Fragment and not we are not using Activity requestPermissions method but we are using Fragment requestPermissions,

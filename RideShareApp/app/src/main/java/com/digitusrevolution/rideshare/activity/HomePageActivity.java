@@ -3,6 +3,7 @@ package com.digitusrevolution.rideshare.activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -116,7 +117,6 @@ public class HomePageActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         removeAllBackStacks();
-
         //Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
         if (id == R.id.nav_home) {
             mFragmentLoader.loadHomePageWithCurrentRidesFragment();
@@ -143,10 +143,16 @@ public class HomePageActivity extends BaseActivity
     private void removeAllBackStacks() {
         //This will remove all the fragment from backstack and would start from clean slate
         //So that we don't have too many backstacks items when user clicks on navigation items from anywhere
-        while(getSupportFragmentManager().popBackStackImmediate()){
-            Log.d(TAG,"Backstack Entry Count is:"+getSupportFragmentManager().getBackStackEntryCount());
+        //IMP Note - Don't use following one's - as it will make activity/context as null
+        //  1. while (fragmentManager.getBackStackEntryCount() != 0)
+        //  2. getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        //Use following option only which works fine
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        Log.d(TAG, "Backstack Counts Before is:"+count);
+        for (int i = 0; i < count; i++) {
+            int backStackId = getSupportFragmentManager().getBackStackEntryAt(i).getId();
+            getSupportFragmentManager().popBackStack(backStackId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
-        ;
     }
 
 

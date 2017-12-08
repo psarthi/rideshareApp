@@ -323,6 +323,11 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                     super.onSuccess(statusCode, headers, response);
                                     RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
                                     Log.d(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
+                                    mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
+                                    /*
+                                    //Blocked this for the time being as it was causing issue in loading proper page
+                                    //e.g. even if its current ride but home should have current ride request, then current ride request
+                                    //page would display and user would be confused.
                                     if (rideOfferResult.isCurrentRide()){
                                         mCommonUtil.updateCurrentRide(rideOfferResult.getRide());
                                         Log.d(TAG, "Updated Current Ride");
@@ -330,7 +335,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                     } else {
                                         //This will load the Ride Info fragment
                                         mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
-                                    }
+                                    }*/
                                 }
 
                                 @Override
@@ -349,6 +354,11 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                 super.onSuccess(statusCode, headers, response);
                                 RideRequestResult rideRequestResult = new Gson().fromJson(response.toString(), RideRequestResult.class);
                                 Log.d(TAG, "Ride Request Successfully created with id:"+rideRequestResult.getRideRequest().getId());
+                                mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
+                                /*
+                                    //Blocked this for the time being as it was causing issue in loading proper page
+                                    //e.g. even if its current ride but home should have current ride request, then current ride request
+                                    //page would display and user would be confused.
                                 if (rideRequestResult.isCurrentRideRequest()){
                                     mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
                                     Log.d(TAG, "Updated Current Ride Request");
@@ -356,7 +366,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                 } else {
                                     //This will load the Ride Request Info fragment
                                     mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
-                                }
+                                }*/
                             }
 
                             @Override

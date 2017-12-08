@@ -68,7 +68,7 @@ public class MapComp{
         mWidth = mBaseFragment.getResources().getDisplayMetrics().widthPixels;
         //This is here for experience purpose, we can use either heigth or width whichever make sense
         mHeight = mBaseFragment.getResources().getDisplayMetrics().heightPixels;
-        int topPadding = (int) (mHeight * Constant.LAT_LNG_TOP_PADDING_PERCENT); // offset from edges of the map 10% of screen
+        int topPadding = (int) (mHeight * Constant.LAT_LNG_TOP_PADDING_PERCENT);
         mStandardPadding = (int) (mHeight * Constant.LAT_LNG_STANDARD_PADDING_PERCENT);
         Log.d(TAG, "Width Pixel:"+mWidth+",Heigth Pixel:"+mHeight+",Customm Top Padding Pixel:"+topPadding+",Standard Padding Pixel:"+mStandardPadding);
 
@@ -78,7 +78,8 @@ public class MapComp{
         } else {
             Log.d(TAG, "Setting Custom Padding");
             //This is very important to customize the visibility range of camera
-            mMap.setPadding(mStandardPadding,topPadding, mStandardPadding,mStandardPadding);
+            // void setPadding (int left,int top,int right,int bottom)
+            mMap.setPadding(mStandardPadding,topPadding, mStandardPadding, mStandardPadding);
         }
     }
 
