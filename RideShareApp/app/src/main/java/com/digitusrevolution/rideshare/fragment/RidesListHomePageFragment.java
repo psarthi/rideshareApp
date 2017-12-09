@@ -15,12 +15,20 @@ import com.digitusrevolution.rideshare.adapter.RidesListViewPagerAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.FullUser;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -50,6 +58,8 @@ public class RidesListHomePageFragment extends BaseFragment {
     private BasicUser mUser;
     private FullUser mFullUser;
     private CommonUtil mCommonUtil;
+    private ViewPager mViewPager;
+    private RidesListViewPagerAdapter mRidesListViewPagerAdapter;
 
     public RidesListHomePageFragment() {
         // Required empty public constructor
@@ -91,30 +101,12 @@ public class RidesListHomePageFragment extends BaseFragment {
         final View view = inflater.inflate(R.layout.fragment_rides_list_home_page, container, false);
 
         TabLayout tabLayout = view.findViewById(R.id.rides_tab);
-        final ViewPager viewPager = view.findViewById(R.id.rides_viewPager);
+        mViewPager = view.findViewById(R.id.rides_viewPager);
 
-        final RidesListViewPagerAdapter ridesListViewPagerAdapter = new RidesListViewPagerAdapter(getActivity().getSupportFragmentManager());
+        mRidesListViewPagerAdapter = new RidesListViewPagerAdapter(getActivity().getSupportFragmentManager());
 
-        String GET_USER_ALL_DATA_URL = APIUrl.GET_USER_ALL_DATA_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId())).
-                replace(APIUrl.FETCH_CHILD_VALUE_KEY,"true");
-        RESTClient.get(GET_USER_ALL_DATA_URL, null, new JsonHttpResponseHandler(){
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                Log.d(TAG, "Successfully got Full User:"+mUser.getId());
-                mFullUser = new Gson().fromJson(response.toString(), FullUser.class);
-                mCommonUtil.updateFullUser(mFullUser);
-                //This will set adapter only when we have got response
-                viewPager.setAdapter(ridesListViewPagerAdapter);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                Log.d(TAG, "Unable to get Full User:"+errorResponse.toString());
-            }
-        });
+        loadInitialRidesData(0);
+        loadInitialRideRequestData(0);
 
         TabLayout.Tab offerRidesTab = tabLayout.newTab();
         TabLayout.Tab requestedRidesTab = tabLayout.newTab();
@@ -126,9 +118,9 @@ public class RidesListHomePageFragment extends BaseFragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.d(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
-                Log.d(TAG, "Before - Current Item in ViewPager is:"+viewPager.getCurrentItem());
-                viewPager.setCurrentItem(tab.getPosition());
-                Log.d(TAG, "After - Current Item in ViewPager is:"+viewPager.getCurrentItem());
+                Log.d(TAG, "Before - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
+                mViewPager.setCurrentItem(tab.getPosition());
+                Log.d(TAG, "After - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
             }
 
             @Override
@@ -145,6 +137,44 @@ public class RidesListHomePageFragment extends BaseFragment {
 
         return view;
     }
+
+    private void loadInitialRidesData(int page) {
+        //Initial Data loading
+        String GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
+                .replace(APIUrl.PAGE_KEY, Integer.toString(page));
+
+        RESTClient.get(GET_USER_RIDES_URL, null, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
+                List<FullRide> rides = new Gson().fromJson(response.toString(), listType);
+                mCommonUtil.updateRecentRides(rides);
+                //This will set adapter only when we have got response
+                mViewPager.setAdapter(mRidesListViewPagerAdapter);
+            }
+        });
+    }
+
+    private void loadInitialRideRequestData(int page) {
+        //Initial Data loading
+        String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
+                .replace(APIUrl.PAGE_KEY, Integer.toString(page));
+
+        RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
+                List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
+                mCommonUtil.updateRecentRideRequests(rideRequests);
+                //This will set adapter only when we have got response
+                mViewPager.setAdapter(mRidesListViewPagerAdapter);
+            }
+        });
+    }
+
+
 
     @Override
     public void onResume() {

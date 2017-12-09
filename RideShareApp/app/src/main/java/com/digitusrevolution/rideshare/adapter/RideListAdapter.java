@@ -9,6 +9,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ import java.util.List;
 
 public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.ViewHolder> {
 
-    private List<BasicRide> mRides;
+    private List<FullRide> mRides;
     private BaseFragment mBaseFragment;
 
-    public RideListAdapter(List<BasicRide> rides, BaseFragment fragment) {
+    public RideListAdapter(List<FullRide> rides, BaseFragment fragment) {
         mRides = rides;
         mBaseFragment = fragment;
     }
@@ -39,7 +40,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.ViewHo
     @Override
     public void onBindViewHolder(RideListAdapter.ViewHolder holder, int position) {
         RideComp rideComp = new RideComp(mBaseFragment, null);
-        rideComp.setBasicRideLayout(holder.itemView,mRides.get(position));
+        rideComp.setBasicRideLayout(holder.itemView, mRides.get(position));
     }
 
     @Override

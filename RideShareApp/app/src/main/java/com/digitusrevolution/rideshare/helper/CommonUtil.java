@@ -14,11 +14,15 @@ import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.FullUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by psarthi on 12/6/17.
@@ -98,6 +102,30 @@ public class CommonUtil {
         String currentRideRequest = getSharedPreferences().getString(Constant.SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY,null);
         return new Gson().fromJson(currentRideRequest,FullRideRequest.class);
     }
+
+    public List<FullRide> getRecentRides() {
+        String rides = getSharedPreferences().getString(Constant.SHARED_PREFS_RECENT_RIDE_LIST_KEY,null);
+        Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
+        List<FullRide> recentRides = new Gson().fromJson(rides, listType);
+        return recentRides;
+    }
+
+    public List<FullRideRequest> getRecentRideRequests() {
+        String rides = getSharedPreferences().getString(Constant.SHARED_PREFS_RECENT_RIDE_REQUEST_LIST_KEY,null);
+        Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
+        List<FullRideRequest> recentRideRequests = new Gson().fromJson(rides, listType);
+        return recentRideRequests;
+    }
+
+
+    public void updateRecentRides(List<FullRide> recentRides){
+        updateInSharedPref(Constant.SHARED_PREFS_RECENT_RIDE_LIST_KEY,new Gson().toJson(recentRides));
+    }
+
+    public void updateRecentRideRequests(List<FullRideRequest> recentRideRequests){
+        updateInSharedPref(Constant.SHARED_PREFS_RECENT_RIDE_REQUEST_LIST_KEY,new Gson().toJson(recentRideRequests));
+    }
+
 
     public void updateAccessToken(String token){
         updateInSharedPref(Constant.SHARED_PREFS_TOKEN_KEY,token);

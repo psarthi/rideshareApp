@@ -20,6 +20,7 @@ public class APIUrl {
     public static final String departureEpochSecond_KEY = "{departureEpochSecond}";
     public static final String GOOGLE_API_KEY = "{key}";
     public static final String FETCH_CHILD_VALUE_KEY = "{fetchChildValue}";
+    public static final String PAGE_KEY = "{page}";
 
 
     public static final String GET_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/domain/riderequests/{id}?fetchChild=true";
@@ -34,6 +35,8 @@ public class APIUrl {
     public static final String USER_REGISTRATION_URL = BASE_URL_USER_SYSTEM + "/users";
     public static final String ADD_VEHICLE_URL = BASE_URL_USER_SYSTEM + "/users/{id}/vehicles";
     public static final String GET_USER_ALL_DATA_URL = BASE_URL_USER_SYSTEM + "/users/{id}?fetchChild={fetchChildValue}";
+    public static final String GET_USER_RIDES_URL = BASE_URL_USER_SYSTEM + "/users/{id}/rides/{page}";
+    public static final String GET_USER_RIDE_REQUESTS_URL = BASE_URL_USER_SYSTEM + "/users/{id}/riderequests/{page}";
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +
             "&destination={destinationLat},{destinationLng}&departure_time={departureEpochSecond}&key={key}";

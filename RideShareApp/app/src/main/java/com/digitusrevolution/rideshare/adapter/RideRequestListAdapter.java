@@ -9,6 +9,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ import java.util.List;
 
 public class RideRequestListAdapter extends RecyclerView.Adapter<RideRequestListAdapter.ViewHolder> {
 
-    private List<BasicRideRequest> mRideRequests;
+    private List<FullRideRequest> mRideRequests;
     private BaseFragment mBaseFragment;
 
-    public RideRequestListAdapter(List<BasicRideRequest> rideRequests, BaseFragment fragment) {
+    public RideRequestListAdapter(List<FullRideRequest> rideRequests, BaseFragment fragment) {
         mRideRequests = rideRequests;
         mBaseFragment = fragment;
     }

@@ -11,23 +11,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
 import com.digitusrevolution.rideshare.adapter.RideListAdapter;
 import com.digitusrevolution.rideshare.adapter.RideRequestListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
-import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.FullUser;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONObject;
+import org.json.JSONArray;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,9 +53,15 @@ public class RidesListFragment extends BaseFragment {
     private BasicUser mUser;
     private FullUser mFullUser;
     private CommonUtil mCommonUtil;
+    private List<FullRide> mRides = new ArrayList<>();
+    private List<FullRideRequest> mRideRequests = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+
+    // Store a member variable for the listener
+    private EndlessRecyclerViewScrollListener mScrollListener;
 
     public RidesListFragment() {
         // Required empty public constructor
@@ -84,6 +92,8 @@ public class RidesListFragment extends BaseFragment {
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
         mFullUser = mCommonUtil.getFullUser();
+        mRides = mCommonUtil.getRecentRides();
+        mRideRequests = mCommonUtil.getRecentRideRequests();
     }
 
     @Override
@@ -91,19 +101,82 @@ public class RidesListFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_rides_list, container, false);
+
         mRecyclerView = view.findViewById(R.id.rides_list);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        layoutManager.setAutoMeasureEnabled(true);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+
+        mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(page);
+            }
+        };
+
+        mRecyclerView.addOnScrollListener(mScrollListener);
         setAdapter();
+
         return view;
     }
 
-    private void setAdapter() {
-        RecyclerView.Adapter adapter;
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+
         if (mRideType.equals(RideType.OfferRide)){
-            adapter = new RideListAdapter((List<BasicRide>)mFullUser.getRidesOffered(), this);
+            String GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
+                    .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+
+            RESTClient.get(GET_USER_RIDES_URL, null, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
+
+                    Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
+                    List<FullRide> newRides = new Gson().fromJson(response.toString(), listType);
+                    //Since object is pass by reference, so when you add in mRides, this will be reflected everywhere
+                    mRides.addAll(newRides);
+                    mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRides.size()-1);
+                    //mAdapter.notifyDataSetChanged();
+                }
+            });
         } else {
-            adapter = new RideRequestListAdapter((List<BasicRideRequest>)mFullUser.getRideRequests(), this);
+            String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
+                    .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+
+            RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
+                    Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
+                    List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
+                    mRideRequests.addAll(rideRequests);
+                    mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRideRequests.size()-1);
+                    //mAdapter.notifyDataSetChanged();
+                }
+            });
         }
-        setRecyclerView(mRecyclerView, adapter, LinearLayoutManager.VERTICAL);
+    }
+
+    private void setAdapter() {
+        if (mRideType.equals(RideType.OfferRide)){
+            Log.d(TAG, "Setting Adapter for Offer Ride. Size:" + mRides.size());
+            mAdapter = new RideListAdapter(mRides, this);
+        } else {
+            Log.d(TAG, "Setting Adapter for Requested Ride. Size:" + mRideRequests.size());
+            mAdapter = new RideRequestListAdapter(mRideRequests, this);
+        }
+        mRecyclerView.setAdapter(mAdapter);
+        //setRecyclerView(mRecyclerView, adapter, LinearLayoutManager.VERTICAL);
     }
 
 
