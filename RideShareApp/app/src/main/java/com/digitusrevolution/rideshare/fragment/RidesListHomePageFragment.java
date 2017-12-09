@@ -60,6 +60,7 @@ public class RidesListHomePageFragment extends BaseFragment {
     private CommonUtil mCommonUtil;
     private ViewPager mViewPager;
     private RidesListViewPagerAdapter mRidesListViewPagerAdapter;
+    private boolean mInitialDataLoaded;
 
     public RidesListHomePageFragment() {
         // Required empty public constructor
@@ -85,6 +86,7 @@ public class RidesListHomePageFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -92,21 +94,19 @@ public class RidesListHomePageFragment extends BaseFragment {
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
+        mRidesListViewPagerAdapter = new RidesListViewPagerAdapter(getActivity().getSupportFragmentManager());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView");
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_rides_list_home_page, container, false);
 
         TabLayout tabLayout = view.findViewById(R.id.rides_tab);
         mViewPager = view.findViewById(R.id.rides_viewPager);
-
-        mRidesListViewPagerAdapter = new RidesListViewPagerAdapter(getActivity().getSupportFragmentManager());
-
-        loadInitialRidesData(0);
-        loadInitialRideRequestData(0);
+        mViewPager.setAdapter(mRidesListViewPagerAdapter);
 
         TabLayout.Tab offerRidesTab = tabLayout.newTab();
         TabLayout.Tab requestedRidesTab = tabLayout.newTab();
@@ -138,46 +138,9 @@ public class RidesListHomePageFragment extends BaseFragment {
         return view;
     }
 
-    private void loadInitialRidesData(int page) {
-        //Initial Data loading
-        String GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
-                .replace(APIUrl.PAGE_KEY, Integer.toString(page));
-
-        RESTClient.get(GET_USER_RIDES_URL, null, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
-                List<FullRide> rides = new Gson().fromJson(response.toString(), listType);
-                mCommonUtil.updateRecentRides(rides);
-                //This will set adapter only when we have got response
-                mViewPager.setAdapter(mRidesListViewPagerAdapter);
-            }
-        });
-    }
-
-    private void loadInitialRideRequestData(int page) {
-        //Initial Data loading
-        String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
-                .replace(APIUrl.PAGE_KEY, Integer.toString(page));
-
-        RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
-                List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
-                mCommonUtil.updateRecentRideRequests(rideRequests);
-                //This will set adapter only when we have got response
-                mViewPager.setAdapter(mRidesListViewPagerAdapter);
-            }
-        });
-    }
-
-
-
     @Override
     public void onResume() {
+        Log.d(TAG,"onResume");
         super.onResume();
         getActivity().setTitle(TITLE);
     }
@@ -202,6 +165,7 @@ public class RidesListHomePageFragment extends BaseFragment {
 
     @Override
     public void onDetach() {
+        Log.d(TAG,"onDetach");
         super.onDetach();
         mListener = null;
     }

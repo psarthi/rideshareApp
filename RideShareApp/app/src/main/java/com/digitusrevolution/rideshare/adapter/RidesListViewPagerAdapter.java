@@ -1,5 +1,6 @@
 package com.digitusrevolution.rideshare.adapter;
 
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -48,4 +49,14 @@ public class RidesListViewPagerAdapter extends FragmentStatePagerAdapter{
     public int getCount() {
         return 2;
     }
+
+    @Override
+    public Parcelable saveState() {
+        return null;
+    }
+
+    @Override
+    public void restoreState(Parcelable state, ClassLoader loader) {
+    }
+
 }

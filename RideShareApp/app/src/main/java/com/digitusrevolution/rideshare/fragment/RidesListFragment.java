@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.LandingPageActivity;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
 import com.digitusrevolution.rideshare.adapter.RideListAdapter;
 import com.digitusrevolution.rideshare.adapter.RideRequestListAdapter;
@@ -47,11 +48,11 @@ public class RidesListFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RIDE_TYPE = "rideType";
+    private static final String TAG = RidesListFragment.class.getName();
 
     // TODO: Rename and change types of parameters
     private RideType mRideType;
     private BasicUser mUser;
-    private FullUser mFullUser;
     private CommonUtil mCommonUtil;
     private List<FullRide> mRides = new ArrayList<>();
     private List<FullRideRequest> mRideRequests = new ArrayList<>();
@@ -76,6 +77,7 @@ public class RidesListFragment extends BaseFragment {
      */
     // TODO: Rename and change types and number of parameters
     public static RidesListFragment newInstance(RideType rideType) {
+        Log.d(TAG,"newInstance");
         RidesListFragment fragment = new RidesListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_RIDE_TYPE, rideType.toString());
@@ -85,20 +87,20 @@ public class RidesListFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        mFullUser = mCommonUtil.getFullUser();
-        mRides = mCommonUtil.getRecentRides();
-        mRideRequests = mCommonUtil.getRecentRideRequests();
+        loadInitialData();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_rides_list, container, false);
 
@@ -118,9 +120,53 @@ public class RidesListFragment extends BaseFragment {
         };
 
         mRecyclerView.addOnScrollListener(mScrollListener);
-        setAdapter();
 
         return view;
+    }
+
+
+    private void loadInitialData() {
+        if (mRideType.equals(RideType.OfferRide)){
+            //Initial Data loading
+            String GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
+                    .replace(APIUrl.PAGE_KEY, Integer.toString(0));
+
+            RESTClient.get(GET_USER_RIDES_URL, null, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
+                    Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
+                    mRides = new Gson().fromJson(response.toString(), listType);
+                    setAdapter();
+                }
+            });
+        } else {
+            //Initial Data loading
+            String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
+                    .replace(APIUrl.PAGE_KEY, Integer.toString(0));
+
+            RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
+                    Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
+                    mRideRequests = new Gson().fromJson(response.toString(), listType);
+                    setAdapter();
+                }
+            });
+        }
+    }
+
+    private void setAdapter() {
+        if (mRideType.equals(RideType.OfferRide)){
+            Log.d(TAG, "Setting Adapter for Offer Ride. Size:" + mRides.size());
+            mAdapter = new RideListAdapter(mRides, this);
+        } else {
+            Log.d(TAG, "Setting Adapter for Requested Ride. Size:" + mRideRequests.size());
+            mAdapter = new RideRequestListAdapter(mRideRequests, this);
+        }
+        mRecyclerView.setAdapter(mAdapter);
+        //setRecyclerView(mRecyclerView, adapter, LinearLayoutManager.VERTICAL);
     }
 
     // Append the next page of data into the adapter
@@ -146,7 +192,6 @@ public class RidesListFragment extends BaseFragment {
                     //Since object is pass by reference, so when you add in mRides, this will be reflected everywhere
                     mRides.addAll(newRides);
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRides.size()-1);
-                    //mAdapter.notifyDataSetChanged();
                 }
             });
         } else {
@@ -161,24 +206,10 @@ public class RidesListFragment extends BaseFragment {
                     List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
                     mRideRequests.addAll(rideRequests);
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRideRequests.size()-1);
-                    //mAdapter.notifyDataSetChanged();
                 }
             });
         }
     }
-
-    private void setAdapter() {
-        if (mRideType.equals(RideType.OfferRide)){
-            Log.d(TAG, "Setting Adapter for Offer Ride. Size:" + mRides.size());
-            mAdapter = new RideListAdapter(mRides, this);
-        } else {
-            Log.d(TAG, "Setting Adapter for Requested Ride. Size:" + mRideRequests.size());
-            mAdapter = new RideRequestListAdapter(mRideRequests, this);
-        }
-        mRecyclerView.setAdapter(mAdapter);
-        //setRecyclerView(mRecyclerView, adapter, LinearLayoutManager.VERTICAL);
-    }
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(String data) {
@@ -200,6 +231,7 @@ public class RidesListFragment extends BaseFragment {
 
     @Override
     public void onDetach() {
+        Log.d(TAG,"onDetach");
         super.onDetach();
         mListener = null;
     }
