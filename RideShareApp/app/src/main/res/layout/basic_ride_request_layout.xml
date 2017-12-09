@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Its important to give id here so that we can use this layout directly inside our components
+as well as inside any other layout as well e.g. In HomePage as well as RidesList-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
+              android:id="@+id/basic_ride_request_layout"
               android:paddingTop="@dimen/default_padding"
               android:paddingLeft="@dimen/default_padding"
               android:paddingRight="@dimen/default_padding"
@@ -71,9 +74,9 @@
               android:maxLines="1"/>
 
     <LinearLayout android:id="@+id/ride_request_buttons_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start">
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="start">
 
         <Button android:id="@+id/ride_request_cancel_button"
                 style="?android:attr/borderlessButtonStyle"
@@ -95,5 +98,9 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:background="@color/colorGrayLight"/>
 
 </LinearLayout>

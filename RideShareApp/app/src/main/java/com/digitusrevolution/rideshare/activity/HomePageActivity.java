@@ -21,6 +21,8 @@ import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
+import com.digitusrevolution.rideshare.fragment.RidesListFragment;
+import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
@@ -39,7 +41,9 @@ public class HomePageActivity extends BaseActivity
         RidesOptionFragment.OnFragmentInteractionListener,
         RideInfoFragment.OnFragmentInteractionListener,
         RideRequestInfoFragment.OnFragmentInteractionListener,
-        UserProfileFragment.OnFragmentInteractionListener{
+        UserProfileFragment.OnFragmentInteractionListener,
+        RidesListHomePageFragment.OnFragmentInteractionListener,
+        RidesListFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -121,14 +125,11 @@ public class HomePageActivity extends BaseActivity
         if (id == R.id.nav_home) {
             mFragmentLoader.loadHomePageWithCurrentRidesFragment();
         } else if (id == R.id.nav_rides) {
-            mFragmentLoader.loadRideInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRide()));
-
-        } else if (id == R.id.nav_payments) {
-            mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRideRequest()));
+            mFragmentLoader.loadRidesListFragment();
         } else if (id == R.id.nav_friends) {
-
+            mFragmentLoader.loadRideInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRide()));
         } else if (id == R.id.nav_groups) {
-
+            mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRideRequest()));
         } else if (id == R.id.nav_vehicles) {
             mFragmentLoader.loadAddVehicleFragment(RideType.RequestRide,null);
         } else if (id == R.id.nav_preference) {
@@ -264,6 +265,16 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onUserProfileFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onRidesListFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onRidesListHomePageFragmentInteraction(String data) {
 
     }
 }

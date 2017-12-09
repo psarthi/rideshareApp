@@ -14,6 +14,7 @@ public class Constant {
     public static final String SHARED_PREFS_KEY_FILE = ".rideshare";
     public static final String SHARED_PREFS_TOKEN_KEY = "token";
     public static final String SHARED_PREFS_USER_KEY = "user";
+    public static final String SHARED_PREFS_FULL_USER_KEY = "fullUser";
     public static final String SHARED_PREFS_CURRENT_RIDE_KEY = "currentRide";
     public static final String SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY = "currentRideRequest";
     public static final int ACCESS_FINE_LOCATION_REQUEST_CODE=1;

@@ -3,7 +3,6 @@ package com.digitusrevolution.rideshare.component;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.BaseActivity;
@@ -13,11 +12,11 @@ import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
+import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.app.RideType;
-import com.google.gson.Gson;
 
 /**
  * Created by psarthi on 12/6/17.
@@ -111,4 +110,14 @@ public class FragmentLoader {
         fragmentTransaction.addToBackStack(RideRequestInfoFragment.TAG);
         fragmentTransaction.commit();
     }
+
+    public void loadRidesListFragment() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        RidesListHomePageFragment ridesListHomePageFragment = RidesListHomePageFragment.
+                newInstance(null, null);
+        fragmentTransaction.replace(R.id.home_page_container, ridesListHomePageFragment, RidesListHomePageFragment.TAG);
+        fragmentTransaction.addToBackStack(RidesListHomePageFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
 }

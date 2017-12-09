@@ -212,7 +212,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         mDateTextView = view.findViewById(R.id.create_rides_date_text);
         mTimeTextView = view.findViewById(R.id.create_rides_time_text);
         mDefaultTextColor = mTimeTextView.getTextColors().getDefaultColor();
-                //Set current time
+        //Set current time
         mDateTextView.setText(mCommonUtil.getFormattedDateString(mStartTimeCalendar.getTime()));
         mTimeTextView.setText(mCommonUtil.getTimeIn12HrFormat(mStartTimeCalendar.get(Calendar.HOUR_OF_DAY),mStartTimeCalendar.get(Calendar.MINUTE)));
         Log.d(TAG,"Current Time in Millis:"+mStartTimeCalendar.getTimeInMillis());
@@ -323,6 +323,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                     super.onSuccess(statusCode, headers, response);
                                     RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
                                     Log.d(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
+                                    if (rideOfferResult.isCurrentRide()) {
+                                        mCommonUtil.updateCurrentRide(rideOfferResult.getRide());
+                                        Log.d(TAG, "Updated Current Ride");
+                                    }
                                     mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
                                     /*
                                     //Blocked this for the time being as it was causing issue in loading proper page
@@ -354,6 +358,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                 super.onSuccess(statusCode, headers, response);
                                 RideRequestResult rideRequestResult = new Gson().fromJson(response.toString(), RideRequestResult.class);
                                 Log.d(TAG, "Ride Request Successfully created with id:"+rideRequestResult.getRideRequest().getId());
+                                if (rideRequestResult.isCurrentRideRequest()) {
+                                    mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
+                                    Log.d(TAG, "Updated Current Ride Request");
+                                }
                                 mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
                                 /*
                                     //Blocked this for the time being as it was causing issue in loading proper page
@@ -668,7 +676,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             if (mFromLatLng!=null) mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mFromLatLng,Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
             if (mToLatLng!=null) mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mToLatLng,Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
         } else {
-                LatLngBounds bounds = getBounds();
+            LatLngBounds bounds = getBounds();
             //Note - padding should be "0" as we have already set padding on map seperately using setPadding()
             mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,0));
             Log.d(TAG, "To Field exist, so using latlng bounds camera zoom");

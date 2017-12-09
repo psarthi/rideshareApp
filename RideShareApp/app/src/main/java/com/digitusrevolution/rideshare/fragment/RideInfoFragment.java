@@ -21,6 +21,7 @@ import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.RejectCoTravellerFragment;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.google.android.gms.maps.GoogleMap;
@@ -94,7 +95,7 @@ public class RideInfoFragment extends BaseFragment implements
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_info, container, false);
         RideComp rideComp = new RideComp(this, mRide);
-        rideComp.setBasicRideLayout(view);
+        rideComp.setBasicRideLayout(view, (BasicRide) mRide);
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_info_map);
         mapFragment.getMapAsync(this);

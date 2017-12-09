@@ -15,6 +15,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -81,7 +82,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_request_info, container, false);
         RideRequestComp rideRequestComp = new RideRequestComp(this, mRideRequest);
-        rideRequestComp.setRideRequestBasicLayout(view);
+        rideRequestComp.setRideRequestBasicLayout(view, (BasicRideRequest) mRideRequest);
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_request_info_map);
         mapFragment.getMapAsync(this);

@@ -13,10 +13,6 @@
             android:id="@+id/nav_rides"
             android:icon="@android:drawable/btn_default"
             android:title="Rides"/>
-        <item
-            android:id="@+id/nav_payments"
-            android:icon="@android:drawable/btn_default"
-            android:title="Payments"/>
     </group>
 
     <group android:checkableBehavior="single" android:id="@+id/trust_network_menu">

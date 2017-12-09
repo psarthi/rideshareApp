@@ -1,57 +1,14 @@
 package com.digitusrevolution.rideshare.fragment;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.config.APIUrl;
-import com.digitusrevolution.rideshare.config.Constant;
-import com.digitusrevolution.rideshare.helper.RESTClient;
-import com.digitusrevolution.rideshare.model.app.RideType;
-import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
-import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
-import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
-import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
-import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
-import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by psarthi on 11/21/17.
@@ -93,8 +50,8 @@ public class BaseFragment extends Fragment{
 
     }
 
-    public void setRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter){
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+    public void setRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter, int orientation){
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), orientation, false);
         layoutManager.setAutoMeasureEnabled(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);

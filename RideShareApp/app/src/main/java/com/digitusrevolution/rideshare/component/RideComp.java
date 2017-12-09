@@ -11,7 +11,9 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
+import com.digitusrevolution.rideshare.model.ride.domain.core.Ride;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 
@@ -39,20 +41,20 @@ public class RideComp {
         mCommonUtil = new CommonUtil(fragment);
     }
 
-    public void setBasicRideLayout(View view){
+    public void setBasicRideLayout(View view, BasicRide ride){
 
         View basic_ride_layout = view.findViewById(R.id.basic_ride_layout);
         TextView rideIdTextView = basic_ride_layout.findViewById(R.id.ride_id_text);
-        String rideIdText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text) +mRide.getId();
+        String rideIdText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text) +ride.getId();
         rideIdTextView.setText(rideIdText);
         TextView rideStatusTextView = basic_ride_layout.findViewById(R.id.ride_status_text);
-        rideStatusTextView.setText(mRide.getStatus().toString());
+        rideStatusTextView.setText(ride.getStatus().toString());
         TextView rideStartTimeTextView = basic_ride_layout.findViewById(R.id.ride_start_time_text);
-        rideStartTimeTextView.setText(mCommonUtil.getFormattedDateTimeString(mRide.getStartTime()));
+        rideStartTimeTextView.setText(mCommonUtil.getFormattedDateTimeString(ride.getStartTime()));
         TextView rideStartPointTextView = basic_ride_layout.findViewById(R.id.ride_start_point_text);
-        rideStartPointTextView.setText(mRide.getStartPointAddress());
+        rideStartPointTextView.setText(ride.getStartPointAddress());
         TextView rideEndPointTextView = basic_ride_layout.findViewById(R.id.ride_end_point_text);
-        rideEndPointTextView.setText(mRide.getEndPointAddress());
+        rideEndPointTextView.setText(ride.getEndPointAddress());
 
         mCancelButton = basic_ride_layout.findViewById(R.id.ride_cancel_button);
         mStartButton = basic_ride_layout.findViewById(R.id.ride_start_button);
@@ -60,18 +62,18 @@ public class RideComp {
         mBasicRideButtonsLayout = basic_ride_layout.findViewById(R.id.ride_buttons_layout);
 
         //This will set the visibility of ride buttons initially
-        updateBasicRideLayoutButtonsVisibility();
+        updateBasicRideLayoutButtonsVisibility(ride);
         //This will set listeners for ride buttons
-        setBasicRideLayoutButtonsOnClickListener();
+        setBasicRideLayoutButtonsOnClickListener(ride);
     }
 
-    private void setBasicRideLayoutButtonsOnClickListener() {
+    private void setBasicRideLayoutButtonsOnClickListener(final BasicRide ride) {
 
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Ride Cancelled");
-                updateBasicRideLayoutButtonsVisibility();
+                updateBasicRideLayoutButtonsVisibility(ride);
             }
         });
 
@@ -79,7 +81,7 @@ public class RideComp {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Ride Started");
-                updateBasicRideLayoutButtonsVisibility();
+                updateBasicRideLayoutButtonsVisibility(ride);
             }
         });
 
@@ -87,20 +89,20 @@ public class RideComp {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Ride Ended");
-                updateBasicRideLayoutButtonsVisibility();
+                updateBasicRideLayoutButtonsVisibility(ride);
             }
         });
     }
 
-    private void updateBasicRideLayoutButtonsVisibility(){
-        if (mRide.getStatus().equals(RideStatus.Planned)){
+    private void updateBasicRideLayoutButtonsVisibility(BasicRide ride){
+        if (ride.getStatus().equals(RideStatus.Planned)){
             mEndButton.setVisibility(View.GONE);
         }
-        if (mRide.getStatus().equals(RideStatus.Started)){
+        if (ride.getStatus().equals(RideStatus.Started)){
             mCancelButton.setVisibility(View.GONE);
             mStartButton.setVisibility(View.GONE);
         }
-        if (mRide.getStatus().equals(RideStatus.Finished) || mRide.getStatus().equals(RideStatus.Cancelled)){
+        if (ride.getStatus().equals(RideStatus.Finished) || ride.getStatus().equals(RideStatus.Cancelled)){
             mBasicRideButtonsLayout.setVisibility(View.GONE);
         }
     }

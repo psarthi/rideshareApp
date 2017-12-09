@@ -8,17 +8,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
-import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.google.android.gms.auth.GoogleAuthException;
-
-import java.util.Date;
 
 /**
  * Created by psarthi on 12/6/17.
@@ -44,54 +39,54 @@ public class RideRequestComp{
         mCommonUtil = new CommonUtil(fragment);
     }
 
-    public void setRideRequestBasicLayout(View view){
+    public void setRideRequestBasicLayout(View view, BasicRideRequest rideRequest){
         View layout = view.findViewById(R.id.basic_ride_request_layout);
-        String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)+ mRideRequest.getId();
+        String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)+ rideRequest.getId();
         ((TextView) layout.findViewById(R.id.ride_request_id_text)).setText(rideRequestNumberText);
-        ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(mRideRequest.getStatus().toString());
-        String pickupTime = mCommonUtil.getFormattedDateTimeString(mRideRequest.getPickupTime());
+        ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(rideRequest.getStatus().toString());
+        String pickupTime = mCommonUtil.getFormattedDateTimeString(rideRequest.getPickupTime());
         ((TextView) layout.findViewById(R.id.ride_request_pickup_time_text)).setText(pickupTime);
         //TODO get confirmation code post backend finalization
         //((TextView) layout.findViewById(R.id.ride_request_confirmation_code_text)).setText();
 
-        ((TextView) layout.findViewById(R.id.ride_request_pickup_point_text)).setText(mRideRequest.getPickupPointAddress());
-        ((TextView) layout.findViewById(R.id.ride_request_drop_point_text)).setText(mRideRequest.getDropPointAddress());
+        ((TextView) layout.findViewById(R.id.ride_request_pickup_point_text)).setText(rideRequest.getPickupPointAddress());
+        ((TextView) layout.findViewById(R.id.ride_request_drop_point_text)).setText(rideRequest.getDropPointAddress());
 
         mCancelButton = layout.findViewById(R.id.ride_request_cancel_button);
         mDestinationNavigationButton = layout.findViewById(R.id.ride_request_navigate_to_destination_button);
         mBasicRideRequestButtonsLayout = layout.findViewById(R.id.ride_request_buttons_layout);
 
         //This will setup initial button visibility
-        updateRideRequestBasicLayoutButtonsVisiblity();
-        setRideRequestBasicLayoutButtonsOnClickListener();
+        updateRideRequestBasicLayoutButtonsVisiblity(rideRequest);
+        setRideRequestBasicLayoutButtonsOnClickListener(rideRequest);
     }
 
-    private void setRideRequestBasicLayoutButtonsOnClickListener(){
+    private void setRideRequestBasicLayoutButtonsOnClickListener(final BasicRideRequest rideRequest){
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Ride Request Cancelled for id:"+mRideRequest.getId());
-                updateRideRequestBasicLayoutButtonsVisiblity();
+                Log.d(TAG, "Ride Request Cancelled for id:"+rideRequest.getId());
+                updateRideRequestBasicLayoutButtonsVisiblity(rideRequest);
             }
         });
         mDestinationNavigationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Navigate to Destination for Id:"+mRideRequest.getId());
-                updateRideRequestBasicLayoutButtonsVisiblity();
+                Log.d(TAG, "Navigate to Destination for Id:"+rideRequest.getId());
+                updateRideRequestBasicLayoutButtonsVisiblity(rideRequest);
             }
         });
     }
 
-    private void updateRideRequestBasicLayoutButtonsVisiblity(){
-        if (mRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)) {
+    private void updateRideRequestBasicLayoutButtonsVisiblity(BasicRideRequest rideRequest){
+        if (rideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)) {
             mDestinationNavigationButton.setVisibility(View.GONE);
         }
-        if (mRideRequest.getStatus().equals(RideRequestStatus.Cancelled)){
+        if (rideRequest.getStatus().equals(RideRequestStatus.Cancelled)){
             mBasicRideRequestButtonsLayout.setVisibility(View.GONE);
         }
-        if (mRideRequest.getStatus().equals(RideRequestStatus.Fulfilled)){
-            if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
+        if (rideRequest.getStatus().equals(RideRequestStatus.Fulfilled)){
+            if (rideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
                 mDestinationNavigationButton.setVisibility(View.GONE);
             } else {
                 mCancelButton.setVisibility(View.GONE);

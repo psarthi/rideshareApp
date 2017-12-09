@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
@@ -323,11 +325,11 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
 
         RideComp rideComp = new RideComp(this, mCurrentRide);
-        rideComp.setBasicRideLayout(view);
+        rideComp.setBasicRideLayout(view, (BasicRide) mCurrentRide);
 
         mRecyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
         mAdapter = new ThumbnailCoTravellerAdapter(this, (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
-        setRecyclerView(mRecyclerView, mAdapter);
+        setRecyclerView(mRecyclerView, mAdapter, LinearLayoutManager.HORIZONTAL);
     }
 
     private void setCurrentRideRequestView(View view){
@@ -336,7 +338,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
 
         RideRequestComp rideRequestComp = new RideRequestComp(this, mCurrentRideRequest);
-        rideRequestComp.setRideRequestBasicLayout(view);
+        rideRequestComp.setRideRequestBasicLayout(view, (BasicRideRequest) mCurrentRideRequest);
 
         if (mCurrentRideRequest.getAcceptedRide()!=null){
             UserComp userComp = new UserComp(this, null);

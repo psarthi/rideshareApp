@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
@@ -23,8 +22,6 @@ import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -118,8 +115,8 @@ public class UserProfileFragment extends BaseFragment {
         RecyclerView.Adapter adapter = new ThumbnailCoTravellerAdapter(this,
                 (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
 
-        setRecyclerView(friendRecyclerView, adapter);
-        setRecyclerView(groupsRecyclerView, adapter);
+        setRecyclerView(friendRecyclerView, adapter, LinearLayoutManager.HORIZONTAL);
+        setRecyclerView(groupsRecyclerView, adapter, LinearLayoutManager.HORIZONTAL);
 
         return view;
     }

@@ -11,6 +11,7 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.digitusrevolution.rideshare.model.user.dto.FullUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.gson.Gson;
 
@@ -83,6 +84,11 @@ public class CommonUtil {
         return new Gson().fromJson(user, BasicUser.class);
     }
 
+    public FullUser getFullUser() {
+        String user = getSharedPreferences().getString(Constant.SHARED_PREFS_FULL_USER_KEY,null);
+        return new Gson().fromJson(user, FullUser.class);
+    }
+
     public FullRide getCurrentRide() {
         String currentRide = getSharedPreferences().getString(Constant.SHARED_PREFS_CURRENT_RIDE_KEY,null);
         return new Gson().fromJson(currentRide, FullRide.class);
@@ -100,6 +106,11 @@ public class CommonUtil {
     public void updateUser(BasicUser user){
         updateInSharedPref(Constant.SHARED_PREFS_USER_KEY,new Gson().toJson(user));
     }
+
+    public void updateFullUser(FullUser user){
+        updateInSharedPref(Constant.SHARED_PREFS_FULL_USER_KEY,new Gson().toJson(user));
+    }
+
 
     public void updateCurrentRide(FullRide currentRide){
         updateInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_KEY,new Gson().toJson(currentRide));
