@@ -46,6 +46,18 @@ public class RideComp {
     public void setBasicRideLayout(View view, BasicRide ride){
 
         View basic_ride_layout = view.findViewById(R.id.basic_ride_layout);
+        mCancelButton = basic_ride_layout.findViewById(R.id.ride_cancel_button);
+        mStartButton = basic_ride_layout.findViewById(R.id.ride_start_button);
+        mEndButton = basic_ride_layout.findViewById(R.id.ride_end_button);
+        mBasicRideButtonsLayout = basic_ride_layout.findViewById(R.id.ride_buttons_layout);
+
+        //Reason for setting it visible to handle view holder reuse where once item is invisible, it remains as it is
+        //e.g. when one item make something invisble but the same view is used by another item, then it remains invisble
+        mCancelButton.setVisibility(View.VISIBLE);
+        mStartButton.setVisibility(View.VISIBLE);
+        mEndButton.setVisibility(View.VISIBLE);
+        mBasicRideButtonsLayout.setVisibility(View.VISIBLE);
+
         TextView rideIdTextView = basic_ride_layout.findViewById(R.id.ride_id_text);
         String rideIdText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text) +ride.getId();
         rideIdTextView.setText(rideIdText);
@@ -57,11 +69,6 @@ public class RideComp {
         rideStartPointTextView.setText(ride.getStartPointAddress());
         TextView rideEndPointTextView = basic_ride_layout.findViewById(R.id.ride_end_point_text);
         rideEndPointTextView.setText(ride.getEndPointAddress());
-
-        mCancelButton = basic_ride_layout.findViewById(R.id.ride_cancel_button);
-        mStartButton = basic_ride_layout.findViewById(R.id.ride_start_button);
-        mEndButton = basic_ride_layout.findViewById(R.id.ride_end_button);
-        mBasicRideButtonsLayout = basic_ride_layout.findViewById(R.id.ride_buttons_layout);
 
         //This will set the visibility of ride buttons initially
         updateBasicRideLayoutButtonsVisibility(ride);
@@ -98,13 +105,16 @@ public class RideComp {
 
     private void updateBasicRideLayoutButtonsVisibility(BasicRide ride){
         if (ride.getStatus().equals(RideStatus.Planned)){
-            Calendar currentTime = Calendar.getInstance();
-            //This will subtract some buffer time from current time e.g. reduce 15 mins from current time
+            Calendar startTime = Calendar.getInstance();
+            startTime.setTime(ride.getStartTime());
+            //This will subtract some buffer time from start time e.g. reduce 15 mins from current time
             //(using -) in add function for substraction
-            currentTime.add(Calendar.MINUTE, -Constant.START_TIME_BUFFER);
+            startTime.add(Calendar.MINUTE, -Constant.START_TIME_BUFFER);
             //This will make Start button invisible if its early than start time by subtracting buffer
             //e.g. if ride start time is 3:00 PM and buffer is 15 mins, then it can only be started after 2:45 PM
-            if (ride.getStartTime().before(currentTime.getTime())){
+            Log.d(TAG, "Ride Start Time - Buffer:"+startTime.getTime().toString());
+            Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
+            if (Calendar.getInstance().getTime().before(startTime.getTime())){
                 mStartButton.setVisibility(View.GONE);
             }
             //This will make Start and Cancel button invisible post end time of ride

@@ -42,7 +42,18 @@ public class RideRequestComp{
     }
 
     public void setRideRequestBasicLayout(View view, BasicRideRequest rideRequest){
+
         View layout = view.findViewById(R.id.basic_ride_request_layout);
+        mCancelButton = layout.findViewById(R.id.ride_request_cancel_button);
+        mDestinationNavigationButton = layout.findViewById(R.id.ride_request_navigate_to_destination_button);
+        mBasicRideRequestButtonsLayout = layout.findViewById(R.id.ride_request_buttons_layout);
+
+        //Reason for setting it visible to handle view holder reuse where once item is invisible, it remains as it is
+        //e.g. when one item make something invisble but the same view is used by another item, then it remains invisble
+        mCancelButton.setVisibility(View.VISIBLE);
+        mDestinationNavigationButton.setVisibility(View.VISIBLE);
+        mBasicRideRequestButtonsLayout.setVisibility(View.VISIBLE);
+
         String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)+ rideRequest.getId();
         ((TextView) layout.findViewById(R.id.ride_request_id_text)).setText(rideRequestNumberText);
         ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(rideRequest.getStatus().toString());
@@ -54,9 +65,6 @@ public class RideRequestComp{
         ((TextView) layout.findViewById(R.id.ride_request_pickup_point_text)).setText(rideRequest.getPickupPointAddress());
         ((TextView) layout.findViewById(R.id.ride_request_drop_point_text)).setText(rideRequest.getDropPointAddress());
 
-        mCancelButton = layout.findViewById(R.id.ride_request_cancel_button);
-        mDestinationNavigationButton = layout.findViewById(R.id.ride_request_navigate_to_destination_button);
-        mBasicRideRequestButtonsLayout = layout.findViewById(R.id.ride_request_buttons_layout);
 
         //This will setup initial button visibility
         updateRideRequestBasicLayoutButtonsVisiblity(rideRequest);
