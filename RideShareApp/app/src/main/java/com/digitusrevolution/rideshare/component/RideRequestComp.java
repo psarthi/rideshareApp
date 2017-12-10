@@ -15,6 +15,8 @@ import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 
+import java.util.Calendar;
+
 /**
  * Created by psarthi on 12/6/17.
  */
@@ -91,6 +93,19 @@ public class RideRequestComp{
             } else {
                 mCancelButton.setVisibility(View.GONE);
             }
+        }
+        Calendar pickupTime = Calendar.getInstance();
+        pickupTime.setTime(rideRequest.getPickupTime());
+        pickupTime.add(Calendar.MINUTE, mCommonUtil.getTimeFromString(rideRequest.getPickupTimeVariation()));
+        pickupTime.add(Calendar.SECOND, rideRequest.getTravelTime());
+
+        Log.d(TAG, "Drop Time with Variation:"+pickupTime.getTime().toString());
+        Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
+
+        //This will make cancel invisible if current time is after pickup time + pickup variation + travel time
+        if (pickupTime.before(Calendar.getInstance())){
+            Log.d(TAG, "Pickup time lapsed, so no cancel button for id:"+rideRequest.getId());
+            mCancelButton.setVisibility(View.GONE);
         }
     }
 

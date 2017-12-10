@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 
-public class Ride {
+public class Ride implements Comparable<Ride>{
 
 	//id data type needs to be finalized later, whether to use int, long, string
 	private int id;
@@ -270,4 +270,14 @@ public class Ride {
 	public void setEndPointAddress(String endPointAddress) {
 		this.endPointAddress = endPointAddress;
 	}
+
+	@Override
+	public int compareTo(Ride ride) {
+		//ascending order
+		//return this.id - ride.id;
+
+		//descending order
+		return ride.id - this.id;
+	}
+
 }

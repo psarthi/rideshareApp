@@ -7,14 +7,6 @@
 
     <include layout="@layout/basic_ride_request_layout" android:id="@+id/basic_ride_request_layout"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/line_seperator_thickness"
-        android:background="@color/colorGrayLight"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        android:layout_below="@id/basic_ride_request_layout"/>
-
     <include layout="@layout/ride_owner_layout" android:id="@+id/ride_owner_layout" android:layout_below="@id/basic_ride_request_layout"
              android:layout_height="wrap_content"
              android:layout_width="match_parent"

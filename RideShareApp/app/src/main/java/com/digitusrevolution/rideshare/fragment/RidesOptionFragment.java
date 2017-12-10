@@ -222,7 +222,7 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
             mDropPointVariationSeekBar.setProgress(mRidesOption.getDropPointVariation());
 
             //This will get minute value from LocalTime of 00:30 format
-            int pickupTimeVariation = Integer.parseInt(mRidesOption.getPickupTimeVariation().split(":")[1]);
+            int pickupTimeVariation = mCommonUtil.getTimeFromString(mRidesOption.getPickupTimeVariation());
 
             mPickupTimeVariationSeekBar.setMax(Constant.PICKUP_TIME_MAX_VALUE);
             mPickupTimeVariationSeekBar.setProgress(pickupTimeVariation);

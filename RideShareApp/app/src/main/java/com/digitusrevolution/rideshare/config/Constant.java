@@ -27,5 +27,9 @@ public class Constant {
     public static final int PICKUP_TIME_MAX_VALUE = 60;
     public static final int PICKUP_POINT_DISTANCE_MAX_VALUE = 1000;
     public static final int DROP_POINT_DISTANCE_MAX_VALUE = 1000;
+    //This is used for setting start time in create rides screen i.e. all rides would have min. 10 mins from current time as start time
+    //so that we don't end up having issues creating rides in the past
     public static final int START_TIME_INCREMENT = 10;
+    //This would be used for enabling/disabling start button for offer rides i.e. any rides can be started only 15 mins before the ride start time
+    public static final int START_TIME_BUFFER = 15;
 }

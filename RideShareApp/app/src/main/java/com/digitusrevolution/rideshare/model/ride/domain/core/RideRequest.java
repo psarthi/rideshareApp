@@ -1,5 +1,7 @@
 package com.digitusrevolution.rideshare.model.ride.domain.core;
 
+import android.support.annotation.NonNull;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -13,7 +15,7 @@ import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
 import com.digitusrevolution.rideshare.model.user.domain.core.User;
 
-public class RideRequest {
+public class RideRequest implements Comparable<RideRequest>{
 
 	private int id;
 	private RideRequestPoint pickupPoint = new RideRequestPoint();
@@ -297,5 +299,14 @@ public class RideRequest {
 
 	public void setRideDropPointDistance(double rideDropPointDistance) {
 		this.rideDropPointDistance = rideDropPointDistance;
+	}
+
+	@Override
+	public int compareTo(RideRequest rideRequest) {
+		//ascending order
+		//return this.id - rideRequest.id;
+
+		//descending order
+		return rideRequest.id - this.id;
 	}
 }

@@ -60,6 +60,7 @@ public class RidesListFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private boolean mInitialDataLoaded;
 
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener mScrollListener;
@@ -100,7 +101,7 @@ public class RidesListFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG,"onCreateView");
+        Log.d(TAG,"onCreateView. mRides,mRidesRequest Size:"+mRides.size()+","+mRideRequests.size());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_rides_list, container, false);
 
@@ -109,6 +110,11 @@ public class RidesListFragment extends BaseFragment {
         layoutManager.setAutoMeasureEnabled(true);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+
+        //VERY IMP - This will get called only when fragment is reloaded and without this it will show up blank screen as adapter is not set
+        if (mInitialDataLoaded) {
+            setAdapter();
+        }
 
         mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -137,6 +143,8 @@ public class RidesListFragment extends BaseFragment {
                     super.onSuccess(statusCode, headers, response);
                     Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
                     mRides = new Gson().fromJson(response.toString(), listType);
+                    mInitialDataLoaded = true;
+                    //This will load adapter only when data is loaded
                     setAdapter();
                 }
             });
@@ -151,6 +159,8 @@ public class RidesListFragment extends BaseFragment {
                     super.onSuccess(statusCode, headers, response);
                     Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
                     mRideRequests = new Gson().fromJson(response.toString(), listType);
+                    mInitialDataLoaded = true;
+                    //This will load adapter only when data is loaded
                     setAdapter();
                 }
             });
@@ -166,6 +176,7 @@ public class RidesListFragment extends BaseFragment {
             mAdapter = new RideRequestListAdapter(mRideRequests, this);
         }
         mRecyclerView.setAdapter(mAdapter);
+        //Don't use this method as we need to instantitate LinearLayout manager before in this case but below method instantiate locally
         //setRecyclerView(mRecyclerView, adapter, LinearLayoutManager.VERTICAL);
     }
 

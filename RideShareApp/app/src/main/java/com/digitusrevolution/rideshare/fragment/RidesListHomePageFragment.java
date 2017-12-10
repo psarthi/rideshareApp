@@ -60,7 +60,7 @@ public class RidesListHomePageFragment extends BaseFragment {
     private CommonUtil mCommonUtil;
     private ViewPager mViewPager;
     private RidesListViewPagerAdapter mRidesListViewPagerAdapter;
-    private boolean mInitialDataLoaded;
+    private int mTabPosition;
 
     public RidesListHomePageFragment() {
         // Required empty public constructor
@@ -94,25 +94,31 @@ public class RidesListHomePageFragment extends BaseFragment {
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        mRidesListViewPagerAdapter = new RidesListViewPagerAdapter(getActivity().getSupportFragmentManager());
+        mRidesListViewPagerAdapter = new RidesListViewPagerAdapter(getChildFragmentManager());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG,"onCreateView");
+        showChildFragmentDetails();
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_rides_list_home_page, container, false);
 
-        TabLayout tabLayout = view.findViewById(R.id.rides_tab);
+        final TabLayout tabLayout = view.findViewById(R.id.rides_tab);
         mViewPager = view.findViewById(R.id.rides_viewPager);
         mViewPager.setAdapter(mRidesListViewPagerAdapter);
 
-        TabLayout.Tab offerRidesTab = tabLayout.newTab();
-        TabLayout.Tab requestedRidesTab = tabLayout.newTab();
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
 
-        tabLayout.addTab(offerRidesTab.setText("Offered Rides"));
-        tabLayout.addTab(requestedRidesTab.setText("Requested Rides"));
+        //This is very important else you will have issue in syncing tab selection with view pager content
+        //i.e. view pager may show request ride but tab selection would show offer ride
+        tabLayout.setupWithViewPager(mViewPager);
+
+        //This is very important else Tab heading would be blank and don't set this upfront while adding tab, as that doesn't come into effect
+        tabLayout.getTabAt(0).setText("Offered Rides");
+        tabLayout.getTabAt(1).setText("Requested Rides");
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -121,6 +127,7 @@ public class RidesListHomePageFragment extends BaseFragment {
                 Log.d(TAG, "Before - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
                 mViewPager.setCurrentItem(tab.getPosition());
                 Log.d(TAG, "After - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
+                showChildFragmentDetails();
             }
 
             @Override
@@ -133,7 +140,6 @@ public class RidesListHomePageFragment extends BaseFragment {
                 Log.d(TAG, "Tab Reselected:"+tab.getText());
             }
         });
-
 
         return view;
     }
@@ -168,6 +174,12 @@ public class RidesListHomePageFragment extends BaseFragment {
         Log.d(TAG,"onDetach");
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mTabPosition = mViewPager.getCurrentItem();
     }
 
     /**

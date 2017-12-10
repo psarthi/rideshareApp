@@ -8,6 +8,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
@@ -17,6 +18,7 @@ import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -96,6 +98,21 @@ public class RideComp {
 
     private void updateBasicRideLayoutButtonsVisibility(BasicRide ride){
         if (ride.getStatus().equals(RideStatus.Planned)){
+            Calendar currentTime = Calendar.getInstance();
+            //This will subtract some buffer time from current time e.g. reduce 15 mins from current time
+            //(using -) in add function for substraction
+            currentTime.add(Calendar.MINUTE, -Constant.START_TIME_BUFFER);
+            //This will make Start button invisible if its early than start time by subtracting buffer
+            //e.g. if ride start time is 3:00 PM and buffer is 15 mins, then it can only be started after 2:45 PM
+            if (ride.getStartTime().before(currentTime.getTime())){
+                mStartButton.setVisibility(View.GONE);
+            }
+            //This will make Start and Cancel button invisible post end time of ride
+            if (ride.getEndTime().before(Calendar.getInstance().getTime())){
+                mCancelButton.setVisibility(View.GONE);
+                mStartButton.setVisibility(View.GONE);
+            }
+            //This will make end button invisible as ride is never started
             mEndButton.setVisibility(View.GONE);
         }
         if (ride.getStatus().equals(RideStatus.Started)){
@@ -188,7 +205,6 @@ public class RideComp {
             ratingBar.setVisibility(View.VISIBLE);
         }
     }
-
 }
 
 

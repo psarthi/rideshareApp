@@ -32,10 +32,11 @@ public class BaseFragment extends Fragment{
     public void showChildFragmentDetails(){
 
         List<Fragment> fragments = getChildFragmentManager().getFragments();
+        Log.d(TAG,"Fragment Name is:"+this.getTag());
         Log.d(TAG,"Child Fragment count is:"+fragments.size());
         for (int i=0; i< fragments.size();i++){
             Log.d(TAG, "Child Fragment Id:"+Integer.toString(fragments.get(i).getId()));
-            if (fragments.get(i).getId()!=0) Log.d(TAG, "String Name of Id:"+getResources().getResourceName(fragments.get(i).getId()));
+            if (fragments.get(i).getId()!=0) Log.d(TAG, "Child Container Resource Name of Id:"+getResources().getResourceName(fragments.get(i).getId()));
         }
     }
 

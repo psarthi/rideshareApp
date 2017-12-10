@@ -181,5 +181,8 @@ public class CommonUtil {
         return dateTimeString;
     }
 
+    public int getTimeFromString(String time) {
+        return Integer.parseInt(time.split(":")[1]);
+    }
 
 }
