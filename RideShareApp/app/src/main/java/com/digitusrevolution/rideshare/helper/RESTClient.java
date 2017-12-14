@@ -32,14 +32,19 @@ public class RESTClient {
 
     private static final String TAG = RESTClient.class.getName();
     private static AsyncHttpClient client = new AsyncHttpClient();
+    //This will avoid connection timeout issue, where we don't get response on time
+    private static final int TIMEOUT_VALUE=20;
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        //This will overwrite default value of 10 seconds so that we are able to get response properly
+        client.setTimeout(TIMEOUT_VALUE);
         Log.d(TAG,"GET URL:"+url);
         client.get(url, params, responseHandler);
     }
 
     public static void post(Context context, String url, Object model, AsyncHttpResponseHandler responseHandler) {
-
+        //This will overwrite default value of 10 seconds so that we are able to get response properly
+        client.setTimeout(TIMEOUT_VALUE);
         /*This is very important as Gson default serializer would not convert the Date into ISO format with UTC timezone
         and in the backend Jackson expects the date in ISO format with UTC timezone - yyyy-MM-dd'T'HH:mm:ss.SSS'Z' (e.g. 2017-11-10T15:30:00Z).
         So we are using custom Gson Adapter which does the Job of changing Date into ISO format and convert it to UTC timezone.
@@ -61,10 +66,14 @@ public class RESTClient {
     }
 
     public static void put(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        //This will overwrite default value of 10 seconds so that we are able to get response properly
+        client.setTimeout(TIMEOUT_VALUE);
         client.put(url, params, responseHandler);
     }
 
     public static void delete(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        //This will overwrite default value of 10 seconds so that we are able to get response properly
+        client.setTimeout(TIMEOUT_VALUE);
         client.delete(url, params, responseHandler);
     }
 

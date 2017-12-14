@@ -36,7 +36,6 @@ public class Ride implements Comparable<Ride>{
 	private Vehicle vehicle;
 	private User driver;
 	private Collection<RidePassenger> ridePassengers = new HashSet<RidePassenger>();
-	private Collection<Bill> bills = new HashSet<Bill>();
 	private Collection<RideRequest> acceptedRideRequests = new HashSet<RideRequest>();
 	private Collection<RideRequest> rejectedRideRequests = new HashSet<RideRequest>();
 	private Collection<RideRequest> cancelledRideRequests = new HashSet<RideRequest>();
@@ -114,12 +113,6 @@ public class Ride implements Comparable<Ride>{
 	}
 	public void setEndPoint(RidePoint endPoint) {
 		this.endPoint = endPoint;
-	}
-	public Collection<Bill> getBills() {
-		return bills;
-	}
-	public void setBills(Collection<Bill> bills) {
-		this.bills = bills;
 	}
 	public Collection<RideRequest> getAcceptedRideRequests() {
 		return acceptedRideRequests;

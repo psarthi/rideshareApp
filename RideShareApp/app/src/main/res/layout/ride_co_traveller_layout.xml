@@ -20,12 +20,12 @@
         android:layout_height="wrap_content"
         android:gravity="start">
 
-        <Button android:id="@+id/co_traveller_reject_button"
+        <Button android:id="@+id/co_traveller_cancel_button"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/default_margin"
-                android:text="Reject"
+                android:text="Cancel"
                 android:textColor="@color/colorAccent"/>
 
         <Button android:id="@+id/co_traveller_pickup_button"
@@ -55,6 +55,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_seperator_thickness"
-        android:background="@color/colorGrayLight"/>
+        android:background="@color/colorGrayLight"
+        android:layout_marginTop="@dimen/default_margin"/>
 
 </LinearLayout>

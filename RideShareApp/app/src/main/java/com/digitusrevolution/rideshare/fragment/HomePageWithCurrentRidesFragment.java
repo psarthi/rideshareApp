@@ -25,9 +25,11 @@ import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.component.UserComp;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
@@ -44,8 +46,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.gson.Gson;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONObject;
 
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -88,6 +96,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     private MapComp mMapComp;
     private CurrentRidesStatus mCurrentRidesStatus;
     private View mMapView;
+    private boolean mCurrentRideLoaded;
+    private boolean mCurrentRideRequestLoaded;
 
     public HomePageWithCurrentRidesFragment() {
         // Required empty public constructor
@@ -126,12 +136,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView Called");
 
-        //Reason for putting it here, so that whenever the fragment get loaded either new or from backstack, onCreateView would get the latest
-        //Otherwise, it was showing old ride information
-        mCurrentRide = mCommonUtil.getCurrentRide();
-        mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
-        mCurrentRidesStatus = getCurrentRidesStatus();
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
         mCurrentRideLinearLayout = view.findViewById(R.id.current_ride_layout);
@@ -142,6 +146,13 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mCurrentRideRequestLinearLayout.setVisibility(View.GONE);
         showRidesLayoutVisibilityStatusForDebugging();
 
+
+        //Reason for putting it here, so that whenever the fragment get loaded either new or from backstack, onCreateView would get the latest
+        //Otherwise, it was showing old ride information
+        mCurrentRide = mCommonUtil.getCurrentRide();
+        mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
+        mCurrentRidesStatus = getCurrentRidesStatus();
+
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
             Log.d(TAG, "Setting Current Ride View");
             setCurrentRideView(view);
@@ -150,6 +161,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
             Log.d(TAG, "Setting Current Ride Request View");
             setCurrentRideRequestView(view);
         }
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.home_page_map);
         mapFragment.getMapAsync(this);
@@ -170,6 +182,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
         return view;
     }
+
 
     //Keep this here instead of moving to BaseFragment, so that you have better control
     @Override
@@ -207,7 +220,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     }
 
     // Don't move this to BaseFragment or MapComp for resuse, as this will unnecessarily required additional callbacks and lots of complication
-// Apart from that you can customize the marker icon, move camera to different zoom level which may be required for different fragements
+   // Apart from that you can customize the marker icon, move camera to different zoom level which may be required for different fragements
     private void setCurrentLocation() {
         Context context = getActivity();
         Activity activity = getActivity();

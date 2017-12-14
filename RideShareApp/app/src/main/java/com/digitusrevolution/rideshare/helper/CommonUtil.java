@@ -8,6 +8,7 @@ import android.util.Log;
 import com.digitusrevolution.rideshare.activity.BaseActivity;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -183,6 +184,14 @@ public class CommonUtil {
 
     public int getTimeFromString(String time) {
         return Integer.parseInt(time.split(":")[1]);
+    }
+
+    public Calendar getRideRequestMaxEndTime(BasicRideRequest rideRequest) {
+        Calendar endTime = Calendar.getInstance();
+        endTime.setTime(rideRequest.getPickupTime());
+        endTime.add(Calendar.MINUTE, getTimeFromString(rideRequest.getPickupTimeVariation()));
+        endTime.add(Calendar.SECOND, rideRequest.getTravelTime());
+        return endTime;
     }
 
 }

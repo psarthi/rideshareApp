@@ -12,7 +12,6 @@ import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
-import com.digitusrevolution.rideshare.model.ride.domain.core.Ride;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
@@ -161,14 +160,14 @@ public class RideComp {
 
     public void setCoTravellerButtonsOnClickListener(final View view, final BasicRideRequest rideRequest){
         //Don't get on layout as its not an external layout which is used as include, get on view.findviewbyId
-        Button rejectButton = view.findViewById(R.id.co_traveller_reject_button);
+        Button rejectButton = view.findViewById(R.id.co_traveller_cancel_button);
         Button pickupButton = view.findViewById(R.id.co_traveller_pickup_button);
         Button dropButton = view.findViewById(R.id.co_traveller_drop_button);
 
         rejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"Passenger Rejected - " + rideRequest.getPassenger().getFirstName());
+                Log.d(TAG,"Passenger Cancelled - " + rideRequest.getPassenger().getFirstName());
                 updateCoTravellerButtonsVisibility(view, rideRequest);
             }
         });
@@ -193,7 +192,7 @@ public class RideComp {
     public void updateCoTravellerButtonsVisibility(View view, final BasicRideRequest rideRequest){
 
         //Don't get on layout as its not an external layout which is used as include, get on view.findviewbyId
-        Button rejectButton = view.findViewById(R.id.co_traveller_reject_button);
+        Button cancelButton = view.findViewById(R.id.co_traveller_cancel_button);
         Button pickupButton = view.findViewById(R.id.co_traveller_pickup_button);
         Button dropButton = view.findViewById(R.id.co_traveller_drop_button);
         RatingBar ratingBar = view.findViewById(R.id.co_traveller_rating_bar);
@@ -202,12 +201,19 @@ public class RideComp {
         //Intial value of rating bar
         ratingBar.setVisibility(View.GONE);
 
+        Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(rideRequest);
+
         if (rideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
+
+            if (maxEndTime.before(Calendar.getInstance())){
+                //This will make cancel button invisible post the ride request max end time has lapsed
+                cancelButton.setVisibility(View.GONE);
+            }
             pickupButton.setVisibility(View.GONE);
             dropButton.setVisibility(View.GONE);
         }
         if (rideRequest.getPassengerStatus().equals(PassengerStatus.Picked)){
-            rejectButton.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
             pickupButton.setVisibility(View.GONE);
         }
         if (rideRequest.getPassengerStatus().equals(PassengerStatus.Dropped)){

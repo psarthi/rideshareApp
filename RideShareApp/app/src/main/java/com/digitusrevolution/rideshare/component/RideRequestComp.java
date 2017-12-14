@@ -16,6 +16,7 @@ import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by psarthi on 12/6/17.
@@ -28,10 +29,10 @@ public class RideRequestComp{
     private FullRideRequest mRideRequest;
     private CommonUtil mCommonUtil;
 
-    private Button mCancelButton;
+    private Button mRideRequestCancelButton;
     private Button mDestinationNavigationButton;
     private LinearLayout mBasicRideRequestButtonsLayout;
-    private Button mRejectButton;
+    private Button mRideOwnerCancelButton;
     private Button mPickupPointNavigationButton;
     private LinearLayout mRideOwnerButtonsLayout;
 
@@ -44,13 +45,13 @@ public class RideRequestComp{
     public void setRideRequestBasicLayout(View view, BasicRideRequest rideRequest){
 
         View layout = view.findViewById(R.id.basic_ride_request_layout);
-        mCancelButton = layout.findViewById(R.id.ride_request_cancel_button);
+        mRideRequestCancelButton = layout.findViewById(R.id.ride_request_cancel_button);
         mDestinationNavigationButton = layout.findViewById(R.id.ride_request_navigate_to_destination_button);
         mBasicRideRequestButtonsLayout = layout.findViewById(R.id.ride_request_buttons_layout);
 
         //Reason for setting it visible to handle view holder reuse where once item is invisible, it remains as it is
         //e.g. when one item make something invisble but the same view is used by another item, then it remains invisble
-        mCancelButton.setVisibility(View.VISIBLE);
+        mRideRequestCancelButton.setVisibility(View.VISIBLE);
         mDestinationNavigationButton.setVisibility(View.VISIBLE);
         mBasicRideRequestButtonsLayout.setVisibility(View.VISIBLE);
 
@@ -72,7 +73,7 @@ public class RideRequestComp{
     }
 
     private void setRideRequestBasicLayoutButtonsOnClickListener(final BasicRideRequest rideRequest){
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
+        mRideRequestCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Ride Request Cancelled for id:"+rideRequest.getId());
@@ -99,21 +100,18 @@ public class RideRequestComp{
             if (rideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
                 mDestinationNavigationButton.setVisibility(View.GONE);
             } else {
-                mCancelButton.setVisibility(View.GONE);
+                mRideRequestCancelButton.setVisibility(View.GONE);
             }
         }
-        Calendar pickupTime = Calendar.getInstance();
-        pickupTime.setTime(rideRequest.getPickupTime());
-        pickupTime.add(Calendar.MINUTE, mCommonUtil.getTimeFromString(rideRequest.getPickupTimeVariation()));
-        pickupTime.add(Calendar.SECOND, rideRequest.getTravelTime());
+        Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(rideRequest);
 
-        Log.d(TAG, "Drop Time with Variation:"+pickupTime.getTime().toString());
+        Log.d(TAG, "Drop Time with Variation:"+maxEndTime.getTime().toString());
         Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
 
         //This will make cancel invisible if current time is after pickup time + pickup variation + travel time
-        if (pickupTime.before(Calendar.getInstance())){
+        if (maxEndTime.before(Calendar.getInstance())){
             Log.d(TAG, "Pickup time lapsed, so no cancel button for id:"+rideRequest.getId());
-            mCancelButton.setVisibility(View.GONE);
+            mRideRequestCancelButton.setVisibility(View.GONE);
         }
     }
 
@@ -134,7 +132,7 @@ public class RideRequestComp{
         ((TextView) view.findViewById(R.id.ride_drop_point_variation_text)).setText(dropDistance);
 
         mRideOwnerButtonsLayout = view.findViewById(R.id.ride_owner_buttons_layout);
-        mRejectButton = view.findViewById(R.id.ride_owner_reject_button);
+        mRideOwnerCancelButton = view.findViewById(R.id.ride_owner_cancel_button);
         mPickupPointNavigationButton = view.findViewById(R.id.navigate_to_ride_pickup_point_button);
 
         updateRideOwnerLayoutButtonsVisiblity(view);
@@ -144,10 +142,10 @@ public class RideRequestComp{
 
     private void setRideOwnerLayoutButtonsOnClickListener(final View view){
 
-        mRejectButton.setOnClickListener(new View.OnClickListener() {
+        mRideOwnerCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Ride Owner Rejected:"+mRideRequest.getAcceptedRide().getDriver().getFirstName());
+                Log.d(TAG, "Ride Owner Cancelled:"+mRideRequest.getAcceptedRide().getDriver().getFirstName());
                 updateRideOwnerLayoutButtonsVisiblity(view);
             }
         });
@@ -168,6 +166,13 @@ public class RideRequestComp{
         //This means that only when passenger is in confirmed state i.e. he/she has not been picked up, he can reject / navigate
         //As far as rating is concerned, he can rate post pickup up or if reject. In case of Reject, we will ask for rating in dialog bar itself
         if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
+
+            Date dropTime = mRideRequest.getRideDropPoint().getRidePointProperties().get(0).getDateTime();
+            if (dropTime.before(Calendar.getInstance().getTime())){
+                //This will make Ride Owner buttons layout invisible post ride request drop point time has lapsed
+                //i.e. No cancel and Pickup Point Navigation button would be visible
+                mRideOwnerButtonsLayout.setVisibility(View.GONE);
+            }
             ratingBar.setVisibility(View.GONE);
         } else {
             mRideOwnerButtonsLayout.setVisibility(View.GONE);

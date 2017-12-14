@@ -7,6 +7,7 @@ public class TripInfo {
 	
 	private Ride ride;
 	private RideRequest rideRequest;
+	private float discountPercentage;
 	
 	public Ride getRide() {
 		return ride;
@@ -20,7 +21,13 @@ public class TripInfo {
 	public void setRideRequest(RideRequest rideRequest) {
 		this.rideRequest = rideRequest;
 	}
-	
-	
 
+
+	public float getDiscountPercentage() {
+		return discountPercentage;
+	}
+
+	public void setDiscountPercentage(float discountPercentage) {
+		this.discountPercentage = discountPercentage;
+	}
 }
