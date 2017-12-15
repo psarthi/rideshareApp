@@ -58,18 +58,19 @@ public class UserComp {
         user_profile_layout.findViewById(R.id.add_friend_image).setVisibility(View.GONE);
         user_profile_layout.findViewById(R.id.friend_image).setVisibility(View.GONE);
 
-        userProfileImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserProfileFragment fragment = (UserProfileFragment) mBaseFragment.getActivity().getSupportFragmentManager().findFragmentByTag(UserProfileFragment.TAG);
-                if (fragment!=null && user.getId() == fragment.getUserId()){
-                    Log.d(TAG, "User Profile is already loaded for same user");
-                }
-                else {
+        UserProfileFragment fragment = (UserProfileFragment) mBaseFragment.getActivity().getSupportFragmentManager()
+                .findFragmentByTag(UserProfileFragment.TAG);
+        if (fragment!=null && user.getId() == fragment.getUserId()){
+            Log.d(TAG, "User Profile is already loaded");
+        } else {
+            userProfileImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
                     fragmentLoader.loadUserProfileFragment(new Gson().toJson(user), null);
                 }
-            }
-        });
+            });
+
+        }
     }
 }

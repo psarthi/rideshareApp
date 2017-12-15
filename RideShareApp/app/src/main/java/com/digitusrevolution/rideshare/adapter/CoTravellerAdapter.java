@@ -60,13 +60,13 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
         UserComp userComp = new UserComp(mBaseFragment, null);
         userComp.setUserProfileSingleRow(convertView, rideRequest.getPassenger());
 
-        RideComp rideComp = new RideComp(mBaseFragment, null);
-        rideComp.setPickupTimeAndBillLayout(convertView, rideRequest);
-        rideComp.setRidePickupDropPointsLayout(convertView, rideRequest);
+        RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, null);
+        rideRequestComp.setPickupTimeAndBillLayout(convertView, rideRequest);
+        rideRequestComp.setRidePickupDropPointsLayout(convertView, rideRequest);
         //This will set the visibility of co traveller buttons initially
-        rideComp.updateCoTravellerButtonsVisibility(convertView, rideRequest);
+        rideRequestComp.updateCoTravellerButtonsVisibility(convertView, rideRequest);
         //This will set the listeners on co traveller buttons
-        rideComp.setCoTravellerButtonsOnClickListener(convertView, rideRequest);
+        rideRequestComp.setCoTravellerButtonsOnClickListener(convertView, rideRequest);
 
 
         RatingBar ratingBar = convertView.findViewById(R.id.co_traveller_rating_bar);

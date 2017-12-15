@@ -15,6 +15,7 @@ import com.digitusrevolution.rideshare.activity.LandingPageActivity;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
 import com.digitusrevolution.rideshare.adapter.RideListAdapter;
 import com.digitusrevolution.rideshare.adapter.RideRequestListAdapter;
+import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
@@ -44,7 +45,7 @@ import cz.msebera.android.httpclient.Header;
  * Use the {@link RidesListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RidesListFragment extends BaseFragment {
+public class RidesListFragment extends BaseFragment implements RideComp.RideCompListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RIDE_TYPE = "rideType";
@@ -245,6 +246,11 @@ public class RidesListFragment extends BaseFragment {
         Log.d(TAG,"onDetach");
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onRideRefresh(FullRide ride) {
+        Log.d(TAG, "Recieved Callback for Refresh for Ride Id:"+ride.getId());
     }
 
     /**

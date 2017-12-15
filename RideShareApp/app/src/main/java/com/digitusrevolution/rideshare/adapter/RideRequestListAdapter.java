@@ -48,8 +48,8 @@ public class RideRequestListAdapter extends RecyclerView.Adapter<RideRequestList
 
     @Override
     public void onBindViewHolder(RideRequestListAdapter.ViewHolder holder, final int position) {
-        RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, null);
-        rideRequestComp.setRideRequestBasicLayout(holder.itemView,mRideRequests.get(position));
+        RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, mRideRequests.get(position));
+        rideRequestComp.setRideRequestBasicLayout(holder.itemView);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

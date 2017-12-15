@@ -12,6 +12,8 @@ public class APIUrl {
     public static final String USER_EMAIL_KEY = "{userEmail}";
     public static final String USER_ID_KEY = "{userId}";
     public static final String ID_KEY = "{id}";
+    public static final String RIDE_ID_KEY = "{rideId}";
+    public static final String RIDE_REQUEST_ID_KEY = "{rideRequestId}";
     public static final String MOBILE_NUMBER_KEY = "{mobileNumber}";
     public static final String OTP_KEY = "{otp}";
     public static final String originLat_KEY = "{originLat}";
@@ -41,6 +43,13 @@ public class APIUrl {
     public static final String GET_CURRENT_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/current/{userId}";
     public static final String GET_CURRENT_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/current/{userId}";
     public static final String GET_USER_CURRENT_RIDES = BASE_URL_RIDE_SYSTEM + "/ridesystem/current/rides/{userId}";
+    public static final String START_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/start/{id}";
+    public static final String END_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/end/{id}";
+    public static final String CANCEL_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/cancel/{id}";
+    public static final String PICKUP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/pickup/{rideRequestId}";
+    public static final String DROP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/drop/{rideRequestId}";
+    public static final String CANCEL_ACCEPTED_RIDEREQUEST = BASE_URL_RIDE_SYSTEM + "/rides{rideId}/cancel/acceptedriderequest/{rideRequestId}";
+    public static final String CANCEL_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/cancel/{id}";
 
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +

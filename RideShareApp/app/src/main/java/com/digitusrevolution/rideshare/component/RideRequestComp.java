@@ -8,15 +8,24 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
+import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
+import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by psarthi on 12/6/17.
@@ -42,7 +51,7 @@ public class RideRequestComp{
         mCommonUtil = new CommonUtil(fragment);
     }
 
-    public void setRideRequestBasicLayout(View view, BasicRideRequest rideRequest){
+    public void setRideRequestBasicLayout(View view){
 
         View layout = view.findViewById(R.id.basic_ride_request_layout);
         mRideRequestCancelButton = layout.findViewById(R.id.ride_request_cancel_button);
@@ -55,62 +64,87 @@ public class RideRequestComp{
         mDestinationNavigationButton.setVisibility(View.VISIBLE);
         mBasicRideRequestButtonsLayout.setVisibility(View.VISIBLE);
 
-        String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)+ rideRequest.getId();
+        String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)+ mRideRequest.getId();
         ((TextView) layout.findViewById(R.id.ride_request_id_text)).setText(rideRequestNumberText);
-        ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(rideRequest.getStatus().toString());
-        String pickupTime = mCommonUtil.getFormattedDateTimeString(rideRequest.getPickupTime());
+        ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(mRideRequest.getStatus().toString());
+        String pickupTime = mCommonUtil.getFormattedDateTimeString(mRideRequest.getPickupTime());
         ((TextView) layout.findViewById(R.id.ride_request_pickup_time_text)).setText(pickupTime);
         //TODO get confirmation code post backend finalization
         //((TextView) layout.findViewById(R.id.ride_request_confirmation_code_text)).setText();
 
-        ((TextView) layout.findViewById(R.id.ride_request_pickup_point_text)).setText(rideRequest.getPickupPointAddress());
-        ((TextView) layout.findViewById(R.id.ride_request_drop_point_text)).setText(rideRequest.getDropPointAddress());
+        ((TextView) layout.findViewById(R.id.ride_request_pickup_point_text)).setText(mRideRequest.getPickupPointAddress());
+        ((TextView) layout.findViewById(R.id.ride_request_drop_point_text)).setText(mRideRequest.getDropPointAddress());
 
 
         //This will setup initial button visibility
-        updateRideRequestBasicLayoutButtonsVisiblity(rideRequest);
-        setRideRequestBasicLayoutButtonsOnClickListener(rideRequest);
+        updateRideRequestBasicLayoutButtonsVisiblity();
+        setRideRequestBasicLayoutButtonsOnClickListener();
+
+        RideRequestInfoFragment fragment = (RideRequestInfoFragment) mBaseFragment.getActivity().getSupportFragmentManager()
+                .findFragmentByTag(RideRequestInfoFragment.TAG);
+        if (fragment!=null && mRideRequest.getId() == fragment.getRideRequestId()){
+            Log.d(TAG, "Ride Request Info is already loaded");
+        } else {
+
+            layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.ID_KEY, Integer.toString(mRideRequest.getId()));
+
+                    RESTClient.get(GET_RIDE_REQUEST_URL, null, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            super.onSuccess(statusCode, headers, response);
+                            FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                            fragmentLoader.loadRideRequestInfoFragment(response.toString());
+                        }
+                    });
+
+                }
+            });
+        }
     }
 
-    private void setRideRequestBasicLayoutButtonsOnClickListener(final BasicRideRequest rideRequest){
+    private void setRideRequestBasicLayoutButtonsOnClickListener(){
         mRideRequestCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Ride Request Cancelled for id:"+rideRequest.getId());
-                updateRideRequestBasicLayoutButtonsVisiblity(rideRequest);
+                Log.d(TAG, "Ride Request Cancelled for id:"+mRideRequest.getId());
+                updateRideRequestBasicLayoutButtonsVisiblity();
             }
         });
         mDestinationNavigationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Navigate to Destination for Id:"+rideRequest.getId());
-                updateRideRequestBasicLayoutButtonsVisiblity(rideRequest);
+                Log.d(TAG, "Navigate to Destination for Id:"+mRideRequest.getId());
+                updateRideRequestBasicLayoutButtonsVisiblity();
             }
         });
     }
 
-    private void updateRideRequestBasicLayoutButtonsVisiblity(BasicRideRequest rideRequest){
-        if (rideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)) {
+    private void updateRideRequestBasicLayoutButtonsVisiblity(){
+        if (mRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)) {
             mDestinationNavigationButton.setVisibility(View.GONE);
         }
-        if (rideRequest.getStatus().equals(RideRequestStatus.Cancelled)){
+        if (mRideRequest.getStatus().equals(RideRequestStatus.Cancelled)){
             mBasicRideRequestButtonsLayout.setVisibility(View.GONE);
         }
-        if (rideRequest.getStatus().equals(RideRequestStatus.Fulfilled)){
-            if (rideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
+        if (mRideRequest.getStatus().equals(RideRequestStatus.Fulfilled)){
+            if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
                 mDestinationNavigationButton.setVisibility(View.GONE);
             } else {
                 mRideRequestCancelButton.setVisibility(View.GONE);
             }
         }
-        Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(rideRequest);
+        Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mRideRequest);
 
         Log.d(TAG, "Drop Time with Variation:"+maxEndTime.getTime().toString());
         Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
 
         //This will make cancel invisible if current time is after pickup time + pickup variation + travel time
         if (maxEndTime.before(Calendar.getInstance())){
-            Log.d(TAG, "Pickup time lapsed, so no cancel button for id:"+rideRequest.getId());
+            Log.d(TAG, "Pickup time lapsed, so no cancel button for id:"+mRideRequest.getId());
             mRideRequestCancelButton.setVisibility(View.GONE);
         }
     }
@@ -120,8 +154,7 @@ public class RideRequestComp{
         UserComp userComp = new UserComp(mBaseFragment, null);
         userComp.setUserProfileSingleRow(view, mRideRequest.getAcceptedRide().getDriver());
 
-        RideComp rideComp = new RideComp(mBaseFragment, null);
-        rideComp.setPickupTimeAndBillLayout(view, (BasicRideRequest) mRideRequest);
+        setPickupTimeAndBillLayout(view, (BasicRideRequest) mRideRequest);
 
         ((TextView) view.findViewById(R.id.ride_pickup_point_text)).setText(mRideRequest.getRidePickupPointAddress());
         ((TextView) view.findViewById(R.id.ride_drop_point_text)).setText(mRideRequest.getRideDropPointAddress());
@@ -179,6 +212,97 @@ public class RideRequestComp{
         }
 
     }
+
+    public void setPickupTimeAndBillLayout(View view, BasicRideRequest rideRequest){
+        View layout = view.findViewById(R.id.pickup_time_bill_layout);
+        TextView pickupTimeTextView = layout.findViewById(R.id.pickup_time_text);
+        Date pickupTime = rideRequest.getRidePickupPoint().getRidePointProperties().get(0).getDateTime();
+        String pickupTimeString = mCommonUtil.getFormattedDateTimeString(pickupTime);
+        pickupTimeTextView.setText(pickupTimeString);
+
+        TextView fareTextView = layout.findViewById(R.id.fare_text);
+        //String amount = Float.toString(rideRequest.getBill().getAmount());
+        //fareTextView.setText(amount);
+
+        TextView billStatusTextView = layout.findViewById(R.id.bill_status);
+        //billStatusTextView.setText(rideRequest.getBill().getStatus().toString());
+    }
+
+    public void setRidePickupDropPointsLayout(View view, BasicRideRequest rideRequest){
+        View layout = view.findViewById(R.id.ride_pickup_drop_point_layout);
+        TextView pickupPointTextView = layout.findViewById(R.id.ride_pickup_point_text);
+        pickupPointTextView.setText(rideRequest.getRidePickupPointAddress());
+
+        TextView dropPointTextView = layout.findViewById(R.id.ride_drop_point_text);
+        dropPointTextView.setText(rideRequest.getRideDropPointAddress());
+
+    }
+
+    public void setCoTravellerButtonsOnClickListener(final View view, final BasicRideRequest rideRequest){
+        //Don't get on layout as its not an external layout which is used as include, get on view.findviewbyId
+        Button rejectButton = view.findViewById(R.id.co_traveller_cancel_button);
+        Button pickupButton = view.findViewById(R.id.co_traveller_pickup_button);
+        Button dropButton = view.findViewById(R.id.co_traveller_drop_button);
+
+        rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Passenger Cancelled - " + rideRequest.getPassenger().getFirstName());
+                updateCoTravellerButtonsVisibility(view, rideRequest);
+            }
+        });
+
+        pickupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Passenger Picked - " + rideRequest.getPassenger().getFirstName());
+                updateCoTravellerButtonsVisibility(view, rideRequest);
+            }
+        });
+
+        dropButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Passenger Dropped - " + rideRequest.getPassenger().getFirstName());
+                updateCoTravellerButtonsVisibility(view, rideRequest);
+            }
+        });
+    }
+
+    public void updateCoTravellerButtonsVisibility(View view, final BasicRideRequest rideRequest){
+
+        //Don't get on layout as its not an external layout which is used as include, get on view.findviewbyId
+        Button cancelButton = view.findViewById(R.id.co_traveller_cancel_button);
+        Button pickupButton = view.findViewById(R.id.co_traveller_pickup_button);
+        Button dropButton = view.findViewById(R.id.co_traveller_drop_button);
+        RatingBar ratingBar = view.findViewById(R.id.co_traveller_rating_bar);
+        View buttonsLayout = view.findViewById(R.id.co_traveller_buttons_layout);
+
+        //Intial value of rating bar
+        ratingBar.setVisibility(View.GONE);
+
+        Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(rideRequest);
+
+        if (rideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
+
+            if (maxEndTime.before(Calendar.getInstance())){
+                //This will make cancel button invisible post the ride request max end time has lapsed
+                cancelButton.setVisibility(View.GONE);
+            }
+            pickupButton.setVisibility(View.GONE);
+            dropButton.setVisibility(View.GONE);
+        }
+        if (rideRequest.getPassengerStatus().equals(PassengerStatus.Picked)){
+            cancelButton.setVisibility(View.GONE);
+            pickupButton.setVisibility(View.GONE);
+        }
+        if (rideRequest.getPassengerStatus().equals(PassengerStatus.Dropped)){
+            buttonsLayout.setVisibility(View.GONE);
+            ratingBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+
 
 }
 

@@ -66,7 +66,7 @@ import cz.msebera.android.httpclient.Header;
  * create an instance of this fragment.
  */
 public class HomePageWithCurrentRidesFragment extends BaseFragment
-        implements OnMapReadyCallback{
+        implements OnMapReadyCallback, RideComp.RideCompListener{
 
     public static final String TAG = HomePageWithCurrentRidesFragment.class.getName();
     public static final String NO_RIDE_TITLE = "Ride Share";
@@ -323,7 +323,15 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         if (mapFragment != null) {
             //This needs to be called if you are facing duplicate map id on fragment reload
             //getActivity().getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
+            //This will just ensure map will get reloaded from scratch on fragment reload. This is different than above solution
+            //This is required else old markers is not getting cleared
+            mMap = null;
         }
+    }
+
+    @Override
+    public void onRideRefresh(FullRide ride) {
+        Log.d(TAG, "Recieved Callback for Refresh for Ride Id:"+ride.getId());
     }
 
     private enum CurrentRidesStatus{
@@ -366,7 +374,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
 
         RideComp rideComp = new RideComp(this, mCurrentRide);
-        rideComp.setBasicRideLayout(view, (BasicRide) mCurrentRide);
+        rideComp.setBasicRideLayout(view);
 
         RecyclerView recyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
         RecyclerView.Adapter adapter = new ThumbnailCoTravellerAdapter(this, (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
@@ -379,7 +387,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
 
         RideRequestComp rideRequestComp = new RideRequestComp(this, mCurrentRideRequest);
-        rideRequestComp.setRideRequestBasicLayout(view, (BasicRideRequest) mCurrentRideRequest);
+        rideRequestComp.setRideRequestBasicLayout(view);
 
         if (mCurrentRideRequest.getAcceptedRide()!=null){
             UserComp userComp = new UserComp(this, null);

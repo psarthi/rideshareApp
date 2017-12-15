@@ -48,8 +48,8 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(RideListAdapter.ViewHolder holder, final int position) {
-        RideComp rideComp = new RideComp(mBaseFragment, null);
-        rideComp.setBasicRideLayout(holder.itemView, mRides.get(position));
+        RideComp rideComp = new RideComp(mBaseFragment, mRides.get(position));
+        rideComp.setBasicRideLayout(holder.itemView);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -42,7 +42,7 @@ import java.util.List;
 public class RideInfoFragment extends BaseFragment implements
         DropCoTravellerFragment.DropCoTravellerFragmentListener,
         RejectCoTravellerFragment.RejectCoTravellerFragmentListener,
-        OnMapReadyCallback {
+        OnMapReadyCallback, RideComp.RideCompListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RIDE = "ride";
@@ -95,7 +95,7 @@ public class RideInfoFragment extends BaseFragment implements
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_info, container, false);
         RideComp rideComp = new RideComp(this, mRide);
-        rideComp.setBasicRideLayout(view, (BasicRide) mRide);
+        rideComp.setBasicRideLayout(view);
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_info_map);
         mapFragment.getMapAsync(this);
@@ -223,6 +223,14 @@ public class RideInfoFragment extends BaseFragment implements
 
     }
 
+    @Override
+    public void onRideRefresh(FullRide ride) {
+        Log.d(TAG, "Recieved Callback for Refresh for Ride Id:"+ride.getId());
+    }
+
+    public int getRideId(){
+        return mRide.getId();
+    }
 
     /**
      * This interface must be implemented by activities that contain this

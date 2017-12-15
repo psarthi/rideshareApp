@@ -82,7 +82,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_request_info, container, false);
         RideRequestComp rideRequestComp = new RideRequestComp(this, mRideRequest);
-        rideRequestComp.setRideRequestBasicLayout(view, (BasicRideRequest) mRideRequest);
+        rideRequestComp.setRideRequestBasicLayout(view);
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_request_info_map);
         mapFragment.getMapAsync(this);
@@ -157,6 +157,10 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
             }
         });
 
+    }
+
+    public int getRideRequestId(){
+        return mRideRequest.getId();
     }
 
     /**

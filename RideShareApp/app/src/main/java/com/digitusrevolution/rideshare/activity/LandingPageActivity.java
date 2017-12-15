@@ -13,6 +13,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
 import com.digitusrevolution.rideshare.model.user.domain.RegistrationType;
@@ -212,7 +213,8 @@ public class LandingPageActivity extends BaseActivity{
                                     @Override
                                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                                        Log.d(TAG,"Failed Response:"+errorResponse.toString());
+                                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                        Log.d(TAG, errorMessage.getErrorMessage());
                                     }
                                 });
                     }
@@ -220,6 +222,13 @@ public class LandingPageActivity extends BaseActivity{
                         Log.d(TAG,"User doesn't exist:" + account.getEmail());
                         mobileRegistration(account);
                     }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                    Log.d(TAG, errorMessage.getErrorMessage());
                 }
             });
 
