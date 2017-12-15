@@ -35,6 +35,7 @@ import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRidesInfo;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -74,30 +75,24 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     // These are the keys which would be used to store and retrieve the data
+    private static final String ARG_FETCH_RIDES_FROM_SERVER = "fetchRidesFromServer";
     private static final String ARG_DATA = "data";
 
     // TODO: Rename and change types of parameters
     private String mData;
+    private boolean mFetchRidesFromServer;
     private BasicUser mUser;
     private FullRide mCurrentRide;
     private FullRideRequest mCurrentRideRequest;
     private OnFragmentInteractionListener mListener;
-    private TextView mTextView;
     private LinearLayout mCurrentRideLinearLayout;
     private LinearLayout mCurrentRideRequestLinearLayout;
-    private TextView mCurrentRideTextView;
-    private TextView mCurrentRideRequestTextView;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private CommonUtil mCommonUtil;
     private FragmentLoader mFragmentLoader;
     private GoogleMap mMap;
+    private View mMapView;
     private MapComp mMapComp;
     private CurrentRidesStatus mCurrentRidesStatus;
-    private View mMapView;
-    private boolean mCurrentRideLoaded;
-    private boolean mCurrentRideRequestLoaded;
 
     public HomePageWithCurrentRidesFragment() {
         // Required empty public constructor
@@ -107,14 +102,16 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
+     * @param fetchRidesFromServer status (true for fetch from server, else false for local from sharedPrefs)
      * @param data  Data in Json format
      * @return A new instance of fragment HomePageWithCurrentRidesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomePageWithCurrentRidesFragment newInstance(String data) {
+    public static HomePageWithCurrentRidesFragment newInstance(boolean fetchRidesFromServer, String data) {
         HomePageWithCurrentRidesFragment fragment = new HomePageWithCurrentRidesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_DATA, data);
+        args.putBoolean(ARG_FETCH_RIDES_FROM_SERVER, fetchRidesFromServer);
         fragment.setArguments(args);
         return fragment;
     }
@@ -125,6 +122,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mData = getArguments().getString(ARG_DATA);
+            mFetchRidesFromServer = getArguments().getBoolean(ARG_FETCH_RIDES_FROM_SERVER);
         }
         mFragmentLoader = new FragmentLoader(this);
         mCommonUtil = new CommonUtil(this);
@@ -137,35 +135,19 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         Log.d(TAG, "onCreateView Called");
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
+        final View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
         mCurrentRideLinearLayout = view.findViewById(R.id.current_ride_layout);
         mCurrentRideRequestLinearLayout = view.findViewById(R.id.current_ride_request_layout);
+        mMapView = view.findViewById(R.id.home_page_map);
+        //Initial title whenever page loads, otherwise it shows previous page title and then it transition to new one and if there is a lag its clearly visible
+        getActivity().setTitle(NO_RIDE_TITLE);
 
-        //Make Ride & Ride Request layout invisible
+        //Make Ride, Ride Request & Map layout invisible, so that it loads on clean slate otherwise,
+        //if you load map first then change camera later, then it looks awkward
         mCurrentRideLinearLayout.setVisibility(View.GONE);
         mCurrentRideRequestLinearLayout.setVisibility(View.GONE);
+        mMapView.setVisibility(View.GONE);
         showRidesLayoutVisibilityStatusForDebugging();
-
-
-        //Reason for putting it here, so that whenever the fragment get loaded either new or from backstack, onCreateView would get the latest
-        //Otherwise, it was showing old ride information
-        mCurrentRide = mCommonUtil.getCurrentRide();
-        mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
-        mCurrentRidesStatus = getCurrentRidesStatus();
-
-        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
-            Log.d(TAG, "Setting Current Ride View");
-            setCurrentRideView(view);
-        }
-        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)){
-            Log.d(TAG, "Setting Current Ride Request View");
-            setCurrentRideRequestView(view);
-        }
-
-
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.home_page_map);
-        mapFragment.getMapAsync(this);
-        mMapView = view.findViewById(R.id.home_page_map);
 
         view.findViewById(R.id.home_page_offer_ride_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,7 +162,57 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
                 mFragmentLoader.loadCreatesRideFragment(RideType.RequestRide, null);
             }});
 
+        //Reason for putting it here, so that whenever the fragment get loaded either new or from backstack, onCreateView would get the latest
+        //Otherwise, it was showing old ride information
+        if (!mFetchRidesFromServer){
+            mCurrentRide = mCommonUtil.getCurrentRide();
+            mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
+            setHomePageView(view);
+        } else {
+            fetchRidesFromServer(view);
+        }
         return view;
+    }
+
+    private void fetchRidesFromServer(final View view) {
+        String GET_USER_CURRENT_RIDES = APIUrl.GET_USER_CURRENT_RIDES.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+        RESTClient.get(GET_USER_CURRENT_RIDES, null, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                FullRidesInfo fullRidesInfo = new Gson().fromJson(response.toString(), FullRidesInfo.class);
+                mCurrentRide = fullRidesInfo.getRide();
+                mCurrentRideRequest = fullRidesInfo.getRideRequest();
+                mCommonUtil.updateCurrentRide(mCurrentRide);
+                mCommonUtil.updateCurrentRideRequest(mCurrentRideRequest);
+                setHomePageView(view);
+            }
+        });
+    }
+
+    private void setHomePageView(View view) {
+
+        //This will get status based on current ride and ride request value
+        mCurrentRidesStatus = getCurrentRidesStatus();
+
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
+            Log.d(TAG, "Setting Current Ride View");
+            getActivity().setTitle(CURRENT_RIDE_TITLE);
+            setCurrentRideView(view);
+        }
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)){
+            Log.d(TAG, "Setting Current Ride Request View");
+            getActivity().setTitle(CURRENT_RIDE_REQUEST_TITLE);
+            setCurrentRideRequestView(view);
+        }
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
+            getActivity().setTitle(NO_RIDE_TITLE);
+        }
+
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.home_page_map);
+        mapFragment.getMapAsync(this);
+        mMapView.setVisibility(View.VISIBLE);
+
     }
 
 
@@ -271,17 +303,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     public void onResume() {
         super.onResume();
         //((HomePageActivity)getActivity()).showBackButton(false);
-        //Its important to set Title here else while loading fragment from backstack, title would not change
-        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
-            getActivity().setTitle(CURRENT_RIDE_TITLE);
-        }
-        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)){
-            getActivity().setTitle(CURRENT_RIDE_REQUEST_TITLE);
-        }
-        if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
-            getActivity().setTitle(NO_RIDE_TITLE);
-        }
-
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
         showChildFragmentDetails();
@@ -330,6 +351,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     private void showRidesLayoutVisibilityStatusForDebugging(){
         Log.d(TAG,"Current Ride Visibility: " + Integer.toString(mCurrentRideLinearLayout.getVisibility()));
         Log.d(TAG,"Current Ride Request Visibility: " + Integer.toString(mCurrentRideRequestLinearLayout.getVisibility()));
+        Log.d(TAG,"Current Map Visibility: " + Integer.toString(mMapView.getVisibility()));
     }
 
     private void setCurrentRideView(View view){
@@ -340,9 +362,9 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         RideComp rideComp = new RideComp(this, mCurrentRide);
         rideComp.setBasicRideLayout(view, (BasicRide) mCurrentRide);
 
-        mRecyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
-        mAdapter = new ThumbnailCoTravellerAdapter(this, (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
-        setRecyclerView(mRecyclerView, mAdapter, LinearLayoutManager.HORIZONTAL);
+        RecyclerView recyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
+        RecyclerView.Adapter adapter = new ThumbnailCoTravellerAdapter(this, (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
+        setRecyclerView(recyclerView, adapter, LinearLayoutManager.HORIZONTAL);
     }
 
     private void setCurrentRideRequestView(View view){

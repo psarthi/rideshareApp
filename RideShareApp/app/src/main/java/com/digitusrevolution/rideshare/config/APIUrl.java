@@ -40,6 +40,7 @@ public class APIUrl {
     public static final String GET_RIDE_REQUEST_URL = BASE_URL_RIDE_SYSTEM + "/riderequests/{id}";
     public static final String GET_CURRENT_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/current/{userId}";
     public static final String GET_CURRENT_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/current/{userId}";
+    public static final String GET_USER_CURRENT_RIDES = BASE_URL_RIDE_SYSTEM + "/ridesystem/current/rides/{userId}";
 
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +

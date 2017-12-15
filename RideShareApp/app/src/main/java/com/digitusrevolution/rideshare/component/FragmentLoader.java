@@ -84,10 +84,10 @@ public class FragmentLoader {
                 .commit();
     }
 
-    public void loadHomePageWithCurrentRidesFragment() {
+    public void loadHomePageWithCurrentRidesFragment(boolean fetchRidesFromServer, String data) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         HomePageWithCurrentRidesFragment homePageWithCurrentRidesFragment = HomePageWithCurrentRidesFragment.
-                newInstance(null);
+                newInstance(fetchRidesFromServer, data);
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, homePageWithCurrentRidesFragment, HomePageWithCurrentRidesFragment.TAG);
         fragmentTransaction.commit();

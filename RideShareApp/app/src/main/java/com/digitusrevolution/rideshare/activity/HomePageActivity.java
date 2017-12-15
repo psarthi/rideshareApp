@@ -82,7 +82,7 @@ public class HomePageActivity extends BaseActivity
         mUser = mCommonUtil.getUser();
 
         setNavHeader(navigationView);
-        mFragmentLoader.loadHomePageWithCurrentRidesFragment();
+        mFragmentLoader.loadHomePageWithCurrentRidesFragment(false, null);
     }
 
     private void setNavHeader(NavigationView navigationView) {
@@ -123,7 +123,7 @@ public class HomePageActivity extends BaseActivity
         removeAllBackStacks();
         //Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
         if (id == R.id.nav_home) {
-            mFragmentLoader.loadHomePageWithCurrentRidesFragment();
+            mFragmentLoader.loadHomePageWithCurrentRidesFragment(true, null);
         } else if (id == R.id.nav_rides) {
             mFragmentLoader.loadRidesListFragment();
         } else if (id == R.id.nav_friends) {
@@ -171,7 +171,7 @@ public class HomePageActivity extends BaseActivity
         //which was causing old map to show up with previous markers/lines
         removeAllBackStacks();
         FragmentLoader fragmentLoader = new FragmentLoader(this);
-        fragmentLoader.loadHomePageWithCurrentRidesFragment();
+        fragmentLoader.loadHomePageWithCurrentRidesFragment(true, null);
     }
 
     @Override
