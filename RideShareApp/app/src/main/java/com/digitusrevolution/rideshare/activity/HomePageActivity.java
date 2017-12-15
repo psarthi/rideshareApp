@@ -27,6 +27,7 @@ import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.model.app.FetchType;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -82,7 +83,7 @@ public class HomePageActivity extends BaseActivity
         mUser = mCommonUtil.getUser();
 
         setNavHeader(navigationView);
-        mFragmentLoader.loadHomePageWithCurrentRidesFragment(false, null);
+        mFragmentLoader.loadHomePageWithCurrentRidesFragment(FetchType.Local, null);
     }
 
     private void setNavHeader(NavigationView navigationView) {
@@ -120,20 +121,48 @@ public class HomePageActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        removeAllBackStacks();
+
+        /* Commented and kept for the reference on the problem faced
+        if (id != R.id.nav_home){
+            //This will ensure that Home page is never killed once you load first time otherwise you will get NPE as
+            //when it loads it makes REST call and by the time response comes, you have already killed the instance and
+            //reinitiated the new one, so for any page where we are making REST call on home page, we need to avoid killing fragment
+            //In Case of home page fragment, i am updating the value in sharedPrefs post getting the data where BaseFragment reference is killed
+            //but in other scenarios's e.g. Rides List i am not updating anything in sharedPrefs which is fine
+            removeAllBackStacks();
+        }
+        */
         //Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
+
         if (id == R.id.nav_home) {
-            mFragmentLoader.loadHomePageWithCurrentRidesFragment(true, null);
-        } else if (id == R.id.nav_rides) {
-            mFragmentLoader.loadRidesListFragment();
-        } else if (id == R.id.nav_friends) {
-            mFragmentLoader.loadRideInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRide()));
-        } else if (id == R.id.nav_groups) {
-            mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRideRequest()));
-        } else if (id == R.id.nav_vehicles) {
-            mFragmentLoader.loadAddVehicleFragment(RideType.RequestRide,null);
-        } else if (id == R.id.nav_preference) {
-            mFragmentLoader.loadRidesOptionFragment(RideType.OfferRide, null);
+            Log.d(TAG, "Home Clicked");
+            //First set the fetchType
+            ((HomePageWithCurrentRidesFragment) getSupportFragmentManager().findFragmentByTag(HomePageWithCurrentRidesFragment.TAG))
+                    .setFetchType(FetchType.Server);
+            //This has to be post setting the FetchType else we will not get data refreshed from server
+            removeAllBackStacks();
+            //mFragmentLoader.loadHomePageWithCurrentRidesFragment(true, null);
+        } else {
+
+            //This is applicable for all items
+            removeAllBackStacks();
+
+            if (id == R.id.nav_rides) {
+                Log.d(TAG, "Rides Clicked");
+                mFragmentLoader.loadRidesListFragment();
+            } else if (id == R.id.nav_friends) {
+                Log.d(TAG, "Friends Clicked");
+                mFragmentLoader.loadRideInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRide()));
+            } else if (id == R.id.nav_groups) {
+                Log.d(TAG, "Groups Clicked");
+                mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRideRequest()));
+            } else if (id == R.id.nav_vehicles) {
+                Log.d(TAG, "Vehicles Clicked");
+                mFragmentLoader.loadAddVehicleFragment(RideType.RequestRide,null);
+            } else if (id == R.id.nav_preference) {
+                Log.d(TAG, "Preference Clicked");
+                mFragmentLoader.loadRidesOptionFragment(RideType.OfferRide, null);
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -148,10 +177,20 @@ public class HomePageActivity extends BaseActivity
         //  1. while (fragmentManager.getBackStackEntryCount() != 0)
         //  2. getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         //Use following option only which works fine
+
+        //ISSUE Resolved by not reloading the Home Fragment as popbackstack would by default load Home Fragment once all fragment is popped
+        //NOTE - VERY IMP - This has serious issue in handling REST Response while popping backtack.
+        //Actually what happens when you do popbackstack one fragment is moved out but previous one is reloaded and this process continues
+        //till we come to an end. What it means - onCreateView would be called and then onDestroy immediately but if you are using REST call
+        //then response of that is not handled as before that it has been killed by this popbackstack and if you are using any reference of the fragment
+        //onSuccess response e.g. mCommonUtil etc. then you will get NPE
+
         int count = getSupportFragmentManager().getBackStackEntryCount();
-        Log.d(TAG, "Backstack Counts Before is:"+count);
+        Log.d(TAG, "Backstack Count is:"+count);
         for (int i = 0; i < count; i++) {
             int backStackId = getSupportFragmentManager().getBackStackEntryAt(i).getId();
+            String name = getSupportFragmentManager().getBackStackEntryAt(i).getName();
+            Log.d(TAG, "Removing Backstack [Name,Id]:"+name+","+backStackId);
             getSupportFragmentManager().popBackStack(backStackId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
@@ -171,7 +210,7 @@ public class HomePageActivity extends BaseActivity
         //which was causing old map to show up with previous markers/lines
         removeAllBackStacks();
         FragmentLoader fragmentLoader = new FragmentLoader(this);
-        fragmentLoader.loadHomePageWithCurrentRidesFragment(true, null);
+        fragmentLoader.loadHomePageWithCurrentRidesFragment(FetchType.Server, null);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.digitusrevolution.rideshare.component;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.BaseActivity;
@@ -16,6 +17,7 @@ import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.model.app.FetchType;
 import com.digitusrevolution.rideshare.model.app.RideType;
 
 /**
@@ -84,15 +86,19 @@ public class FragmentLoader {
                 .commit();
     }
 
-    public void loadHomePageWithCurrentRidesFragment(boolean fetchRidesFromServer, String data) {
+    //We would like to load this fragment everytime so that we we can fetch latest data, so getting old fragment would not work
+    public void loadHomePageWithCurrentRidesFragment(FetchType fetchType, String data) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         HomePageWithCurrentRidesFragment homePageWithCurrentRidesFragment = HomePageWithCurrentRidesFragment.
-                newInstance(fetchRidesFromServer, data);
+                    newInstance(fetchType, data);
         //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, homePageWithCurrentRidesFragment, HomePageWithCurrentRidesFragment.TAG);
         fragmentTransaction.commit();
     }
 
+    //Don't implement the same logic of getting the old fragment and create only when null.
+    //This may impact the content of the fragment as we are passing ride in newInstance
+    // and if used old one then old data of another ride would come. Need to think better
     public void loadRideInfoFragment(String ride) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         RideInfoFragment rideInfoFragment = RideInfoFragment.
@@ -102,6 +108,9 @@ public class FragmentLoader {
         fragmentTransaction.commit();
     }
 
+    //Don't implement the same logic of getting the old fragment and create only when null.
+    //This may impact the content of the fragment as we are passing rideRequest in newInstance
+    // and if used old one then old data of another ride request would come. Need to think better
     public void loadRideRequestInfoFragment(String rideRequest) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         RideRequestInfoFragment rideRequestInfoFragment = RideRequestInfoFragment.

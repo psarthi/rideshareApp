@@ -148,6 +148,7 @@ public class RidesListHomePageFragment extends BaseFragment {
     public void onResume() {
         Log.d(TAG,"onResume");
         super.onResume();
+        showBackStackDetails();
         getActivity().setTitle(TITLE);
     }
 

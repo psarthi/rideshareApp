@@ -30,6 +30,7 @@ import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.app.FetchType;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
@@ -75,12 +76,12 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     // These are the keys which would be used to store and retrieve the data
-    private static final String ARG_FETCH_RIDES_FROM_SERVER = "fetchRidesFromServer";
+    private static final String ARG_FETCH_TYPE = "fetchType";
     private static final String ARG_DATA = "data";
 
     // TODO: Rename and change types of parameters
     private String mData;
-    private boolean mFetchRidesFromServer;
+    private FetchType mFetchType;
     private BasicUser mUser;
     private FullRide mCurrentRide;
     private FullRideRequest mCurrentRideRequest;
@@ -102,27 +103,32 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param fetchRidesFromServer status (true for fetch from server, else false for local from sharedPrefs)
+     * @param fetchType Local or Server
      * @param data  Data in Json format
      * @return A new instance of fragment HomePageWithCurrentRidesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomePageWithCurrentRidesFragment newInstance(boolean fetchRidesFromServer, String data) {
+    public static HomePageWithCurrentRidesFragment newInstance(FetchType fetchType, String data) {
         HomePageWithCurrentRidesFragment fragment = new HomePageWithCurrentRidesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_DATA, data);
-        args.putBoolean(ARG_FETCH_RIDES_FROM_SERVER, fetchRidesFromServer);
+        args.putString(ARG_FETCH_TYPE, fetchType.toString());
         fragment.setArguments(args);
         return fragment;
     }
 
+    public void setFetchType(FetchType fetchType) {
+        Log.d(TAG, "Fetch Type has been set to:"+fetchType.toString());
+        mFetchType = fetchType;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate Called");
+        Log.d(TAG, "onCreate Called of instance:"+this.hashCode());
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mData = getArguments().getString(ARG_DATA);
-            mFetchRidesFromServer = getArguments().getBoolean(ARG_FETCH_RIDES_FROM_SERVER);
+            mFetchType = FetchType.valueOf(getArguments().getString(ARG_FETCH_TYPE));
         }
         mFragmentLoader = new FragmentLoader(this);
         mCommonUtil = new CommonUtil(this);
@@ -132,7 +138,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView Called");
+        Log.d(TAG, "onCreateView Called of instance:"+this.hashCode());
 
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
@@ -164,7 +170,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
         //Reason for putting it here, so that whenever the fragment get loaded either new or from backstack, onCreateView would get the latest
         //Otherwise, it was showing old ride information
-        if (!mFetchRidesFromServer){
+        if (mFetchType.equals(FetchType.Local)){
             mCurrentRide = mCommonUtil.getCurrentRide();
             mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
             setHomePageView(view);
@@ -303,7 +309,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     public void onResume() {
         super.onResume();
         //((HomePageActivity)getActivity()).showBackButton(false);
-        Log.d(TAG,"Inside OnResume");
+        Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
         showBackStackDetails();
         showChildFragmentDetails();
     }
@@ -311,7 +317,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "Inside Destroy View");
+        Log.d(TAG, "Inside Destroy View of instance:"+this.hashCode());
         showChildFragmentDetails();
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.home_page_map);
         if (mapFragment != null) {
@@ -387,6 +393,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     @Override
     public void onAttach(Context context) {
+        Log.d(TAG, "Inside onAttach of instance:"+this.hashCode());
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -398,6 +405,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     @Override
     public void onDetach() {
+        Log.d(TAG, "Inside onDetach of instance:"+this.hashCode());
         super.onDetach();
         mListener = null;
     }
