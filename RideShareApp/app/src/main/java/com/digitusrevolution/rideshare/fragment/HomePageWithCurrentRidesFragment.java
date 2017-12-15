@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
@@ -32,7 +31,6 @@ import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.FetchType;
 import com.digitusrevolution.rideshare.model.app.RideType;
-import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
@@ -66,7 +64,8 @@ import cz.msebera.android.httpclient.Header;
  * create an instance of this fragment.
  */
 public class HomePageWithCurrentRidesFragment extends BaseFragment
-        implements OnMapReadyCallback, RideComp.RideCompListener{
+        implements OnMapReadyCallback, RideComp.RideCompListener,
+        RideRequestComp.RideRequestCompListener{
 
     public static final String TAG = HomePageWithCurrentRidesFragment.class.getName();
     public static final String NO_RIDE_TITLE = "Ride Share";
@@ -94,6 +93,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     private View mMapView;
     private MapComp mMapComp;
     private CurrentRidesStatus mCurrentRidesStatus;
+    private boolean mMapLoaded;
 
     public HomePageWithCurrentRidesFragment() {
         // Required empty public constructor
@@ -225,10 +225,15 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     //Keep this here instead of moving to BaseFragment, so that you have better control
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady called");
+        Log.d(TAG, "onMapReady called of instance:"+this.hashCode());
         mMap = googleMap;
         mMapComp = new MapComp(this, googleMap);
         mMapComp.setPadding(true);
+
+        if (mMapLoaded){
+            Log.d(TAG, "Map already loaded");
+            drawOnMap();
+        }
 
         //TODO think on how to move this in common location so that we don't have to repeat this
         //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
@@ -241,20 +246,25 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
                 //This will ensure only once this is called
                 mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 Log.d(TAG, "Map Layout is ready");
-                if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)) {
-                    Log.d(TAG, "Setting Ride On Map");
-                    mMapComp.setRideOnMap(mCurrentRide);
-                }
-                if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)) {
-                    Log.d(TAG, "Setting Ride Request On Map");
-                    mMapComp.setRideRequestOnMap(mCurrentRideRequest);
-                }
-                if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
-                    Log.d(TAG, "No Ride On Map");
-                    setCurrentLocation();
-                }
+                mMapLoaded = true;
+                drawOnMap();
             }
         });
+    }
+
+    private void drawOnMap() {
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)) {
+            Log.d(TAG, "Setting Ride On Map");
+            mMapComp.setRideOnMap(mCurrentRide);
+        }
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)) {
+            Log.d(TAG, "Setting Ride Request On Map");
+            mMapComp.setRideRequestOnMap(mCurrentRideRequest);
+        }
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
+            Log.d(TAG, "No Ride On Map");
+            setCurrentLocation();
+        }
     }
 
     // Don't move this to BaseFragment or MapComp for resuse, as this will unnecessarily required additional callbacks and lots of complication
@@ -263,12 +273,12 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         Context context = getActivity();
         Activity activity = getActivity();
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Location Permission not there");
+            Log.d(TAG, "Location Permission not there of instance:"+this.hashCode());
             //This is important for Fragment and not we are not using Activity requestPermissions method but we are using Fragment requestPermissions,
             // so that request can be handled in this class itself instead of handling it in Activity class
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constant.ACCESS_FINE_LOCATION_REQUEST_CODE);
         } else {
-            Log.d(TAG, "Location Permission already there");
+            Log.d(TAG, "Location Permission already there of instance:"+this.hashCode());
             FusedLocationProviderClient locationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
             locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                 @Override
@@ -319,19 +329,30 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         super.onDestroyView();
         Log.d(TAG, "Inside Destroy View of instance:"+this.hashCode());
         showChildFragmentDetails();
+        //This will ensure it just clears the marker
+        mMap.clear();
+
+        //Below remarks is for reference. Commented till we find cleaner solution to ensure maps get reloaded
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.home_page_map);
         if (mapFragment != null) {
+            //Note - Don't use below one of remove mapfrgament as it also kills HomePageFragment as well
             //This needs to be called if you are facing duplicate map id on fragment reload
             //getActivity().getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
+            //Note - Don't use this one as somehow this is not working, instead remove mapFragment completely as shown above
             //This will just ensure map will get reloaded from scratch on fragment reload. This is different than above solution
             //This is required else old markers is not getting cleared
-            mMap = null;
+            //mMap = null;
         }
     }
 
     @Override
     public void onRideRefresh(FullRide ride) {
         Log.d(TAG, "Recieved Callback for Refresh for Ride Id:"+ride.getId());
+    }
+
+    @Override
+    public void onRideRequestRefresh(FullRideRequest rideRequest) {
+        Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id:"+rideRequest.getId());
     }
 
     private enum CurrentRidesStatus{

@@ -17,6 +17,7 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRidePassenger;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 
 import java.util.List;
@@ -30,11 +31,13 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
     public static final String TAG = CoTravellerAdapter.class.getName();
     private List<BasicRideRequest> mRideRequests;
     private BaseFragment mBaseFragment;
+    private FullRide mRide;
 
-    public CoTravellerAdapter(BaseFragment fragment, List<BasicRideRequest> rideRequests){
+    public CoTravellerAdapter(BaseFragment fragment, List<BasicRideRequest> rideRequests, FullRide ride){
         super(fragment.getActivity(),-1,rideRequests);
         mRideRequests = rideRequests;
         mBaseFragment = fragment;
+        mRide = ride;
     }
 
     @Override
@@ -63,10 +66,12 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
         RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, null);
         rideRequestComp.setPickupTimeAndBillLayout(convertView, rideRequest);
         rideRequestComp.setRidePickupDropPointsLayout(convertView, rideRequest);
+
+        RideComp rideComp = new RideComp(mBaseFragment, mRide);
         //This will set the visibility of co traveller buttons initially
-        rideRequestComp.updateCoTravellerButtonsVisibility(convertView, rideRequest);
+        rideComp.updateCoTravellerButtonsVisibility(convertView, rideRequest);
         //This will set the listeners on co traveller buttons
-        rideRequestComp.setCoTravellerButtonsOnClickListener(convertView, rideRequest);
+        rideComp.setCoTravellerButtonsOnClickListener(convertView, rideRequest);
 
 
         RatingBar ratingBar = convertView.findViewById(R.id.co_traveller_rating_bar);

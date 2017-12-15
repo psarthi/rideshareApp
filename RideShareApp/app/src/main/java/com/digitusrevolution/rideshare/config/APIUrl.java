@@ -48,7 +48,7 @@ public class APIUrl {
     public static final String CANCEL_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/cancel/{id}";
     public static final String PICKUP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/pickup/{rideRequestId}";
     public static final String DROP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/drop/{rideRequestId}";
-    public static final String CANCEL_ACCEPTED_RIDEREQUEST = BASE_URL_RIDE_SYSTEM + "/rides{rideId}/cancel/acceptedriderequest/{rideRequestId}";
+    public static final String CANCEL_ACCEPTED_RIDEREQUEST = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/cancel/acceptedriderequest/{rideRequestId}";
     public static final String CANCEL_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/cancel/{id}";
 
 

@@ -105,7 +105,7 @@ public class RideInfoFragment extends BaseFragment implements
         //Note - We are using the same adapter which is also applicable for listview,
         //but this can be used for our own prupose and in this case, its the best suitable option
         ArrayAdapter<BasicRideRequest> coTravellerAdapter = new CoTravellerAdapter(
-                this, (List<BasicRideRequest>) mRide.getAcceptedRideRequests());
+                this, (List<BasicRideRequest>) mRide.getAcceptedRideRequests(), mRide);
 
         for (int i=0; i<mRide.getAcceptedRideRequests().size(); i++){
             View coTravellerView = coTravellerAdapter.getView(i, null, container);

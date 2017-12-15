@@ -151,7 +151,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
      * @return A new instance of fragment CreateRidesFragment.
      */
     public static CreateRidesFragment newInstance(RideType rideType, String data) {
-        Log.d(TAG, "newInstance Called");
+        Log.d(TAG, "newInstance Called with RideType:"+rideType);
         CreateRidesFragment fragment = new CreateRidesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_RIDE_TYPE, rideType.toString());

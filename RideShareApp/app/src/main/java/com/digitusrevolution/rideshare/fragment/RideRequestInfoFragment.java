@@ -30,7 +30,8 @@ import com.google.gson.Gson;
  * Use the {@link RideRequestInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyCallback{
+public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyCallback,
+        RideRequestComp.RideRequestCompListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RIDE_REQUEST = "rideRequest";
@@ -161,6 +162,11 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
 
     public int getRideRequestId(){
         return mRideRequest.getId();
+    }
+
+    @Override
+    public void onRideRequestRefresh(FullRideRequest rideRequest) {
+        Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id:"+rideRequest.getId());
     }
 
     /**
