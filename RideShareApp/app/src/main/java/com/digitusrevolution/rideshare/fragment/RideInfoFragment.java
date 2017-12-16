@@ -102,11 +102,24 @@ public class RideInfoFragment extends BaseFragment implements
         mMapView = view.findViewById(R.id.ride_info_map);
 
         mCoTravellerLinearLayout = view.findViewById(R.id.ride_info_co_traveller_layout);
+        setRideInfoView(view);
+
+        return view;
+    }
+
+    private void setRideInfoView(View view) {
+        //This will ensure on refresh it clears all earlier views otherwise old views will remain there
+        mCoTravellerLinearLayout.removeAllViews();
         //Note - We are using the same adapter which is also applicable for listview,
         //but this can be used for our own prupose and in this case, its the best suitable option
         ArrayAdapter<BasicRideRequest> coTravellerAdapter = new CoTravellerAdapter(
                 this, (List<BasicRideRequest>) mRide.getAcceptedRideRequests(), mRide);
 
+        //You can also get this by passing the container from onCreateView but in that case,
+        //for refreshing the view again i need to store this container somewhere, so instead
+        //i am getting the container directly here
+        //Note - Can't call getView as view has not been set as of now and this function is in between the onCreateView call
+        ViewGroup container = ((ViewGroup) view.getParent());
         for (int i=0; i<mRide.getAcceptedRideRequests().size(); i++){
             View coTravellerView = coTravellerAdapter.getView(i, null, container);
             mCoTravellerLinearLayout.addView(coTravellerView);
@@ -118,8 +131,6 @@ public class RideInfoFragment extends BaseFragment implements
             layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             mMapView.setLayoutParams(layoutParams);
         }
-
-        return view;
     }
 
     @Override
@@ -226,6 +237,9 @@ public class RideInfoFragment extends BaseFragment implements
     @Override
     public void onRideRefresh(FullRide ride) {
         Log.d(TAG, "Recieved Callback for Refresh for Ride Id:"+ride.getId());
+        mRide = ride;
+        Log.d(TAG, "Passennger Count:"+mRide.getAcceptedRideRequests().size());
+        setRideInfoView(getView());
     }
 
     public int getRideId(){

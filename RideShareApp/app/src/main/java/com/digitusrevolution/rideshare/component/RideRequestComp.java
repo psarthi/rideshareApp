@@ -1,5 +1,6 @@
 package com.digitusrevolution.rideshare.component;
 
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -55,6 +56,14 @@ public class RideRequestComp{
         mRideRequest = rideRequest;
         mCommonUtil = new CommonUtil(fragment);
         if (fragment instanceof RideRequestCompListener) mListener = (RideRequestCompListener) fragment;
+    }
+
+    //Reason behind this additional constructor so that we can send callback directly to adapter instead of BaseFragment class only
+    public RideRequestComp(RecyclerView.Adapter adapter, BaseFragment fragment, FullRideRequest rideRequest){
+        mBaseFragment = fragment;
+        mRideRequest = rideRequest;
+        mCommonUtil = new CommonUtil(fragment);
+        mListener = (RideRequestCompListener) adapter;
     }
 
     public void setRideRequestBasicLayout(View view){

@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.ViewTreeObserver;
 
+import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
@@ -112,7 +113,7 @@ public class MapComp{
             LatLng pickupPointLatLng = new LatLng(rideRequest.getRidePickupPoint().getPoint().getLatitude(),
                     rideRequest.getRidePickupPoint().getPoint().getLongitude());
             latLngs.add(pickupPointLatLng);
-            mMap.addMarker(new MarkerOptions().position(pickupPointLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            mMap.addMarker(new MarkerOptions().position(pickupPointLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
         }
 
         LatLngBounds latLngBounds = getBounds(latLngs);
@@ -138,7 +139,7 @@ public class MapComp{
         mMap.addMarker(new MarkerOptions().position(dropPoint).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
         //Draw Ride Pickup and Ride Drop Point Marker
-        mMap.addMarker(new MarkerOptions().position(ridePickupPoint).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        mMap.addMarker(new MarkerOptions().position(ridePickupPoint).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
         mMap.addMarker(new MarkerOptions().position(rideDropPoint).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
 
         //Draw Circle with Pickup Distance and Drop Distance Variation

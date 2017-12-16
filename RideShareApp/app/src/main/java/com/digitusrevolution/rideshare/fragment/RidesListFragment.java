@@ -46,8 +46,7 @@ import cz.msebera.android.httpclient.Header;
  * Use the {@link RidesListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RidesListFragment extends BaseFragment implements RideComp.RideCompListener,
-        RideRequestComp.RideRequestCompListener{
+public class RidesListFragment extends BaseFragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RIDE_TYPE = "rideType";
@@ -248,16 +247,6 @@ public class RidesListFragment extends BaseFragment implements RideComp.RideComp
         Log.d(TAG,"onDetach");
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onRideRefresh(FullRide ride) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Id:"+ride.getId());
-    }
-
-    @Override
-    public void onRideRequestRefresh(FullRideRequest rideRequest) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id:"+rideRequest.getId());
     }
 
     /**

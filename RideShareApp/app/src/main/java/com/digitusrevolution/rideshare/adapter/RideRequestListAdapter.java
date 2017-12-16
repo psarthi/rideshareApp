@@ -1,6 +1,7 @@
 package com.digitusrevolution.rideshare.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -26,8 +28,10 @@ import cz.msebera.android.httpclient.Header;
  * Created by psarthi on 12/9/17.
  */
 
-public class RideRequestListAdapter extends RecyclerView.Adapter<RideRequestListAdapter.ViewHolder> {
+public class RideRequestListAdapter extends RecyclerView.Adapter<RideRequestListAdapter.ViewHolder>
+implements RideRequestComp.RideRequestCompListener{
 
+    private static final String TAG = RideRequestListAdapter.class.getName();
     private List<FullRideRequest> mRideRequests;
     private BaseFragment mBaseFragment;
 
@@ -48,7 +52,7 @@ public class RideRequestListAdapter extends RecyclerView.Adapter<RideRequestList
 
     @Override
     public void onBindViewHolder(RideRequestListAdapter.ViewHolder holder, final int position) {
-        RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, mRideRequests.get(position));
+        RideRequestComp rideRequestComp = new RideRequestComp(this,mBaseFragment, mRideRequests.get(position));
         rideRequestComp.setRideRequestBasicLayout(holder.itemView);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +77,24 @@ public class RideRequestListAdapter extends RecyclerView.Adapter<RideRequestList
     @Override
     public int getItemCount() {
         return mRideRequests.size();
+    }
+
+    @Override
+    public void onRideRequestRefresh(FullRideRequest rideRequest) {
+        Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id:"+rideRequest.getId());
+        int i = 0 ;
+        for (FullRideRequest fullRideRequest: mRideRequests){
+            if (fullRideRequest.getId() == rideRequest.getId()){
+                mRideRequests.set(i,rideRequest);
+                //Somehow its not working, so using notifydatasetChanged
+                //notifyItemChanged(i + 1);
+                notifyDataSetChanged();
+                Log.d(TAG, "Item matched at position:"+i);
+                break;
+            }
+            i++;
+        }
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

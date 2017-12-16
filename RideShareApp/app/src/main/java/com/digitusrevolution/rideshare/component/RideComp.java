@@ -1,5 +1,6 @@
 package com.digitusrevolution.rideshare.component;
 
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -57,6 +58,17 @@ public class RideComp {
         //And in those cases, it will throw ClassCasteException
         if (fragment instanceof RideCompListener) mListener = (RideCompListener) fragment;
     }
+
+    //Reason behind this additional constructor so that we can send callback directly to adapter instead of BaseFragment class only
+    public RideComp(RecyclerView.Adapter adapter, BaseFragment fragment, FullRide ride){
+        mBaseFragment = fragment;
+        mRide = ride;
+        mCommonUtil = new CommonUtil(fragment);
+        //Its important to check instance of fragment as some fragment may not be required to implement Listener
+        //And in those cases, it will throw ClassCasteException
+        mListener = (RideCompListener) adapter;
+    }
+
 
     public void setBasicRideLayout(View view){
 

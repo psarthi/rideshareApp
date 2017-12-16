@@ -22,7 +22,8 @@ public class Constant {
     public static final int ACCESS_FINE_LOCATION_REQUEST_CODE=1;
     public static final float MAP_SINGLE_LOCATION_ZOOM_LEVEL = 15;
     public static final double LAT_LNG_TOP_PADDING_PERCENT = 0.30;
-    public static final double LAT_LNG_STANDARD_PADDING_PERCENT = 0.05;
+    //This will ensure that markers are visible properly
+    public static final double LAT_LNG_STANDARD_PADDING_PERCENT = 0.07;
     public static final String CURRENT_LOCATION_TEXT = "Current Location";
     public static final int PICKUP_TIME_MAX_VALUE = 60;
     public static final int PICKUP_POINT_DISTANCE_MAX_VALUE = 1000;

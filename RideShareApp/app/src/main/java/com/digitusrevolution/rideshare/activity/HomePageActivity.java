@@ -137,11 +137,26 @@ public class HomePageActivity extends BaseActivity
         if (id == R.id.nav_home) {
             Log.d(TAG, "Home Clicked");
             //First set the fetchType
-            ((HomePageWithCurrentRidesFragment) getSupportFragmentManager().findFragmentByTag(HomePageWithCurrentRidesFragment.TAG))
-                    .setFetchType(FetchType.Server);
-            //This has to be post setting the FetchType else we will not get data refreshed from server
-            removeAllBackStacks();
-            //mFragmentLoader.loadHomePageWithCurrentRidesFragment(true, null);
+            HomePageWithCurrentRidesFragment fragment = (HomePageWithCurrentRidesFragment) getSupportFragmentManager()
+                    .findFragmentByTag(HomePageWithCurrentRidesFragment.TAG);
+
+            //This will update the fetch type from local to server, as initially post sign fetch type is local
+            //This may not be required as we are forcefully calling the fetchFromServer but it would be good to
+            //have this value set for any future purpose e.g. if we are taking some further action based on FetchType
+            fragment.setFetchType(FetchType.Server);
+
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0){
+                Log.d(TAG, "Refreshing Home Page View");
+                //This will refresh the view if the fragment is already loaded which is based on the backstack count
+                //Note - Don't do this on else block otherwise it will throw NPE as view would only be created post onCreateView is called
+                //But if some other fragment is loaded then View is already destroyed
+                fragment.fetchRidesFromServer(fragment.getView());
+            } else {
+                //This has to be post setting the FetchType else we will not get data refreshed from server
+                //Note - Fragment would only get reloaded if you are not on the Home Page else it will not do anything
+                //as home page is already loaded
+                removeAllBackStacks();
+            }
         } else {
 
             //This is applicable for all items

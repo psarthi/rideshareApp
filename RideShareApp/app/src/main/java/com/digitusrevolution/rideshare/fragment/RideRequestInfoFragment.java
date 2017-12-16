@@ -46,6 +46,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     private GoogleMap mMap;
     private MapComp mMapComp;
     private View mMapView;
+    private RideRequestComp mRideRequestComp;
 
 
     public RideRequestInfoFragment() {
@@ -82,16 +83,21 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_request_info, container, false);
-        RideRequestComp rideRequestComp = new RideRequestComp(this, mRideRequest);
-        rideRequestComp.setRideRequestBasicLayout(view);
+        mRideRequestComp = new RideRequestComp(this, mRideRequest);
+        mRideRequestComp.setRideRequestBasicLayout(view);
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_request_info_map);
         mapFragment.getMapAsync(this);
         mMapView = view.findViewById(R.id.ride_request_info_map);
 
+        setRideRequestInfoView(view);
 
+        return view;
+    }
+
+    private void setRideRequestInfoView(View view) {
         if (mRideRequest.getAcceptedRide()!=null){
-            rideRequestComp.setRideOwnerLayout(view);
+            mRideRequestComp.setRideOwnerLayout(view);
         } else {
             view.findViewById(R.id.ride_owner_layout).setVisibility(View.GONE);
         }
@@ -102,9 +108,6 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
             layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             mMapView.setLayoutParams(layoutParams);
         }
-
-
-        return view;
     }
 
     @Override
@@ -167,6 +170,8 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     @Override
     public void onRideRequestRefresh(FullRideRequest rideRequest) {
         Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id:"+rideRequest.getId());
+        mRideRequest = rideRequest;
+        setRideRequestInfoView(getView());
     }
 
     /**

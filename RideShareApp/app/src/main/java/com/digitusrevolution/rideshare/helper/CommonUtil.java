@@ -162,6 +162,9 @@ public class CommonUtil {
         calendar.set(Calendar.MINUTE, minute);
 
         String hour = String.format("%02d", calendar.get(Calendar.HOUR));
+        //This will handle special scenario when Hour is 00
+        if (hour.equals("00")) hour = "12";
+
         String min = String.format("%02d", calendar.get(Calendar.MINUTE));
         String AM_PM = calendar.get(Calendar.AM_PM) == 0 ? "AM" : "PM";
 

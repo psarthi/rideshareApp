@@ -141,18 +141,20 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         Log.d(TAG, "onCreateView Called of instance:"+this.hashCode());
 
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
         mCurrentRideLinearLayout = view.findViewById(R.id.current_ride_layout);
         mCurrentRideRequestLinearLayout = view.findViewById(R.id.current_ride_request_layout);
         mMapView = view.findViewById(R.id.home_page_map);
         //Initial title whenever page loads, otherwise it shows previous page title and then it transition to new one and if there is a lag its clearly visible
         getActivity().setTitle(NO_RIDE_TITLE);
 
-        //Make Ride, Ride Request & Map layout invisible, so that it loads on clean slate otherwise,
+        //This will make Ride, Ride Request and Map layout invisible, so that it loads on clean slate otherwise
         //if you load map first then change camera later, then it looks awkward
-        mCurrentRideLinearLayout.setVisibility(View.GONE);
-        mCurrentRideRequestLinearLayout.setVisibility(View.GONE);
+        //Note - If you don't make Current Ride and Ride Request Invisible, it will show the intitial layout for
+        //a second and then make it invisible later when setting HomePageView
         mMapView.setVisibility(View.GONE);
+        mCurrentRideRequestLinearLayout.setVisibility(View.GONE);
+        mCurrentRideLinearLayout.setVisibility(View.GONE);
         showRidesLayoutVisibilityStatusForDebugging();
 
         view.findViewById(R.id.home_page_offer_ride_button).setOnClickListener(new View.OnClickListener() {
@@ -180,7 +182,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         return view;
     }
 
-    private void fetchRidesFromServer(final View view) {
+    public void fetchRidesFromServer(final View view) {
         String GET_USER_CURRENT_RIDES = APIUrl.GET_USER_CURRENT_RIDES.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
         RESTClient.get(GET_USER_CURRENT_RIDES, null, new JsonHttpResponseHandler(){
             @Override
@@ -213,12 +215,14 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         }
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
             getActivity().setTitle(NO_RIDE_TITLE);
+            //This will make ride and ride request layout invisible
+            mCurrentRideRequestLinearLayout.setVisibility(View.GONE);
+            mCurrentRideLinearLayout.setVisibility(View.GONE);
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.home_page_map);
         mapFragment.getMapAsync(this);
         mMapView.setVisibility(View.VISIBLE);
-
     }
 
 
@@ -351,11 +355,17 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     @Override
     public void onRideRefresh(FullRide ride) {
         Log.d(TAG, "Recieved Callback for Refresh for Ride Id:"+ride.getId());
+        //Reason for refetching as we don't know what action user has performed e.g. if he has cancelled the ride
+        //then our current rides status would itself change
+        fetchRidesFromServer(getView());
     }
 
     @Override
     public void onRideRequestRefresh(FullRideRequest rideRequest) {
         Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id:"+rideRequest.getId());
+        //Reason for refetching as we don't know what action user has performed e.g. if he has cancelled the ride
+        //then our current rides status would itself change
+        fetchRidesFromServer(getView());
     }
 
     private enum CurrentRidesStatus{
@@ -396,6 +406,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
         //This will make Ride layout visible which was set to Gone at the start
         mCurrentRideLinearLayout.setVisibility(View.VISIBLE);
+        //This will make ride request layout invisible
+        mCurrentRideRequestLinearLayout.setVisibility(View.GONE);
 
         RideComp rideComp = new RideComp(this, mCurrentRide);
         rideComp.setBasicRideLayout(view);
@@ -409,6 +421,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
         //This will make Ride Request layout visible which was set to Gone at the start
         mCurrentRideRequestLinearLayout.setVisibility(View.VISIBLE);
+        //This will make ride layout invisible
+        mCurrentRideLinearLayout.setVisibility(View.GONE);
 
         RideRequestComp rideRequestComp = new RideRequestComp(this, mCurrentRideRequest);
         rideRequestComp.setRideRequestBasicLayout(view);
