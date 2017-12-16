@@ -253,6 +253,9 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     }
 
     private void drawOnMap() {
+        //This will ensure it just clears the marker
+        mMap.clear();
+
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)) {
             Log.d(TAG, "Setting Ride On Map");
             mMapComp.setRideOnMap(mCurrentRide);
@@ -329,10 +332,9 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         super.onDestroyView();
         Log.d(TAG, "Inside Destroy View of instance:"+this.hashCode());
         showChildFragmentDetails();
-        //This will ensure it just clears the marker
-        mMap.clear();
 
         //Below remarks is for reference. Commented till we find cleaner solution to ensure maps get reloaded
+        /*
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.home_page_map);
         if (mapFragment != null) {
             //Note - Don't use below one of remove mapfrgament as it also kills HomePageFragment as well
@@ -343,6 +345,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
             //This is required else old markers is not getting cleared
             //mMap = null;
         }
+        */
     }
 
     @Override

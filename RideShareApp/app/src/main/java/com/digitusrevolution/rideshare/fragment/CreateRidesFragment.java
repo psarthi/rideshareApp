@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -134,6 +135,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private FragmentLoader mFragmentLoader;
     private GoogleMap mMap;
     private MapComp mMapComp;
+    private View mMapView;
     private Place mFromPlace;
     private Place mToPlace;
 
@@ -208,6 +210,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.create_rides_map);
         mapFragment.getMapAsync(this);
+        mMapView = view.findViewById(R.id.create_rides_map);
 
         mDateTextView = view.findViewById(R.id.create_rides_date_text);
         mTimeTextView = view.findViewById(R.id.create_rides_time_text);
@@ -655,18 +658,27 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         //This will extend the bound to cover circle
         //TODO Replace with actual radius of rides
         if (mRideType.equals(RideType.RequestRide)){
+            Log.d(TAG, "mFromLatLng, mToLatLng - "+mFromLatLng.toString() +":"+mToLatLng.toString());
             if (mFromLatLng!=null) {
-                latLngBounds = mMapComp.getCircleBounds(mFromLatLng,mRideRequest.getPickupPointVariation());
+                //This will ensure we are getting the right variation as initally mRideRequest variations are not set
+                int variation = mRideRequest.getPickupPointVariation();
+                if (variation == 0) variation = mUser.getPreference().getPickupPointVariation();
+                latLngBounds = mMapComp.getCircleBounds(mFromLatLng,variation);
                 latLngBoundsBuilder.include(latLngBounds.northeast);
                 latLngBoundsBuilder.include(latLngBounds.southwest);
             }
             if (mToLatLng!=null) {
-                latLngBounds = mMapComp.getCircleBounds(mToLatLng,mRideRequest.getDropPointVariation());
+                //This will ensure we are getting the right variation as initally mRideRequest variations are not set
+                int variation = mRideRequest.getDropPointVariation();
+                if (variation == 0) variation = mUser.getPreference().getDropPointVariation();
+                latLngBounds = mMapComp.getCircleBounds(mToLatLng,variation);
                 latLngBoundsBuilder.include(latLngBounds.northeast);
                 latLngBoundsBuilder.include(latLngBounds.southwest);
             }
         }
         latLngBounds = latLngBoundsBuilder.build();
+        Log.d(TAG, "Bound Northeast"+latLngBounds.northeast.toString());
+        Log.d(TAG, "Bound Southwest"+latLngBounds.southwest.toString());
         return latLngBounds;
     }
 
@@ -792,6 +804,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         Log.d(TAG, "Ride Option has been updated");
         mRidesOptionUpdated = true;
         mUpdatedRidesOption = ridesOption;
+        //Reason for setting variation so that it reflects the updated variation on map circle as well.
+        //Other options has not effect on map markers so whatever has effect on map markers, should be updated here
+        //Note - No need to update as the change is minor in terms of scale w.r.t map that effect of circle different is negligible
+        //and on top of it, it changes the bounds without any change in circle size which is not correct
+        //mRideRequest.setPickupPointVariation(mUpdatedRidesOption.getPickupPointVariation());
+        //mRideRequest.setDropPointVariation(mUpdatedRidesOption.getDropPointVariation());
         if (mRideType.equals(RideType.OfferRide)){
             mVehicleRegistrationNumber = vehicleRegistrationNumber;
         }
