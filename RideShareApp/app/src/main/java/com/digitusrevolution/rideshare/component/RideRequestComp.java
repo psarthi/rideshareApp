@@ -207,16 +207,15 @@ public class RideRequestComp{
         mRideOwnerCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String CANCEL_ACCEPTED_RIDEREQUEST = APIUrl.CANCEL_ACCEPTED_RIDEREQUEST.replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getId()))
-                        .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(mRideRequest.getId()));
-                RESTClient.get(CANCEL_ACCEPTED_RIDEREQUEST, null, new JsonHttpResponseHandler(){
+                String CANCEL_DRIVER = APIUrl.CANCEL_DRIVER.replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(mRideRequest.getId()))
+                        .replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getId()));
+                RESTClient.get(CANCEL_DRIVER, null, new JsonHttpResponseHandler(){
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         Log.d(TAG, "Ride Owner Cancelled");
-                        FullRidesInfo ridesInfo = new Gson().fromJson(response.toString(), FullRidesInfo.class);
-                        mRideRequest = ridesInfo.getRideRequest();
+                        mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
                         mListener.onRideRequestRefresh(mRideRequest);
                     }
 
@@ -245,16 +244,18 @@ public class RideRequestComp{
         //This means that only when passenger is in confirmed state i.e. he/she has not been picked up, he can reject / navigate
         //As far as rating is concerned, he can rate post pickup up or if reject. In case of Reject, we will ask for rating in dialog bar itself
         if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
-
             Date dropTime = mRideRequest.getRideDropPoint().getRidePointProperties().get(0).getDateTime();
             if (dropTime.before(Calendar.getInstance().getTime())){
                 //This will make Ride Owner buttons layout invisible post ride request drop point time has lapsed
                 //i.e. No cancel and Pickup Point Navigation button would be visible
                 mRideOwnerButtonsLayout.setVisibility(View.GONE);
+                ratingBar.setVisibility(View.VISIBLE);
+            } else {
+                ratingBar.setVisibility(View.GONE);
             }
-            ratingBar.setVisibility(View.GONE);
         } else {
             mRideOwnerButtonsLayout.setVisibility(View.GONE);
+            ratingBar.setVisibility(View.VISIBLE);
         }
 
     }

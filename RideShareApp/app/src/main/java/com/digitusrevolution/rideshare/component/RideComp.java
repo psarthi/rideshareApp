@@ -237,16 +237,15 @@ public class RideComp {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String CANCEL_ACCEPTED_RIDEREQUEST = APIUrl.CANCEL_ACCEPTED_RIDEREQUEST.replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRide.getId()))
+                String CANCEL_PASSENGER = APIUrl.CANCEL_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRide.getId()))
                         .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()));
-                RESTClient.get(CANCEL_ACCEPTED_RIDEREQUEST, null, new JsonHttpResponseHandler(){
+                RESTClient.get(CANCEL_PASSENGER, null, new JsonHttpResponseHandler(){
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         Log.d(TAG, "CoTraveller Cancelled");
-                        FullRidesInfo ridesInfo = new Gson().fromJson(response.toString(), FullRidesInfo.class);
-                        mRide = ridesInfo.getRide();
+                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
                     }
 

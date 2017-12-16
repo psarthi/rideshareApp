@@ -145,8 +145,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mCurrentRideLinearLayout = view.findViewById(R.id.current_ride_layout);
         mCurrentRideRequestLinearLayout = view.findViewById(R.id.current_ride_request_layout);
         mMapView = view.findViewById(R.id.home_page_map);
-        //Initial title whenever page loads, otherwise it shows previous page title and then it transition to new one and if there is a lag its clearly visible
-        getActivity().setTitle(NO_RIDE_TITLE);
 
         //This will make Ride, Ride Request and Map layout invisible, so that it loads on clean slate otherwise
         //if you load map first then change camera later, then it looks awkward
@@ -199,22 +197,19 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     }
 
     private void setHomePageView(View view) {
-
+        Log.d(TAG, "Setting Home Page View");
         //This will get status based on current ride and ride request value
         mCurrentRidesStatus = getCurrentRidesStatus();
 
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
             Log.d(TAG, "Setting Current Ride View");
-            getActivity().setTitle(CURRENT_RIDE_TITLE);
             setCurrentRideView(view);
         }
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)){
             Log.d(TAG, "Setting Current Ride Request View");
-            getActivity().setTitle(CURRENT_RIDE_REQUEST_TITLE);
             setCurrentRideRequestView(view);
         }
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
-            getActivity().setTitle(NO_RIDE_TITLE);
             //This will make ride and ride request layout invisible
             mCurrentRideRequestLinearLayout.setVisibility(View.GONE);
             mCurrentRideLinearLayout.setVisibility(View.GONE);
@@ -234,11 +229,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mMapComp = new MapComp(this, googleMap);
         mMapComp.setPadding(true);
 
-        if (mMapLoaded){
-            Log.d(TAG, "Map already loaded");
-            drawOnMap();
-        }
-
         //TODO think on how to move this in common location so that we don't have to repeat this
         //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
         //Ref - https://stackoverflow.com/questions/7733813/how-can-you-tell-when-a-layout-has-been-drawn
@@ -254,6 +244,13 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
                 drawOnMap();
             }
         });
+
+        //Reason behind this as on refresh of view, getViewTreeObserver would not get called
+        //as its called only first time when map is loaded
+        if (mMapLoaded){
+            Log.d(TAG, "Map already loaded");
+            drawOnMap();
+        }
     }
 
     private void drawOnMap() {
@@ -329,6 +326,21 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
         showBackStackDetails();
         showChildFragmentDetails();
+        //Don't set title anywhere else otherwise since this a base fragment and whenever backstack is cleared,
+        //this will try to get loaded and in between if you load any other fragment then title of that page would change
+        setTitle();
+    }
+
+    private void setTitle(){
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
+            getActivity().setTitle(CURRENT_RIDE_TITLE);
+        }
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)){
+            getActivity().setTitle(CURRENT_RIDE_REQUEST_TITLE);
+        }
+        if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
+            getActivity().setTitle(NO_RIDE_TITLE);
+        }
     }
 
     @Override
@@ -354,7 +366,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     @Override
     public void onRideRefresh(FullRide ride) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Id:"+ride.getId());
+        Log.d(TAG, "Recieved Callback for Refresh for Ride Id with status:"
+                +ride.getId()+":"+ride.getStatus());
         //Reason for refetching as we don't know what action user has performed e.g. if he has cancelled the ride
         //then our current rides status would itself change
         fetchRidesFromServer(getView());
@@ -362,7 +375,8 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     @Override
     public void onRideRequestRefresh(FullRideRequest rideRequest) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id:"+rideRequest.getId());
+        Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id with status:"
+                +rideRequest.getId()+":"+rideRequest.getStatus());
         //Reason for refetching as we don't know what action user has performed e.g. if he has cancelled the ride
         //then our current rides status would itself change
         fetchRidesFromServer(getView());

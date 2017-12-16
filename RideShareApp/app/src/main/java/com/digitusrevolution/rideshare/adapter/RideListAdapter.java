@@ -81,7 +81,9 @@ implements RideComp.RideCompListener{
 
     @Override
     public void onRideRefresh(FullRide ride) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Id:"+ride.getId());
+        Log.d(TAG, "Recieved Callback for Refresh for Ride Id with status:"
+                +ride.getId()+":"+ride.getStatus());
+
         int i = 0 ;
         for (FullRide fullRide: mRides){
             if (fullRide.getId() == ride.getId()){

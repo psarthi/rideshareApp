@@ -59,6 +59,8 @@ public class RideInfoFragment extends BaseFragment implements
     private GoogleMap mMap;
     private MapComp mMapComp;
     private View mMapView;
+    private boolean mMapLoaded;
+    private RideComp mRideComp;
 
     public RideInfoFragment() {
         // Required empty public constructor
@@ -87,6 +89,7 @@ public class RideInfoFragment extends BaseFragment implements
             mRideData = getArguments().getString(ARG_RIDE);
         }
         mRide = new Gson().fromJson(mRideData, FullRide.class);
+        mRideComp = new RideComp(this, mRide);
     }
 
     @Override
@@ -94,11 +97,6 @@ public class RideInfoFragment extends BaseFragment implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_info, container, false);
-        RideComp rideComp = new RideComp(this, mRide);
-        rideComp.setBasicRideLayout(view);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_info_map);
-        mapFragment.getMapAsync(this);
         mMapView = view.findViewById(R.id.ride_info_map);
 
         mCoTravellerLinearLayout = view.findViewById(R.id.ride_info_co_traveller_layout);
@@ -108,6 +106,10 @@ public class RideInfoFragment extends BaseFragment implements
     }
 
     private void setRideInfoView(View view) {
+        Log.d(TAG, "Setting Ride Info View");
+
+        mRideComp.setBasicRideLayout(view);
+
         //This will ensure on refresh it clears all earlier views otherwise old views will remain there
         mCoTravellerLinearLayout.removeAllViews();
         //Note - We are using the same adapter which is also applicable for listview,
@@ -131,11 +133,15 @@ public class RideInfoFragment extends BaseFragment implements
             layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             mMapView.setLayoutParams(layoutParams);
         }
+
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_info_map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.clear();
         mMapComp = new MapComp(this, googleMap);
         //This will set standard padding for the map
         mMapComp.setPadding(true);
@@ -150,9 +156,17 @@ public class RideInfoFragment extends BaseFragment implements
                 //This will ensure only once this is called
                 mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 Log.d(TAG, "Map Layout is ready");
+                mMapLoaded = true;
                 mMapComp.setRideOnMap(mRide);
             }
         });
+
+        //Reason behind this as on refresh of view, getViewTreeObserver would not get called
+        //as its called only first time when map is loaded
+        if (mMapLoaded) {
+            Log.d(TAG, "Map already loaded");
+            mMapComp.setRideOnMap(mRide);
+        }
 
     }
 
@@ -236,9 +250,10 @@ public class RideInfoFragment extends BaseFragment implements
 
     @Override
     public void onRideRefresh(FullRide ride) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Id:"+ride.getId());
+        Log.d(TAG, "Recieved Callback for Refresh for Ride Id with status:"
+                +ride.getId()+":"+ride.getStatus());
+
         mRide = ride;
-        Log.d(TAG, "Passennger Count:"+mRide.getAcceptedRideRequests().size());
         setRideInfoView(getView());
     }
 

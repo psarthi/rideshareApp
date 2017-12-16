@@ -47,6 +47,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     private MapComp mMapComp;
     private View mMapView;
     private RideRequestComp mRideRequestComp;
+    private boolean mMapLoaded;
 
 
     public RideRequestInfoFragment() {
@@ -76,6 +77,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
             mRideRequestData = getArguments().getString(ARG_RIDE_REQUEST);
         }
         mRideRequest = new Gson().fromJson(mRideRequestData, FullRideRequest.class);
+        mRideRequestComp = new RideRequestComp(this, mRideRequest);
     }
 
     @Override
@@ -83,11 +85,6 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_request_info, container, false);
-        mRideRequestComp = new RideRequestComp(this, mRideRequest);
-        mRideRequestComp.setRideRequestBasicLayout(view);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_request_info_map);
-        mapFragment.getMapAsync(this);
         mMapView = view.findViewById(R.id.ride_request_info_map);
 
         setRideRequestInfoView(view);
@@ -96,6 +93,10 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     }
 
     private void setRideRequestInfoView(View view) {
+        Log.d(TAG, "Setting Ride Request Info View");
+
+        mRideRequestComp.setRideRequestBasicLayout(view);
+
         if (mRideRequest.getAcceptedRide()!=null){
             mRideRequestComp.setRideOwnerLayout(view);
         } else {
@@ -108,6 +109,9 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
             layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             mMapView.setLayoutParams(layoutParams);
         }
+
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_request_info_map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -143,9 +147,11 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.clear();
         mMapComp = new MapComp(this, googleMap);
         //This will set standard padding for the map
         mMapComp.setPadding(true);
+
         //TODO think on how to move this in common location so that we don't have to repeat this
         //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
         //Ref - https://stackoverflow.com/questions/7733813/how-can-you-tell-when-a-layout-has-been-drawn
@@ -157,9 +163,17 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
                 //This will ensure only once this is called
                 mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 Log.d(TAG, "Map Layout is ready");
+                mMapLoaded = true;
                 mMapComp.setRideRequestOnMap(mRideRequest);
             }
         });
+
+        //Reason behind this as on refresh of view, getViewTreeObserver would not get called
+        //as its called only first time when map is loaded
+        if (mMapLoaded){
+            Log.d(TAG, "Map already loaded");
+            mMapComp.setRideRequestOnMap(mRideRequest);
+        }
 
     }
 
@@ -169,7 +183,8 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
 
     @Override
     public void onRideRequestRefresh(FullRideRequest rideRequest) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id:"+rideRequest.getId());
+        Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id with status:"
+                +rideRequest.getId()+":"+rideRequest.getStatus());
         mRideRequest = rideRequest;
         setRideRequestInfoView(getView());
     }
