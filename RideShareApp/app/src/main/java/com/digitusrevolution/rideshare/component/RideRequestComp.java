@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.dialog.CancelCoTravellerFragment;
+import com.digitusrevolution.rideshare.dialog.StandardAlertDialog;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
@@ -136,30 +137,43 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         mRideRequestCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String CANCEL_RIDE_REQUEST = APIUrl.CANCEL_RIDE_REQUEST.replace(APIUrl.ID_KEY, Integer.toString(mRideRequest.getId()));
-                RESTClient.get(CANCEL_RIDE_REQUEST, null, new JsonHttpResponseHandler(){
+
+                String message = mBaseFragment.getString(R.string.standard_cancellation_confirmation_message);
+                DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardAlertDialogListener() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        Log.d(TAG, "Ride Request Cancelled");
-                        mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
-                        mListener.onRideRequestRefresh(mRideRequest);
-                        Toast.makeText(mBaseFragment.getActivity(), "Ride Request Cancelled", Toast.LENGTH_LONG).show();
+                    public void onPositiveStandardAlertDialog() {
+                        String CANCEL_RIDE_REQUEST = APIUrl.CANCEL_RIDE_REQUEST.replace(APIUrl.ID_KEY, Integer.toString(mRideRequest.getId()));
+                        RESTClient.get(CANCEL_RIDE_REQUEST, null, new JsonHttpResponseHandler(){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                Log.d(TAG, "Ride Request Cancelled");
+                                mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
+                                mListener.onRideRequestRefresh(mRideRequest);
+                                Toast.makeText(mBaseFragment.getActivity(), "Ride Request Cancelled", Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                super.onFailure(statusCode, headers, throwable, errorResponse);
+                                if (errorResponse!=null) {
+                                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                    Log.d(TAG, errorMessage.getErrorMessage());
+                                    Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                                    Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                                }                    }
+                        });
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        if (errorResponse!=null) {
-                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                            Log.d(TAG, errorMessage.getErrorMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                        }                    }
+                    public void onNegativeStandardAlertDialog() {
+                        Log.d(TAG, "Negative Button clicked on standard dialog");
+                    }
                 });
+                dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), StandardAlertDialog.TAG);
             }
         });
         mDestinationNavigationButton.setOnClickListener(new View.OnClickListener() {

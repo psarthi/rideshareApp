@@ -1,6 +1,8 @@
 package com.digitusrevolution.rideshare.component;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +20,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.dialog.CancelCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
+import com.digitusrevolution.rideshare.dialog.StandardAlertDialog;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
@@ -26,6 +29,7 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
@@ -59,6 +63,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
     LinearLayout mBasicRideButtonsLayout;
     private CommonUtil mCommonUtil;
     private RideCompListener mListener;
+    private boolean mEndRideConfirmation;
 
     public RideComp(BaseFragment fragment, FullRide ride){
         mBaseFragment = fragment;
@@ -134,31 +139,44 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String CANCEL_RIDE = APIUrl.CANCEL_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mRide.getId()));
-                RESTClient.get(CANCEL_RIDE, null, new JsonHttpResponseHandler(){
+                String message = mBaseFragment.getString(R.string.standard_cancellation_confirmation_message);
+                DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardAlertDialogListener() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        Log.d(TAG, "Ride Cancelled");
-                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                        mListener.onRideRefresh(mRide);
-                        Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Cancelled", Toast.LENGTH_LONG).show();
+                    public void onPositiveStandardAlertDialog() {
+                        String CANCEL_RIDE = APIUrl.CANCEL_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mRide.getId()));
+                        RESTClient.get(CANCEL_RIDE, null, new JsonHttpResponseHandler(){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                Log.d(TAG, "Ride Cancelled");
+                                mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                                mListener.onRideRefresh(mRide);
+                                Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Cancelled", Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                super.onFailure(statusCode, headers, throwable, errorResponse);
+                                if (errorResponse!=null) {
+                                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                    Log.d(TAG, errorMessage.getErrorMessage());
+                                    Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                                    Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        if (errorResponse!=null) {
-                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                            Log.d(TAG, errorMessage.getErrorMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                        }
+                    public void onNegativeStandardAlertDialog() {
+                        Log.d(TAG, "Negative Button clicked on standard dialog");
                     }
                 });
+
+                dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), StandardAlertDialog.TAG);
             }
         });
 
@@ -196,31 +214,57 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         mEndButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String END_RIDE = APIUrl.END_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mRide.getId()));
-                RESTClient.get(END_RIDE, null, new JsonHttpResponseHandler(){
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        Log.d(TAG, "Ride Ended");
-                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                        mListener.onRideRefresh(mRide);
-                        Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Ended", Toast.LENGTH_LONG).show();
-                    }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        if (errorResponse!=null) {
-                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                            Log.d(TAG, errorMessage.getErrorMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                        }
+                int notOnBoardedPassenger = 0;
+                for (BasicRideRequest rideRequest: mRide.getAcceptedRideRequests()){
+                    if (rideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
+                        notOnBoardedPassenger++;
                     }
-                });
+                }
+
+                if (notOnBoardedPassenger > 0){
+                    String message = mBaseFragment.getString(R.string.standard_cancellation_confirmation_message);
+                    DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardAlertDialogListener() {
+                        @Override
+                        public void onPositiveStandardAlertDialog() {
+                            mEndRideConfirmation = true;
+                        }
+
+                        @Override
+                        public void onNegativeStandardAlertDialog() {
+                            Log.d(TAG, "Negative Button clicked on standard dialog");
+                        }
+                    });
+                    dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), StandardAlertDialog.TAG);
+                }
+
+                if (mEndRideConfirmation || notOnBoardedPassenger == 0){
+                    String END_RIDE = APIUrl.END_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mRide.getId()));
+                    RESTClient.get(END_RIDE, null, new JsonHttpResponseHandler(){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            super.onSuccess(statusCode, headers, response);
+                            Log.d(TAG, "Ride Ended");
+                            mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                            mListener.onRideRefresh(mRide);
+                            Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Ended", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                            if (errorResponse!=null) {
+                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                Log.d(TAG, errorMessage.getErrorMessage());
+                                Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                                Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
             }
         });
 
