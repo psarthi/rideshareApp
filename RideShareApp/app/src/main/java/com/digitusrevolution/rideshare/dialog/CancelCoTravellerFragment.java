@@ -5,11 +5,15 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.component.RideComp;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 
 /**
  * Created by psarthi on 12/4/17.
@@ -20,14 +24,16 @@ public class CancelCoTravellerFragment extends DialogFragment{
     public static final String TAG = CancelCoTravellerFragment.class.getName();
 
     private CancelCoTravellerFragmentListener mListener;
-    private String mCoTravellerName;
+    private BasicRideRequest mRideRequest;
+    private BasicRide mRide;
 
     public CancelCoTravellerFragment(){}
 
-    public static CancelCoTravellerFragment newInstance(CancelCoTravellerFragmentListener listener, String coTravellerName){
+    public static CancelCoTravellerFragment newInstance(CancelCoTravellerFragmentListener listener, BasicRide ride, BasicRideRequest rideRequest){
         CancelCoTravellerFragment fragment = new CancelCoTravellerFragment();
         fragment.mListener = listener;
-        fragment.mCoTravellerName = coTravellerName;
+        fragment.mRideRequest = rideRequest;
+        fragment.mRide = ride;
         return fragment;
     }
 
@@ -41,7 +47,16 @@ public class CancelCoTravellerFragment extends DialogFragment{
         View view = inflater.inflate(R.layout.cancel_co_traveller, null);
 
         final TextView titleTextView = view.findViewById(R.id.title_text);
-        titleTextView.setText("Reject "+mCoTravellerName);
+
+        String coTravellerName;
+        if (mListener instanceof RideComp){
+            Log.d(TAG, "Ride Comp. Instance");
+            coTravellerName = mRide.getDriver().getFirstName() +" "+mRide.getDriver().getLastName();
+        } else {
+            Log.d(TAG, "Ride Request Comp. Instance");
+            coTravellerName = mRideRequest.getPassenger().getFirstName() +" "+mRideRequest.getPassenger().getLastName();
+        }
+        titleTextView.setText(getString(R.string.cancel_cotraveller_text)+coTravellerName);
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -50,13 +65,13 @@ public class CancelCoTravellerFragment extends DialogFragment{
                 .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onPositiveClickOfCancelCoTravellerFragment(CancelCoTravellerFragment.this);
+                        mListener.onPositiveClickOfCancelCoTravellerFragment(getDialog(), mRide, mRideRequest);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onNegativeClickOfCancelCoTravellerFragment(CancelCoTravellerFragment.this);
+                        mListener.onNegativeClickOfCancelCoTravellerFragment(getDialog(), mRide, mRideRequest);
                     }
                 });
 
@@ -64,7 +79,7 @@ public class CancelCoTravellerFragment extends DialogFragment{
     }
 
     public interface CancelCoTravellerFragmentListener {
-        public void onPositiveClickOfCancelCoTravellerFragment(DialogFragment dialogFragment);
-        public void onNegativeClickOfCancelCoTravellerFragment(DialogFragment dialogFragment);
+        public void onPositiveClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest);
+        public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest);
     }
 }

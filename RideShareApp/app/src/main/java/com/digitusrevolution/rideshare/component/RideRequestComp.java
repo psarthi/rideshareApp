@@ -1,5 +1,7 @@
 package com.digitusrevolution.rideshare.component;
 
+import android.app.Dialog;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.dialog.CancelCoTravellerFragment;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
@@ -19,6 +22,7 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
@@ -38,7 +42,7 @@ import cz.msebera.android.httpclient.Header;
  * Created by psarthi on 12/6/17.
  */
 
-public class RideRequestComp{
+public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravellerFragmentListener{
 
     public static final String TAG = RideRequestComp.class.getName();
     BaseFragment mBaseFragment;
@@ -83,12 +87,14 @@ public class RideRequestComp{
 
 
         String paymentCode = mRideRequest.getConfirmationCode();
-        if (paymentCode!=null){
+        if (mRideRequest.getAcceptedRide()!=null){
+            Log.d(TAG, "Accepted Ride Request for Id:"+mRideRequest.getId()+" is :"+mRideRequest.getAcceptedRide().getId());
             //Reason behind making it visible so that its visible on refresh
             layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.VISIBLE);
             String paymentLabel = mBaseFragment.getString(R.string.ride_request_payment_code_text);
             ((TextView) layout.findViewById(R.id.ride_request_confirmation_code_text)).setText(paymentLabel+paymentCode);
         } else {
+            Log.d(TAG, "No Accepted Ride Request for Id:"+mRideRequest.getId());
             layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.GONE);
         }
 
@@ -241,33 +247,9 @@ public class RideRequestComp{
         mRideOwnerCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String CANCEL_DRIVER = APIUrl.CANCEL_DRIVER.replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(mRideRequest.getId()))
-                        .replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getId()));
-                RESTClient.get(CANCEL_DRIVER, null, new JsonHttpResponseHandler(){
 
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        Log.d(TAG, "Ride Owner Cancelled");
-                        mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
-                        mListener.onRideRequestRefresh(mRideRequest);
-                        Toast.makeText(mBaseFragment.getActivity(), "Ride Owner Cancelled", Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        if (errorResponse!=null) {
-                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                            Log.d(TAG, errorMessage.getErrorMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+                DialogFragment dialogFragment = CancelCoTravellerFragment.newInstance(RideRequestComp.this, mRideRequest.getAcceptedRide(), mRideRequest);
+                dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), CancelCoTravellerFragment.TAG);
             }
         });
 
@@ -336,6 +318,49 @@ public class RideRequestComp{
 
         TextView dropPointTextView = layout.findViewById(R.id.ride_drop_point_text);
         dropPointTextView.setText(rideRequest.getRideDropPointAddress());
+
+    }
+
+    @Override
+    public void onPositiveClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest) {
+        RatingBar ratingBar = dialog.findViewById(R.id.rating_bar);
+        Log.d(TAG, "Rating value:"+ratingBar.getRating());
+
+        String CANCEL_DRIVER = APIUrl.CANCEL_DRIVER.replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(mRideRequest.getId()))
+                .replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getId()))
+                .replace(APIUrl.RATING_KEY, Float.toString(ratingBar.getRating()));
+
+        RESTClient.get(CANCEL_DRIVER, null, new JsonHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Log.d(TAG, "Ride Owner Cancelled");
+                mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
+                mListener.onRideRequestRefresh(mRideRequest);
+                Toast.makeText(mBaseFragment.getActivity(), "Ride Owner Cancelled", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse!=null) {
+                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                    Log.d(TAG, errorMessage.getErrorMessage());
+                    Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                    Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest) {
+        Log.d(TAG, "Ride Owner Not Cancelled");
 
     }
 

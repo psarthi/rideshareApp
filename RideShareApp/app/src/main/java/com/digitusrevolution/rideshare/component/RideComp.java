@@ -16,6 +16,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.LandingPageActivity;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.dialog.CancelCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
@@ -44,11 +45,12 @@ import cz.msebera.android.httpclient.Header;
  * Created by psarthi on 12/6/17.
  */
 
-public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragmentListener{
+public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragmentListener,
+        CancelCoTravellerFragment.CancelCoTravellerFragmentListener{
 
     public static final String TAG = RideComp.class.getName();
-    BaseFragment mBaseFragment;
-    FullRide mRide;
+    private BaseFragment mBaseFragment;
+    private FullRide mRide;
 
     Button mCancelButton;
     Button mStartButton;
@@ -291,33 +293,8 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String CANCEL_PASSENGER = APIUrl.CANCEL_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRide.getId()))
-                        .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()));
-                RESTClient.get(CANCEL_PASSENGER, null, new JsonHttpResponseHandler(){
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        Log.d(TAG, "CoTraveller Cancelled");
-                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                        mListener.onRideRefresh(mRide);
-                        Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Cancelled", Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        if (errorResponse!=null) {
-                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                            Log.d(TAG, errorMessage.getErrorMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+                DialogFragment dialogFragment = CancelCoTravellerFragment.newInstance(RideComp.this, mRide, rideRequest);
+                dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), CancelCoTravellerFragment.TAG);
             }
         });
 
@@ -468,6 +445,49 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
     @Override
     public void onNegativeClickOfDropCoTravellerFragment(Dialog dialog, BasicRideRequest rideRequest) {
         Log.d(TAG, "CoTraveller Not Dropped");
+    }
+
+    @Override
+    public void onPositiveClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest) {
+
+        RatingBar ratingBar = dialog.findViewById(R.id.rating_bar);
+        Log.d(TAG, "Rating value:"+ratingBar.getRating());
+
+        String CANCEL_PASSENGER = APIUrl.CANCEL_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRide.getId()))
+                .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()))
+                .replace(APIUrl.RATING_KEY, Float.toString(ratingBar.getRating()));
+
+        RESTClient.get(CANCEL_PASSENGER, null, new JsonHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Log.d(TAG, "CoTraveller Cancelled");
+                mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                mListener.onRideRefresh(mRide);
+                Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Cancelled", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (errorResponse!=null) {
+                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                    Log.d(TAG, errorMessage.getErrorMessage());
+                    Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                    Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest) {
+        Log.d(TAG, "CoTraveller Not Cancelled");
     }
 
     public interface RideCompListener{
