@@ -330,17 +330,22 @@ public class RideComp {
                 //This will make cancel button invisible post the ride request max end time has lapsed
                 cancelButton.setVisibility(View.GONE);
             }
+            //This would make Pickup possible anytime post ride is started which would help to deal with
+            //post settlement of ride in case of connectivity issue
             if (!mRide.getStatus().equals(RideStatus.Started)){
                 pickupButton.setVisibility(View.GONE);
             }
+            //You can not drop anyone until he/she has been picked up
             dropButton.setVisibility(View.GONE);
         }
         if (rideRequest.getPassengerStatus().equals(PassengerStatus.Picked)){
+            //In this case only Drop is visible by default
             cancelButton.setVisibility(View.GONE);
             pickupButton.setVisibility(View.GONE);
         }
         if (rideRequest.getPassengerStatus().equals(PassengerStatus.Dropped)){
             buttonsLayout.setVisibility(View.GONE);
+            //Note - Rating Bar is only visible post you drop a passenger
             ratingBar.setVisibility(View.VISIBLE);
         }
     }

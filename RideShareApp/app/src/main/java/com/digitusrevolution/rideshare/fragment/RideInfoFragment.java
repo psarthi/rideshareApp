@@ -60,7 +60,6 @@ public class RideInfoFragment extends BaseFragment implements
     private MapComp mMapComp;
     private View mMapView;
     private boolean mMapLoaded;
-    private RideComp mRideComp;
 
     public RideInfoFragment() {
         // Required empty public constructor
@@ -89,7 +88,6 @@ public class RideInfoFragment extends BaseFragment implements
             mRideData = getArguments().getString(ARG_RIDE);
         }
         mRide = new Gson().fromJson(mRideData, FullRide.class);
-        mRideComp = new RideComp(this, mRide);
     }
 
     @Override
@@ -108,7 +106,9 @@ public class RideInfoFragment extends BaseFragment implements
     private void setRideInfoView(View view) {
         Log.d(TAG, "Setting Ride Info View");
 
-        mRideComp.setBasicRideLayout(view);
+        //This should be initialized here so that it can be reloaded on refresh
+        RideComp rideComp = new RideComp(this, mRide);
+        rideComp.setBasicRideLayout(view);
 
         //This will ensure on refresh it clears all earlier views otherwise old views will remain there
         mCoTravellerLinearLayout.removeAllViews();
@@ -144,7 +144,7 @@ public class RideInfoFragment extends BaseFragment implements
         mMap.clear();
         mMapComp = new MapComp(this, googleMap);
         //This will set standard padding for the map
-        mMapComp.setPadding(true);
+        //mMapComp.setPadding(true);
         //TODO think on how to move this in common location so that we don't have to repeat this
         //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
         //Ref - https://stackoverflow.com/questions/7733813/how-can-you-tell-when-a-layout-has-been-drawn

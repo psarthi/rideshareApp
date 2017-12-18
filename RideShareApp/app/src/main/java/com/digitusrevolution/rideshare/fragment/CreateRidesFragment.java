@@ -262,7 +262,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
                         mFromLatLng = latLng;
-                        mFromAddressTextView.setText(Constant.CURRENT_LOCATION_TEXT);
+                        mFromAddressTextView.setText(R.string.current_location_text);
                         //This will get called whenever map is reloaded and camera needs to be moved accordingly
                         //Otherwise what would happen on backpress, camera move would not happen for all markers on the map
                         //as it would assume there is only one marked which is current location marker and move camera accordinlgy
@@ -473,6 +473,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
         if (mToLatLng ==null || mFromLatLng == null || mTimeInPast){
             Toast.makeText(getActivity(), "Please ensure input is valid",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (mRideType.equals(RideType.OfferRide) && mGoogleDirection == null){
+            Toast.makeText(getActivity(), "Please wait for route to show up",Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

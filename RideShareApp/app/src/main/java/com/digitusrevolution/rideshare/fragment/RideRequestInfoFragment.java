@@ -150,7 +150,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         mMap.clear();
         mMapComp = new MapComp(this, googleMap);
         //This will set standard padding for the map
-        mMapComp.setPadding(true);
+        //mMapComp.setPadding(true);
 
         //TODO think on how to move this in common location so that we don't have to repeat this
         //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
