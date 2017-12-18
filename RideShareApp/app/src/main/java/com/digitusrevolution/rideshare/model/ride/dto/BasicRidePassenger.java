@@ -13,7 +13,7 @@ public class BasicRidePassenger {
 	
 	private int id;
 	private BasicUser passenger;
-	
+
 	public BasicUser getPassenger() {
 		return passenger;
 	}

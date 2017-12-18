@@ -2,6 +2,7 @@ package com.digitusrevolution.rideshare.model.ride.dto;
 
 import java.util.Date;
 
+import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.domain.RideRequestPoint;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
@@ -44,7 +45,9 @@ public class BasicRideRequest {
 	private int travelDistance;
 	private BasicRide acceptedRide;
 	private RideMode rideMode;
-	
+	private Bill bill;
+	private String confirmationCode;
+
 	public int getId() {
 		return id;
 	}
@@ -234,5 +237,19 @@ public class BasicRideRequest {
 
 	public void setRideDropPointDistance(double rideDropPointDistance) {
 		this.rideDropPointDistance = rideDropPointDistance;
+	}
+	public Bill getBill() {
+		return bill;
+	}
+	public void setBill(Bill bill) {
+		this.bill = bill;
+	}
+
+	public String getConfirmationCode() {
+		return confirmationCode;
+	}
+
+	public void setConfirmationCode(String confirmationCode) {
+		this.confirmationCode = confirmationCode;
 	}
 }

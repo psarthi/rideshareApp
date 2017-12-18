@@ -58,6 +58,7 @@
     <string name="to_address_hint">To</string>
     <string name="ride_offer_id_text">"Ride Offer No. "</string>
     <string name="ride_request_id_text">"Ride Request No. "</string>
+    <string name="ride_request_payment_code_text">"Payment Code "</string>
     <string name="distance_metrics">" mtrs"</string>
 
     <!--Error Message -->

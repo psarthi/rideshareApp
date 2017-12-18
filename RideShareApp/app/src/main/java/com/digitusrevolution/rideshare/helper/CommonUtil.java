@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 
@@ -196,5 +197,4 @@ public class CommonUtil {
         endTime.add(Calendar.SECOND, rideRequest.getTravelTime());
         return endTime;
     }
-
 }

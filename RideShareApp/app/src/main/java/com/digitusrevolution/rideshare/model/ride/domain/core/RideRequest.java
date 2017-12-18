@@ -49,6 +49,7 @@ public class RideRequest implements Comparable<RideRequest>{
 	private Collection<Ride> cancelledRides = new HashSet<Ride>();
 	private RideMode rideMode;
 	private Bill bill;
+	private String confirmationCode;
 	
 	public int getId() {
 		return id;
@@ -292,5 +293,12 @@ public class RideRequest implements Comparable<RideRequest>{
 
 		//descending order
 		return rideRequest.id - this.id;
+	}
+	public String getConfirmationCode() {
+		return confirmationCode;
+	}
+
+	public void setConfirmationCode(String confirmationCode) {
+		this.confirmationCode = confirmationCode;
 	}
 }

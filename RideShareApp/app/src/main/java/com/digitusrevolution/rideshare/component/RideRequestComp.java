@@ -29,6 +29,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
@@ -79,8 +80,17 @@ public class RideRequestComp{
         ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(mRideRequest.getStatus().toString());
         String pickupTime = mCommonUtil.getFormattedDateTimeString(mRideRequest.getPickupTime());
         ((TextView) layout.findViewById(R.id.ride_request_pickup_time_text)).setText(pickupTime);
-        //TODO get confirmation code post backend finalization
-        //((TextView) layout.findViewById(R.id.ride_request_confirmation_code_text)).setText();
+
+
+        String paymentCode = mRideRequest.getConfirmationCode();
+        if (paymentCode!=null){
+            //Reason behind making it visible so that its visible on refresh
+            layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.VISIBLE);
+            String paymentLabel = mBaseFragment.getString(R.string.ride_request_payment_code_text);
+            ((TextView) layout.findViewById(R.id.ride_request_confirmation_code_text)).setText(paymentLabel+paymentCode);
+        } else {
+            layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.GONE);
+        }
 
         ((TextView) layout.findViewById(R.id.ride_request_pickup_point_text)).setText(mRideRequest.getPickupPointAddress());
         ((TextView) layout.findViewById(R.id.ride_request_drop_point_text)).setText(mRideRequest.getDropPointAddress());
@@ -311,11 +321,12 @@ public class RideRequestComp{
         pickupTimeTextView.setText(pickupTimeString);
 
         TextView fareTextView = layout.findViewById(R.id.fare_text);
-        //String amount = Float.toString(rideRequest.getBill().getAmount());
-        //fareTextView.setText(amount);
+        String amount = Float.toString(rideRequest.getBill().getAmount());
+        String symbol = Currency.getInstance(rideRequest.getPassenger().getCountry().getCurrency().getName()).getSymbol();
+        fareTextView.setText(symbol+amount);
 
         TextView billStatusTextView = layout.findViewById(R.id.bill_status);
-        //billStatusTextView.setText(rideRequest.getBill().getStatus().toString());
+        billStatusTextView.setText(rideRequest.getBill().getStatus().toString());
     }
 
     public void setRidePickupDropPointsLayout(View view, BasicRideRequest rideRequest){
