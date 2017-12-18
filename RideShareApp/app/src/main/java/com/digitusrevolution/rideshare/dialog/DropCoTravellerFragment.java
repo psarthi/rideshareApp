@@ -2,16 +2,20 @@ package com.digitusrevolution.rideshare.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 
 /**
  * Created by psarthi on 12/4/17.
@@ -22,17 +26,16 @@ public class DropCoTravellerFragment extends DialogFragment{
     public static final String TAG = DropCoTravellerFragment.class.getName();
 
     private DropCoTravellerFragmentListener mListener;
-    private String mCoTravellerName;
-    private String mPaymentCode;
+    private BasicRideRequest mRideRequest;
+    private RadioButton mFreeRideRadioButton;
+    private TextView mPaymentTextView;
 
     public DropCoTravellerFragment(){}
 
-    public static DropCoTravellerFragment newInstance(DropCoTravellerFragmentListener listener,
-                                                      String coTravellerName, String paymentCode){
+    public static DropCoTravellerFragment newInstance(DropCoTravellerFragmentListener listener, BasicRideRequest rideRequest){
         DropCoTravellerFragment fragment = new DropCoTravellerFragment();
         fragment.mListener = listener;
-        fragment.mCoTravellerName = coTravellerName;
-        fragment.mPaymentCode = paymentCode;
+        fragment.mRideRequest = rideRequest;
         return fragment;
     }
 
@@ -45,19 +48,19 @@ public class DropCoTravellerFragment extends DialogFragment{
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.drop_co_traveller, null);
 
-        RadioButton freeRideRadioButton= view.findViewById(R.id.free_ride_radio_button);
-        final TextView paymentTextView = view.findViewById(R.id.payment_code_text);
+        mFreeRideRadioButton = view.findViewById(R.id.free_ride_radio_button);
+        mPaymentTextView = view.findViewById(R.id.payment_code_text);
         final TextView titleTextView = view.findViewById(R.id.title_text);
-        titleTextView.setText("Drop "+mCoTravellerName);
+        titleTextView.setText(getString(R.string.drop_text_msg)+mRideRequest.getPassenger().getFirstName() +" "+mRideRequest.getPassenger().getLastName());
 
         //This will enable/disable payment code text according to the selection of radio button
-        freeRideRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mFreeRideRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    paymentTextView.setEnabled(false);
+                    mPaymentTextView.setEnabled(false);
                 } else {
-                    paymentTextView.setEnabled(true);
+                    mPaymentTextView.setEnabled(true);
                 }
             }
         });
@@ -65,25 +68,54 @@ public class DropCoTravellerFragment extends DialogFragment{
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)
-                //Pass the value of title from calling method in Bundle
                 .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onPositiveClickOfDropCoTravellerFragment(DropCoTravellerFragment.this);
+                        //No action required here as we are overwriting the onClick in onStart method
+                        //Listener would be overwritten by onStart positiveButton onClick
                     }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onNegativeClickOfDropCoTravellerFragment(DropCoTravellerFragment.this);
+                        mListener.onNegativeClickOfDropCoTravellerFragment(getDialog(), mRideRequest);
                     }
                 });
 
         return builder.create();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        final AlertDialog dialog = (AlertDialog) getDialog();
+        if (dialog!=null){
+            Button positiveButton = (Button) dialog.getButton(Dialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "Inside onStart Positive Button Click. Code is/Entered Code:"+mRideRequest.getConfirmationCode()+"/"+mPaymentTextView.getText());
+                    if (!mFreeRideRadioButton.isChecked()){
+                        if (mPaymentTextView.getText().toString().equals(mRideRequest.getConfirmationCode())){
+                            mListener.onPositiveClickOfDropCoTravellerFragment(dialog, mRideRequest);
+                            //dismiss should be the last line otherwise you will get NPE on the Listener callback as Dialog fragment would be lost on call of Dismiss
+                            //Don't try to return the fragment itself in the interface instead return dialog as dismiss would kill this fragment itself
+                            dismiss();
+                        } else {
+                            Toast.makeText(getActivity(), "Payment Code is not valid", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     public interface DropCoTravellerFragmentListener{
-        public void onPositiveClickOfDropCoTravellerFragment(DialogFragment dialogFragment);
-        public void onNegativeClickOfDropCoTravellerFragment(DialogFragment dialogFragment);
+        public void onPositiveClickOfDropCoTravellerFragment(Dialog dialog, BasicRideRequest rideRequest);
+        public void onNegativeClickOfDropCoTravellerFragment(Dialog dialog, BasicRideRequest rideRequest);
+    }
+
+    public BasicRideRequest getRideRequest() {
+        return mRideRequest;
     }
 }
