@@ -46,7 +46,6 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     private GoogleMap mMap;
     private MapComp mMapComp;
     private View mMapView;
-    private RideRequestComp mRideRequestComp;
     private boolean mMapLoaded;
 
 
@@ -77,7 +76,6 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
             mRideRequestData = getArguments().getString(ARG_RIDE_REQUEST);
         }
         mRideRequest = new Gson().fromJson(mRideRequestData, FullRideRequest.class);
-        mRideRequestComp = new RideRequestComp(this, mRideRequest);
     }
 
     @Override
@@ -95,10 +93,12 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     private void setRideRequestInfoView(View view) {
         Log.d(TAG, "Setting Ride Request Info View");
 
-        mRideRequestComp.setRideRequestBasicLayout(view);
+        //This should be initialized here so that it can be reloaded on refresh
+        RideRequestComp rideRequestComp = new RideRequestComp(this, mRideRequest);
+        rideRequestComp.setRideRequestBasicLayout(view);
 
         if (mRideRequest.getAcceptedRide()!=null){
-            mRideRequestComp.setRideOwnerLayout(view);
+            rideRequestComp.setRideOwnerLayout(view);
         } else {
             view.findViewById(R.id.ride_owner_layout).setVisibility(View.GONE);
         }

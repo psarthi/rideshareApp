@@ -76,6 +76,7 @@ as well as inside any other layout as well e.g. In HomePage as well as RidesList
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_navigation"
                 android:text="Start"
                 android:layout_marginEnd="@dimen/default_margin"
                 android:textColor="@color/colorAccent"/>
@@ -87,6 +88,17 @@ as well as inside any other layout as well e.g. In HomePage as well as RidesList
                 android:text="End"
                 android:layout_marginEnd="@dimen/default_margin"
                 android:textColor="@color/colorAccent"/>
+
+        <Button
+            android:id="@+id/ride_navigation_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:drawableStart="@drawable/ic_navigation"
+            android:text="Continue"
+            android:textColor="@color/colorAccent"/>
+
 
     </LinearLayout>
 

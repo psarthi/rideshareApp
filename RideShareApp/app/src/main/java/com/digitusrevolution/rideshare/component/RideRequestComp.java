@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
@@ -73,12 +74,6 @@ public class RideRequestComp{
         mDestinationNavigationButton = layout.findViewById(R.id.ride_request_navigate_to_destination_button);
         mBasicRideRequestButtonsLayout = layout.findViewById(R.id.ride_request_buttons_layout);
 
-        //Reason for setting it visible to handle view holder reuse where once item is invisible, it remains as it is
-        //e.g. when one item make something invisble but the same view is used by another item, then it remains invisble
-        mRideRequestCancelButton.setVisibility(View.VISIBLE);
-        mDestinationNavigationButton.setVisibility(View.VISIBLE);
-        mBasicRideRequestButtonsLayout.setVisibility(View.VISIBLE);
-
         String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)+ mRideRequest.getId();
         ((TextView) layout.findViewById(R.id.ride_request_id_text)).setText(rideRequestNumberText);
         ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(mRideRequest.getStatus().toString());
@@ -133,14 +128,21 @@ public class RideRequestComp{
                         Log.d(TAG, "Ride Request Cancelled");
                         mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
                         mListener.onRideRequestRefresh(mRideRequest);
+                        Toast.makeText(mBaseFragment.getActivity(), "Ride Request Cancelled", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
-                    }
+                        if (errorResponse!=null) {
+                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                            Log.d(TAG, errorMessage.getErrorMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                        }                    }
                 });
             }
         });
@@ -153,28 +155,50 @@ public class RideRequestComp{
     }
 
     private void updateRideRequestBasicLayoutButtonsVisiblity(){
-        if (mRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)) {
-            mDestinationNavigationButton.setVisibility(View.GONE);
-        }
-        if (mRideRequest.getStatus().equals(RideRequestStatus.Cancelled)){
-            mBasicRideRequestButtonsLayout.setVisibility(View.GONE);
-        }
-        if (mRideRequest.getStatus().equals(RideRequestStatus.Fulfilled)){
-            if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
+
+        //Reason for setting it visible to handle view holder reuse where once item is invisible, it remains as it is
+        //e.g. when one item make something invisble but the same view is used by another item, then it remains invisble
+        //Initial value of Buttons Layout which would be applicable to all except when ride is cancelled or finished
+        //Reason for setting this just to avoid any issue with visiblity when layout is invisible but child is visible
+        //not sure how that would behave so cleaner option is to make layout visible and then childs visible/invisible as well
+        mBasicRideRequestButtonsLayout.setVisibility(View.VISIBLE);
+
+        if (mRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)
+                || mRideRequest.getStatus().equals(RideRequestStatus.Fulfilled)) {
+
+            //Rules based on passenger status
+            if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)
+                    || mRideRequest.getPassengerStatus().equals(PassengerStatus.Unconfirmed)){
+
+                //Visible Buttons
+                mRideRequestCancelButton.setVisibility(View.VISIBLE);
+
+                //Invisible Buttons
                 mDestinationNavigationButton.setVisibility(View.GONE);
+
             } else {
+                //Visible Buttons for Picked / Dropped Status of passenger
+                mDestinationNavigationButton.setVisibility(View.VISIBLE);
+
+                //Invisible Buttons
                 mRideRequestCancelButton.setVisibility(View.GONE);
             }
+
+            Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mRideRequest);
+            Log.d(TAG, "Drop Time with Variation:"+maxEndTime.getTime().toString());
+            Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
+
+            //Exception Rules common for both cases
+            //This will make cancel invisible if current time is after pickup time + pickup variation + travel time
+            if (maxEndTime.before(Calendar.getInstance())){
+                Log.d(TAG, "Pickup time lapsed, so no cancel and Destination button for id:"+mRideRequest.getId());
+                mRideRequestCancelButton.setVisibility(View.GONE);
+                mDestinationNavigationButton.setVisibility(View.GONE);
+            }
         }
-        Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mRideRequest);
 
-        Log.d(TAG, "Drop Time with Variation:"+maxEndTime.getTime().toString());
-        Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
-
-        //This will make cancel invisible if current time is after pickup time + pickup variation + travel time
-        if (maxEndTime.before(Calendar.getInstance())){
-            Log.d(TAG, "Pickup time lapsed, so no cancel button for id:"+mRideRequest.getId());
-            mRideRequestCancelButton.setVisibility(View.GONE);
+        if (mRideRequest.getStatus().equals(RideRequestStatus.Cancelled)){
+            mBasicRideRequestButtonsLayout.setVisibility(View.GONE);
         }
     }
 
@@ -217,13 +241,21 @@ public class RideRequestComp{
                         Log.d(TAG, "Ride Owner Cancelled");
                         mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
                         mListener.onRideRequestRefresh(mRideRequest);
+                        Toast.makeText(mBaseFragment.getActivity(), "Ride Owner Cancelled", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
+                        if (errorResponse!=null) {
+                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                            Log.d(TAG, errorMessage.getErrorMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }
@@ -241,21 +273,32 @@ public class RideRequestComp{
 
         RatingBar ratingBar = view.findViewById(R.id.ride_owner_rating_bar);
 
-        //This means that only when passenger is in confirmed state i.e. he/she has not been picked up, he can reject / navigate
-        //As far as rating is concerned, he can rate post pickup up or if reject. In case of Reject, we will ask for rating in dialog bar itself
+        //This means that only when passenger is in confirmed state i.e. he/she has not been picked up, he can cancel / navigate
+        //As far as rating is concerned, he can rate post pickup up or cancel. In case of cancel, we will ask for rating in dialog bar itself
         if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
-            Date dropTime = mRideRequest.getRideDropPoint().getRidePointProperties().get(0).getDateTime();
-            if (dropTime.before(Calendar.getInstance().getTime())){
+
+            Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mRideRequest);
+            if (maxEndTime.before(Calendar.getInstance().getTime())){
+                //Visible Buttons
+                ratingBar.setVisibility(View.VISIBLE);
+
                 //This will make Ride Owner buttons layout invisible post ride request drop point time has lapsed
                 //i.e. No cancel and Pickup Point Navigation button would be visible
                 mRideOwnerButtonsLayout.setVisibility(View.GONE);
-                ratingBar.setVisibility(View.VISIBLE);
             } else {
+                //Visible Buttons
+                mRideOwnerCancelButton.setVisibility(View.VISIBLE);
+                mPickupPointNavigationButton.setVisibility(View.VISIBLE);
+
+                //Invisible Buttons
                 ratingBar.setVisibility(View.GONE);
             }
         } else {
-            mRideOwnerButtonsLayout.setVisibility(View.GONE);
+            //Visible Buttons
             ratingBar.setVisibility(View.VISIBLE);
+
+            //Invisible Buttons
+            mRideOwnerButtonsLayout.setVisibility(View.GONE);
         }
 
     }

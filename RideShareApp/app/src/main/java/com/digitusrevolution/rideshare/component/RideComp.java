@@ -7,8 +7,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.LandingPageActivity;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
@@ -46,6 +48,7 @@ public class RideComp {
     Button mCancelButton;
     Button mStartButton;
     Button mEndButton;
+    Button mNavigationButton;
     LinearLayout mBasicRideButtonsLayout;
     private CommonUtil mCommonUtil;
     private RideCompListener mListener;
@@ -76,14 +79,8 @@ public class RideComp {
         mCancelButton = basic_ride_layout.findViewById(R.id.ride_cancel_button);
         mStartButton = basic_ride_layout.findViewById(R.id.ride_start_button);
         mEndButton = basic_ride_layout.findViewById(R.id.ride_end_button);
+        mNavigationButton = basic_ride_layout.findViewById(R.id.ride_navigation_button);
         mBasicRideButtonsLayout = basic_ride_layout.findViewById(R.id.ride_buttons_layout);
-
-        //Reason for setting it visible to handle view holder reuse where once item is invisible, it remains as it is
-        //e.g. when one item make something invisble but the same view is used by another item, then it remains invisble
-        mCancelButton.setVisibility(View.VISIBLE);
-        mStartButton.setVisibility(View.VISIBLE);
-        mEndButton.setVisibility(View.VISIBLE);
-        mBasicRideButtonsLayout.setVisibility(View.VISIBLE);
 
         TextView rideIdTextView = basic_ride_layout.findViewById(R.id.ride_id_text);
         String rideIdText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text) +mRide.getId();
@@ -138,13 +135,21 @@ public class RideComp {
                         Log.d(TAG, "Ride Cancelled");
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
+                        Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Cancelled", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
+                        if (errorResponse!=null) {
+                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                            Log.d(TAG, errorMessage.getErrorMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }
@@ -161,13 +166,21 @@ public class RideComp {
                         Log.d(TAG, "Ride Started");
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
+                        Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Started", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
+                        if (errorResponse!=null) {
+                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                            Log.d(TAG, errorMessage.getErrorMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }
@@ -184,21 +197,53 @@ public class RideComp {
                         Log.d(TAG, "Ride Ended");
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
+                        Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Ended", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
+                        if (errorResponse!=null) {
+                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                            Log.d(TAG, errorMessage.getErrorMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
+            }
+        });
+
+        mNavigationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Continue Navigation");
             }
         });
     }
 
     private void updateBasicRideLayoutButtonsVisibility(){
-        if (mRide.getStatus().equals(RideStatus.Planned)){
+
+        //Reason for setting it visible to handle view holder reuse where once item is invisible, it remains as it is
+        //e.g. when one item make something invisble but the same view is used by another item, then it remains invisble
+        //Initial value of Buttons Layout which would be applicable to all except when ride is cancelled or finished
+        //Reason for setting this just to avoid any issue with visiblity when layout is invisible but child is visible
+        //not sure how that would behave so cleaner option is to make layout visible and then childs visible/invisible as well
+        mBasicRideButtonsLayout.setVisibility(View.VISIBLE);
+
+        if (mRide.getStatus().equals(RideStatus.Planned) || mRide.getStatus().equals(RideStatus.Fulfilled)){
+            //Visible Buttons
+            mCancelButton.setVisibility(View.VISIBLE);
+
+            //Invisible Buttons
+            //This will make end and navigation button invisible as ride is never started
+            mEndButton.setVisibility(View.GONE);
+            mNavigationButton.setVisibility(View.GONE);
+
+            //Exception Rules Buttons visibility
             Calendar startTime = Calendar.getInstance();
             startTime.setTime(mRide.getStartTime());
             //This will subtract some buffer time from start time e.g. reduce 15 mins from current time
@@ -216,14 +261,18 @@ public class RideComp {
                 mCancelButton.setVisibility(View.GONE);
                 mStartButton.setVisibility(View.GONE);
             }
-            //This will make end button invisible as ride is never started
-            mEndButton.setVisibility(View.GONE);
         }
         if (mRide.getStatus().equals(RideStatus.Started)){
+            //Visible Buttons
+            mNavigationButton.setVisibility(View.VISIBLE);
+            mEndButton.setVisibility(View.VISIBLE);
+
+            //Invisible buttons
             mCancelButton.setVisibility(View.GONE);
             mStartButton.setVisibility(View.GONE);
         }
         if (mRide.getStatus().equals(RideStatus.Finished) || mRide.getStatus().equals(RideStatus.Cancelled)){
+            //Invisible Buttons
             mBasicRideButtonsLayout.setVisibility(View.GONE);
         }
     }
@@ -247,13 +296,21 @@ public class RideComp {
                         Log.d(TAG, "CoTraveller Cancelled");
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
+                        Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Cancelled", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
+                        if (errorResponse!=null) {
+                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                            Log.d(TAG, errorMessage.getErrorMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }
@@ -272,13 +329,21 @@ public class RideComp {
                         Log.d(TAG, "CoTraveller Picked");
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
+                        Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Picked", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
+                        if (errorResponse!=null) {
+                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                            Log.d(TAG, errorMessage.getErrorMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }
@@ -297,13 +362,21 @@ public class RideComp {
                         Log.d(TAG, "CoTraveller Dropped");
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
+                        Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Dropped", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
+                        if (errorResponse!=null) {
+                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                            Log.d(TAG, errorMessage.getErrorMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }
@@ -319,34 +392,46 @@ public class RideComp {
         RatingBar ratingBar = view.findViewById(R.id.co_traveller_rating_bar);
         View buttonsLayout = view.findViewById(R.id.co_traveller_buttons_layout);
 
-        //Intial value of rating bar
+        //Intial value of rating bar which will only be visible post Drop
         ratingBar.setVisibility(View.GONE);
-
-        Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(rideRequest);
 
         if (rideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
 
-            if (maxEndTime.before(Calendar.getInstance())){
-                //This will make cancel button invisible post the ride request max end time has lapsed
-                cancelButton.setVisibility(View.GONE);
-            }
+            //Visible Buttons
+            cancelButton.setVisibility(View.VISIBLE);
+
+            //Invisible Buttons
+            // You can not drop anyone until he/she has been picked up
+            dropButton.setVisibility(View.GONE);
+
+            //Exception Rules
             //This would make Pickup possible anytime post ride is started which would help to deal with
             //post settlement of ride in case of connectivity issue
             if (!mRide.getStatus().equals(RideStatus.Started)){
                 pickupButton.setVisibility(View.GONE);
             }
-            //You can not drop anyone until he/she has been picked up
-            dropButton.setVisibility(View.GONE);
+
+            if (mRide.getEndTime().before(Calendar.getInstance().getTime())){
+                //This will make cancel button invisible post the ride end time has lapsed
+                cancelButton.setVisibility(View.GONE);
+            }
         }
         if (rideRequest.getPassengerStatus().equals(PassengerStatus.Picked)){
+            //Visible Buttons
+            dropButton.setVisibility(View.VISIBLE);
+
+            //Invisible Buttons
             //In this case only Drop is visible by default
             cancelButton.setVisibility(View.GONE);
             pickupButton.setVisibility(View.GONE);
         }
         if (rideRequest.getPassengerStatus().equals(PassengerStatus.Dropped)){
-            buttonsLayout.setVisibility(View.GONE);
+            //Visible Buttons
             //Note - Rating Bar is only visible post you drop a passenger
             ratingBar.setVisibility(View.VISIBLE);
+
+            //Invisible Buttons
+            buttonsLayout.setVisibility(View.GONE);
         }
     }
 
