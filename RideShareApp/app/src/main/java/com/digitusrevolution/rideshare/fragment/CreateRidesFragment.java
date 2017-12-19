@@ -298,7 +298,13 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         view.findViewById(R.id.create_rides_option_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentLoader.loadRidesOptionFragment(mRideType, null);
+                String ridesOption;
+                if (mRidesOptionUpdated){
+                    ridesOption = new Gson().toJson(mUpdatedRidesOption);
+                } else {
+                    ridesOption = new Gson().toJson(mUser.getPreference());
+                }
+                mFragmentLoader.loadRidesOptionFragment(mRideType, ridesOption);
             }
         });
 
@@ -409,18 +415,22 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             mRide.setSeatOffered(mUpdatedRidesOption.getSeatOffered());
             mRide.setLuggageCapacityOffered(mUpdatedRidesOption.getLuggageCapacityOffered());
             mRide.setRideMode(mUpdatedRidesOption.getRideMode());
-            for (Vehicle vehicle : mUser.getVehicles()){
-                if (vehicle.getRegistrationNumber().equals(mVehicleRegistrationNumber)){
-                    mRide.setVehicle(vehicle);
-                    break;
-                }
-            }
+            mRide.setVehicle(getVehicle(mVehicleRegistrationNumber));
         } else {
             mRide.setSeatOffered(mUser.getPreference().getSeatOffered());
             mRide.setLuggageCapacityOffered(mUser.getPreference().getLuggageCapacityOffered());
             mRide.setVehicle(mUser.getPreference().getDefaultVehicle());
             mRide.setRideMode(mUser.getPreference().getRideMode());
         }
+    }
+
+    private Vehicle getVehicle(String vehicleRegistrationNumber) {
+        for (Vehicle vehicle : mUser.getVehicles()){
+            if (vehicle.getRegistrationNumber().equals(vehicleRegistrationNumber)){
+                return vehicle;
+            }
+        }
+        return null;
     }
 
     private void setRideRequest(){
@@ -816,6 +826,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         //mRideRequest.setDropPointVariation(mUpdatedRidesOption.getDropPointVariation());
         if (mRideType.equals(RideType.OfferRide)){
             mVehicleRegistrationNumber = vehicleRegistrationNumber;
+            //This will ensure on reopening the rides option the same vehicle reflects
+            mUpdatedRidesOption.setDefaultVehicle(getVehicle(vehicleRegistrationNumber));
         }
         Log.d(TAG,"Updated Value is:"+new Gson().toJson(ridesOption));
     }

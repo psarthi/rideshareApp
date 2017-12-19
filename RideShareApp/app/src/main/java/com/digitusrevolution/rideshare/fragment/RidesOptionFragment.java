@@ -24,6 +24,7 @@ import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +46,11 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RIDE_TYPE = "rideType";
-    private static final String ARG_PARAM2 = "data";
+    private static final String ARG_RIDES_OPTION = "ridesOption";
 
     // TODO: Rename and change types of parameters
     private RideType mRideType;
-    private String mData;
+    private String mRidesOptionData;
 
     private OnFragmentInteractionListener mListener;
     private BasicUser mUser;
@@ -81,14 +82,14 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
      * this fragment using the provided parameters.
      *
      * @param rideType Type of ride e.g. Offer Ride or Request Ride
-     * @param data  Data in Json format
+     * @param ridesOption  Data in Json format
      * @return A new instance of fragment RidesOptionFragment.
      */
-    public static RidesOptionFragment newInstance(RideType rideType, String data) {
+    public static RidesOptionFragment newInstance(RideType rideType, String ridesOption) {
         RidesOptionFragment fragment = new RidesOptionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_RIDE_TYPE, rideType.toString());
-        args.putString(ARG_PARAM2, data);
+        args.putString(ARG_RIDES_OPTION, ridesOption);
         fragment.setArguments(args);
         return fragment;
     }
@@ -98,13 +99,18 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
-            mData = getArguments().getString(ARG_PARAM2);
+            mRidesOptionData = getArguments().getString(ARG_RIDES_OPTION);
         }
         mCommonUtil = new CommonUtil(this);
         mFragmentLoader = new FragmentLoader(this);
         mUser = mCommonUtil.getUser();
         //This will default preference of user which will be the default option for the ride
-        mRidesOption = mUser.getPreference();
+        //This will only be used when we don't pass the ridesOption while creating the fragement instance
+        if (mRidesOptionData==null){
+            mRidesOption = mUser.getPreference();
+        }
+
+        mRidesOption = new Gson().fromJson(mRidesOptionData, Preference.class);
 
         mCommonComp = new CommonComp(this);
         //This will set this fragment for vehicle categories ready listener callback
@@ -178,7 +184,7 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
             boolean defaultVehicleFound = false;
             int i = 0;
             for (Vehicle vehicle:mUser.getVehicles()){
-                if (vehicle.equals(mUser.getPreference().getDefaultVehicle())){
+                if (vehicle.equals(mRidesOption.getDefaultVehicle())){
                     defaultVehicleFound = true;
                     break;
                 }
