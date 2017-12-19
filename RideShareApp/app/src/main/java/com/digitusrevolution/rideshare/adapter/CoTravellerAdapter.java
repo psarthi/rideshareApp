@@ -26,14 +26,14 @@ import java.util.List;
  * Created by psarthi on 12/1/17.
  */
 
-public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
+public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
 
     public static final String TAG = CoTravellerAdapter.class.getName();
-    private List<BasicRideRequest> mRideRequests;
+    private List<FullRideRequest> mRideRequests;
     private BaseFragment mBaseFragment;
     private FullRide mRide;
 
-    public CoTravellerAdapter(BaseFragment fragment, List<BasicRideRequest> rideRequests, FullRide ride){
+    public CoTravellerAdapter(BaseFragment fragment, List<FullRideRequest> rideRequests, FullRide ride){
         super(fragment.getActivity(),-1,rideRequests);
         mRideRequests = rideRequests;
         mBaseFragment = fragment;
@@ -47,7 +47,7 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
 
     @Nullable
     @Override
-    public BasicRideRequest getItem(int position) {
+    public FullRideRequest getItem(int position) {
         return mRideRequests.get(position);
     }
 
@@ -55,7 +55,7 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        BasicRideRequest rideRequest= getItem(position);
+        FullRideRequest rideRequest= getItem(position);
 
         LayoutInflater inflater = LayoutInflater.from(mBaseFragment.getActivity());
         convertView = inflater.inflate(R.layout.ride_co_traveller_layout, parent, false);
@@ -63,11 +63,11 @@ public class CoTravellerAdapter extends ArrayAdapter<BasicRideRequest>{
         UserComp userComp = new UserComp(mBaseFragment, null);
         userComp.setUserProfileSingleRow(convertView, rideRequest.getPassenger());
 
-        RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, null);
-        rideRequestComp.setPickupTimeAndBillLayout(convertView, rideRequest);
-        rideRequestComp.setRidePickupDropPointsLayout(convertView, rideRequest);
+        RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, rideRequest);
+        rideRequestComp.setPickupTimeAndBillLayout(convertView);
+        rideRequestComp.setRidePickupDropPointsLayout(convertView);
 
-        RideComp rideComp = new RideComp(mBaseFragment, mRide);
+        RideComp rideComp = new RideComp(mBaseFragment, rideRequest.getAcceptedRide());
         //This will set the visibility of co traveller buttons initially
         rideComp.updateCoTravellerButtonsVisibility(convertView, rideRequest);
         //This will set the listeners on co traveller buttons

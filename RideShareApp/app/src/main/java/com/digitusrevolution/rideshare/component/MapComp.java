@@ -108,8 +108,8 @@ public class MapComp{
         mMap.addPolyline(new PolylineOptions().addAll(routeLatLngs));
 
         //This will add markers for all pickup points
-        Collection<BasicRideRequest> acceptedRideRequests = ride.getAcceptedRideRequests();
-        for (BasicRideRequest rideRequest: acceptedRideRequests){
+        Collection<FullRideRequest> acceptedRideRequests = ride.getAcceptedRideRequests();
+        for (FullRideRequest rideRequest: acceptedRideRequests){
             LatLng pickupPointLatLng = new LatLng(rideRequest.getRidePickupPoint().getPoint().getLatitude(),
                     rideRequest.getRidePickupPoint().getPoint().getLongitude());
             latLngs.add(pickupPointLatLng);

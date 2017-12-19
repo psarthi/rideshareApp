@@ -31,7 +31,6 @@ public class BasicRide {
 	private RideSeatStatus seatStatus;
 	private Vehicle vehicle;
 	private BasicUser driver;
-	private Collection<BasicRidePassenger> ridePassengers = new HashSet<BasicRidePassenger>();
 	private int travelDistance;
 	private RideMode rideMode;
 	
@@ -94,12 +93,6 @@ public class BasicRide {
 	}
 	public void setDriver(BasicUser driver) {
 		this.driver = driver;
-	}
-	public Collection<BasicRidePassenger> getRidePassengers() {
-		return ridePassengers;
-	}
-	public void setRidePassengers(Collection<BasicRidePassenger> ridePassengers) {
-		this.ridePassengers = ridePassengers;
 	}
 	public Sex getSexPreference() {
 		return sexPreference;

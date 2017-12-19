@@ -43,9 +43,7 @@ public class BasicRideRequest {
 	private double rideDropPointDistance;
 	private int travelTime;
 	private int travelDistance;
-	private BasicRide acceptedRide;
 	private RideMode rideMode;
-	private Bill bill;
 	private String confirmationCode;
 
 	public int getId() {
@@ -168,13 +166,6 @@ public class BasicRideRequest {
 	public void setTravelDistance(int travelDistance) {
 		this.travelDistance = travelDistance;
 	}
-	public BasicRide getAcceptedRide() {
-		return acceptedRide;
-	}
-	public void setAcceptedRide(BasicRide acceptedRide) {
-		this.acceptedRide = acceptedRide;
-	}
-
 	public RideMode getRideMode() {
 		return rideMode;
 	}
@@ -238,13 +229,6 @@ public class BasicRideRequest {
 	public void setRideDropPointDistance(double rideDropPointDistance) {
 		this.rideDropPointDistance = rideDropPointDistance;
 	}
-	public Bill getBill() {
-		return bill;
-	}
-	public void setBill(Bill bill) {
-		this.bill = bill;
-	}
-
 	public String getConfirmationCode() {
 		return confirmationCode;
 	}

@@ -32,10 +32,10 @@ public class RideRequestListAdapter extends RecyclerView.Adapter<RideRequestList
 implements RideRequestComp.RideRequestCompListener{
 
     private static final String TAG = RideRequestListAdapter.class.getName();
-    private List<FullRideRequest> mRideRequests;
+    private List<BasicRideRequest> mRideRequests;
     private BaseFragment mBaseFragment;
 
-    public RideRequestListAdapter(List<FullRideRequest> rideRequests, BaseFragment fragment) {
+    public RideRequestListAdapter(List<BasicRideRequest> rideRequests, BaseFragment fragment) {
         mRideRequests = rideRequests;
         mBaseFragment = fragment;
     }
@@ -84,8 +84,8 @@ implements RideRequestComp.RideRequestCompListener{
         Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id with status:"
                 +rideRequest.getId()+":"+rideRequest.getStatus());
         int i = 0 ;
-        for (FullRideRequest fullRideRequest: mRideRequests){
-            if (fullRideRequest.getId() == rideRequest.getId()){
+        for (BasicRideRequest basicRideRequest: mRideRequests){
+            if (basicRideRequest.getId() == rideRequest.getId()){
                 mRideRequests.set(i,rideRequest);
                 //Somehow its not working, so using notifydatasetChanged
                 //notifyItemChanged(i + 1);

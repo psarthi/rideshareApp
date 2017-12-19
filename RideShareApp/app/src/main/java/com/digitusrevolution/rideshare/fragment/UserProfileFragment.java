@@ -19,6 +19,7 @@ import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -113,7 +114,7 @@ public class UserProfileFragment extends BaseFragment {
         RecyclerView friendRecyclerView = view.findViewById(R.id.mutual_friends_list);
         RecyclerView groupsRecyclerView = view.findViewById(R.id.common_groups_list);
         RecyclerView.Adapter adapter = new ThumbnailCoTravellerAdapter(this,
-                (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
+                (List<FullRideRequest>) mCurrentRide.getAcceptedRideRequests());
 
         setRecyclerView(friendRecyclerView, adapter, LinearLayoutManager.HORIZONTAL);
         setRecyclerView(groupsRecyclerView, adapter, LinearLayoutManager.HORIZONTAL);

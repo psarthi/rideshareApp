@@ -21,6 +21,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
@@ -56,8 +57,8 @@ public class RidesListFragment extends BaseFragment{
     private RideType mRideType;
     private BasicUser mUser;
     private CommonUtil mCommonUtil;
-    private List<FullRide> mRides = new ArrayList<>();
-    private List<FullRideRequest> mRideRequests = new ArrayList<>();
+    private List<BasicRide> mRides = new ArrayList<>();
+    private List<BasicRideRequest> mRideRequests = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
@@ -143,7 +144,7 @@ public class RidesListFragment extends BaseFragment{
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
-                    Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
+                    Type listType = new TypeToken<ArrayList<BasicRide>>(){}.getType();
                     mRides = new Gson().fromJson(response.toString(), listType);
                     mInitialDataLoaded = true;
                     //This will load adapter only when data is loaded
@@ -159,7 +160,7 @@ public class RidesListFragment extends BaseFragment{
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
-                    Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
+                    Type listType = new TypeToken<ArrayList<BasicRideRequest>>(){}.getType();
                     mRideRequests = new Gson().fromJson(response.toString(), listType);
                     mInitialDataLoaded = true;
                     //This will load adapter only when data is loaded

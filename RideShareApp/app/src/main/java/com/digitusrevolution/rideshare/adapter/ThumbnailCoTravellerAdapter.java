@@ -14,6 +14,7 @@ import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -27,7 +28,7 @@ import java.util.List;
 public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailCoTravellerAdapter.ViewHolder> {
 
     public static final String TAG = ThumbnailCoTravellerAdapter.class.getName();
-    private List<BasicRideRequest> mRideRequests;
+    private List<FullRideRequest> mRideRequests;
     private BaseFragment mBaseFragment;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -41,7 +42,7 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
         }
     }
 
-    public ThumbnailCoTravellerAdapter(BaseFragment fragment, List<BasicRideRequest> rideRequests) {
+    public ThumbnailCoTravellerAdapter(BaseFragment fragment, List<FullRideRequest> rideRequests) {
         mRideRequests = rideRequests;
         mBaseFragment = fragment;
     }
@@ -71,7 +72,7 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
 
     }
 
-    private BasicRideRequest getItem(int position){
+    private FullRideRequest getItem(int position){
         return mRideRequests.get(position);
     }
 

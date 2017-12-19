@@ -32,10 +32,10 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.ViewHo
 implements RideComp.RideCompListener{
 
     private static final String TAG = RideListAdapter.class.getName();
-    private List<FullRide> mRides;
+    private List<BasicRide> mRides;
     private BaseFragment mBaseFragment;
 
-    public RideListAdapter(List<FullRide> rides, BaseFragment fragment) {
+    public RideListAdapter(List<BasicRide> rides, BaseFragment fragment) {
         mRides = rides;
         mBaseFragment = fragment;
     }
@@ -85,8 +85,8 @@ implements RideComp.RideCompListener{
                 +ride.getId()+":"+ride.getStatus());
 
         int i = 0 ;
-        for (FullRide fullRide: mRides){
-            if (fullRide.getId() == ride.getId()){
+        for (BasicRide basicRide: mRides){
+            if (basicRide.getId() == ride.getId()){
                mRides.set(i,ride);
                //Somehow its not working, so using notifydatasetChanged
                //notifyItemChanged(i + 1);

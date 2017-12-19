@@ -427,7 +427,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         rideComp.setBasicRideLayout(view);
 
         RecyclerView recyclerView = view.findViewById(R.id.current_ride_co_traveller_list);
-        RecyclerView.Adapter adapter = new ThumbnailCoTravellerAdapter(this, (List<BasicRideRequest>) mCurrentRide.getAcceptedRideRequests());
+        RecyclerView.Adapter adapter = new ThumbnailCoTravellerAdapter(this, (List<FullRideRequest>) mCurrentRide.getAcceptedRideRequests());
         setRecyclerView(recyclerView, adapter, LinearLayoutManager.HORIZONTAL);
     }
 

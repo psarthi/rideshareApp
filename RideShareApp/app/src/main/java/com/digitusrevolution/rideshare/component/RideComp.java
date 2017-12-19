@@ -34,6 +34,7 @@ import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRidesInfo;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -55,6 +56,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
     public static final String TAG = RideComp.class.getName();
     private BaseFragment mBaseFragment;
     private FullRide mRide;
+    private BasicRide mBasicRide;
 
     Button mCancelButton;
     Button mStartButton;
@@ -68,6 +70,9 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
     public RideComp(BaseFragment fragment, FullRide ride){
         mBaseFragment = fragment;
         mRide = ride;
+        //This will ensure that basic ride layout would work perfectly fine for Full Ride as well
+        //No need to type case it will be taken care itself
+        mBasicRide = ride;
         mCommonUtil = new CommonUtil(fragment);
         //Its important to check instance of fragment as some fragment may not be required to implement Listener
         //And in those cases, it will throw ClassCasteException
@@ -75,16 +80,16 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
     }
 
     //Reason behind this additional constructor so that we can send callback directly to adapter instead of BaseFragment class only
-    public RideComp(RecyclerView.Adapter adapter, BaseFragment fragment, FullRide ride){
+    public RideComp(RecyclerView.Adapter adapter, BaseFragment fragment, BasicRide ride){
         mBaseFragment = fragment;
-        mRide = ride;
+        mBasicRide = ride;
         mCommonUtil = new CommonUtil(fragment);
         //Its important to check instance of fragment as some fragment may not be required to implement Listener
         //And in those cases, it will throw ClassCasteException
         mListener = (RideCompListener) adapter;
     }
 
-
+    //Note - Use Input as BasicRide and store REST response as FullRide so that we can support Ride Info as well as Ride List
     public void setBasicRideLayout(View view){
 
         View basic_ride_layout = view.findViewById(R.id.basic_ride_layout);
@@ -95,16 +100,16 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         mBasicRideButtonsLayout = basic_ride_layout.findViewById(R.id.ride_buttons_layout);
 
         TextView rideIdTextView = basic_ride_layout.findViewById(R.id.ride_id_text);
-        String rideIdText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text) +mRide.getId();
+        String rideIdText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text) +mBasicRide.getId();
         rideIdTextView.setText(rideIdText);
         TextView rideStatusTextView = basic_ride_layout.findViewById(R.id.ride_status_text);
-        rideStatusTextView.setText(mRide.getStatus().toString());
+        rideStatusTextView.setText(mBasicRide.getStatus().toString());
         TextView rideStartTimeTextView = basic_ride_layout.findViewById(R.id.ride_start_time_text);
-        rideStartTimeTextView.setText(mCommonUtil.getFormattedDateTimeString(mRide.getStartTime()));
+        rideStartTimeTextView.setText(mCommonUtil.getFormattedDateTimeString(mBasicRide.getStartTime()));
         TextView rideStartPointTextView = basic_ride_layout.findViewById(R.id.ride_start_point_text);
-        rideStartPointTextView.setText(mRide.getStartPointAddress());
+        rideStartPointTextView.setText(mBasicRide.getStartPointAddress());
         TextView rideEndPointTextView = basic_ride_layout.findViewById(R.id.ride_end_point_text);
-        rideEndPointTextView.setText(mRide.getEndPointAddress());
+        rideEndPointTextView.setText(mBasicRide.getEndPointAddress());
 
         //This will set the visibility of ride buttons initially
         updateBasicRideLayoutButtonsVisibility();
@@ -113,13 +118,13 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
 
         RideInfoFragment fragment = (RideInfoFragment) mBaseFragment.getActivity().getSupportFragmentManager()
                 .findFragmentByTag(RideInfoFragment.TAG);
-        if (fragment!=null && mRide.getId() == fragment.getRideId()){
+        if (fragment!=null && mBasicRide.getId() == fragment.getRideId()){
             Log.d(TAG, "Ride Info is already loaded");
         } else {
             basic_ride_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String GET_RIDE_URL = APIUrl.GET_RIDE_URL.replace(APIUrl.ID_KEY,Integer.toString(mRide.getId()));
+                    String GET_RIDE_URL = APIUrl.GET_RIDE_URL.replace(APIUrl.ID_KEY,Integer.toString(mBasicRide.getId()));
                     RESTClient.get(GET_RIDE_URL, null, new JsonHttpResponseHandler(){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -134,6 +139,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         }
     }
 
+    //Note - Use Input as BasicRide and store REST response as FullRide so that we can support Ride Info as well as Ride List
     private void setBasicRideLayoutButtonsOnClickListener() {
 
         mCancelButton.setOnClickListener(new View.OnClickListener() {
@@ -143,12 +149,14 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardAlertDialogListener() {
                     @Override
                     public void onPositiveStandardAlertDialog() {
-                        String CANCEL_RIDE = APIUrl.CANCEL_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mRide.getId()));
+                        //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
+                        String CANCEL_RIDE = APIUrl.CANCEL_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mBasicRide.getId()));
                         RESTClient.get(CANCEL_RIDE, null, new JsonHttpResponseHandler(){
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);
                                 Log.d(TAG, "Ride Cancelled");
+                                //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
                                 mListener.onRideRefresh(mRide);
                                 Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Cancelled", Toast.LENGTH_LONG).show();
@@ -183,12 +191,14 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String START_RIDE = APIUrl.START_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mRide.getId()));
+                //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
+                String START_RIDE = APIUrl.START_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mBasicRide.getId()));
                 RESTClient.get(START_RIDE, null, new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         Log.d(TAG, "Ride Started");
+                        //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
                         Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Started", Toast.LENGTH_LONG).show();
@@ -214,20 +224,37 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         mEndButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                int notOnBoardedPassenger = 0;
-                for (BasicRideRequest rideRequest: mRide.getAcceptedRideRequests()){
-                    if (rideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
-                        notOnBoardedPassenger++;
-                    }
-                }
-
-                if (notOnBoardedPassenger > 0){
+                    //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
                     String message = mBaseFragment.getString(R.string.standard_cancellation_confirmation_message);
                     DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardAlertDialogListener() {
                         @Override
                         public void onPositiveStandardAlertDialog() {
-                            mEndRideConfirmation = true;
+                            String END_RIDE = APIUrl.END_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mBasicRide.getId()));
+                            RESTClient.get(END_RIDE, null, new JsonHttpResponseHandler(){
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    Log.d(TAG, "Ride Ended");
+                                    //Imp - Ensure that output is always saved as FullRide as you actually get fullride
+                                    mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                                    mListener.onRideRefresh(mRide);
+                                    Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Ended", Toast.LENGTH_LONG).show();
+                                }
+
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                                    if (errorResponse!=null) {
+                                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                        Log.d(TAG, errorMessage.getErrorMessage());
+                                        Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                    else {
+                                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                                        Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
                         }
 
                         @Override
@@ -237,35 +264,6 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     });
                     dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), StandardAlertDialog.TAG);
                 }
-
-                if (mEndRideConfirmation || notOnBoardedPassenger == 0){
-                    String END_RIDE = APIUrl.END_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mRide.getId()));
-                    RESTClient.get(END_RIDE, null, new JsonHttpResponseHandler(){
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            Log.d(TAG, "Ride Ended");
-                            mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                            mListener.onRideRefresh(mRide);
-                            Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Ended", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            super.onFailure(statusCode, headers, throwable, errorResponse);
-                            if (errorResponse!=null) {
-                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                Log.d(TAG, errorMessage.getErrorMessage());
-                                Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                                Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
-            }
         });
 
         mNavigationButton.setOnClickListener(new View.OnClickListener() {
@@ -276,6 +274,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         });
     }
 
+    //Note - Use Input as BasicRide and store REST response as FullRide so that we can support Ride Info as well as Ride List
     private void updateBasicRideLayoutButtonsVisibility(){
 
         //Reason for setting it visible to handle view holder reuse where once item is invisible, it remains as it is
@@ -285,7 +284,8 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         //not sure how that would behave so cleaner option is to make layout visible and then childs visible/invisible as well
         mBasicRideButtonsLayout.setVisibility(View.VISIBLE);
 
-        if (mRide.getStatus().equals(RideStatus.Planned) || mRide.getStatus().equals(RideStatus.Fulfilled)){
+        //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
+        if (mBasicRide.getStatus().equals(RideStatus.Planned) || mBasicRide.getStatus().equals(RideStatus.Fulfilled)){
             //Visible Buttons
             mCancelButton.setVisibility(View.VISIBLE);
 
@@ -296,7 +296,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
 
             //Exception Rules Buttons visibility
             Calendar startTime = Calendar.getInstance();
-            startTime.setTime(mRide.getStartTime());
+            startTime.setTime(mBasicRide.getStartTime());
             //This will subtract some buffer time from start time e.g. reduce 15 mins from current time
             //(using -) in add function for substraction
             startTime.add(Calendar.MINUTE, -Constant.START_TIME_BUFFER);
@@ -308,12 +308,12 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 mStartButton.setVisibility(View.GONE);
             }
             //This will make Start and Cancel button invisible post end time of ride
-            if (mRide.getEndTime().before(Calendar.getInstance().getTime())){
+            if (mBasicRide.getEndTime().before(Calendar.getInstance().getTime())){
                 mCancelButton.setVisibility(View.GONE);
                 mStartButton.setVisibility(View.GONE);
             }
         }
-        if (mRide.getStatus().equals(RideStatus.Started)){
+        if (mBasicRide.getStatus().equals(RideStatus.Started)){
             //Visible Buttons
             mNavigationButton.setVisibility(View.VISIBLE);
             mEndButton.setVisibility(View.VISIBLE);
@@ -322,13 +322,14 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             mCancelButton.setVisibility(View.GONE);
             mStartButton.setVisibility(View.GONE);
         }
-        if (mRide.getStatus().equals(RideStatus.Finished) || mRide.getStatus().equals(RideStatus.Cancelled)){
+        if (mBasicRide.getStatus().equals(RideStatus.Finished) || mBasicRide.getStatus().equals(RideStatus.Cancelled)){
             //Invisible Buttons
             mBasicRideButtonsLayout.setVisibility(View.GONE);
         }
     }
 
-    public void setCoTravellerButtonsOnClickListener(final View view, final BasicRideRequest rideRequest){
+    //Note - Use Input as FullRide as well as store REST response as FullRide as caller pass Fullride in constructor
+    public void setCoTravellerButtonsOnClickListener(final View view, final FullRideRequest rideRequest){
         //Don't get on layout as its not an external layout which is used as include, get on view.findviewbyId
         final Button cancelButton = view.findViewById(R.id.co_traveller_cancel_button);
         Button pickupButton = view.findViewById(R.id.co_traveller_pickup_button);
@@ -337,7 +338,8 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dialogFragment = CancelCoTravellerFragment.newInstance(RideComp.this, mRide, rideRequest);
+                //Input is fine as Full Ride as caller set the fullride in constructor
+                DialogFragment dialogFragment = CancelCoTravellerFragment.newInstance(RideComp.this, rideRequest);
                 dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), CancelCoTravellerFragment.TAG);
             }
         });
@@ -345,6 +347,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         pickupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Input is fine as Full Ride as caller set the fullride in constructor
                 String PICKUP_PASSENGER = APIUrl.PICKUP_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRide.getId()))
                         .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()));
                 RESTClient.get(PICKUP_PASSENGER, null, new JsonHttpResponseHandler(){
@@ -353,6 +356,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         Log.d(TAG, "CoTraveller Picked");
+                        //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
                         Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Picked", Toast.LENGTH_LONG).show();
@@ -385,6 +389,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         });
     }
 
+    //Note - Use Input as FullRide as well as store REST response as FullRide as caller pass Fullride in constructor
     public void updateCoTravellerButtonsVisibility(View view, final BasicRideRequest rideRequest){
 
         //Don't get on layout as its not an external layout which is used as include, get on view.findviewbyId
@@ -409,6 +414,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             //Exception Rules
             //This would make Pickup possible anytime post ride is started which would help to deal with
             //post settlement of ride in case of connectivity issue
+            //Input is fine as Full Ride as caller set the fullride in constructor
             if (!mRide.getStatus().equals(RideStatus.Started)){
                 pickupButton.setVisibility(View.GONE);
             }
@@ -454,7 +460,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             rideMode = RideMode.Paid;
         }
         Log.d(TAG, "Ride Mode is:"+rideMode.toString());
-
+        //Input is fine as Full Ride as caller set the fullride in constructor
         String DROP_PASSENGER = APIUrl.DROP_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRide.getId()))
                 .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()))
                 .replace(APIUrl.RIDE_MODE_KEY, rideMode.toString());
@@ -465,6 +471,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 Log.d(TAG, "CoTraveller Dropped");
+                //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
                 mListener.onRideRefresh(mRide);
                 Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Dropped", Toast.LENGTH_LONG).show();
@@ -492,11 +499,12 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
     }
 
     @Override
-    public void onPositiveClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest) {
+    public void onPositiveClickOfCancelCoTravellerFragment(Dialog dialog, FullRideRequest rideRequest) {
 
         RatingBar ratingBar = dialog.findViewById(R.id.rating_bar);
         Log.d(TAG, "Rating value:"+ratingBar.getRating());
 
+        //Input is fine as Full Ride as caller set the fullride in constructor
         String CANCEL_PASSENGER = APIUrl.CANCEL_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRide.getId()))
                 .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()))
                 .replace(APIUrl.RATING_KEY, Float.toString(ratingBar.getRating()));
@@ -507,6 +515,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 Log.d(TAG, "CoTraveller Cancelled");
+                //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
                 mListener.onRideRefresh(mRide);
                 Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Cancelled", Toast.LENGTH_LONG).show();
@@ -530,11 +539,12 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
     }
 
     @Override
-    public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest) {
+    public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, FullRideRequest rideRequest) {
         Log.d(TAG, "CoTraveller Not Cancelled");
     }
 
     public interface RideCompListener{
+        //Input is Fullride as we get Fullride on any rides Action from the server
         public void onRideRefresh(FullRide ride);
     }
 }

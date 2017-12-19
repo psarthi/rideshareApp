@@ -14,6 +14,8 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 
 /**
  * Created by psarthi on 12/4/17.
@@ -24,16 +26,14 @@ public class CancelCoTravellerFragment extends DialogFragment{
     public static final String TAG = CancelCoTravellerFragment.class.getName();
 
     private CancelCoTravellerFragmentListener mListener;
-    private BasicRideRequest mRideRequest;
-    private BasicRide mRide;
+    private FullRideRequest mRideRequest;
 
     public CancelCoTravellerFragment(){}
 
-    public static CancelCoTravellerFragment newInstance(CancelCoTravellerFragmentListener listener, BasicRide ride, BasicRideRequest rideRequest){
+    public static CancelCoTravellerFragment newInstance(CancelCoTravellerFragmentListener listener, FullRideRequest rideRequest){
         CancelCoTravellerFragment fragment = new CancelCoTravellerFragment();
         fragment.mListener = listener;
         fragment.mRideRequest = rideRequest;
-        fragment.mRide = ride;
         return fragment;
     }
 
@@ -51,7 +51,7 @@ public class CancelCoTravellerFragment extends DialogFragment{
         String coTravellerName;
         if (mListener instanceof RideComp){
             Log.d(TAG, "Ride Comp. Instance");
-            coTravellerName = mRide.getDriver().getFirstName() +" "+mRide.getDriver().getLastName();
+            coTravellerName = mRideRequest.getAcceptedRide().getDriver().getFirstName() +" "+mRideRequest.getAcceptedRide().getDriver().getLastName();
         } else {
             Log.d(TAG, "Ride Request Comp. Instance");
             coTravellerName = mRideRequest.getPassenger().getFirstName() +" "+mRideRequest.getPassenger().getLastName();
@@ -65,13 +65,13 @@ public class CancelCoTravellerFragment extends DialogFragment{
                 .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onPositiveClickOfCancelCoTravellerFragment(getDialog(), mRide, mRideRequest);
+                        mListener.onPositiveClickOfCancelCoTravellerFragment(getDialog(), mRideRequest);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onNegativeClickOfCancelCoTravellerFragment(getDialog(), mRide, mRideRequest);
+                        mListener.onNegativeClickOfCancelCoTravellerFragment(getDialog(), mRideRequest);
                     }
                 });
 
@@ -79,7 +79,7 @@ public class CancelCoTravellerFragment extends DialogFragment{
     }
 
     public interface CancelCoTravellerFragmentListener {
-        public void onPositiveClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest);
-        public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest);
+        public void onPositiveClickOfCancelCoTravellerFragment(Dialog dialog, FullRideRequest rideRequest);
+        public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, FullRideRequest rideRequest);
     }
 }

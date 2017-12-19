@@ -23,6 +23,7 @@ import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.CancelCoTravellerFragment;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
+import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -111,8 +112,8 @@ public class RideInfoFragment extends BaseFragment implements
         mCoTravellerLinearLayout.removeAllViews();
         //Note - We are using the same adapter which is also applicable for listview,
         //but this can be used for our own prupose and in this case, its the best suitable option
-        ArrayAdapter<BasicRideRequest> coTravellerAdapter = new CoTravellerAdapter(
-                this, (List<BasicRideRequest>) mRide.getAcceptedRideRequests(), mRide);
+        ArrayAdapter<FullRideRequest> coTravellerAdapter = new CoTravellerAdapter(
+                this, (List<FullRideRequest>) mRide.getAcceptedRideRequests(), mRide);
 
         //You can also get this by passing the container from onCreateView but in that case,
         //for refreshing the view again i need to store this container somewhere, so instead

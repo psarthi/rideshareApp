@@ -46,8 +46,9 @@ import cz.msebera.android.httpclient.Header;
 public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravellerFragmentListener{
 
     public static final String TAG = RideRequestComp.class.getName();
-    BaseFragment mBaseFragment;
+    private BaseFragment mBaseFragment;
     private FullRideRequest mRideRequest;
+    private BasicRideRequest mBasicRideRequest;
     private CommonUtil mCommonUtil;
 
     private Button mRideRequestCancelButton;
@@ -61,18 +62,21 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     public RideRequestComp(BaseFragment fragment, FullRideRequest rideRequest){
         mBaseFragment = fragment;
         mRideRequest = rideRequest;
+        //This will ensure that basic ride request layout would work perfectly fine for Full Ride Request as well
+        mBasicRideRequest = rideRequest;
         mCommonUtil = new CommonUtil(fragment);
         if (fragment instanceof RideRequestCompListener) mListener = (RideRequestCompListener) fragment;
     }
 
     //Reason behind this additional constructor so that we can send callback directly to adapter instead of BaseFragment class only
-    public RideRequestComp(RecyclerView.Adapter adapter, BaseFragment fragment, FullRideRequest rideRequest){
+    public RideRequestComp(RecyclerView.Adapter adapter, BaseFragment fragment, BasicRideRequest rideRequest){
         mBaseFragment = fragment;
-        mRideRequest = rideRequest;
+        mBasicRideRequest = rideRequest;
         mCommonUtil = new CommonUtil(fragment);
         mListener = (RideRequestCompListener) adapter;
     }
 
+    //Use all input as Basic Ride Request
     public void setRideRequestBasicLayout(View view){
 
         View layout = view.findViewById(R.id.basic_ride_request_layout);
@@ -80,28 +84,22 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         mDestinationNavigationButton = layout.findViewById(R.id.ride_request_navigate_to_destination_button);
         mBasicRideRequestButtonsLayout = layout.findViewById(R.id.ride_request_buttons_layout);
 
-        String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)+ mRideRequest.getId();
+        String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)+ mBasicRideRequest.getId();
         ((TextView) layout.findViewById(R.id.ride_request_id_text)).setText(rideRequestNumberText);
-        ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(mRideRequest.getStatus().toString());
-        String pickupTime = mCommonUtil.getFormattedDateTimeString(mRideRequest.getPickupTime());
+        ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(mBasicRideRequest.getStatus().toString());
+        String pickupTime = mCommonUtil.getFormattedDateTimeString(mBasicRideRequest.getPickupTime());
         ((TextView) layout.findViewById(R.id.ride_request_pickup_time_text)).setText(pickupTime);
 
+        ((TextView) layout.findViewById(R.id.ride_request_pickup_point_text)).setText(mBasicRideRequest.getPickupPointAddress());
+        ((TextView) layout.findViewById(R.id.ride_request_drop_point_text)).setText(mBasicRideRequest.getDropPointAddress());
 
-        String paymentCode = mRideRequest.getConfirmationCode();
-        if (mRideRequest.getAcceptedRide()!=null){
-            Log.d(TAG, "Accepted Ride Request for Id:"+mRideRequest.getId()+" is :"+mRideRequest.getAcceptedRide().getId());
-            //Reason behind making it visible so that its visible on refresh
-            layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.VISIBLE);
-            String paymentLabel = mBaseFragment.getString(R.string.ride_request_payment_code_text);
-            ((TextView) layout.findViewById(R.id.ride_request_confirmation_code_text)).setText(paymentLabel+paymentCode);
+        //This will setup those views which is available only in Full Ride Request
+        if (mListener instanceof BaseFragment){
+            setExtraOfBasicLayout(layout);
         } else {
-            Log.d(TAG, "No Accepted Ride Request for Id:"+mRideRequest.getId());
+            Log.d(TAG, "Basic Ride Request Layout within Rides List, So Payment Code information for Id:"+mBasicRideRequest.getId());
             layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.GONE);
         }
-
-        ((TextView) layout.findViewById(R.id.ride_request_pickup_point_text)).setText(mRideRequest.getPickupPointAddress());
-        ((TextView) layout.findViewById(R.id.ride_request_drop_point_text)).setText(mRideRequest.getDropPointAddress());
-
 
         //This will setup initial button visibility
         updateRideRequestBasicLayoutButtonsVisiblity();
@@ -109,7 +107,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
         RideRequestInfoFragment fragment = (RideRequestInfoFragment) mBaseFragment.getActivity().getSupportFragmentManager()
                 .findFragmentByTag(RideRequestInfoFragment.TAG);
-        if (fragment!=null && mRideRequest.getId() == fragment.getRideRequestId()){
+        if (fragment!=null && mBasicRideRequest.getId() == fragment.getRideRequestId()){
             Log.d(TAG, "Ride Request Info is already loaded");
         } else {
 
@@ -117,7 +115,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 @Override
                 public void onClick(View v) {
 
-                    String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.ID_KEY, Integer.toString(mRideRequest.getId()));
+                    String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.ID_KEY, Integer.toString(mBasicRideRequest.getId()));
 
                     RESTClient.get(GET_RIDE_REQUEST_URL, null, new JsonHttpResponseHandler() {
                         @Override
@@ -127,12 +125,29 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                             fragmentLoader.loadRideRequestInfoFragment(response.toString());
                         }
                     });
-
                 }
             });
         }
     }
 
+    //Use all input as Full Ride Request with an assumption that fragments would have access to Full ride request
+    private void setExtraOfBasicLayout(View layout) {
+        String paymentCode = mRideRequest.getConfirmationCode();
+        //IMP - This will work fine when getting called from Ride Request Info with Full Ride Request
+        if (mRideRequest.getAcceptedRide()!=null){
+            Log.d(TAG, "Accepted Ride Request for Id:"+mRideRequest.getId()+" is :"+mRideRequest.getAcceptedRide().getId());
+            //Reason behind making it visible so that its visible on refresh
+            layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.VISIBLE);
+            String paymentLabel = mBaseFragment.getString(R.string.ride_request_payment_code_text);
+            ((TextView) layout.findViewById(R.id.ride_request_confirmation_code_text)).setText(paymentLabel+paymentCode);
+        }else {
+            Log.d(TAG, "No Accepted Ride for Id:"+mBasicRideRequest.getId());
+            layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.GONE);
+        }
+    }
+
+    //Use all input as Basic Ride Request and save response as Full Ride Request as we get that only from server
+    //and we can support Ride Request List as well as Ride Request Info fragment as well
     private void setRideRequestBasicLayoutButtonsOnClickListener(){
         mRideRequestCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +157,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardAlertDialogListener() {
                     @Override
                     public void onPositiveStandardAlertDialog() {
-                        String CANCEL_RIDE_REQUEST = APIUrl.CANCEL_RIDE_REQUEST.replace(APIUrl.ID_KEY, Integer.toString(mRideRequest.getId()));
+                        String CANCEL_RIDE_REQUEST = APIUrl.CANCEL_RIDE_REQUEST.replace(APIUrl.ID_KEY, Integer.toString(mBasicRideRequest.getId()));
                         RESTClient.get(CANCEL_RIDE_REQUEST, null, new JsonHttpResponseHandler(){
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -179,11 +194,13 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         mDestinationNavigationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Navigate to Destination for Id:"+mRideRequest.getId());
+                Log.d(TAG, "Navigate to Destination for Id:"+mBasicRideRequest.getId());
             }
         });
     }
 
+    //Use all input as Basic Ride Request and save response as Full Ride Request as we get that only from server
+    //and we can support Ride Request List as well as Ride Request Info fragment as well
     private void updateRideRequestBasicLayoutButtonsVisiblity(){
 
         //Reason for setting it visible to handle view holder reuse where once item is invisible, it remains as it is
@@ -193,12 +210,12 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         //not sure how that would behave so cleaner option is to make layout visible and then childs visible/invisible as well
         mBasicRideRequestButtonsLayout.setVisibility(View.VISIBLE);
 
-        if (mRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)
-                || mRideRequest.getStatus().equals(RideRequestStatus.Fulfilled)) {
+        if (mBasicRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)
+                || mBasicRideRequest.getStatus().equals(RideRequestStatus.Fulfilled)) {
 
             //Rules based on passenger status
-            if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)
-                    || mRideRequest.getPassengerStatus().equals(PassengerStatus.Unconfirmed)){
+            if (mBasicRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)
+                    || mBasicRideRequest.getPassengerStatus().equals(PassengerStatus.Unconfirmed)){
 
                 //Visible Buttons
                 mRideRequestCancelButton.setVisibility(View.VISIBLE);
@@ -214,30 +231,31 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 mRideRequestCancelButton.setVisibility(View.GONE);
             }
 
-            Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mRideRequest);
+            Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mBasicRideRequest);
             Log.d(TAG, "Drop Time with Variation:"+maxEndTime.getTime().toString());
             Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
 
             //Exception Rules common for both cases
             //This will make cancel invisible if current time is after pickup time + pickup variation + travel time
             if (maxEndTime.before(Calendar.getInstance())){
-                Log.d(TAG, "Pickup time lapsed, so no cancel and Destination button for id:"+mRideRequest.getId());
+                Log.d(TAG, "Pickup time lapsed, so no cancel and Destination button for id:"+mBasicRideRequest.getId());
                 mRideRequestCancelButton.setVisibility(View.GONE);
                 mDestinationNavigationButton.setVisibility(View.GONE);
             }
         }
 
-        if (mRideRequest.getStatus().equals(RideRequestStatus.Cancelled)){
+        if (mBasicRideRequest.getStatus().equals(RideRequestStatus.Cancelled)){
             mBasicRideRequestButtonsLayout.setVisibility(View.GONE);
         }
     }
 
+    //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
     public void setRideOwnerLayout(View view){
 
         UserComp userComp = new UserComp(mBaseFragment, null);
         userComp.setUserProfileSingleRow(view, mRideRequest.getAcceptedRide().getDriver());
 
-        setPickupTimeAndBillLayout(view, (BasicRideRequest) mRideRequest);
+        setPickupTimeAndBillLayout(view);
 
         ((TextView) view.findViewById(R.id.ride_pickup_point_text)).setText(mRideRequest.getRidePickupPointAddress());
         ((TextView) view.findViewById(R.id.ride_drop_point_text)).setText(mRideRequest.getRideDropPointAddress());
@@ -256,13 +274,14 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
     }
 
+    //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
     private void setRideOwnerLayoutButtonsOnClickListener(final View view){
 
         mRideOwnerCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                DialogFragment dialogFragment = CancelCoTravellerFragment.newInstance(RideRequestComp.this, mRideRequest.getAcceptedRide(), mRideRequest);
+                DialogFragment dialogFragment = CancelCoTravellerFragment.newInstance(RideRequestComp.this, mRideRequest);
                 dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), CancelCoTravellerFragment.TAG);
             }
         });
@@ -275,6 +294,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         });
     }
 
+    //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
     private void updateRideOwnerLayoutButtonsVisiblity(View view){
 
         RatingBar ratingBar = view.findViewById(R.id.ride_owner_rating_bar);
@@ -309,39 +329,41 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
     }
 
-    public void setPickupTimeAndBillLayout(View view, BasicRideRequest rideRequest){
+    //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
+    public void setPickupTimeAndBillLayout(View view){
         View layout = view.findViewById(R.id.pickup_time_bill_layout);
         TextView pickupTimeTextView = layout.findViewById(R.id.pickup_time_text);
-        Date pickupTime = rideRequest.getRidePickupPoint().getRidePointProperties().get(0).getDateTime();
+        Date pickupTime = mRideRequest.getRidePickupPoint().getRidePointProperties().get(0).getDateTime();
         String pickupTimeString = mCommonUtil.getFormattedDateTimeString(pickupTime);
         pickupTimeTextView.setText(pickupTimeString);
 
         TextView fareTextView = layout.findViewById(R.id.fare_text);
-        String amount = Float.toString(rideRequest.getBill().getAmount());
-        String symbol = Currency.getInstance(rideRequest.getPassenger().getCountry().getCurrency().getName()).getSymbol();
+        String amount = Float.toString(mRideRequest.getBill().getAmount());
+        String symbol = Currency.getInstance(mRideRequest.getPassenger().getCountry().getCurrency().getName()).getSymbol();
         fareTextView.setText(symbol+amount);
 
         TextView billStatusTextView = layout.findViewById(R.id.bill_status);
-        billStatusTextView.setText(rideRequest.getBill().getStatus().toString());
+        billStatusTextView.setText(mRideRequest.getBill().getStatus().toString());
     }
 
-    public void setRidePickupDropPointsLayout(View view, BasicRideRequest rideRequest){
+    //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
+    public void setRidePickupDropPointsLayout(View view){
         View layout = view.findViewById(R.id.ride_pickup_drop_point_layout);
         TextView pickupPointTextView = layout.findViewById(R.id.ride_pickup_point_text);
-        pickupPointTextView.setText(rideRequest.getRidePickupPointAddress());
+        pickupPointTextView.setText(mRideRequest.getRidePickupPointAddress());
 
         TextView dropPointTextView = layout.findViewById(R.id.ride_drop_point_text);
-        dropPointTextView.setText(rideRequest.getRideDropPointAddress());
+        dropPointTextView.setText(mRideRequest.getRideDropPointAddress());
 
     }
 
     @Override
-    public void onPositiveClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest) {
+    public void onPositiveClickOfCancelCoTravellerFragment(Dialog dialog, FullRideRequest rideRequest) {
         RatingBar ratingBar = dialog.findViewById(R.id.rating_bar);
         Log.d(TAG, "Rating value:"+ratingBar.getRating());
 
-        String CANCEL_DRIVER = APIUrl.CANCEL_DRIVER.replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(mRideRequest.getId()))
-                .replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getId()))
+        String CANCEL_DRIVER = APIUrl.CANCEL_DRIVER.replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()))
+                .replace(APIUrl.RIDE_ID_KEY, Integer.toString(rideRequest.getAcceptedRide().getId()))
                 .replace(APIUrl.RATING_KEY, Float.toString(ratingBar.getRating()));
 
         RESTClient.get(CANCEL_DRIVER, null, new JsonHttpResponseHandler(){
@@ -373,7 +395,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     }
 
     @Override
-    public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, BasicRide ride, BasicRideRequest rideRequest) {
+    public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, FullRideRequest rideRequest) {
         Log.d(TAG, "Ride Owner Not Cancelled");
 
     }
