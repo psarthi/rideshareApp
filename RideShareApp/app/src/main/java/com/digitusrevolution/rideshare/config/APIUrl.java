@@ -6,8 +6,8 @@ package com.digitusrevolution.rideshare.config;
 
 public class APIUrl {
 
-    public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.6:8080/RSRideSystem/api";
-    public static final String BASE_URL_USER_SYSTEM = "http://10.0.0.6:8080/RSUserSystem/api";
+    public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.4:8080/RSRideSystem/api";
+    public static final String BASE_URL_USER_SYSTEM = "http://10.0.0.4:8080/RSUserSystem/api";
 
     public static final String USER_EMAIL_KEY = "{userEmail}";
     public static final String USER_ID_KEY = "{userId}";
@@ -26,6 +26,7 @@ public class APIUrl {
     public static final String PAGE_KEY = "{page}";
     public static final String RIDE_MODE_KEY = "{rideMode}";
     public static final String RATING_KEY = "{rating}";
+    public static final String PAYMENT_CODE_KEY = "{paymentCode}";
 
     public static final String SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/signin";
     public static final String GOOGLE_SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/googlesignin";
@@ -49,7 +50,7 @@ public class APIUrl {
     public static final String END_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/end/{id}";
     public static final String CANCEL_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/cancel/{id}";
     public static final String PICKUP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/pickup/{rideRequestId}";
-    public static final String DROP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/drop/{rideRequestId}?ridemode={rideMode}";
+    public static final String DROP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/drop/{rideRequestId}?ridemode={rideMode}&paymentcode={paymentCode}";
     public static final String CANCEL_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/cancelpassenger/{rideRequestId}?rating={rating}";
     public static final String CANCEL_DRIVER = BASE_URL_RIDE_SYSTEM + "/riderequests/{rideRequestId}/canceldriver/{rideId}?rating={rating}";
     public static final String CANCEL_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/cancel/{id}";

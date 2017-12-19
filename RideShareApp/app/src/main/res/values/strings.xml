@@ -64,5 +64,6 @@
     <string name="cancel_cotraveller_text">"Cancel "</string>
     <string name="system_exception_msg">Technical Issue. Please try again</string>
     <string name="standard_cancellation_confirmation_message">Are you sure you want to cancel?</string>
+    <string name="ride_end_confirmation_message">Are you sure you want to end the ride early?</string>
 
 </resources>

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 
 /**
@@ -28,6 +29,7 @@ public class DropCoTravellerFragment extends DialogFragment{
     private DropCoTravellerFragmentListener mListener;
     private BasicRideRequest mRideRequest;
     private RadioButton mFreeRideRadioButton;
+    private RadioButton mPaidRideRadioButton;
     private TextView mPaymentTextView;
 
     public DropCoTravellerFragment(){}
@@ -49,9 +51,24 @@ public class DropCoTravellerFragment extends DialogFragment{
         View view = inflater.inflate(R.layout.drop_co_traveller, null);
 
         mFreeRideRadioButton = view.findViewById(R.id.free_ride_radio_button);
+        mPaidRideRadioButton = view.findViewById(R.id.paid_ride_radio_button);
         mPaymentTextView = view.findViewById(R.id.payment_code_text);
         final TextView titleTextView = view.findViewById(R.id.title_text);
         titleTextView.setText(getString(R.string.drop_text_msg)+mRideRequest.getPassenger().getFirstName() +" "+mRideRequest.getPassenger().getLastName());
+
+        if (mRideRequest.getRideMode().equals(RideMode.Free)){
+            //This will disable the Paid Ride Radio Button and payment code text field
+            mPaidRideRadioButton.setEnabled(false);
+            mPaymentTextView.setEnabled(false);
+            //This will set Free Ride as checked
+            mFreeRideRadioButton.setChecked(true);
+        } else {
+            //Even though default behavior is the below as per XML layout but for simplicity
+            //we have added again here so that we are bit clear from program front as well
+            mPaidRideRadioButton.setEnabled(true);
+            mPaidRideRadioButton.setChecked(true);
+            mPaymentTextView.setEnabled(true);
+        }
 
         //This will enable/disable payment code text according to the selection of radio button
         mFreeRideRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
