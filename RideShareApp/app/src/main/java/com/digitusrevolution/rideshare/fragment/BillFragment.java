@@ -121,13 +121,19 @@ public class BillFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.rate_per_km_text)).setText(mCommonUtil.getDecimalFormattedString(ratePerKm));
         ((TextView) view.findViewById(R.id.distance_text)).setText(mCommonUtil.getDecimalFormattedString(distance));
         ((TextView) view.findViewById(R.id.discount_text)).setText(mCommonUtil.getDecimalFormattedString(mBill.getDiscountPercentage()));
-        ((TextView) view.findViewById(R.id.total_amount_text)).setText(mCommonUtil.getDecimalFormattedString(mBill.getAmount()));
+
+        String currencySymbol = mCommonUtil.getCurrencySymbol(mUser.getCountry());
+        String amountText = currencySymbol + mCommonUtil.getDecimalFormattedString(mBill.getAmount());
+        ((TextView) view.findViewById(R.id.total_amount_text)).setText(amountText);
 
         float serviceCharge = mBill.getServiceChargePercentage() * mBill.getAmount() / 100;
         float rideOwnerAmount = mBill.getAmount() - serviceCharge;
 
-        ((TextView) view.findViewById(R.id.service_charge_text)).setText(mCommonUtil.getDecimalFormattedString(serviceCharge));
-        ((TextView) view.findViewById(R.id.payable_to_ride_owner_amount_text)).setText(mCommonUtil.getDecimalFormattedString(rideOwnerAmount));
+        String serviceChargeText = currencySymbol + mCommonUtil.getDecimalFormattedString(serviceCharge);
+        String rideOwnerAmountText = currencySymbol + mCommonUtil.getDecimalFormattedString(rideOwnerAmount);
+
+        ((TextView) view.findViewById(R.id.service_charge_text)).setText(serviceChargeText);
+        ((TextView) view.findViewById(R.id.payable_to_ride_owner_amount_text)).setText(rideOwnerAmountText);
 
         //This will check is the person vewing the bill is the passenger or the driver
         //if its passenger, then check if the status is approved. In that case only, show Pay button

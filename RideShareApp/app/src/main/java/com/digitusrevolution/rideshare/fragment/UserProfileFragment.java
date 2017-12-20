@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
@@ -21,6 +22,7 @@ import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.digitusrevolution.rideshare.model.user.dto.UserProfile;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -39,17 +41,16 @@ public class UserProfileFragment extends BaseFragment {
     public static final String TAG = UserProfileFragment.class.getName();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_USER = "user";
+    private static final String ARG_USER = "userProfile";
     private static final String ARG_PARAM2 = "param2";
     public static final String TITLE = "User Profile";
 
     // TODO: Rename and change types of parameters
-    private String mUserData;
+    private String mUserProfileData;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    private BasicUser mUser;
-    private BasicUser mSignedInUser;
+    private UserProfile mUserProfile;
     private FullRide mCurrentRide;
     private CommonUtil mCommonUtil;
     private FragmentLoader mFragmentLoader;
@@ -62,15 +63,15 @@ public class UserProfileFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param user User in Json format
+     * @param userProfile UserProfile in Json format
      * @param param2 Parameter 2.
      * @return A new instance of fragment UserProfileFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static UserProfileFragment newInstance(String user, String param2) {
+    public static UserProfileFragment newInstance(String userProfile, String param2) {
         UserProfileFragment fragment = new UserProfileFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_USER, user);
+        args.putString(ARG_USER, userProfile);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -80,11 +81,11 @@ public class UserProfileFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mUserData = getArguments().getString(ARG_USER);
+            mUserProfileData = getArguments().getString(ARG_USER);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        mUser = new Gson().fromJson(mUserData, BasicUser.class);
-        Log.d(TAG, "User Profile loaded for user Id:"+mUser.getId());
+        mUserProfile = new Gson().fromJson(mUserProfileData, UserProfile.class);
+        Log.d(TAG, "User Profile loaded for user Id:"+mUserProfile.getUser().getId());
         mCommonUtil = new CommonUtil(this);
         mFragmentLoader = new FragmentLoader(this);
         mCurrentRide = mCommonUtil.getCurrentRide();
@@ -96,11 +97,11 @@ public class UserProfileFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
         ImageView userProfileImageView = (ImageView) view.findViewById(R.id.user_profile_large_image);
-        Picasso.with(getActivity()).load(mUser.getPhoto().getImageLocation())
+        Picasso.with(getActivity()).load(mUserProfile.getUser().getPhoto().getImageLocation())
                 .into(userProfileImageView);
 
         UserComp userComp = new UserComp(this, null);
-        userComp.setUserProfileSingleRow(view, mUser);
+        userComp.setUserProfileSingleRow(view, mUserProfile.getUser());
 
         View user_profile_layout = view.findViewById(R.id.user_profile_single_row_layout);
         //This will make small user image invisible
@@ -109,8 +110,29 @@ public class UserProfileFragment extends BaseFragment {
         //TODO This should be set according to backend implementation to see if its a friend or not
         user_profile_layout.findViewById(R.id.add_friend_image).setVisibility(View.VISIBLE);
 
+        String offeredRideText = getResources().getString(R.string.rides_offered_text) + mUserProfile.getOfferedRides();
+        String ridesTakenText = getResources().getString(R.string.rides_taken_text) + mUserProfile.getRidesTaken();
+
+        ((TextView) view.findViewById(R.id.rides_offered_text)).setText(offeredRideText);
+        ((TextView) view.findViewById(R.id.ride_taken_text)).setText(ridesTakenText);
+
+        int mutualFriendsSize = 0;
+        if (mUserProfile.getMutualFriends()!=null){
+            mutualFriendsSize = mUserProfile.getMutualFriends().size();
+        }
+        int commonGroupsSize = 0;
+        if (mUserProfile.getCommonGroups()!=null){
+            commonGroupsSize = mUserProfile.getCommonGroups().size();
+        }
+
+        String mutualFriendsText = getResources().getString(R.string.mutual_friends_text) + mutualFriendsSize;
+        String commonGroupsText = getResources().getString(R.string.common_groups_text) + commonGroupsSize;
+
+        ((TextView) view.findViewById(R.id.mutual_friends_count_text)).setText(mutualFriendsText);
+        ((TextView) view.findViewById(R.id.common_groups_count_text)).setText(commonGroupsText);
 
         //TODO load additional view's once we get fulluser from backend properly. Below recycler view is for dummy
+        /* For reference purpose
         RecyclerView friendRecyclerView = view.findViewById(R.id.mutual_friends_list);
         RecyclerView groupsRecyclerView = view.findViewById(R.id.common_groups_list);
         RecyclerView.Adapter adapter = new ThumbnailCoTravellerAdapter(this,
@@ -118,6 +140,7 @@ public class UserProfileFragment extends BaseFragment {
 
         setRecyclerView(friendRecyclerView, adapter, LinearLayoutManager.HORIZONTAL);
         setRecyclerView(groupsRecyclerView, adapter, LinearLayoutManager.HORIZONTAL);
+        */
 
         return view;
     }
@@ -168,6 +191,6 @@ public class UserProfileFragment extends BaseFragment {
     }
 
     public int getUserId(){
-        return mUser.getId();
+        return mUserProfile.getUser().getId();
     }
 }

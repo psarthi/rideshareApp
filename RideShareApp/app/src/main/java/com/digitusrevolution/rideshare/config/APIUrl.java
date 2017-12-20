@@ -57,6 +57,7 @@ public class APIUrl {
     public static final String CANCEL_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/cancel/{id}";
     public static final String PAY_BILL = BASE_URL_BILLING_SYSTEM + "/billing/pay";
     public static final String USER_FEEDBACK = BASE_URL_USER_SYSTEM + "/users/{userId}/feedback";
+    public static final String GET_USER_PROFILE = BASE_URL_USER_SYSTEM + "/users/{userId}/profile";
 
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +

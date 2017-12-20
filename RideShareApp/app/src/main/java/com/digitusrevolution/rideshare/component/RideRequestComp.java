@@ -22,6 +22,7 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
@@ -377,7 +378,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
         TextView fareTextView = layout.findViewById(R.id.fare_text);
         String amount = mCommonUtil.getDecimalFormattedString(mRideRequest.getBill().getAmount());
-        String symbol = Currency.getInstance(mRideRequest.getPassenger().getCountry().getCurrency().getName()).getSymbol();
+        String symbol = mCommonUtil.getCurrencySymbol(mRideRequest.getPassenger().getCountry());
         fareTextView.setText(symbol+amount);
 
         TextView billStatusTextView = layout.findViewById(R.id.bill_status);

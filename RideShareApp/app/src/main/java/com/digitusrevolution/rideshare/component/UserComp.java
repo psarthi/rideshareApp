@@ -7,13 +7,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.FullUser;
 import com.google.gson.Gson;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by psarthi on 12/6/17.
@@ -41,7 +48,7 @@ public class UserComp {
         String userName = user.getFirstName() + " " + user.getLastName();
         userNameTextView.setText(userName);
         TextView userRatingTextView = user_profile_layout.findViewById(R.id.user_rating_text);
-        String profileRating = Float.toString(user.getProfileRating());
+        String profileRating = mCommonUtil.getDecimalFormattedString(user.getProfileRating());
         userRatingTextView.setText(profileRating);
 
         ImageView mobileImageView = user_profile_layout.findViewById(R.id.user_mobile_image);
@@ -66,11 +73,19 @@ public class UserComp {
             userProfileImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                    fragmentLoader.loadUserProfileFragment(new Gson().toJson(user), null);
+                    String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.USER_ID_KEY, Integer.toString(user.getId()));
+                    RESTClient.post(mBaseFragment.getActivity(), GET_USER_PROFILE, mUser, new JsonHttpResponseHandler() {
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            super.onSuccess(statusCode, headers, response);
+                            FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                            fragmentLoader.loadUserProfileFragment(response.toString(), null);
+
+                        }
+                    });
                 }
             });
-
         }
     }
 }

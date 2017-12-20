@@ -67,5 +67,9 @@
     <string name="standard_cancellation_confirmation_message">Are you sure you want to cancel?</string>
     <string name="ride_end_confirmation_message">Are you sure you want to end the ride early?</string>
     <string name="bill_no_text">"Bill No. "</string>
+    <string name="rides_offered_text">"Rides Offered - "</string>
+    <string name="rides_taken_text">"Rides Taken - "</string>
+    <string name="mutual_friends_text">"Mutual Friends - "</string>
+    <string name="common_groups_text">"Common Groups - "</string>
 
 </resources>

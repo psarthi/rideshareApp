@@ -11,6 +11,7 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
+import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.FullUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
@@ -58,7 +59,7 @@ public class CommonUtil {
 
     public void saveUserSignInResult(UserSignInResult userSignInResult) {
         saveInSharedPref(Constant.SHARED_PREFS_TOKEN_KEY,userSignInResult.getToken());
-        saveInSharedPref(Constant.SHARED_PREFS_USER_KEY,new Gson().toJson(userSignInResult.getUserProfile()));
+        saveInSharedPref(Constant.SHARED_PREFS_USER_KEY,new Gson().toJson(userSignInResult.getUser()));
         saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_KEY,new Gson().toJson(userSignInResult.getCurrentRide()));
         saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY,new Gson().toJson(userSignInResult.getCurrentRideRequest()));
     }
@@ -202,5 +203,9 @@ public class CommonUtil {
         Log.d(TAG, "Number is:"+number);
         String result = String.format("%.2f", number);
         return result;
+    }
+
+    public String getCurrencySymbol(Country country) {
+        return Currency.getInstance(country.getCurrency().getName()).getSymbol();
     }
 }
