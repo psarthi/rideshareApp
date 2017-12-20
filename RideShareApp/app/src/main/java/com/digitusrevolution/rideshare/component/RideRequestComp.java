@@ -25,6 +25,8 @@ import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
+import com.digitusrevolution.rideshare.model.user.domain.UserFeedback;
+import com.digitusrevolution.rideshare.model.user.dto.UserFeedbackInfo;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -292,10 +294,42 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             }
         });
 
-        mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        setRatingBar(mRatingBar);
+
+        //This will show the user given rating
+        for (UserFeedback feedback: mRideRequest.getFeedbacks()) {
+            if (feedback.getForUser().getId() == mRideRequest.getAcceptedRide().getDriver().getId()) {
+                mRatingBar.setRating(feedback.getRating());
+                mRatingBar.setEnabled(false);
+            }
+        }
+    }
+
+    public void setRatingBar(final RatingBar userRatingBar) {
+        userRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 Log.d(TAG, "Rating is:"+rating);
+                String USER_FEEDBACK = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getDriver().getId()));
+                UserFeedbackInfo feedbackInfo = new UserFeedbackInfo();
+                feedbackInfo.setGivenByUser(mRideRequest.getPassenger());
+                feedbackInfo.setRating(rating);
+                feedbackInfo.setRide(mRideRequest.getAcceptedRide());
+                feedbackInfo.setRideRequest(mRideRequest);
+                RESTClient.post(mBaseFragment.getActivity(), USER_FEEDBACK, feedbackInfo, new JsonHttpResponseHandler(){
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        userRatingBar.setEnabled(false);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                    }
+                });
+
             }
         });
     }

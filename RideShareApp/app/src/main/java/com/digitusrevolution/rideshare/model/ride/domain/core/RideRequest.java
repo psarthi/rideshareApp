@@ -5,12 +5,14 @@ import android.support.annotation.NonNull;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.domain.RideRequestPoint;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
 import com.digitusrevolution.rideshare.model.user.domain.Sex;
+import com.digitusrevolution.rideshare.model.user.domain.UserFeedback;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
 import com.digitusrevolution.rideshare.model.user.domain.core.User;
@@ -50,6 +52,7 @@ public class RideRequest implements Comparable<RideRequest>{
 	private RideMode rideMode;
 	private Bill bill;
 	private String confirmationCode;
+	private Collection<UserFeedback> feedbacks = new HashSet<UserFeedback>();
 	
 	public int getId() {
 		return id;
@@ -300,5 +303,13 @@ public class RideRequest implements Comparable<RideRequest>{
 
 	public void setConfirmationCode(String confirmationCode) {
 		this.confirmationCode = confirmationCode;
+	}
+
+	public Collection<UserFeedback> getFeedbacks() {
+		return feedbacks;
+	}
+
+	public void setFeedbacks(Collection<UserFeedback> feedbacks) {
+		this.feedbacks = feedbacks;
 	}
 }
