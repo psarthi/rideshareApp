@@ -8,6 +8,7 @@ public class APIUrl {
 
     public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.4:8080/RSRideSystem/api";
     public static final String BASE_URL_USER_SYSTEM = "http://10.0.0.4:8080/RSUserSystem/api";
+    public static final String BASE_URL_BILLING_SYSTEM = "http://10.0.0.4:8080/RSBillingSystem/api";
 
     public static final String USER_EMAIL_KEY = "{userEmail}";
     public static final String USER_ID_KEY = "{userId}";
@@ -54,6 +55,7 @@ public class APIUrl {
     public static final String CANCEL_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/cancelpassenger/{rideRequestId}?rating={rating}";
     public static final String CANCEL_DRIVER = BASE_URL_RIDE_SYSTEM + "/riderequests/{rideRequestId}/canceldriver/{rideId}?rating={rating}";
     public static final String CANCEL_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/cancel/{id}";
+    public static final String PAY_BILL = BASE_URL_BILLING_SYSTEM + "/billing/pay";
 
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +

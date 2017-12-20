@@ -3,6 +3,7 @@ package com.digitusrevolution.rideshare.activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
+import com.digitusrevolution.rideshare.fragment.BillFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
@@ -29,6 +31,7 @@ import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.model.app.FetchType;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
@@ -44,7 +47,8 @@ public class HomePageActivity extends BaseActivity
         RideRequestInfoFragment.OnFragmentInteractionListener,
         UserProfileFragment.OnFragmentInteractionListener,
         RidesListHomePageFragment.OnFragmentInteractionListener,
-        RidesListFragment.OnFragmentInteractionListener{
+        RidesListFragment.OnFragmentInteractionListener,
+        BillFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -330,5 +334,19 @@ public class HomePageActivity extends BaseActivity
     @Override
     public void onRidesListHomePageFragmentInteraction(String data) {
 
+    }
+
+    @Override
+    public void onBillFragmentInteraction(RideType rideType, String bill) {
+
+        if (rideType.equals(RideType.OfferRide)){
+            RideInfoFragment fragment = (RideInfoFragment) getSupportFragmentManager().findFragmentByTag(RideInfoFragment.TAG);
+            fragment.updateBill(new Gson().fromJson(bill, Bill.class));
+            getSupportFragmentManager().popBackStack();
+        } else {
+            RideRequestInfoFragment fragment = (RideRequestInfoFragment) getSupportFragmentManager().findFragmentByTag(RideRequestInfoFragment.TAG);
+            fragment.updateBill(new Gson().fromJson(bill, Bill.class));
+            getSupportFragmentManager().popBackStack();
+        }
     }
 }

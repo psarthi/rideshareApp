@@ -21,6 +21,7 @@ import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.CancelCoTravellerFragment;
+import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
@@ -254,5 +255,16 @@ public class RideInfoFragment extends BaseFragment implements
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onRideInfoFragmentInteraction(Uri uri);
+    }
+
+    public void updateBill(Bill bill){
+
+        for (FullRideRequest rideRequest:mRide.getAcceptedRideRequests()){
+            if (rideRequest.getId() == bill.getRideRequest().getId()){
+                //Since its all by reference, so updating rideRequest would reflect in mRide as well
+                rideRequest.setBill(bill);
+                break;
+            }
+        }
     }
 }

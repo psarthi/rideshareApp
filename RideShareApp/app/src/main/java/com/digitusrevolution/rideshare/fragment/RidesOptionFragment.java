@@ -108,10 +108,9 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
         //This will only be used when we don't pass the ridesOption while creating the fragement instance
         if (mRidesOptionData==null){
             mRidesOption = mUser.getPreference();
+        } else {
+            mRidesOption = new Gson().fromJson(mRidesOptionData, Preference.class);
         }
-
-        mRidesOption = new Gson().fromJson(mRidesOptionData, Preference.class);
-
         mCommonComp = new CommonComp(this);
         //This will set this fragment for vehicle categories ready listener callback
         mCommonComp.mOnVehicleCategoriesReadyListener = this;

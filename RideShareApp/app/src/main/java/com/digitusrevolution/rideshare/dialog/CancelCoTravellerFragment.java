@@ -62,13 +62,13 @@ public class CancelCoTravellerFragment extends DialogFragment{
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)
                 //Pass the value of title from calling method in Bundle
-                .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mListener.onPositiveClickOfCancelCoTravellerFragment(getDialog(), mRideRequest);
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mListener.onNegativeClickOfCancelCoTravellerFragment(getDialog(), mRideRequest);

@@ -197,4 +197,10 @@ public class CommonUtil {
         endTime.add(Calendar.SECOND, rideRequest.getTravelTime());
         return endTime;
     }
+
+    public String getDecimalFormattedString(double number){
+        Log.d(TAG, "Number is:"+number);
+        String result = String.format("%.2f", number);
+        return result;
+    }
 }

@@ -9,6 +9,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.BaseActivity;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
+import com.digitusrevolution.rideshare.fragment.BillFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
@@ -126,6 +127,14 @@ public class FragmentLoader {
                 newInstance(null, null);
         fragmentTransaction.replace(R.id.home_page_container, ridesListHomePageFragment, RidesListHomePageFragment.TAG);
         fragmentTransaction.addToBackStack(RidesListHomePageFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadBillFragment(String bill, RideType rideType) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        BillFragment billFragment = BillFragment.newInstance(bill, rideType);
+        fragmentTransaction.replace(R.id.home_page_container, billFragment, BillFragment.TAG);
+        fragmentTransaction.addToBackStack(BillFragment.TAG);
         fragmentTransaction.commit();
     }
 

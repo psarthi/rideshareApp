@@ -1,9 +1,14 @@
 package com.digitusrevolution.rideshare.adapter;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.media.Rating;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,8 +18,10 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.component.UserComp;
+import com.digitusrevolution.rideshare.dialog.CoTravellerRatingDialog;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
+import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRidePassenger;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
@@ -51,11 +58,12 @@ public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
         return mRideRequests.get(position);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        FullRideRequest rideRequest= getItem(position);
+        final FullRideRequest rideRequest= getItem(position);
 
         LayoutInflater inflater = LayoutInflater.from(mBaseFragment.getActivity());
         convertView = inflater.inflate(R.layout.ride_co_traveller_layout, parent, false);
@@ -64,7 +72,7 @@ public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
         userComp.setUserProfileSingleRow(convertView, rideRequest.getPassenger());
 
         RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, rideRequest);
-        rideRequestComp.setPickupTimeAndBillLayout(convertView);
+        rideRequestComp.setPickupTimeAndBillLayout(convertView, RideType.OfferRide);
         rideRequestComp.setRidePickupDropPointsLayout(convertView);
 
         RideComp rideComp = new RideComp(mBaseFragment, rideRequest.getAcceptedRide());
@@ -73,12 +81,11 @@ public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
         //This will set the listeners on co traveller buttons
         rideComp.setCoTravellerButtonsOnClickListener(convertView, rideRequest);
 
-
         RatingBar ratingBar = convertView.findViewById(R.id.co_traveller_rating_bar);
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                Log.d(TAG,"Rating is:"+rating);
+            public void onRatingChanged(final RatingBar ratingBar, float rating, boolean fromUser) {
+                Log.d(TAG, "Rating is:"+rating);
             }
         });
 

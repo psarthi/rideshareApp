@@ -16,18 +16,15 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.dialog.CancelCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.StandardAlertDialog;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
-import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
-import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
-import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
-import com.digitusrevolution.rideshare.model.ride.dto.FullRidesInfo;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -58,6 +55,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     private Button mPickupPointNavigationButton;
     private LinearLayout mRideOwnerButtonsLayout;
     private RideRequestCompListener mListener;
+    private RatingBar mRatingBar;
 
     public RideRequestComp(BaseFragment fragment, FullRideRequest rideRequest){
         mBaseFragment = fragment;
@@ -255,7 +253,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         UserComp userComp = new UserComp(mBaseFragment, null);
         userComp.setUserProfileSingleRow(view, mRideRequest.getAcceptedRide().getDriver());
 
-        setPickupTimeAndBillLayout(view);
+        setPickupTimeAndBillLayout(view, RideType.RequestRide);
 
         ((TextView) view.findViewById(R.id.ride_pickup_point_text)).setText(mRideRequest.getRidePickupPointAddress());
         ((TextView) view.findViewById(R.id.ride_drop_point_text)).setText(mRideRequest.getRideDropPointAddress());
@@ -268,6 +266,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         mRideOwnerButtonsLayout = view.findViewById(R.id.ride_owner_buttons_layout);
         mRideOwnerCancelButton = view.findViewById(R.id.ride_owner_cancel_button);
         mPickupPointNavigationButton = view.findViewById(R.id.navigate_to_ride_pickup_point_button);
+        mRatingBar = view.findViewById(R.id.ride_owner_rating_bar);
 
         updateRideOwnerLayoutButtonsVisiblity(view);
         setRideOwnerLayoutButtonsOnClickListener(view);
@@ -292,12 +291,17 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 Log.d(TAG, "Navigate to Pickup Point for Id:"+mRideRequest.getId());
             }
         });
+
+        mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                Log.d(TAG, "Rating is:"+rating);
+            }
+        });
     }
 
     //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
     private void updateRideOwnerLayoutButtonsVisiblity(View view){
-
-        RatingBar ratingBar = view.findViewById(R.id.ride_owner_rating_bar);
 
         //This means that only when passenger is in confirmed state i.e. he/she has not been picked up, he can cancel / navigate
         //As far as rating is concerned, he can rate post pickup up or cancel. In case of cancel, we will ask for rating in dialog bar itself
@@ -306,7 +310,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mRideRequest);
             if (maxEndTime.before(Calendar.getInstance().getTime())){
                 //Visible Buttons
-                ratingBar.setVisibility(View.VISIBLE);
+                mRatingBar.setVisibility(View.VISIBLE);
 
                 //This will make Ride Owner buttons layout invisible post ride request drop point time has lapsed
                 //i.e. No cancel and Pickup Point Navigation button would be visible
@@ -317,11 +321,11 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 mPickupPointNavigationButton.setVisibility(View.VISIBLE);
 
                 //Invisible Buttons
-                ratingBar.setVisibility(View.GONE);
+                mRatingBar.setVisibility(View.GONE);
             }
         } else {
             //Visible Buttons
-            ratingBar.setVisibility(View.VISIBLE);
+            mRatingBar.setVisibility(View.VISIBLE);
 
             //Invisible Buttons
             mRideOwnerButtonsLayout.setVisibility(View.GONE);
@@ -330,7 +334,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     }
 
     //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
-    public void setPickupTimeAndBillLayout(View view){
+    public void setPickupTimeAndBillLayout(View view, final RideType rideType){
         View layout = view.findViewById(R.id.pickup_time_bill_layout);
         TextView pickupTimeTextView = layout.findViewById(R.id.pickup_time_text);
         Date pickupTime = mRideRequest.getRidePickupPoint().getRidePointProperties().get(0).getDateTime();
@@ -338,12 +342,20 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         pickupTimeTextView.setText(pickupTimeString);
 
         TextView fareTextView = layout.findViewById(R.id.fare_text);
-        String amount = Float.toString(mRideRequest.getBill().getAmount());
+        String amount = mCommonUtil.getDecimalFormattedString(mRideRequest.getBill().getAmount());
         String symbol = Currency.getInstance(mRideRequest.getPassenger().getCountry().getCurrency().getName()).getSymbol();
         fareTextView.setText(symbol+amount);
 
         TextView billStatusTextView = layout.findViewById(R.id.bill_status);
         billStatusTextView.setText(mRideRequest.getBill().getStatus().toString());
+
+        billStatusTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                fragmentLoader.loadBillFragment(new Gson().toJson(mRideRequest.getBill()), rideType);
+            }
+        });
     }
 
     //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request

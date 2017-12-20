@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
+import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
@@ -202,5 +203,9 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onRideRequestInfoFragmentInteraction(Uri uri);
+    }
+
+    public void updateBill(Bill bill){
+        mRideRequest.setBill(bill);
     }
 }
