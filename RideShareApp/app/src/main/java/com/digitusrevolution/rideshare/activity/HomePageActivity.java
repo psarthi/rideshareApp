@@ -21,12 +21,16 @@ import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BillFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
+import com.digitusrevolution.rideshare.fragment.RedeemFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
+import com.digitusrevolution.rideshare.fragment.TopUpFragment;
+import com.digitusrevolution.rideshare.fragment.TransactionFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
+import com.digitusrevolution.rideshare.fragment.WalletFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.model.app.FetchType;
@@ -48,7 +52,11 @@ public class HomePageActivity extends BaseActivity
         UserProfileFragment.OnFragmentInteractionListener,
         RidesListHomePageFragment.OnFragmentInteractionListener,
         RidesListFragment.OnFragmentInteractionListener,
-        BillFragment.OnFragmentInteractionListener{
+        BillFragment.OnFragmentInteractionListener,
+        WalletFragment.OnFragmentInteractionListener,
+        TopUpFragment.OnFragmentInteractionListener,
+        TransactionFragment.OnFragmentInteractionListener,
+        RedeemFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -171,16 +179,15 @@ public class HomePageActivity extends BaseActivity
                 mFragmentLoader.loadRidesListFragment();
             } else if (id == R.id.nav_friends) {
                 Log.d(TAG, "Friends Clicked");
-                mFragmentLoader.loadRideInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRide()));
             } else if (id == R.id.nav_groups) {
                 Log.d(TAG, "Groups Clicked");
-                mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(mCommonUtil.getCurrentRideRequest()));
-            } else if (id == R.id.nav_vehicles) {
-                Log.d(TAG, "Vehicles Clicked");
-                mFragmentLoader.loadAddVehicleFragment(RideType.RequestRide,null);
-            } else if (id == R.id.nav_preference) {
-                Log.d(TAG, "Preference Clicked");
-                mFragmentLoader.loadRidesOptionFragment(RideType.OfferRide, null);
+            }
+            else if (id == R.id.nav_wallet) {
+                Log.d(TAG, "Wallet Clicked");
+                mFragmentLoader.loadWalletFragment();
+            }
+            else if (id == R.id.nav_signout) {
+                Log.d(TAG, "Signout Clicked");
             }
         }
 
@@ -348,5 +355,25 @@ public class HomePageActivity extends BaseActivity
             fragment.updateBill(new Gson().fromJson(bill, Bill.class));
             getSupportFragmentManager().popBackStack();
         }
+    }
+
+    @Override
+    public void onWalletFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onTopUpFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onRedeemFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onTransactionFragmentInteraction(String data) {
+
     }
 }

@@ -8,7 +8,7 @@ public class Transaction {
 	private Date dateTime;
 	private TransactionType type;
 	private float amount;
-	private String remark;
+	private Remark remark;
 	
 	public Date getDateTime() {
 		return dateTime;
@@ -28,18 +28,21 @@ public class Transaction {
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}
-	public String getRemark() {
-		return remark;
-	}
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public Remark getRemark() {
+		return remark;
+	}
+
+	public void setRemark(Remark remark) {
+		this.remark = remark;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

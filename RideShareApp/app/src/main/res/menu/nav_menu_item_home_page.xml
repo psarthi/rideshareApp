@@ -28,14 +28,6 @@
 
     <group android:checkableBehavior="single" android:id="@+id/misc_group_menu">
         <item
-            android:id="@+id/nav_preference"
-            android:icon="@android:drawable/btn_default"
-            android:title="Preference"/>
-        <item
-            android:id="@+id/nav_vehicles"
-            android:icon="@android:drawable/btn_default"
-            android:title="Vehicles"/>
-        <item
             android:id="@+id/nav_wallet"
             android:icon="@android:drawable/btn_default"
             android:title="Wallet"/>

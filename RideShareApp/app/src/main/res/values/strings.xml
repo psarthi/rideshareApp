@@ -72,5 +72,7 @@
     <string name="mutual_friends_text">"Mutual Friends - "</string>
     <string name="common_groups_text">"Common Groups - "</string>
     <string name="add_vehicle_thumbnail_text">Add Vehicle</string>
+    <string name="pending_bills_ride_owner_amount_label">Payable to Ride Owner</string>
+    <string name="paid_bills_ride_owner_amount_label">Paid to Ride Owner</string>
 
 </resources>

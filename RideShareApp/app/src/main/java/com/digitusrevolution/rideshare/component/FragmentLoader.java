@@ -17,6 +17,7 @@ import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
+import com.digitusrevolution.rideshare.fragment.WalletFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.app.FetchType;
 import com.digitusrevolution.rideshare.model.app.RideType;
@@ -137,5 +138,15 @@ public class FragmentLoader {
         fragmentTransaction.addToBackStack(BillFragment.TAG);
         fragmentTransaction.commit();
     }
+
+    public void loadWalletFragment() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        WalletFragment walletFragment = WalletFragment.
+                newInstance(null, null);
+        fragmentTransaction.replace(R.id.home_page_container, walletFragment, WalletFragment.TAG);
+        fragmentTransaction.addToBackStack(WalletFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
 
 }

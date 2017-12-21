@@ -132,6 +132,13 @@ public class BillFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.service_charge_text)).setText(serviceChargeText);
         ((TextView) view.findViewById(R.id.payable_to_ride_owner_amount_text)).setText(rideOwnerAmountText);
 
+        //This will ensure label is shown properly based on ride status
+        if (!mBill.getStatus().equals(BillStatus.Paid)){
+            ((TextView) view.findViewById(R.id.ride_owner_amount_label)).setText(R.string.pending_bills_ride_owner_amount_label);
+        } else {
+            ((TextView) view.findViewById(R.id.ride_owner_amount_label)).setText(R.string.paid_bills_ride_owner_amount_label);
+        }
+
         //This will check is the person vewing the bill is the passenger or the driver
         //if its passenger, then check if the status is approved. In that case only, show Pay button
         if (mUser.getId() == mBill.getRideRequest().getPassenger().getId()

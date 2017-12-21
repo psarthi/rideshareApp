@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="@dimen/default_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView android:id="@+id/transaction_date"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginRight="@dimen/large_margin"
+                  android:text="Sat Dec 2, 9:00 AM"/>
+
+        <TextView android:id="@+id/transaction_purpose"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginRight="@dimen/default_margin"
+                  android:text="Ride"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end|center_vertical">
+
+            <ImageView android:id="@+id/transaction_type"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/ic_add"/>
+
+            <TextView android:id="@+id/transaction_amount"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginRight="@dimen/default_margin"
+                      android:text="100"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView android:id="@+id/transaction_rides_id"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/default_margin"
+              android:text="Offered Ride Id 123"/>
+
+    <TextView android:id="@+id/transaction_person"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Paid By - CoTraveller Name"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:background="@color/colorGrayLight"
+        android:layout_marginTop="@dimen/default_margin"/>
+
+</LinearLayout>

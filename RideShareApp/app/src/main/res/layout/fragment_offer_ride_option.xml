@@ -15,7 +15,7 @@
         </android.support.v7.widget.RecyclerView>
 
     <include layout="@layout/seat_luggage_layout" android:id="@+id/seat_luggage_layout"
-             android:layout_below="@+id/offer_ride_vehicles_list"
+             android:layout_below="@id/offer_ride_vehicles_list"
              android:layout_height="wrap_content"
              android:layout_width="match_parent"/>
 

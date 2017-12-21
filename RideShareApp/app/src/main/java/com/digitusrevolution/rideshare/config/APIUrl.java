@@ -28,6 +28,7 @@ public class APIUrl {
     public static final String RIDE_MODE_KEY = "{rideMode}";
     public static final String RATING_KEY = "{rating}";
     public static final String PAYMENT_CODE_KEY = "{paymentCode}";
+    public static final String ACCOUNT_NUMBER_KEY = "{accountNumber}";
 
     public static final String SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/signin";
     public static final String GOOGLE_SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/googlesignin";
@@ -58,6 +59,8 @@ public class APIUrl {
     public static final String PAY_BILL = BASE_URL_BILLING_SYSTEM + "/billing/pay";
     public static final String USER_FEEDBACK = BASE_URL_USER_SYSTEM + "/users/{userId}/feedback";
     public static final String GET_USER_PROFILE = BASE_URL_USER_SYSTEM + "/users/{userId}/profile";
+    public static final String GET_USER_WALLET_ACCOUNT_DETAILS = BASE_URL_BILLING_SYSTEM + "/domain/accounts/{accountNumber}?fetchChild=true";
+
 
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +
