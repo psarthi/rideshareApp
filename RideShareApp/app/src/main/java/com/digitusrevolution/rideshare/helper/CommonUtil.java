@@ -187,14 +187,25 @@ public class CommonUtil {
         return dateTimeString;
     }
 
-    public int getTimeFromString(String time) {
-        return Integer.parseInt(time.split(":")[1]);
+    public int getMinsFromLocalTimeString(String time) {
+        int hours = Integer.parseInt(time.split(":")[0]);
+        int minutes = Integer.parseInt(time.split(":")[1]);
+        int totalMins = hours * 60 + minutes;
+        return totalMins;
     }
+
+    public String getLocalTimeStringFromMins(int time) {
+        int hours = time / 60; //since both are ints, you get an int
+        int minutes = time % 60;
+        String localTime = String.format("%02d:%02d", hours, minutes);
+        return localTime;
+    }
+
 
     public Calendar getRideRequestMaxEndTime(BasicRideRequest rideRequest) {
         Calendar endTime = Calendar.getInstance();
         endTime.setTime(rideRequest.getPickupTime());
-        endTime.add(Calendar.MINUTE, getTimeFromString(rideRequest.getPickupTimeVariation()));
+        endTime.add(Calendar.MINUTE, getMinsFromLocalTimeString(rideRequest.getPickupTimeVariation()));
         endTime.add(Calendar.SECOND, rideRequest.getTravelTime());
         return endTime;
     }

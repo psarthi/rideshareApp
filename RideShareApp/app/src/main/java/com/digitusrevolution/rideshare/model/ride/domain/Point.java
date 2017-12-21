@@ -22,7 +22,7 @@ public class Point implements Geometry{
 	private List<Double> coordinates = new ArrayList<Double>(2);
 	
 	public Point() {
-		//This is just to add two elements in the list, so that while setting lat/lon would not throw index out of bound exception
+		//This is just to drawable.add two elements in the list, so that while setting lat/lon would not throw index out of bound exception
 		coordinates.add(0.0);
 		coordinates.add(0.0);		
 	}

@@ -5,7 +5,7 @@ import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 
 /*
  * Purpose of this class is to break ManyToMany relationship between Ride and User to OneToMany from both sides,
- * so that we can add extra fields of passenger such as Passenger Status
+ * so that we can drawable.add extra fields of passenger such as Passenger Status
  * 
  */
 

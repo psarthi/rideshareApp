@@ -251,7 +251,7 @@ public class HomePageActivity extends BaseActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             // when DrawerToggle is disabled i.e. setDrawerIndicatorEnabled(false), navigation icon
             // clicks are disabled i.e. the UP button will not work.
-            // We need to add a listener, as in below, so DrawerToggle will forward
+            // We need to drawable.add a listener, as in below, so DrawerToggle will forward
             // click events to this listener.
             if(!mToolBarNavigationListenerIsRegistered) {
                 mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
@@ -304,10 +304,10 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onRidesOptionFragmentInteraction(Preference ridesOption, String vehicleRegistrationNumber) {
+    public void onRidesOptionFragmentInteraction(Preference ridesOption) {
 
         CreateRidesFragment createRidesFragment = (CreateRidesFragment) getSupportFragmentManager().findFragmentByTag(CreateRidesFragment.TAG);
-        createRidesFragment.updateRidesOption(ridesOption, vehicleRegistrationNumber);
+        createRidesFragment.updateRidesOption(ridesOption);
         getSupportFragmentManager().popBackStack();
     }
 

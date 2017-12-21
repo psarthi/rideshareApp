@@ -112,13 +112,10 @@ public class BillFragment extends BaseFragment {
                 mBill.getRideRequest().getPassenger().getLastName();
         ((TextView) view.findViewById(R.id.co_traveller_name)).setText(coTravellerName);
         mBillStatusTextView.setText(mBill.getStatus().toString());
-        float ratePerKm = mBill.getAmount() / mBill.getRideRequest().getTravelDistance() * 1000;
         //Reason for casting to float to get decimal value as distance is int, its not giving decimal value
         float distance = (float) mBill.getRideRequest().getTravelDistance() / 1000;
-        Log.d(TAG, "Actual Distance:"+mBill.getRideRequest().getTravelDistance());
-        Log.d(TAG, "Rate/Distance:"+ratePerKm+"/"+distance);
 
-        ((TextView) view.findViewById(R.id.rate_per_km_text)).setText(mCommonUtil.getDecimalFormattedString(ratePerKm));
+        ((TextView) view.findViewById(R.id.rate_per_km_text)).setText(mCommonUtil.getDecimalFormattedString(mBill.getRate()));
         ((TextView) view.findViewById(R.id.distance_text)).setText(mCommonUtil.getDecimalFormattedString(distance));
         ((TextView) view.findViewById(R.id.discount_text)).setText(mCommonUtil.getDecimalFormattedString(mBill.getDiscountPercentage()));
 

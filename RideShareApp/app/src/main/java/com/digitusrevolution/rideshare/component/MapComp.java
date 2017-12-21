@@ -94,7 +94,7 @@ public class MapComp{
         latLngs.add(fromLatLng);
         latLngs.add(toLatLng);
 
-        //This will add marker for start and end point
+        //This will drawable.add marker for start and end point
         mMap.addMarker(new MarkerOptions().position(fromLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         mMap.addMarker(new MarkerOptions().position(toLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
@@ -107,7 +107,7 @@ public class MapComp{
         latLngs.addAll(routeLatLngs);
         mMap.addPolyline(new PolylineOptions().addAll(routeLatLngs));
 
-        //This will add markers for all pickup points
+        //This will drawable.add markers for all pickup points
         Collection<FullRideRequest> acceptedRideRequests = ride.getAcceptedRideRequests();
         for (FullRideRequest rideRequest: acceptedRideRequests){
             LatLng pickupPointLatLng = new LatLng(rideRequest.getRidePickupPoint().getPoint().getLatitude(),

@@ -307,7 +307,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             Calendar startTime = Calendar.getInstance();
             startTime.setTime(mBasicRide.getStartTime());
             //This will subtract some buffer time from start time e.g. reduce 15 mins from current time
-            //(using -) in add function for substraction
+            //(using -) in drawable.add function for substraction
             startTime.add(Calendar.MINUTE, -Constant.START_TIME_BUFFER);
             //This will make Start button invisible if its early than start time by subtracting buffer
             //e.g. if ride start time is 3:00 PM and buffer is 15 mins, then it can only be started after 2:45 PM

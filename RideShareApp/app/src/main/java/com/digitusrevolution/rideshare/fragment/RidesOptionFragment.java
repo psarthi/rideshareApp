@@ -3,6 +3,8 @@ package com.digitusrevolution.rideshare.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.adapter.ThumbnailVehicleAdapter;
 import com.digitusrevolution.rideshare.component.CommonComp;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
@@ -72,6 +75,7 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
     private FragmentLoader mFragmentLoader;
     private CommonComp mCommonComp;
     private List<VehicleCategory> mVehicleCategories;
+    private ThumbnailVehicleAdapter mVehicleAdapter;
 
     public RidesOptionFragment() {
         // Required empty public constructor
@@ -172,31 +176,16 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
         mSeatTextView = seatLuggageView.findViewById(R.id.seat_count_text);
         mLuggageTextView = seatLuggageView.findViewById(R.id.luggage_count_text);
 
-        mVehicleSpinner = view.findViewById(R.id.offer_ride_option_vehicle_name_spinner);
-        ArrayList<String> vehicleNameList = new ArrayList<>();
-        for (Vehicle vehicle : mUser.getVehicles()){
-            vehicleNameList.add(vehicle.getRegistrationNumber());
+        List<Vehicle> vehicleList = new ArrayList<>();
+        for (Vehicle vehicle: mUser.getVehicles()){
+            vehicleList.add(vehicle);
         }
-        //This will make Vehicle List available or unavailable
-        if (vehicleNameList.size() > 0){
-            populateSpinner(vehicleNameList, mVehicleSpinner);
-            boolean defaultVehicleFound = false;
-            int i = 0;
-            for (Vehicle vehicle:mUser.getVehicles()){
-                if (vehicle.equals(mRidesOption.getDefaultVehicle())){
-                    defaultVehicleFound = true;
-                    break;
-                }
-                i++;
-            }
-            //This is important as sometimes if there is no default vehicle, then system would crash as
-            // value of i would be size + 1 due to i++ and while setting the selection, it would throw IndexOutOfBoundException
-            if (defaultVehicleFound){
-                mVehicleSpinner.setSelection(i);
-            }
-        } else {
-            view.findViewById(R.id.offer_ride_option_vehicle_name_layout).setVisibility(View.GONE);
-        }
+        //Adding dummy vehicle for drawable.add sign at the end
+        vehicleList.add(new Vehicle());
+
+        RecyclerView recyclerView = view.findViewById(R.id.offer_ride_vehicles_list);
+        mVehicleAdapter = new ThumbnailVehicleAdapter(this, vehicleList, mRidesOption.getDefaultVehicle().getId());
+        setRecyclerView(recyclerView, mVehicleAdapter, LinearLayoutManager.HORIZONTAL);
     }
 
     private void setInitialValue(){
@@ -227,7 +216,7 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
             mDropPointVariationSeekBar.setProgress(mRidesOption.getDropPointVariation());
 
             //This will get minute value from LocalTime of 00:30 format
-            int pickupTimeVariation = mCommonUtil.getTimeFromString(mRidesOption.getPickupTimeVariation());
+            int pickupTimeVariation = mCommonUtil.getMinsFromLocalTimeString(mRidesOption.getPickupTimeVariation());
 
             mPickupTimeVariationSeekBar.setMax(Constant.PICKUP_TIME_MAX_VALUE);
             mPickupTimeVariationSeekBar.setProgress(pickupTimeVariation);
@@ -251,10 +240,12 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
         if (mRideType.equals(RideType.OfferRide)){
             mRidesOption.setSeatOffered(Integer.parseInt(mSeatTextView.getText().toString()));
             mRidesOption.setLuggageCapacityOffered(Integer.parseInt(mLuggageTextView.getText().toString()));
+            mRidesOption.setDefaultVehicle(mVehicleAdapter.getSelectedVehicle());
         } else {
             mRidesOption.setSeatRequired(Integer.parseInt(mSeatTextView.getText().toString()));
             mRidesOption.setLuggageCapacityRequired(Integer.parseInt(mLuggageTextView.getText().toString()));
-            mRidesOption.setPickupTimeVariation("00:"+mPickupTimeVariationProgressTextView.getText().toString());
+            String pickupTimeVariation = mCommonUtil.getLocalTimeStringFromMins(Integer.parseInt(mPickupTimeVariationProgressTextView.getText().toString()));
+            mRidesOption.setPickupTimeVariation(pickupTimeVariation);
             mRidesOption.setPickupPointVariation(Integer.parseInt(mPickupPointVariationProgressTextView.getText().toString()));
             mRidesOption.setDropPointVariation(Integer.parseInt(mDropPointVariationProgressTextView.getText().toString()));
             for (VehicleCategory vehicleCategory: mVehicleCategories){
@@ -344,9 +335,9 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
                 setRidesOption();
                 if (mListener != null) {
                     if (mRideType.equals(RideType.OfferRide)){
-                        mListener.onRidesOptionFragmentInteraction(mRidesOption, mVehicleSpinner.getSelectedItem().toString());
+                        mListener.onRidesOptionFragmentInteraction(mRidesOption);
                     } else {
-                        mListener.onRidesOptionFragmentInteraction(mRidesOption, null);
+                        mListener.onRidesOptionFragmentInteraction(mRidesOption);
                     }
                 }
             }
@@ -414,7 +405,7 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onRidesOptionFragmentInteraction(Preference ridesOption, String vehicleRegistrationNumber);
+        void onRidesOptionFragmentInteraction(Preference ridesOption);
     }
 
 }

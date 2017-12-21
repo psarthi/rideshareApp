@@ -124,7 +124,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private BasicUser mUser;
     private boolean mRidesOptionUpdated = false;
     private Preference mUpdatedRidesOption;
-    private String mVehicleRegistrationNumber;
     private BasicRide mRide = new BasicRide();
     private RideOfferInfo mRideOfferInfo = new RideOfferInfo();
     private BasicRideRequest mRideRequest = new BasicRideRequest();
@@ -415,7 +414,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             mRide.setSeatOffered(mUpdatedRidesOption.getSeatOffered());
             mRide.setLuggageCapacityOffered(mUpdatedRidesOption.getLuggageCapacityOffered());
             mRide.setRideMode(mUpdatedRidesOption.getRideMode());
-            mRide.setVehicle(getVehicle(mVehicleRegistrationNumber));
+            mRide.setVehicle(mUpdatedRidesOption.getDefaultVehicle());
         } else {
             mRide.setSeatOffered(mUser.getPreference().getSeatOffered());
             mRide.setLuggageCapacityOffered(mUser.getPreference().getLuggageCapacityOffered());
@@ -814,21 +813,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateRidesOption(Preference ridesOption, String vehicleRegistrationNumber){
+    public void updateRidesOption(Preference ridesOption){
         Log.d(TAG, "Ride Option has been updated");
         mRidesOptionUpdated = true;
         mUpdatedRidesOption = ridesOption;
-        //Reason for setting variation so that it reflects the updated variation on map circle as well.
-        //Other options has not effect on map markers so whatever has effect on map markers, should be updated here
-        //Note - No need to update as the change is minor in terms of scale w.r.t map that effect of circle different is negligible
-        //and on top of it, it changes the bounds without any change in circle size which is not correct
-        //mRideRequest.setPickupPointVariation(mUpdatedRidesOption.getPickupPointVariation());
-        //mRideRequest.setDropPointVariation(mUpdatedRidesOption.getDropPointVariation());
-        if (mRideType.equals(RideType.OfferRide)){
-            mVehicleRegistrationNumber = vehicleRegistrationNumber;
-            //This will ensure on reopening the rides option the same vehicle reflects
-            mUpdatedRidesOption.setDefaultVehicle(getVehicle(vehicleRegistrationNumber));
-        }
         Log.d(TAG,"Updated Value is:"+new Gson().toJson(ridesOption));
     }
 }

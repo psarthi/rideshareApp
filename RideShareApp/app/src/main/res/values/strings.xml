@@ -71,5 +71,6 @@
     <string name="rides_taken_text">"Rides Taken - "</string>
     <string name="mutual_friends_text">"Mutual Friends - "</string>
     <string name="common_groups_text">"Common Groups - "</string>
+    <string name="add_vehicle_thumbnail_text">Add Vehicle</string>
 
 </resources>

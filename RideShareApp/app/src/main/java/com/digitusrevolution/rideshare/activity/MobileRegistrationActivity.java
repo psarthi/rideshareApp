@@ -153,8 +153,8 @@ public class MobileRegistrationActivity extends BaseActivity {
                 /*
                 //Below snapshot is for reference which shows that no need to write custom adapter if the value is plan String
                 ArrayList<String> arrayList = new ArrayList<>();
-                arrayList.add("India");
-                arrayList.add("US");
+                arrayList.drawable.add("India");
+                arrayList.drawable.add("US");
                 ArrayAdapter<String> countryArrayAdapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,arrayList);
                 // Specify the layout to use when the list of choices appears
                 // Don't setDropDownView here and instead overwrite getDropDownView since we are using Object instead of String.
