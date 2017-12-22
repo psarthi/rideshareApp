@@ -64,8 +64,9 @@ public class TransactionFragment extends BaseFragment {
     private RecyclerView.Adapter mAdapter;
     private BasicUser mUser;
     private CommonUtil mCommonUtil;
-    private Account mAccount;
     private boolean mInitialDataLoaded;
+    private List<Transaction> mTransactions = new ArrayList<>();
+    private Account mAccount;
 
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener mScrollListener;
@@ -103,6 +104,10 @@ public class TransactionFragment extends BaseFragment {
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
+        List<Account> accounts = (List<Account>) mUser.getAccounts();
+        //This is just the basic account with no transaction
+        mAccount = accounts.get(0);
+
         loadInitialData();
     }
 
@@ -135,19 +140,24 @@ public class TransactionFragment extends BaseFragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"Inside OnResume");
+    }
+
     private void loadInitialData() {
         Log.d(TAG, "loadInitialData Called");
         //Initial Data loading
-        List<Account> accounts = (List<Account>) mUser.getAccounts();
-        //This is just the basic account with no transaction
-        Account account = accounts.get(0);
 
-        String GET_USER_WALLET_ACCOUNT_DETAILS = APIUrl.GET_USER_WALLET_ACCOUNT_DETAILS.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(account.getNumber()));
-        RESTClient.get(GET_USER_WALLET_ACCOUNT_DETAILS, null, new JsonHttpResponseHandler(){
+        String GET_USER_WALLET_TRANSACTION = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
+                .replace(APIUrl.PAGE_KEY, Integer.toString(0));
+        RESTClient.get(GET_USER_WALLET_TRANSACTION, null, new JsonHttpResponseHandler(){
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                mAccount = new Gson().fromJson(response.toString(), Account.class);
+                Type listType = new TypeToken<ArrayList<Transaction>>(){}.getType();
+                mTransactions = new Gson().fromJson(response.toString(), listType);
                 mInitialDataLoaded = true;
                 setAdapter();
                 //This will load adapter only when data is loaded
@@ -157,7 +167,7 @@ public class TransactionFragment extends BaseFragment {
 
     private void setAdapter() {
         Log.d(TAG, "Setting Adapter of Transaction");
-        mAdapter = new TransactionAdapter((List<Transaction>) mAccount.getTransactions(), this);
+        mAdapter = new TransactionAdapter(mTransactions, this);
         mRecyclerView.setAdapter(mAdapter);
 
     }
@@ -171,15 +181,16 @@ public class TransactionFragment extends BaseFragment {
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
 
-        List<Account> accounts = (List<Account>) mUser.getAccounts();
-        //This is just the basic account with no transaction
-        Account account = accounts.get(0);
-
-        String GET_USER_WALLET_ACCOUNT_DETAILS = APIUrl.GET_USER_WALLET_ACCOUNT_DETAILS.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(account.getNumber()));
-        RESTClient.get(GET_USER_WALLET_ACCOUNT_DETAILS, null, new JsonHttpResponseHandler(){
+        String GET_USER_WALLET_TRANSACTION = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
+                .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+        RESTClient.get(GET_USER_WALLET_TRANSACTION, null, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
+                Type listType = new TypeToken<ArrayList<Transaction>>(){}.getType();
+                List<Transaction> transactions = new Gson().fromJson(response.toString(), listType);
+                mTransactions.addAll(transactions);
+                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mTransactions.size()-1);
             }
         });
     }

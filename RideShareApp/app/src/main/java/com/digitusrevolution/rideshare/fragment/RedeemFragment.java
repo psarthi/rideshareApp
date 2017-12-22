@@ -4,11 +4,18 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,15 +25,19 @@ import com.digitusrevolution.rideshare.R;
  * Use the {@link RedeemFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RedeemFragment extends Fragment {
+public class RedeemFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = RedeemFragment.class.getName();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private BasicUser mUser;
+    private CommonUtil mCommonUtil;
+    private Account mAccount;
 
     private OnFragmentInteractionListener mListener;
 
@@ -59,13 +70,30 @@ public class RedeemFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mCommonUtil = new CommonUtil(this);
+        mUser = mCommonUtil.getUser();
+        List<Account> accounts = (List<Account>) mUser.getAccounts();
+        //This is just the basic account with no transaction
+        mAccount = accounts.get(0);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_redeem, container, false);
+        View view = inflater.inflate(R.layout.fragment_redeem, container, false);
+        String currencySymbol = mCommonUtil.getCurrencySymbol(mUser.getCountry());
+        String balance = currencySymbol + mAccount.getBalance();
+        ((TextView) view.findViewById(R.id.wallet_balance_amount)).setText(balance);
+        String hint = getResources().getString(R.string.amount_hint)+" ("+currencySymbol+")";
+        ((TextView)view.findViewById(R.id.redeem_amount)).setHint(hint);
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"Inside OnResume");
     }
 
     @Override

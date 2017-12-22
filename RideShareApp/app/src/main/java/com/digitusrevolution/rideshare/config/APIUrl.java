@@ -59,7 +59,7 @@ public class APIUrl {
     public static final String PAY_BILL = BASE_URL_BILLING_SYSTEM + "/billing/pay";
     public static final String USER_FEEDBACK = BASE_URL_USER_SYSTEM + "/users/{userId}/feedback";
     public static final String GET_USER_PROFILE = BASE_URL_USER_SYSTEM + "/users/{userId}/profile";
-    public static final String GET_USER_WALLET_ACCOUNT_DETAILS = BASE_URL_BILLING_SYSTEM + "/domain/accounts/{accountNumber}?fetchChild=true";
+    public static final String GET_USER_WALLET_TRANSACTION = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/transactions?page={page}";
 
 
 

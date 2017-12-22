@@ -13,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin"
-        android:hint="Amount (Rs)"
-        android:gravity="start"
+        android:hint="@string/amount_hint"
         android:inputType="number"
         android:textSize="@dimen/heading3_text_size"
         app:backgroundTint="@color/colorPrimary"/>

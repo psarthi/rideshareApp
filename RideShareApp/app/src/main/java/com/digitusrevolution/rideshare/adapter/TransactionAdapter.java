@@ -59,7 +59,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
         public ViewHolder(View itemView) {
             super(itemView);
-            Log.d(TAG, "Getting Viewholder");
             mDateTextView = itemView.findViewById(R.id.transaction_date);
             mPurposeTextView = itemView.findViewById(R.id.transaction_purpose);
             mTransactionTypeImageView = itemView.findViewById(R.id.transaction_type);
@@ -83,35 +82,36 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     @Override
     public void onBindViewHolder(TransactionAdapter.ViewHolder holder, final int position) {
         Transaction transaction = getItem(position);
-        Log.d(TAG, "Binding View Holder for Transaction Id:"+transaction.getId());
 
         String date = mCommonUtil.getFormattedDateTimeString(transaction.getDateTime());
         holder.mDateTextView.setText(date);
 
         holder.mPurposeTextView.setText(transaction.getRemark().getPurpose().toString());
-        holder.mAmountTextView.setText(mCurrencySymbol+Float.toString(transaction.getAmount()));
+        String amount = mCurrencySymbol+mCommonUtil.getDecimalFormattedString(transaction.getAmount());
+        holder.mAmountTextView.setText(amount);
+
         if (transaction.getType().equals(TransactionType.Debit)){
             holder.mTransactionTypeImageView.setImageResource(R.drawable.ic_minus);
-            holder.mPersonTextView.setText("Paid To - "+transaction.getRemark().getPaidTo());
-            holder.mRidesIdTextView.setText(mBaseFragment.getResources().getString(R.string.ride_request_id_text)
-                    +transaction.getRemark().getRideRequestId());
+            holder.mPersonTextView.setText(transaction.getRemark().getPaidTo().split(" ")[0]);
+            String rideText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)
+                    +transaction.getRemark().getRideRequestId();
+            holder.mRidesIdTextView.setText(rideText);
         } else {
-            holder.mPersonTextView.setText("Paid By - "+transaction.getRemark().getPaidBy());
-            holder.mRidesIdTextView.setText(mBaseFragment.getResources().getString(R.string.ride_offer_id_text)
-                    +transaction.getRemark().getRideId());
+            holder.mPersonTextView.setText(transaction.getRemark().getPaidBy().split(" ")[0]);
+            String rideText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text)
+                    +transaction.getRemark().getRideId();
+            holder.mRidesIdTextView.setText(rideText);
             holder.mTransactionTypeImageView.setImageResource(R.drawable.ic_add);
         }
 
     }
 
     public Transaction getItem(int position){
-        Log.d(TAG, "Getting Transaction for Position:"+position);
         return mTransactions.get(position);
     }
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "Getting Item Count:"+mTransactions.size());
         return mTransactions.size();
     }
 
