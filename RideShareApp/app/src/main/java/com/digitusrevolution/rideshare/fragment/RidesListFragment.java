@@ -205,6 +205,7 @@ public class RidesListFragment extends BaseFragment{
                     List<FullRide> newRides = new Gson().fromJson(response.toString(), listType);
                     //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
                     mRides.addAll(newRides);
+                    Log.d(TAG, "Ride Size changed. Current Size is:"+mRides.size());
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRides.size()-1);
                 }
             });
@@ -219,6 +220,7 @@ public class RidesListFragment extends BaseFragment{
                     Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
                     List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
                     mRideRequests.addAll(rideRequests);
+                    Log.d(TAG, "Ride Request Size changed. Current Size is:"+mRideRequests.size());
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRideRequests.size()-1);
                 }
             });

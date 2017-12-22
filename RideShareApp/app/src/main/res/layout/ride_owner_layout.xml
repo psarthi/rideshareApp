@@ -13,10 +13,19 @@
         android:id="@+id/user_profile_single_row_layout"
         layout="@layout/user_profile_single_row_layout"/>
 
+    <TextView
+        android:id="@+id/ride_vehicle_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:textStyle="bold"
+        android:text="Volkswage Polo KA 51 MA 6127"
+        android:textColor="@color/colorPrimaryDark"
+        android:maxLines="1"/>
+
     <include
         android:id="@+id/pickup_time_bill_layout"
         layout="@layout/pickup_time_bill_layout"
-        android:layout_marginTop="@dimen/default_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

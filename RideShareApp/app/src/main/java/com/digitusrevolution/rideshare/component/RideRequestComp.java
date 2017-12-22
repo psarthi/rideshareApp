@@ -233,8 +233,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             }
 
             Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mBasicRideRequest);
-            Log.d(TAG, "Drop Time with Variation:"+maxEndTime.getTime().toString());
-            Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
+            //Log.d(TAG, "Drop Time with Variation:"+maxEndTime.getTime().toString());
+            //Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
 
             //Exception Rules common for both cases
             //This will make cancel invisible if current time is after pickup time + pickup variation + travel time
@@ -255,6 +255,10 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
         UserComp userComp = new UserComp(mBaseFragment, null);
         userComp.setUserProfileSingleRow(view, mRideRequest.getAcceptedRide().getDriver());
+
+        String vehicle = mRideRequest.getAcceptedRide().getVehicle().getModel() + " " +
+                mRideRequest.getAcceptedRide().getVehicle().getRegistrationNumber();
+        ((TextView) view.findViewById(R.id.ride_vehicle_name)).setText(vehicle);
 
         setPickupTimeAndBillLayout(view, RideType.RequestRide);
 
