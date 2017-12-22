@@ -3,8 +3,12 @@ package com.digitusrevolution.rideshare.component;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
@@ -37,6 +41,9 @@ public class CommonComp {
     //Don't expose this as public and instead use listeners which would invoke only when vehicle is ready and populated
     private List<VehicleCategory> mVehicleCategories;
     public onVehicleCategoriesReadyListener mOnVehicleCategoriesReadyListener;
+    private int mSeatCount = 0;
+    private int mLuggageCount = 0;
+    public onSeatLuggageSelectionListener mOnSeatLuggageSelectionListener;
 
     public CommonComp(BaseFragment fragment){
         mBaseFragment = fragment;
@@ -90,5 +97,85 @@ public class CommonComp {
 
     public interface onVehicleCategoriesReadyListener{
         void onVehicleCategoriesReady(List<VehicleCategory> vehicleCategories);
+    }
+
+    public void setSeatPicker(View view, int initialValue, final int minValue, final int maxValue){
+        mSeatCount = initialValue;
+        final TextView seatCountTextView = view.findViewById(R.id.seat_count_text);
+        //Setting initial value
+        String count = Integer.toString(mSeatCount);
+        seatCountTextView.setText(count);
+
+        //Setting listeners
+        ((ImageView) view.findViewById(R.id.seat_plus_image)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSeatCount < maxValue) {
+                    mSeatCount++;
+                    String count = Integer.toString(mSeatCount);
+                    seatCountTextView.setText(count);
+                    mOnSeatLuggageSelectionListener.onSeatSelection(mSeatCount);
+                } else {
+                    Toast.makeText(mBaseFragment.getActivity(), "Max Value Reached", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        ((ImageView) view.findViewById(R.id.seat_minus_image)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSeatCount > minValue) {
+                    mSeatCount--;
+                    String count = Integer.toString(mSeatCount);
+                    seatCountTextView.setText(count);
+                    mOnSeatLuggageSelectionListener.onSeatSelection(mSeatCount);
+                } else {
+                    Toast.makeText(mBaseFragment.getActivity(), "Min Value Reached", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
+    public void setLuggagePicker(View view, int initialValue, final int minValue, final int maxValue){
+        mLuggageCount = initialValue;
+        final TextView luggageCountTextView = view.findViewById(R.id.luggage_count_text);
+        //Setting initial value
+        String count = Integer.toString(mLuggageCount);
+        luggageCountTextView.setText(count);
+
+        //Setting listeners
+        ((ImageView) view.findViewById(R.id.luggage_plus_image)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mLuggageCount < maxValue) {
+                    mLuggageCount++;
+                    String count = Integer.toString(mLuggageCount);
+                    luggageCountTextView.setText(count);
+                    mOnSeatLuggageSelectionListener.onLuggageSelection(mLuggageCount);
+                } else {
+                    Toast.makeText(mBaseFragment.getActivity(), "Max Value Reached", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        ((ImageView) view.findViewById(R.id.luggage_minus_image)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mLuggageCount > minValue) {
+                    mLuggageCount--;
+                    String count = Integer.toString(mLuggageCount);
+                    luggageCountTextView.setText(count);
+                    mOnSeatLuggageSelectionListener.onLuggageSelection(mLuggageCount);
+                } else {
+                    Toast.makeText(mBaseFragment.getActivity(), "Min Value Reached", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public interface onSeatLuggageSelectionListener{
+        public void onSeatSelection(int seatCount);
+        public void onLuggageSelection(int luggageCount);
     }
 }

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.CommonComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.RESTClient;
@@ -42,7 +43,8 @@ import cz.msebera.android.httpclient.Header;
  * Use the {@link AddVehicleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddVehicleFragment extends BaseFragment implements CommonComp.onVehicleCategoriesReadyListener{
+public class AddVehicleFragment extends BaseFragment implements CommonComp.onVehicleCategoriesReadyListener,
+CommonComp.onSeatLuggageSelectionListener{
 
     public static final String TAG = AddVehicleFragment.class.getName();
     public static final String TITLE = "Add Vehicle";
@@ -62,14 +64,13 @@ public class AddVehicleFragment extends BaseFragment implements CommonComp.onVeh
     private Spinner mVehicleSubCategorySpinner;
     private EditText mRegistrationNumberText;
     private EditText mModelText;
-    private TextView mSeatCapacityText;
-    private TextView mSmallLuggageCapacityText;
     private Button mCancelButton;
     private CommonUtil mCommonUtil;
     private FragmentLoader mFragmentLoader;
     private CommonComp mCommonComp;
     private List<VehicleCategory> mVehicleCategories;
-
+    private int mSeatCount;
+    private int mLuggageCount;
 
     public AddVehicleFragment() {
         // Required empty public constructor
@@ -105,6 +106,7 @@ public class AddVehicleFragment extends BaseFragment implements CommonComp.onVeh
         mCommonComp = new CommonComp(this);
         //This will set this fragment for vehicle categories ready listener callback
         mCommonComp.mOnVehicleCategoriesReadyListener = this;
+        mCommonComp.mOnSeatLuggageSelectionListener = this;
     }
 
     @Override
@@ -114,16 +116,17 @@ public class AddVehicleFragment extends BaseFragment implements CommonComp.onVeh
         View view = inflater.inflate(R.layout.fragment_add_vehicle, container, false);
         View vehicleCatSubCatLayout = view.findViewById(R.id.vehicle_category_sub_category_layout);
 
+        View seatLuggageView = view.findViewById(R.id.seat_luggage_layout);
+        //Max value is just based on max capacity of SUV but this values can be fetched from backend
+        mCommonComp.setSeatPicker(seatLuggageView, Constant.MIN_SEAT, Constant.MIN_SEAT, Constant.MAX_SEAT);
+        mCommonComp.setLuggagePicker(seatLuggageView, Constant.MIN_LUGGAGE,Constant.MIN_LUGGAGE,Constant.MAX_LUGGAGE);
+
         mVehicleCategorySpinner = vehicleCatSubCatLayout.findViewById(R.id.vehicle_category_spinner);
         mVehicleSubCategorySpinner = vehicleCatSubCatLayout.findViewById(R.id.vehicle_sub_category_spinner);
         mCommonComp.setVehicleCategoriesSpinner(mVehicleCategorySpinner, mVehicleSubCategorySpinner);
 
         mRegistrationNumberText = view.findViewById(R.id.add_vehicle_number_text);
         mModelText = view.findViewById(R.id.add_vehicle_model_text);
-
-        View seatLuggageView = view.findViewById(R.id.seat_luggage_layout);
-        mSeatCapacityText = seatLuggageView.findViewById(R.id.seat_count_text);
-        mSmallLuggageCapacityText = seatLuggageView.findViewById(R.id.luggage_count_text);
 
         mAddButton = view.findViewById(R.id.add_vehicle_add_button);
         mCancelButton = view.findViewById(R.id.add_vehicle_cancel_button);
@@ -183,8 +186,8 @@ public class AddVehicleFragment extends BaseFragment implements CommonComp.onVeh
         }
         mVehicle.setRegistrationNumber(mRegistrationNumberText.getText().toString());
         mVehicle.setModel(mModelText.getText().toString());
-        mVehicle.setSeatCapacity(Integer.parseInt(mSeatCapacityText.getText().toString()));
-        mVehicle.setSmallLuggageCapacity(Integer.parseInt(mSmallLuggageCapacityText.getText().toString()));
+        mVehicle.setSeatCapacity(mSeatCount);
+        mVehicle.setSmallLuggageCapacity(mLuggageCount);
     }
 
     private boolean validateInput(){
@@ -231,6 +234,19 @@ public class AddVehicleFragment extends BaseFragment implements CommonComp.onVeh
     public void onVehicleCategoriesReady(List<VehicleCategory> vehicleCategories) {
         mVehicleCategories = vehicleCategories;
     }
+
+    @Override
+    public void onSeatSelection(int seatCount) {
+        mSeatCount = seatCount;
+        Log.d(TAG, "Updating seat count");
+    }
+
+    @Override
+    public void onLuggageSelection(int luggageCount) {
+        mLuggageCount = luggageCount;
+        Log.d(TAG, "Updating luggage count");
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

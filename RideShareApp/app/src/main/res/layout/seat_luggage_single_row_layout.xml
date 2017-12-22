@@ -22,31 +22,8 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"/>
 
-        <ImageButton
-            android:id="@+id/seat_minus_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_minus_circle"
-            android:background="@android:color/transparent"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:id="@+id/seat_count_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:padding="@dimen/small_padding"
-            android:textAlignment="center"
-            android:textSize="@dimen/large_text_size"
-            android:textStyle="bold"/>
-
-        <ImageButton
-            android:id="@+id/seat_plus_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_circle"
-            android:background="@android:color/transparent"
-            android:layout_gravity="center"/>
+        <!-- No need to have id as we are using merge in the included layout-->
+        <include layout="@layout/seat_picker"/>
 
 
     </LinearLayout>
@@ -66,31 +43,8 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"/>
 
-        <ImageButton
-            android:id="@+id/luggage_minus_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_minus_circle"
-            android:background="@android:color/transparent"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:id="@+id/luggage_count_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:padding="@dimen/small_padding"
-            android:textAlignment="center"
-            android:textSize="@dimen/large_text_size"
-            android:textStyle="bold"/>
-
-        <ImageButton
-            android:id="@+id/luggage_plus_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_circle"
-            android:background="@android:color/transparent"
-            android:layout_gravity="center"/>
+        <!-- No need to have id as we are using merge in the included layout-->
+        <include layout="@layout/luggage_picker"/>
 
 
     </LinearLayout>

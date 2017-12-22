@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+       xmlns:android="http://schemas.android.com/apk/res/android"
+       tools:showIn="@layout/seat_luggage_layout">
+
+
+    <ImageButton
+        android:id="@+id/seat_minus_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_minus_circle"
+        android:background="@android:color/transparent"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/seat_count_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2"
+        android:padding="@dimen/small_padding"
+        android:textAlignment="center"
+        android:textSize="@dimen/large_text_size"
+        android:textStyle="bold"/>
+
+    <ImageButton
+        android:id="@+id/seat_plus_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add_circle"
+        android:background="@android:color/transparent"
+        android:layout_gravity="center"/>
+
+</merge>

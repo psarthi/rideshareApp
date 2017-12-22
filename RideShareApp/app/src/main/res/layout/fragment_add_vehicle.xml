@@ -10,6 +10,24 @@
 
     <include layout="@layout/vehicle_category_sub_category_layout" android:id="@+id/vehicle_category_sub_category_layout"/>
 
+    <LinearLayout android:id="@+id/add_vehicle_model_layout"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:padding="@dimen/default_padding"
+                  android:orientation="vertical">
+        <TextView
+            android:id="@+id/add_registration_model_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/model_label"
+            android:textSize="@dimen/standard_text_size"/>
+
+        <EditText android:id="@+id/add_vehicle_model_text"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:inputType="textNoSuggestions"/>
+    </LinearLayout>
+
     <LinearLayout android:id="@+id/add_vehicle_number_layout"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -24,25 +42,6 @@
             android:textSize="@dimen/standard_text_size"/>
 
         <EditText android:id="@+id/add_vehicle_number_text"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:inputType="textNoSuggestions"/>
-    </LinearLayout>
-
-    <LinearLayout android:id="@+id/add_vehicle_model_layout"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:padding="@dimen/default_padding"
-                  android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/add_registration_model_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/model_label"
-            android:textSize="@dimen/standard_text_size"/>
-
-        <EditText android:id="@+id/add_vehicle_model_text"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:inputType="textNoSuggestions"/>

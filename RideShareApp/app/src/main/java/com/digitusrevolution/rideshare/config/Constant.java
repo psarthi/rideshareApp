@@ -32,4 +32,9 @@ public class Constant {
     public static final int START_TIME_INCREMENT = 10;
     //This would be used for enabling/disabling start button for offer rides i.e. any rides can be started only 15 mins before the ride start time
     public static final int START_TIME_BUFFER = 15;
+    public static final int MIN_SEAT = 1;
+    public static final int MAX_SEAT = 7;
+    public static final int MIN_LUGGAGE = 0;
+    public static final int MAX_LUGGAGE = 6;
+
 }

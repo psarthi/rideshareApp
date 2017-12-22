@@ -294,7 +294,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         mBasicRideButtonsLayout.setVisibility(View.VISIBLE);
 
         //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
-        if (mBasicRide.getStatus().equals(RideStatus.Planned) || mBasicRide.getStatus().equals(RideStatus.Fulfilled)){
+        if (mBasicRide.getStatus().equals(RideStatus.Planned)){
             //Visible Buttons
             mCancelButton.setVisibility(View.VISIBLE);
 

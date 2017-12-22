@@ -15,6 +15,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.billing.domain.core.Purpose;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Transaction;
 import com.digitusrevolution.rideshare.model.billing.domain.core.TransactionType;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
@@ -93,17 +94,24 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         if (transaction.getType().equals(TransactionType.Debit)){
             holder.mTransactionTypeImageView.setImageResource(R.drawable.ic_minus);
             holder.mPersonTextView.setText(transaction.getRemark().getPaidTo().split(" ")[0]);
-            String rideText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)
-                    +transaction.getRemark().getRideRequestId();
-            holder.mRidesIdTextView.setText(rideText);
+            if (!transaction.getRemark().getPurpose().equals(Purpose.Ride)) {
+                holder.mRidesIdTextView.setVisibility(View.GONE);
+            } else {
+                holder.mRidesIdTextView.setVisibility(View.VISIBLE);
+                String rideText = mBaseFragment.getResources().getString(R.string.ride_request_id_text) +transaction.getRemark().getRideRequestId();
+                holder.mRidesIdTextView.setText(rideText);
+            }
         } else {
             holder.mPersonTextView.setText(transaction.getRemark().getPaidBy().split(" ")[0]);
-            String rideText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text)
-                    +transaction.getRemark().getRideId();
-            holder.mRidesIdTextView.setText(rideText);
             holder.mTransactionTypeImageView.setImageResource(R.drawable.ic_add);
+            if (!transaction.getRemark().getPurpose().equals(Purpose.Ride)) {
+                holder.mRidesIdTextView.setVisibility(View.GONE);
+            } else {
+                holder.mRidesIdTextView.setVisibility(View.VISIBLE);
+                String rideText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text) +transaction.getRemark().getRideId();
+                holder.mRidesIdTextView.setText(rideText);
+            }
         }
-
     }
 
     public Transaction getItem(int position){

@@ -75,5 +75,6 @@
     <string name="pending_bills_ride_owner_amount_label">Payable to Ride Owner</string>
     <string name="paid_bills_ride_owner_amount_label">Paid to Ride Owner</string>
     <string name="amount_hint">Amount</string>
+    <string name="selection_all">All</string>
 
 </resources>

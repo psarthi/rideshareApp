@@ -40,7 +40,9 @@ import java.util.List;
  * Use the {@link RidesOptionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RidesOptionFragment extends BaseFragment implements CommonComp.onVehicleCategoriesReadyListener{
+public class RidesOptionFragment extends BaseFragment
+        implements CommonComp.onVehicleCategoriesReadyListener,
+        CommonComp.onSeatLuggageSelectionListener{
 
     public static final String TAG = RidesOptionFragment.class.getName();
     public static final String OFFER_RIDE_OPTION_TITLE = "Offer Ride Option";
@@ -57,10 +59,7 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
 
     private OnFragmentInteractionListener mListener;
     private BasicUser mUser;
-    private Spinner mVehicleSpinner;
     private Preference mRidesOption;
-    private TextView mSeatTextView;
-    private TextView mLuggageTextView;
     private Spinner mVehicleCategorySpinner;
     private Spinner mVehicleSubCategorySpinner;
     private SeekBar mPickupTimeVariationSeekBar;
@@ -76,6 +75,8 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
     private CommonComp mCommonComp;
     private List<VehicleCategory> mVehicleCategories;
     private ThumbnailVehicleAdapter mVehicleAdapter;
+    private int mSeatCount;
+    private int mLuggageCount;
 
     public RidesOptionFragment() {
         // Required empty public constructor
@@ -118,6 +119,7 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
         mCommonComp = new CommonComp(this);
         //This will set this fragment for vehicle categories ready listener callback
         mCommonComp.mOnVehicleCategoriesReadyListener = this;
+        mCommonComp.mOnSeatLuggageSelectionListener = this;
     }
 
     @Override
@@ -152,8 +154,11 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
 
     private void setRequestRideView(View view) {
         View seatLuggageSingleRowLayout = view.findViewById(R.id.seat_luggage_single_row_layout);
-        mSeatTextView = seatLuggageSingleRowLayout.findViewById(R.id.seat_count_text);
-        mLuggageTextView = seatLuggageSingleRowLayout.findViewById(R.id.luggage_count_text);
+        mSeatCount = mRidesOption.getSeatRequired();
+        mLuggageCount = mRidesOption.getLuggageCapacityRequired();
+        mCommonComp.setSeatPicker(seatLuggageSingleRowLayout, mSeatCount, Constant.MIN_SEAT, Constant.MAX_SEAT);
+        mCommonComp.setLuggagePicker(seatLuggageSingleRowLayout,mLuggageCount,Constant.MIN_LUGGAGE,Constant.MAX_LUGGAGE);
+
 
         mVehicleCategorySpinner = view.findViewById(R.id.vehicle_category_spinner);
         mVehicleSubCategorySpinner = view.findViewById(R.id.vehicle_sub_category_spinner);
@@ -171,10 +176,12 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
     }
 
     private void setOfferRideView(View view) {
-        //This is not same for Ride Request Option as there we are using single line seat luggage
         View seatLuggageView = view.findViewById(R.id.seat_luggage_layout);
-        mSeatTextView = seatLuggageView.findViewById(R.id.seat_count_text);
-        mLuggageTextView = seatLuggageView.findViewById(R.id.luggage_count_text);
+        mSeatCount = mRidesOption.getSeatOffered();
+        mLuggageCount = mRidesOption.getLuggageCapacityOffered();
+        //Max value is just based on max capacity of SUV but this values can be fetched from backend
+        mCommonComp.setSeatPicker(seatLuggageView, mSeatCount, Constant.MIN_SEAT, Constant.MAX_SEAT);
+        mCommonComp.setLuggagePicker(seatLuggageView, mLuggageCount,Constant.MIN_LUGGAGE,Constant.MAX_LUGGAGE);
 
         List<Vehicle> vehicleList = new ArrayList<>();
         for (Vehicle vehicle: mUser.getVehicles()){
@@ -200,13 +207,7 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
         }
 
         //Specific for Ride Types
-        if (mRideType.equals(RideType.OfferRide)){
-            mSeatTextView.setText(String.valueOf(mRidesOption.getSeatOffered()));
-            mLuggageTextView.setText(String.valueOf(mRidesOption.getLuggageCapacityOffered()));
-        } else {
-            mSeatTextView.setText(String.valueOf(mRidesOption.getSeatRequired()));
-            mLuggageTextView.setText(String.valueOf(mRidesOption.getLuggageCapacityRequired()));
-
+        if (mRideType.equals(RideType.RequestRide)){
             //IMP - Note the sequence of setMax and Progress. First you should set the value of Max and then progress,
             //otherwise progress value gets changed if the sequence is not correct
             mPickupPointVariationSeekBar.setMax(Constant.PICKUP_POINT_DISTANCE_MAX_VALUE);
@@ -238,12 +239,12 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
 
         //Specific for Ride Types
         if (mRideType.equals(RideType.OfferRide)){
-            mRidesOption.setSeatOffered(Integer.parseInt(mSeatTextView.getText().toString()));
-            mRidesOption.setLuggageCapacityOffered(Integer.parseInt(mLuggageTextView.getText().toString()));
+            mRidesOption.setSeatOffered(mSeatCount);
+            mRidesOption.setLuggageCapacityOffered(mLuggageCount);
             mRidesOption.setDefaultVehicle(mVehicleAdapter.getSelectedVehicle());
         } else {
-            mRidesOption.setSeatRequired(Integer.parseInt(mSeatTextView.getText().toString()));
-            mRidesOption.setLuggageCapacityRequired(Integer.parseInt(mLuggageTextView.getText().toString()));
+            mRidesOption.setSeatRequired(mSeatCount);
+            mRidesOption.setLuggageCapacityRequired(mLuggageCount);
             String pickupTimeVariation = mCommonUtil.getLocalTimeStringFromMins(Integer.parseInt(mPickupTimeVariationProgressTextView.getText().toString()));
             mRidesOption.setPickupTimeVariation(pickupTimeVariation);
             mRidesOption.setPickupPointVariation(Integer.parseInt(mPickupPointVariationProgressTextView.getText().toString()));
@@ -392,6 +393,18 @@ public class RidesOptionFragment extends BaseFragment implements CommonComp.onVe
                 break;
             }
         }
+    }
+
+    @Override
+    public void onSeatSelection(int seatCount) {
+        mSeatCount = seatCount;
+        Log.d(TAG, "Updating seat count");
+    }
+
+    @Override
+    public void onLuggageSelection(int luggageCount) {
+        mLuggageCount = luggageCount;
+        Log.d(TAG, "Updating luggage count");
     }
 
     /**
