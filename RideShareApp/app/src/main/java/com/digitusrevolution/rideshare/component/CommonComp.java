@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -76,6 +78,7 @@ public class CommonComp {
             }
         });
 
+        //Reason for setting vehicle sub-category on setOnItemSelected of vehicle category to cater multiple vehicle categories
         vehicleCategotySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -84,7 +87,15 @@ public class CommonComp {
                     vehicleSubCategoryNames.add(vehicleSubCategory.getName());
                     Log.d(TAG,"Vehicle Sub Category Name:"+ vehicleSubCategory.getName());
                 }
+                Collections.sort(vehicleSubCategoryNames);
+
+                if (mOnVehicleCategoriesReadyListener instanceof AddVehicleFragment) {
+                    vehicleSubCategoryNames.remove("All");
+                }
                 mBaseFragment.populateSpinner(vehicleSubCategoryNames,vehicleSubCategotySpinner);
+
+                //Imp - This should be called post when both spinner is setup otherwise we will get NPE
+                //This will update the vehicle categories including its sub-category in the calling fragment e.g Add Vehicle, Rides Option
                 if (mOnVehicleCategoriesReadyListener!=null) mOnVehicleCategoriesReadyListener.onVehicleCategoriesReady(mVehicleCategories);
             }
 
@@ -105,7 +116,7 @@ public class CommonComp {
         //Setting initial value
         String count = Integer.toString(mSeatCount);
         seatCountTextView.setText(count);
-
+        Log.d(TAG, "Setting Seat Count:"+mSeatCount);
         //Setting listeners
         ((ImageView) view.findViewById(R.id.seat_plus_image)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,6 +154,7 @@ public class CommonComp {
         //Setting initial value
         String count = Integer.toString(mLuggageCount);
         luggageCountTextView.setText(count);
+        Log.d(TAG, "Setting Luggage Count:"+mSeatCount);
 
         //Setting listeners
         ((ImageView) view.findViewById(R.id.luggage_plus_image)).setOnClickListener(new View.OnClickListener() {

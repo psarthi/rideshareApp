@@ -42,7 +42,8 @@ import java.util.List;
  */
 public class RidesOptionFragment extends BaseFragment
         implements CommonComp.onVehicleCategoriesReadyListener,
-        CommonComp.onSeatLuggageSelectionListener{
+        CommonComp.onSeatLuggageSelectionListener,
+        ThumbnailVehicleAdapter.ThumbnailVehicleAdapterListener{
 
     public static final String TAG = RidesOptionFragment.class.getName();
     public static final String OFFER_RIDE_OPTION_TITLE = "Offer Ride Option";
@@ -153,12 +154,7 @@ public class RidesOptionFragment extends BaseFragment
     }
 
     private void setRequestRideView(View view) {
-        View seatLuggageSingleRowLayout = view.findViewById(R.id.seat_luggage_single_row_layout);
-        mSeatCount = mRidesOption.getSeatRequired();
-        mLuggageCount = mRidesOption.getLuggageCapacityRequired();
-        mCommonComp.setSeatPicker(seatLuggageSingleRowLayout, mSeatCount, Constant.MIN_SEAT, Constant.MAX_SEAT);
-        mCommonComp.setLuggagePicker(seatLuggageSingleRowLayout,mLuggageCount,Constant.MIN_LUGGAGE,Constant.MAX_LUGGAGE);
-
+        setSeatLuggagePicker(view, mRidesOption.getSeatRequired(), mRidesOption.getLuggageCapacityRequired());
 
         mVehicleCategorySpinner = view.findViewById(R.id.vehicle_category_spinner);
         mVehicleSubCategorySpinner = view.findViewById(R.id.vehicle_sub_category_spinner);
@@ -176,12 +172,8 @@ public class RidesOptionFragment extends BaseFragment
     }
 
     private void setOfferRideView(View view) {
-        View seatLuggageView = view.findViewById(R.id.seat_luggage_layout);
-        mSeatCount = mRidesOption.getSeatOffered();
-        mLuggageCount = mRidesOption.getLuggageCapacityOffered();
-        //Max value is just based on max capacity of SUV but this values can be fetched from backend
-        mCommonComp.setSeatPicker(seatLuggageView, mSeatCount, Constant.MIN_SEAT, Constant.MAX_SEAT);
-        mCommonComp.setLuggagePicker(seatLuggageView, mLuggageCount,Constant.MIN_LUGGAGE,Constant.MAX_LUGGAGE);
+        setSeatLuggagePicker(view, mRidesOption.getDefaultVehicle().getSeatCapacity(),
+                mRidesOption.getDefaultVehicle().getSmallLuggageCapacity());
 
         List<Vehicle> vehicleList = new ArrayList<>();
         for (Vehicle vehicle: mUser.getVehicles()){
@@ -194,6 +186,20 @@ public class RidesOptionFragment extends BaseFragment
         mVehicleAdapter = new ThumbnailVehicleAdapter(this, vehicleList, mRidesOption.getDefaultVehicle().getId());
         setRecyclerView(recyclerView, mVehicleAdapter, LinearLayoutManager.HORIZONTAL);
     }
+
+    private void setSeatLuggagePicker(View view, int seatCount, int luggageCount) {
+        View seatLuggageView;
+        if (mRideType.equals(RideType.OfferRide)){
+            seatLuggageView = view.findViewById(R.id.seat_luggage_layout);
+        } else {
+            seatLuggageView = view.findViewById(R.id.seat_luggage_single_row_layout);
+        }
+        mSeatCount = seatCount;
+        mLuggageCount = luggageCount;
+        mCommonComp.setSeatPicker(seatLuggageView, mSeatCount, Constant.MIN_SEAT, Constant.MAX_SEAT);
+        mCommonComp.setLuggagePicker(seatLuggageView,mLuggageCount,Constant.MIN_LUGGAGE,Constant.MAX_LUGGAGE);
+    }
+
 
     private void setInitialValue(){
 
@@ -239,8 +245,6 @@ public class RidesOptionFragment extends BaseFragment
 
         //Specific for Ride Types
         if (mRideType.equals(RideType.OfferRide)){
-            mRidesOption.setSeatOffered(mSeatCount);
-            mRidesOption.setLuggageCapacityOffered(mLuggageCount);
             mRidesOption.setDefaultVehicle(mVehicleAdapter.getSelectedVehicle());
         } else {
             mRidesOption.setSeatRequired(mSeatCount);
@@ -378,21 +382,16 @@ public class RidesOptionFragment extends BaseFragment
     @Override
     public void onVehicleCategoriesReady(List<VehicleCategory> vehicleCategories) {
         mVehicleCategories = vehicleCategories;
-        for (int i=0; i<mVehicleCategorySpinner.getCount();i++){
-            if (mVehicleCategorySpinner.getItemAtPosition(i).equals(mRidesOption.getVehicleCategory().getName())){
-                mVehicleCategorySpinner.setSelection(i);
-                Log.d(TAG, "Setting Default value of Vehicle Category as:"+mRidesOption.getVehicleCategory().getName());
-                break;
-            }
-        }
 
-        for (int i=0; i<mVehicleSubCategorySpinner.getCount();i++){
+        int i=0;
+        for (VehicleSubCategory subCategory: mRidesOption.getVehicleCategory().getSubCategories()){
             if (mVehicleSubCategorySpinner.getItemAtPosition(i).equals(mRidesOption.getVehicleSubCategory().getName())){
                 mVehicleSubCategorySpinner.setSelection(i);
-                Log.d(TAG, "Setting Default value of Vehicle Sub Category as:"+mRidesOption.getVehicleSubCategory().getName());
                 break;
             }
+            i++;
         }
+
     }
 
     @Override
@@ -405,6 +404,11 @@ public class RidesOptionFragment extends BaseFragment
     public void onLuggageSelection(int luggageCount) {
         mLuggageCount = luggageCount;
         Log.d(TAG, "Updating luggage count");
+    }
+
+    @Override
+    public void onVehicleClicked(Vehicle vehicle) {
+        setSeatLuggagePicker(getView(), vehicle.getSeatCapacity(), vehicle.getSmallLuggageCapacity());
     }
 
     /**

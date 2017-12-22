@@ -28,6 +28,7 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
     private BaseFragment mBaseFragment;
     private ViewHolder mLastView;
     private Vehicle mSelectedVehicle;
+    private ThumbnailVehicleAdapterListener mListener;
 
     private int mDefaultVehicleId;
 
@@ -48,6 +49,7 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
         mVehicles = vehicles;
         mBaseFragment = fragment;
         mDefaultVehicleId = defaultVehicleId;
+        mListener = (ThumbnailVehicleAdapterListener) fragment;
     }
 
     @Override
@@ -78,6 +80,7 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
                     Log.d(TAG, "Vehicle Clicked:"+vehicle.getModel());
                     if (mLastView != null) deselect(mLastView);
                     select(holder, position);
+                    mListener.onVehicleClicked(vehicle);
                 }
             });
         }
@@ -124,6 +127,10 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
 
     public void setDefaultVehicleId(int defaultVehicleId) {
         mDefaultVehicleId = defaultVehicleId;
+    }
+
+    public interface ThumbnailVehicleAdapterListener{
+        public void onVehicleClicked(Vehicle vehicle);
     }
 
 }

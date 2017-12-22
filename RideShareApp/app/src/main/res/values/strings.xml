@@ -42,7 +42,7 @@
     <string name="model_label">Model</string>
     <string name="category_label">Category</string>
     <string name="sub_category_label">Sub Category</string>
-    <string name="number_of_seats_label">Seats</string>
+    <string name="number_of_seats_label">Seat</string>
     <string name="small_luggage_label">Small Luggage</string>
     <string name="cancel_button_text">Cancel</string>
     <string name="add_button_text">Add</string>

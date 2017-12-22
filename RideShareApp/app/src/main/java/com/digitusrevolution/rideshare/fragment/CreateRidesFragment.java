@@ -411,13 +411,13 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         mRide.setTrustNetwork(mTrustNetworkComp.getTrustNetworkFromView());
         mRide.setDriver(mUser);
         if (mRidesOptionUpdated){
-            mRide.setSeatOffered(mUpdatedRidesOption.getSeatOffered());
-            mRide.setLuggageCapacityOffered(mUpdatedRidesOption.getLuggageCapacityOffered());
+            mRide.setSeatOffered(mUpdatedRidesOption.getDefaultVehicle().getSeatCapacity());
+            mRide.setLuggageCapacityOffered(mUpdatedRidesOption.getDefaultVehicle().getSmallLuggageCapacity());
             mRide.setRideMode(mUpdatedRidesOption.getRideMode());
             mRide.setVehicle(mUpdatedRidesOption.getDefaultVehicle());
         } else {
-            mRide.setSeatOffered(mUser.getPreference().getSeatOffered());
-            mRide.setLuggageCapacityOffered(mUser.getPreference().getLuggageCapacityOffered());
+            mRide.setSeatOffered(mUser.getPreference().getDefaultVehicle().getSeatCapacity());
+            mRide.setLuggageCapacityOffered(mUser.getPreference().getDefaultVehicle().getSmallLuggageCapacity());
             mRide.setVehicle(mUser.getPreference().getDefaultVehicle());
             mRide.setRideMode(mUser.getPreference().getRideMode());
         }
