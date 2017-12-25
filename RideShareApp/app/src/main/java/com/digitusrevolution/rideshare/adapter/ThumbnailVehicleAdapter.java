@@ -30,8 +30,6 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
     private Vehicle mSelectedVehicle;
     private ThumbnailVehicleAdapterListener mListener;
 
-    private int mDefaultVehicleId;
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextView;
         public ImageView mImageView;
@@ -45,10 +43,10 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
         }
     }
 
-    public ThumbnailVehicleAdapter(BaseFragment fragment, List<Vehicle> vehicles, int defaultVehicleId) {
+    public ThumbnailVehicleAdapter(BaseFragment fragment, List<Vehicle> vehicles, Vehicle defaultVehicle) {
         mVehicles = vehicles;
         mBaseFragment = fragment;
-        mDefaultVehicleId = defaultVehicleId;
+        mSelectedVehicle = defaultVehicle;
         mListener = (ThumbnailVehicleAdapterListener) fragment;
     }
 
@@ -64,13 +62,15 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
     @Override
     public void onBindViewHolder(final ThumbnailVehicleAdapter.ViewHolder holder, final int position) {
         final Vehicle vehicle = getItem(position);
-
+        //This will ensure that on view holder reuse we don't get selected text color of earlier viewholder
+        //otherwise you would see multiple vehicle selected
+        holder.mTextView.setTextColor(holder.mDefaultTextColor);
         if (vehicle.getId()!=0){
             holder.mTextView.setText(vehicle.getModel());
             if (vehicle.getVehicleCategory().getName().equals("Car")){
                 Picasso.with(mBaseFragment.getActivity()).load(R.drawable.ic_car).into(holder.mImageView);
             }
-            if (vehicle.getId()==mDefaultVehicleId){
+            if (vehicle.getId()==mSelectedVehicle.getId()){
                 //Setting default vehicle as selected
                 select(holder, position);
             }
@@ -93,7 +93,7 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
                 public void onClick(View v) {
                     Log.d(TAG, "Add Vehicle Clicked");
                     FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                    fragmentLoader.loadAddVehicleFragment(RideType.OfferRide, null);
+                    fragmentLoader.loadAddVehicleFragment(null);
                 }
             });
         }
@@ -117,16 +117,15 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
         holder.mTextView.setTextColor(mBaseFragment.getResources().getColor(R.color.colorAccent));
         //Reason for setting it here instead of onClick in Bind,
         //so that this function can be used to set default vehicle on load as well without click
+        //IMP - Even though the holder is reusable, this will take care of the visible holder selection/deselection
+        //if the new item is getting renedered then by default based on the selected vehicle match, it will get highlighted
+        //That's the reason we are storing the lastview as holder
         mLastView = holder;
         mSelectedVehicle = getItem(position);
     }
 
     private void deselect(ThumbnailVehicleAdapter.ViewHolder holder){
         holder.mTextView.setTextColor(holder.mDefaultTextColor);
-    }
-
-    public void setDefaultVehicleId(int defaultVehicleId) {
-        mDefaultVehicleId = defaultVehicleId;
     }
 
     public interface ThumbnailVehicleAdapterListener{

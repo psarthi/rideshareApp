@@ -174,8 +174,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         }
         mCommonUtil = new CommonUtil(this);
         mFragmentLoader = new FragmentLoader(this);
-        mUser = mCommonUtil.getUser();
-        Log.d(TAG,"User Name is:"+mUser.getFirstName());
         //Setting calender to current time
         mStartTimeCalendar = Calendar.getInstance();
         //This will increment the start time by lets say 10 mins, so that we don't get into issues of google API trying to get data of the past time
@@ -191,6 +189,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView Called");
+        //IMP - This will ensure on fragment reload, user data is upto date e.g. in case of vehicle addition
+        //new vehicle would reflect and role would also show up else it will again ask for adding vehicle
+        mUser = mCommonUtil.getUser();
+        Log.d(TAG,"User Name is:"+mUser.getFirstName());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_rides, container, false);
         //Make fare view invisible initially and make it visible later for ride request cases only
@@ -320,7 +322,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         }
                     }
                     if (!driverStatus){
-                        mFragmentLoader.loadAddVehicleFragment(mRideType, null);
+                        mFragmentLoader.loadAddVehicleFragment(null);
                     } else {
                         Log.d(TAG, "User is a driver, so create ride directly");
                         if (validateInput()){

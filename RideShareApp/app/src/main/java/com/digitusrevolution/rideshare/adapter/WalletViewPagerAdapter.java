@@ -23,9 +23,13 @@ import com.digitusrevolution.rideshare.model.app.RideType;
 public class WalletViewPagerAdapter extends FragmentStatePagerAdapter {
 
     public static final String TAG = WalletViewPagerAdapter.class.getName();
+    private boolean mRequiredBalanceVisiblity;
+    private float mRequiredBalanceAmount;
 
-    public WalletViewPagerAdapter(FragmentManager fm) {
+    public WalletViewPagerAdapter(FragmentManager fm, boolean requiredBalanceVisiblity, float requiredBalanceAmount) {
         super(fm);
+        mRequiredBalanceVisiblity = requiredBalanceVisiblity;
+        mRequiredBalanceAmount = requiredBalanceAmount;
     }
 
     @Override
@@ -33,7 +37,7 @@ public class WalletViewPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
         if (position==0){
             Log.d(TAG, "Get Top Up Fragment");
-            fragment = TopUpFragment.newInstance(null, null);
+            fragment = TopUpFragment.newInstance(mRequiredBalanceVisiblity, mRequiredBalanceAmount);
         }
         if (position == 1){
             Log.d(TAG, "Get Transaction Fragment");

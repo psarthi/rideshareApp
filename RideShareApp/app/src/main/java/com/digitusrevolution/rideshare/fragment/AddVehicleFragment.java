@@ -50,10 +50,8 @@ CommonComp.onSeatLuggageSelectionListener{
     public static final String TITLE = "Add Vehicle";
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_RIDE_TYPE = "rideType";
     private static final String ARG_DATA = "data";
 
-    private RideType mRideType;
     private String mData;
 
     private OnFragmentInteractionListener mListener;
@@ -80,14 +78,12 @@ CommonComp.onSeatLuggageSelectionListener{
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param rideType Type of ride e.g. Offer Ride or Request Ride
      * @param data  Data in Json format
      * @return A new instance of fragment AddVehicleFragment.
      */
-    public static AddVehicleFragment newInstance(RideType rideType,  String data) {
+    public static AddVehicleFragment newInstance(String data) {
         AddVehicleFragment fragment = new AddVehicleFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_RIDE_TYPE, rideType.toString());
         args.putString(ARG_DATA, data);
         fragment.setArguments(args);
         return fragment;
@@ -97,7 +93,6 @@ CommonComp.onSeatLuggageSelectionListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
             mData = getArguments().getString(ARG_DATA);
         }
         mCommonUtil = new CommonUtil(this);
@@ -117,9 +112,11 @@ CommonComp.onSeatLuggageSelectionListener{
         View vehicleCatSubCatLayout = view.findViewById(R.id.vehicle_category_sub_category_layout);
 
         View seatLuggageView = view.findViewById(R.id.seat_luggage_layout);
+        mSeatCount = Constant.MIN_SEAT;
+        mLuggageCount = Constant.MIN_LUGGAGE;
         //Max value is just based on max capacity of SUV but this values can be fetched from backend
-        mCommonComp.setSeatPicker(seatLuggageView, Constant.MIN_SEAT, Constant.MIN_SEAT, Constant.MAX_SEAT);
-        mCommonComp.setLuggagePicker(seatLuggageView, Constant.MIN_LUGGAGE,Constant.MIN_LUGGAGE,Constant.MAX_LUGGAGE);
+        mCommonComp.setSeatPicker(seatLuggageView, mSeatCount, Constant.MIN_SEAT, Constant.MAX_SEAT);
+        mCommonComp.setLuggagePicker(seatLuggageView, mLuggageCount,Constant.MIN_LUGGAGE,Constant.MAX_LUGGAGE);
 
         mVehicleCategorySpinner = vehicleCatSubCatLayout.findViewById(R.id.vehicle_category_spinner);
         mVehicleSubCategorySpinner = vehicleCatSubCatLayout.findViewById(R.id.vehicle_sub_category_spinner);
@@ -156,15 +153,11 @@ CommonComp.onSeatLuggageSelectionListener{
                             mUser = new Gson().fromJson(response.toString(), BasicUser.class);
                             mCommonUtil.updateUser(mUser);
                             Log.d(TAG, "Vehicle Added");
-                            //This will ensure that only when its first time adding vehicle through create rides flow, this will load Rides Option Fragment
-                            //So that it can show the added vehicle to the user for other cases, we need to handle differently
-                            if (mRideType.equals(RideType.OfferRide)){
-                                mFragmentLoader.loadRidesOptionFragment(mRideType, null);
-                            } else {
-                                getActivity().getSupportFragmentManager().popBackStack();
-                            }
-                        }
+                            //This will take care of loading back to the fragment from where its called e.g. from Create Rides Confirm option
+                            //or Rides Option page
+                            getActivity().getSupportFragmentManager().popBackStack();
 
+                        }
                         @Override
                         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                             super.onFailure(statusCode, headers, throwable, errorResponse);
@@ -196,13 +189,6 @@ CommonComp.onSeatLuggageSelectionListener{
             return false;
         }
         return true;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onAddVehicleFragmentFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -260,6 +246,6 @@ CommonComp.onSeatLuggageSelectionListener{
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onAddVehicleFragmentFragmentInteraction(Uri uri);
+        void onAddVehicleFragmentFragmentInteraction(String data);
     }
 }

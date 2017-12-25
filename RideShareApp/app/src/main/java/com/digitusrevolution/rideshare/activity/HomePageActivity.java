@@ -184,7 +184,7 @@ public class HomePageActivity extends BaseActivity
             }
             else if (id == R.id.nav_wallet) {
                 Log.d(TAG, "Wallet Clicked");
-                mFragmentLoader.loadWalletFragment();
+                mFragmentLoader.loadWalletFragment(false, 0);
             }
             else if (id == R.id.nav_signout) {
                 Log.d(TAG, "Signout Clicked");
@@ -237,11 +237,6 @@ public class HomePageActivity extends BaseActivity
         removeAllBackStacks();
         FragmentLoader fragmentLoader = new FragmentLoader(this);
         fragmentLoader.loadHomePageWithCurrentRidesFragment(FetchType.Server, null);
-    }
-
-    @Override
-    public void onAddVehicleFragmentFragmentInteraction(Uri uri) {
-
     }
 
     public void showBackButton(boolean show) {
@@ -374,6 +369,11 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onTransactionFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onAddVehicleFragmentFragmentInteraction(String data) {
 
     }
 }

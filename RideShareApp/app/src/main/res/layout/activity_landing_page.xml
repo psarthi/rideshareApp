@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/default_margin"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.digitusrevolution.rideshare.activity.LandingPageActivity">
 
@@ -23,54 +24,16 @@
         android:layout_below="@id/company_name_text_view"
         android:layout_centerHorizontal="true"
         android:text="@string/product_name"
-        android:textSize="@dimen/heading2_text_size"/>
+        android:textSize="@dimen/heading2_text_size"
+        android:textStyle="italic"/>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_sign_in_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/sign_up_sign_in_linear_layout"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        app:colorScheme="light">
+        android:layout_alignParentBottom="true"
+        app:colorScheme="dark">
 
     </com.google.android.gms.common.SignInButton>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/sign_up_sign_in_linear_layout"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:layout_alignParentBottom="true">
-
-        <Button
-            android:id="@+id/sign_up_button"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
-            android:text="@string/sign_up"
-            android:textAllCaps="false"
-            android:textStyle="bold"/>
-
-        <Button
-            android:id="@+id/sign_in_button"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
-            android:text="@string/sign_in"
-            android:textAllCaps="false"
-            android:textStyle="bold"/>
-    </LinearLayout>
-
 
 </RelativeLayout>

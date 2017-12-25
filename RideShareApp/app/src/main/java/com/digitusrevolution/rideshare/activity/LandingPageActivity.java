@@ -44,8 +44,6 @@ public class LandingPageActivity extends BaseActivity{
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton mGoogleSignInButton;
-    private Button mSignUpButton;
-    private Button mSignInButton;
     private CommonUtil mCommonUtil;
 
     @Override
@@ -56,8 +54,6 @@ public class LandingPageActivity extends BaseActivity{
 
         mCommonUtil = new CommonUtil(this);
         mGoogleSignInButton = findViewById(R.id.google_sign_in_button);
-        mSignUpButton = findViewById(R.id.sign_up_button);
-        mSignInButton = findViewById(R.id.sign_in_button);
 
         //Change the text of google sign in button
         for (int i=0;i<mGoogleSignInButton.getChildCount();i++){
@@ -81,81 +77,6 @@ public class LandingPageActivity extends BaseActivity{
             @Override
             public void onClick(View view) {
                 googleSignIn();
-            }
-        });
-        mSignUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signUp();
-            }
-        });
-        mSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    signIn();
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void signIn() throws URISyntaxException {
-        Log.d(TAG,"Sign In Button clicked");
-
-        String POST_URL = APIUrl.SIGN_IN_URL;
-
-        SignInInfo signInInfo = new SignInInfo();
-        signInInfo.setEmail("email-1");
-        signInInfo.setPassword("password");
-        Gson gson = new Gson();
-        Log.d(TAG,"Post Initial Value:"+ gson.toJson(signInInfo));
-
-        RESTClient.post(this,POST_URL,signInInfo, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                Log.d(TAG,"POST Response Success: "+response);
-                Gson gson = new Gson();
-                UserSignInResult userSignInResult = gson.fromJson(response.toString(), UserSignInResult.class);
-                Log.d(TAG,"POST: From Gson Model:"+ userSignInResult.getToken());
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-
-                Log.d(TAG,"POST Response Failure:" + errorResponse);
-            }
-        });
-
-    }
-
-    private void signUp() {
-        Log.d(TAG,"Sign Up Button clicked");
-
-        String GET_URL= APIUrl.GET_RIDE_URL;
-        GET_URL = GET_URL.replace(APIUrl.ID_KEY, "1");
-
-        RESTClient.get(GET_URL, null, new JsonHttpResponseHandler(){
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-
-                Log.d(TAG,"GET Response Success: "+response);
-                Gson gson = new Gson();
-                RideRequest rideRequest = gson.fromJson(response.toString(), RideRequest.class);
-                Log.d(TAG,"GET: Ride Request TimeVariation: "+ rideRequest.getPickupPoint().getTimeVariation());
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-
-                Log.d(TAG,"GET Response Failure: "+errorResponse);
             }
         });
     }

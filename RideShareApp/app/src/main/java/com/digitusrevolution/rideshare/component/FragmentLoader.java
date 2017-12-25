@@ -61,9 +61,9 @@ public class FragmentLoader {
                 .commit();
     }
 
-    public void loadAddVehicleFragment(RideType rideType, String data) {
+    public void loadAddVehicleFragment(String data) {
         AddVehicleFragment addVehicleFragment = AddVehicleFragment.
-                newInstance(rideType, data);
+                newInstance(data);
         getFragmentManager().beginTransaction()
                 .replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG)
                 .addToBackStack(AddVehicleFragment.TAG)
@@ -139,10 +139,10 @@ public class FragmentLoader {
         fragmentTransaction.commit();
     }
 
-    public void loadWalletFragment() {
+    public void loadWalletFragment(boolean requiredBalanceVisiblity, float requiredBalanceAmount) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         WalletFragment walletFragment = WalletFragment.
-                newInstance(null, null);
+                newInstance(requiredBalanceVisiblity, requiredBalanceAmount);
         fragmentTransaction.replace(R.id.home_page_container, walletFragment, WalletFragment.TAG);
         fragmentTransaction.addToBackStack(WalletFragment.TAG);
         fragmentTransaction.commit();

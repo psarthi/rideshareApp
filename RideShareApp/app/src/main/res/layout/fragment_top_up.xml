@@ -8,6 +8,14 @@
 
     <include layout="@layout/wallet_balance"/>
 
+    <TextView android:id="@+id/required_wallet_balance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="Required Balance: Rs 50"
+        android:textStyle="italic"
+        android:textColor="@color/colorPrimary"/>
+
     <android.support.v7.widget.AppCompatEditText
               android:id="@+id/topup_amount"
               android:layout_width="match_parent"

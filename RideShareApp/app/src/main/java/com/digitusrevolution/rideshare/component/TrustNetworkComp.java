@@ -67,7 +67,9 @@ public class TrustNetworkComp {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"Clicked on the All Image View: Selected Status:" + mAllSelected);
-                mAllSelected = !mAllSelected;
+                if (mFriendsSelected || mGroupsSelected){
+                    mAllSelected = !mAllSelected;
+                }
                 //If all is selected then by default Groups and Friends is already included, so no need to select them individually
                 if (mAllSelected){
                     mFriendsSelected = false;
@@ -80,7 +82,9 @@ public class TrustNetworkComp {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"Clicked on the Groups Image View: Selected Status:" + mGroupsSelected);
-                mGroupsSelected = !mGroupsSelected;
+                if (mFriendsSelected || mAllSelected){
+                    mGroupsSelected = !mGroupsSelected;
+                }
                 if (mGroupsSelected){
                     mAllSelected = false;
                 }
@@ -91,7 +95,9 @@ public class TrustNetworkComp {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"Clicked on the Friends Image View: Selected Status:" + mFriendsImageView);
-                mFriendsSelected = !mFriendsSelected;
+                if (mGroupsSelected || mAllSelected){
+                    mFriendsSelected = !mFriendsSelected;
+                }
                 if (mFriendsSelected){
                     mAllSelected = false;
                 }

@@ -109,14 +109,6 @@ public class RidesOptionFragment extends BaseFragment
         }
         mCommonUtil = new CommonUtil(this);
         mFragmentLoader = new FragmentLoader(this);
-        mUser = mCommonUtil.getUser();
-        //This will default preference of user which will be the default option for the ride
-        //This will only be used when we don't pass the ridesOption while creating the fragement instance
-        if (mRidesOptionData==null){
-            mRidesOption = mUser.getPreference();
-        } else {
-            mRidesOption = new Gson().fromJson(mRidesOptionData, Preference.class);
-        }
         mCommonComp = new CommonComp(this);
         //This will set this fragment for vehicle categories ready listener callback
         mCommonComp.mOnVehicleCategoriesReadyListener = this;
@@ -126,6 +118,18 @@ public class RidesOptionFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //IMP - This will ensure we always get the updated data of user on fragment reload
+        //e.g. when vehicle is added and this is reloaded new vehicle would show up properly
+        mUser = mCommonUtil.getUser();
+        //This will default preference of user which will be the default option for the ride
+        //This will only be used when we don't pass the ridesOption while creating the fragement instance
+        if (mRidesOptionData==null){
+            mRidesOption = mUser.getPreference();
+        } else {
+            mRidesOption = new Gson().fromJson(mRidesOptionData, Preference.class);
+        }
+
         View view;
         Log.d(TAG,"RideType:"+mRideType);
         if (mRideType.equals(RideType.OfferRide)){
@@ -183,7 +187,7 @@ public class RidesOptionFragment extends BaseFragment
         vehicleList.add(new Vehicle());
 
         RecyclerView recyclerView = view.findViewById(R.id.offer_ride_vehicles_list);
-        mVehicleAdapter = new ThumbnailVehicleAdapter(this, vehicleList, mRidesOption.getDefaultVehicle().getId());
+        mVehicleAdapter = new ThumbnailVehicleAdapter(this, vehicleList, mRidesOption.getDefaultVehicle());
         setRecyclerView(recyclerView, mVehicleAdapter, LinearLayoutManager.HORIZONTAL);
     }
 

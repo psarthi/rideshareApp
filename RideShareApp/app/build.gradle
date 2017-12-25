@@ -50,6 +50,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:11.6.0'
     //Google Maps Android Util
     compile 'com.google.maps.android:android-maps-utils:0.5'
+    compile files('lib/PGSDK_V2.1.jar')
 }
 
 //This has to be below the dependencies block otherwise you will get conflict with firebase (firebase comes with google services)

@@ -21,7 +21,7 @@
             android:id="@+id/wallet_balance_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wallet Balance"
+            android:text="@string/wallet_balance"
             android:textSize="@dimen/heading3_text_size"/>
 
 

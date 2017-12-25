@@ -36,5 +36,7 @@ public class Constant {
     public static final int MAX_SEAT = 7;
     public static final int MIN_LUGGAGE = 0;
     public static final int MAX_LUGGAGE = 6;
+    public static final int MIN_TOPUP_AMOUNT = 1;
+    public static final int MAX_TOPUP_AMOUNT = 1000;
 
 }
