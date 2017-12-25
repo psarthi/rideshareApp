@@ -296,15 +296,15 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     }
 
     private void setButtonsOnClickListener(View view) {
+        final String ridesOption;
+        if (mRidesOptionUpdated){
+            ridesOption = new Gson().toJson(mUpdatedRidesOption);
+        } else {
+            ridesOption = new Gson().toJson(mUser.getPreference());
+        }
         view.findViewById(R.id.create_rides_option_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String ridesOption;
-                if (mRidesOptionUpdated){
-                    ridesOption = new Gson().toJson(mUpdatedRidesOption);
-                } else {
-                    ridesOption = new Gson().toJson(mUser.getPreference());
-                }
                 mFragmentLoader.loadRidesOptionFragment(mRideType, ridesOption);
             }
         });
@@ -322,7 +322,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         }
                     }
                     if (!driverStatus){
-                        mFragmentLoader.loadAddVehicleFragment(null);
+                        mFragmentLoader.loadRidesOptionFragment(mRideType, ridesOption);
                     } else {
                         Log.d(TAG, "User is a driver, so create ride directly");
                         if (validateInput()){

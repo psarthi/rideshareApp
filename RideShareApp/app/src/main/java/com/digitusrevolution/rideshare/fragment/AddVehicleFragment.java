@@ -153,8 +153,6 @@ CommonComp.onSeatLuggageSelectionListener{
                             mUser = new Gson().fromJson(response.toString(), BasicUser.class);
                             mCommonUtil.updateUser(mUser);
                             Log.d(TAG, "Vehicle Added");
-                            //This will take care of loading back to the fragment from where its called e.g. from Create Rides Confirm option
-                            //or Rides Option page
                             getActivity().getSupportFragmentManager().popBackStack();
 
                         }

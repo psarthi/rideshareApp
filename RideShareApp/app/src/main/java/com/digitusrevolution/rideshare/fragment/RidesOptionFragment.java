@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.ThumbnailVehicleAdapter;
@@ -176,8 +177,12 @@ public class RidesOptionFragment extends BaseFragment
     }
 
     private void setOfferRideView(View view) {
-        setSeatLuggagePicker(view, mRidesOption.getDefaultVehicle().getSeatCapacity(),
-                mRidesOption.getDefaultVehicle().getSmallLuggageCapacity());
+        if (mRidesOption.getDefaultVehicle()!=null){
+            setSeatLuggagePicker(view, mRidesOption.getDefaultVehicle().getSeatCapacity(),
+                    mRidesOption.getDefaultVehicle().getSmallLuggageCapacity());
+        } else {
+            setSeatLuggagePicker(view, Constant.MIN_SEAT,Constant.MIN_LUGGAGE);
+        }
 
         List<Vehicle> vehicleList = new ArrayList<>();
         for (Vehicle vehicle: mUser.getVehicles()){
@@ -340,13 +345,17 @@ public class RidesOptionFragment extends BaseFragment
         buttonLayoutView.findViewById(R.id.rides_option_save_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Rides Option Saved");
-                setRidesOption();
-                if (mListener != null) {
-                    if (mRideType.equals(RideType.OfferRide)){
-                        mListener.onRidesOptionFragmentInteraction(mRidesOption);
-                    } else {
-                        mListener.onRidesOptionFragmentInteraction(mRidesOption);
+                if (mUser.getVehicles().size()==0){
+                    Toast.makeText(getActivity(), "Please add a vehicle", Toast.LENGTH_LONG).show();
+                } else {
+                    Log.d(TAG, "Rides Option Saved");
+                    setRidesOption();
+                    if (mListener != null) {
+                        if (mRideType.equals(RideType.OfferRide)){
+                            mListener.onRidesOptionFragmentInteraction(mRidesOption);
+                        } else {
+                            mListener.onRidesOptionFragmentInteraction(mRidesOption);
+                        }
                     }
                 }
             }
