@@ -27,10 +27,13 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MobileRegistrationActivity extends BaseActivity {
@@ -91,7 +94,7 @@ public class MobileRegistrationActivity extends BaseActivity {
         */
     }
 
-    private void sendOTP() {
+    private void sendOTP(){
         mSelectedCountry = (Country) mCountryNameSpinner.getSelectedItem();
         mSelectedCountryCode = mSelectedCountry.getCode();
         Log.d(TAG,"Sending OTP to Mobile number "+
@@ -100,26 +103,31 @@ public class MobileRegistrationActivity extends BaseActivity {
 
         if (mCountryNameSpinner.getSelectedItem()!=null) {
             if (mMobileNumber.getText().length() == 10) {
-                String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,mSelectedCountryCode+
-                        mMobileNumber.getText().toString());
-                RESTClient.get(GET_OTP_URL, null, new TextHttpResponseHandler() {
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        Log.d(TAG, "Response Failure:" + responseString);
-                    }
+                try {
+                    //Reason for doing encoding as we have to send + sign in mobile number as query parameters and without encoding that data would interpreted differently
+                    String encodedQueryString = URLEncoder.encode(mSelectedCountryCode + mMobileNumber.getText().toString(), "UTF-8");
+                    String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString);
+                    RESTClient.get(GET_OTP_URL, null, new TextHttpResponseHandler() {
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.d(TAG, "Response Failure:" + responseString);
+                        }
 
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                        Log.d(TAG, "Response Success:" + responseString);
-                        mOTP = responseString;
-                        String data = getExtraData();
-                        Intent otpVerificationIntent = new Intent(getApplicationContext(), OtpVerificationActivity.class);
-                        //Reason for storing key name as well, so that calling class don't have to know the key name
-                        otpVerificationIntent.putExtra(getExtraDataKey(),data);
-                        startActivity(otpVerificationIntent);
-                    }
-                });
-
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                            Log.d(TAG, "Response Success:" + responseString);
+                            mOTP = responseString;
+                            String data = getExtraData();
+                            Intent otpVerificationIntent = new Intent(getApplicationContext(), OtpVerificationActivity.class);
+                            //Reason for storing key name as well, so that calling class don't have to know the key name
+                            otpVerificationIntent.putExtra(getExtraDataKey(),data);
+                            startActivity(otpVerificationIntent);
+                        }
+                    });
+                } catch (UnsupportedEncodingException e) {
+                    //TODO This needs to be figured out how to handle this exception
+                    e.printStackTrace();
+                }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.invalid_mobile_number, Toast.LENGTH_SHORT).show();
             }

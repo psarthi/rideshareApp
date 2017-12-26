@@ -23,6 +23,9 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import cz.msebera.android.httpclient.Header;
 
 public class OtpVerificationActivity extends BaseActivity {
@@ -63,7 +66,7 @@ public class OtpVerificationActivity extends BaseActivity {
         addTextChangedListenerOnOTPTextField();
 
         //Note - I have appended "+" sign as we are storing country code without + due to some technical issue
-        mVerificationCodeSubHeading.append(" +"+mUserRegistration.getMobileNumber());
+        mVerificationCodeSubHeading.append(mUserRegistration.getMobileNumber());
 
         mOTPConfirmationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,33 +173,39 @@ public class OtpVerificationActivity extends BaseActivity {
     }
 
     private void validateOTP(){
-
-        String VALIDATE_OTP_URL = APIUrl.VALIDATE_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,mUserRegistration.getMobileNumber())
-                .replace(APIUrl.OTP_KEY,mOTPInput);
-        RESTClient.get(VALIDATE_OTP_URL, null, new TextHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d(TAG,"Response Failed:"+responseString);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-
-                boolean OTPMatch = Boolean.parseBoolean(responseString);
-
-                Log.d(TAG,"Response Success:"+responseString);
-
-                if (OTPMatch) {
-                    Log.d(TAG,"OTP Validation Success");
-                    mUserRegistration.setOtp(mOTPInput);
-                    registerUser();
-
-                } else {
-                    Log.d(TAG,"OTP Validation failed");
-                    Toast.makeText(OtpVerificationActivity.this,"OTP Validation Failed, please reenter valid OTP",Toast.LENGTH_SHORT).show();
+        //Reason for doing encoding as we have to send + sign in mobile number as query parameters and without encoding that data would interpreted differently
+        try {
+            String encodedQueryString = URLEncoder.encode(mUserRegistration.getMobileNumber(), "UTF-8");
+            String VALIDATE_OTP_URL = APIUrl.VALIDATE_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString)
+                    .replace(APIUrl.OTP_KEY,mOTPInput);
+            RESTClient.get(VALIDATE_OTP_URL, null, new TextHttpResponseHandler() {
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d(TAG,"Response Failed:"+responseString);
                 }
-            }
-        });
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                    boolean OTPMatch = Boolean.parseBoolean(responseString);
+
+                    Log.d(TAG,"Response Success:"+responseString);
+
+                    if (OTPMatch) {
+                        Log.d(TAG,"OTP Validation Success");
+                        mUserRegistration.setOtp(mOTPInput);
+                        registerUser();
+
+                    } else {
+                        Log.d(TAG,"OTP Validation failed");
+                        Toast.makeText(OtpVerificationActivity.this,"OTP Validation Failed, please reenter valid OTP",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } catch (UnsupportedEncodingException e) {
+            //TODO This needs to be figured out how to handle this exception
+            e.printStackTrace();
+        }
     }
 
     private void registerUser() {

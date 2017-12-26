@@ -12,7 +12,7 @@
     <string name="mobile_registration_sub_heading">Please enter your mobile number.</string>
     <string name="send_verification_code">Send Verification Code</string>
     <string name="default_country_code">+91</string>
-    <string name="verification_code_message">Please type the verification code sent to</string>
+    <string name="verification_code_message">"Please type the verification code sent to "</string>
     <string name="verification_code_heading">Verification Code</string>
     <string name="otp_confirm_button_text">Confirm</string>
     <string name="did_not_received_otp_code_label">Didn\'t received code?</string>

@@ -65,7 +65,7 @@ public class CustomCountryAdapter extends ArrayAdapter<Country>{
 
         // Reason for adding "+" in the code as while sending the GET request for getting OTP with +91,
         // somehow + gets omitted, so we are storing the data without + and while sending OTP we can drawable.add + from backend
-        viewHolder.countryTextView.setText(country.getName() +" (+" + country.getCode() +")");
+        viewHolder.countryTextView.setText(country.getName() +" (" + country.getCode() +")");
         return convertView;
     }
 

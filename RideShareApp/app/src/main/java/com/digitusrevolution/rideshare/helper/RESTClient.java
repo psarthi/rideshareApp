@@ -13,6 +13,7 @@ import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
