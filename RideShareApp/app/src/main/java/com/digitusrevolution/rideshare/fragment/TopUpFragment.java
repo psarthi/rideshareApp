@@ -8,21 +8,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.google.gson.Gson;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +54,9 @@ public class TopUpFragment extends BaseFragment {
     private BasicUser mUser;
     private CommonUtil mCommonUtil;
     private Account mAccount;
+    private TextView mWalletBalance;
+    private TextView mTopUpAmount;
+    private String mCurrencySymbol;
 
     public TopUpFragment() {
         // Required empty public constructor
@@ -70,6 +82,7 @@ public class TopUpFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"onCreate Called");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mRequiredBalanceVisiblity = getArguments().getBoolean(ARG_REQD_BALANCE_VISIBILITY);
@@ -77,43 +90,71 @@ public class TopUpFragment extends BaseFragment {
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        List<Account> accounts = (List<Account>) mUser.getAccounts();
-        //This is just the basic account with no transaction
-        mAccount = accounts.get(0);
-
+        mCurrencySymbol = mCommonUtil.getCurrencySymbol(mUser.getCountry());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView Called");
+        //This will ensure we will get updated Amount on wallet top ups
+        mAccount = mCommonUtil.getAccount();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_top_up, container, false);
-        String currencySymbol = mCommonUtil.getCurrencySymbol(mUser.getCountry());
-        String balance = currencySymbol + mAccount.getBalance();
-        ((TextView) view.findViewById(R.id.wallet_balance_amount)).setText(balance);
-        String hint = getResources().getString(R.string.amount_hint)+" ("+currencySymbol+")";
-        ((TextView)view.findViewById(R.id.topup_amount)).setHint(hint);
+        mWalletBalance = view.findViewById(R.id.wallet_balance_amount);
+        mTopUpAmount = view.findViewById(R.id.topup_amount);
+        setWalletBalance(mAccount.getBalance());
 
         if (mRequiredBalanceVisiblity){
             String reqdAmount = getResources().getString(R.string.required_wallet_balance) +
-                    currencySymbol + Float.toString(mRequiredBalanceAmount);
+                    mCurrencySymbol + mCommonUtil.getDecimalFormattedString(mRequiredBalanceAmount);
             ((TextView) view.findViewById(R.id.required_wallet_balance)).setText(reqdAmount);
-            //Adding 1 to cover decimals as when you typecast to int decimal would not be taken care e.g. 3.2 would become 3
             Log.d(TAG, "Required Min Balance:"+mRequiredBalanceAmount);
 
         } else {
             view.findViewById(R.id.required_wallet_balance).setVisibility(View.GONE);
         }
 
+        setAddMoneyButtonListener(view);
 
+        return view;
+    }
+
+    private void setWalletBalance(float balance) {
+        String balanceString = mCurrencySymbol + balance;
+        mWalletBalance.setText(balanceString);
+        String hint = getResources().getString(R.string.amount_hint)+" ("+mCurrencySymbol+")";
+        mTopUpAmount.setHint(hint);
+        mTopUpAmount.setText("");
+    }
+
+    private void setAddMoneyButtonListener(final View view) {
         view.findViewById(R.id.add_money_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onStartTransaction();
+                //TODO Add Money via PayTm
+
+                String topUpAmount = ((TextView) view.findViewById(R.id.topup_amount)).getText().toString();
+                String ADD_MONEY = APIUrl.ADD_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY,Integer.toString(mAccount.getNumber()))
+                        .replace(APIUrl.AMOUNT_KEY, topUpAmount);
+                RESTClient.get(ADD_MONEY, null, new JsonHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        mAccount = new Gson().fromJson(response.toString(), Account.class);
+                        mCommonUtil.updateAccount(mAccount);
+                        //This will refresh the wallet balance
+                        setWalletBalance(mAccount.getBalance());
+                        if (mRequiredBalanceVisiblity){
+                            //This will go back to the create rides page
+                            hideSoftKeyBoard();
+                            Toast.makeText(getActivity(), "New Wallet Balance:"+mCurrencySymbol+mAccount.getBalance(),Toast.LENGTH_LONG);
+                            getActivity().getSupportFragmentManager().popBackStack();
+                        }
+                    }
+                });
             }
         });
-
-        return view;
     }
 
     public void onStartTransaction() {

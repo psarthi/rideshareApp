@@ -62,9 +62,7 @@ public class TransactionFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private BasicUser mUser;
     private CommonUtil mCommonUtil;
-    private boolean mInitialDataLoaded;
     private List<Transaction> mTransactions = new ArrayList<>();
     private Account mAccount;
 
@@ -103,12 +101,6 @@ public class TransactionFragment extends BaseFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         mCommonUtil = new CommonUtil(this);
-        mUser = mCommonUtil.getUser();
-        List<Account> accounts = (List<Account>) mUser.getAccounts();
-        //This is just the basic account with no transaction
-        mAccount = accounts.get(0);
-
-        loadInitialData();
     }
 
     @Override
@@ -124,9 +116,8 @@ public class TransactionFragment extends BaseFragment {
         mRecyclerView.setHasFixedSize(true);
 
         //VERY IMP - This will get called only when fragment is reloaded and without this it will show up blank screen as adapter is not set
-        if (mInitialDataLoaded) {
-            setAdapter();
-        }
+        mAccount = mCommonUtil.getAccount();
+        loadInitialData();
 
         mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -158,7 +149,6 @@ public class TransactionFragment extends BaseFragment {
                 super.onSuccess(statusCode, headers, response);
                 Type listType = new TypeToken<ArrayList<Transaction>>(){}.getType();
                 mTransactions = new Gson().fromJson(response.toString(), listType);
-                mInitialDataLoaded = true;
                 setAdapter();
                 //This will load adapter only when data is loaded
             }

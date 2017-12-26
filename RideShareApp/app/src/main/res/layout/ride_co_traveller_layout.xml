@@ -55,7 +55,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_seperator_thickness"
-        android:background="@color/colorGrayLight"
-        android:layout_marginTop="@dimen/default_margin"/>
+        android:background="@color/colorGrayLight"/>
 
 </LinearLayout>

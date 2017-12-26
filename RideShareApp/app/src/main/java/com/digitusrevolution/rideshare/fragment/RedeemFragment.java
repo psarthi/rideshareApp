@@ -11,11 +11,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.google.gson.Gson;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONObject;
 
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +46,10 @@ public class RedeemFragment extends BaseFragment {
     private BasicUser mUser;
     private CommonUtil mCommonUtil;
     private Account mAccount;
+    private TextView mWalletBalance;
+    private TextView mRedeemAmount;
+    private String mCurrencySymbol;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,6 +77,7 @@ public class RedeemFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"onCreate Called");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -72,23 +85,58 @@ public class RedeemFragment extends BaseFragment {
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        List<Account> accounts = (List<Account>) mUser.getAccounts();
-        //This is just the basic account with no transaction
-        mAccount = accounts.get(0);
+        mCurrencySymbol = mCommonUtil.getCurrencySymbol(mUser.getCountry());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView Called");
+        //This will ensure we will get updated Amount on wallet top ups
+        mAccount = mCommonUtil.getAccount();
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_redeem, container, false);
-        String currencySymbol = mCommonUtil.getCurrencySymbol(mUser.getCountry());
-        String balance = currencySymbol + mAccount.getBalance();
-        ((TextView) view.findViewById(R.id.wallet_balance_amount)).setText(balance);
-        String hint = getResources().getString(R.string.amount_hint)+" ("+currencySymbol+")";
-        ((TextView)view.findViewById(R.id.redeem_amount)).setHint(hint);
+        final View view = inflater.inflate(R.layout.fragment_redeem, container, false);
+        mWalletBalance = view.findViewById(R.id.wallet_balance_amount);
+        mRedeemAmount = view.findViewById(R.id.redeem_amount);
+        setWalletBalance(mAccount.getBalance());
+
+        setRedeemButtonListener(view);
+
         return view;
     }
+
+    private void setRedeemButtonListener(final View view) {
+        //TODO Implement redemption with Paytm
+
+        view.findViewById(R.id.redeem_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String redeemAmount = ((TextView) view.findViewById(R.id.redeem_amount)).getText().toString();
+                String REDEEM_MONEY = APIUrl.REDEEM_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY,Integer.toString(mAccount.getNumber()))
+                        .replace(APIUrl.AMOUNT_KEY, redeemAmount);
+
+                RESTClient.get(REDEEM_MONEY, null, new JsonHttpResponseHandler(){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        mAccount = new Gson().fromJson(response.toString(), Account.class);
+                        mCommonUtil.updateAccount(mAccount);
+                        //This will refresh the wallet balance
+                        setWalletBalance(mAccount.getBalance());
+                    }
+                });
+            }
+        });
+    }
+
+    private void setWalletBalance(float balance) {
+        String balanceString = mCurrencySymbol + balance;
+        mWalletBalance.setText(balanceString);
+        String hint = getResources().getString(R.string.amount_hint)+" ("+mCurrencySymbol+")";
+        mRedeemAmount.setHint(hint);
+        mRedeemAmount.setText("");
+    }
+
 
     @Override
     public void onResume() {

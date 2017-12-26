@@ -88,6 +88,10 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
         else {
             Picasso.with(mBaseFragment.getActivity()).load(R.drawable.ic_add).into(holder.mImageView);
             holder.mTextView.setText(mBaseFragment.getResources().getString(R.string.add_vehicle_thumbnail_text));
+            //This will ensure to highlight in case of no vehicles are there. Reason for 1 as there is a dummy vehicle added for add vehicle
+            if (mVehicles.size() == 1){
+                holder.mTextView.setTextColor(mBaseFragment.getResources().getColor(R.color.colorAccent));
+            }
             holder.mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

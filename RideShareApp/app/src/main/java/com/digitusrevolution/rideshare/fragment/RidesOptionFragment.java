@@ -123,12 +123,14 @@ public class RidesOptionFragment extends BaseFragment
         //IMP - This will ensure we always get the updated data of user on fragment reload
         //e.g. when vehicle is added and this is reloaded new vehicle would show up properly
         mUser = mCommonUtil.getUser();
-        //This will default preference of user which will be the default option for the ride
-        //This will only be used when we don't pass the ridesOption while creating the fragement instance
-        if (mRidesOptionData==null){
-            mRidesOption = mUser.getPreference();
-        } else {
-            mRidesOption = new Gson().fromJson(mRidesOptionData, Preference.class);
+        Log.d(TAG, "Rides Option is:"+mRidesOptionData);
+        //We will always have rides option passed either user preference or updated preference
+        mRidesOption = new Gson().fromJson(mRidesOptionData, Preference.class);
+
+        //This will take care of scenario where initally there is no vehicle and later on vehicle is added
+        //In this case, ridesOption would have null as default vehicle but post adding vehicle, default vehicle is not updated
+        if (mRidesOption.getDefaultVehicle()==null && mUser.getPreference().getDefaultVehicle()!=null){
+            mRidesOption.setDefaultVehicle(mUser.getPreference().getDefaultVehicle());
         }
 
         View view;
@@ -185,13 +187,14 @@ public class RidesOptionFragment extends BaseFragment
         }
 
         List<Vehicle> vehicleList = new ArrayList<>();
-        for (Vehicle vehicle: mUser.getVehicles()){
-            vehicleList.add(vehicle);
-        }
+        vehicleList.addAll(mUser.getVehicles());
         //Adding dummy vehicle for drawable.add sign at the end
         vehicleList.add(new Vehicle());
 
         RecyclerView recyclerView = view.findViewById(R.id.offer_ride_vehicles_list);
+        Log.d(TAG, "Default Vehicle is:"+new Gson().toJson(mRidesOption.getDefaultVehicle()));
+        //IMP - Reason for using User and not ridesOption to get default vehicle as initially when no vehicle is there, ridesoption default vehicle is null
+        //but when vehicle is added only user gets updated and not rides option
         mVehicleAdapter = new ThumbnailVehicleAdapter(this, vehicleList, mRidesOption.getDefaultVehicle());
         setRecyclerView(recyclerView, mVehicleAdapter, LinearLayoutManager.HORIZONTAL);
     }
@@ -254,7 +257,10 @@ public class RidesOptionFragment extends BaseFragment
 
         //Specific for Ride Types
         if (mRideType.equals(RideType.OfferRide)){
-            mRidesOption.setDefaultVehicle(mVehicleAdapter.getSelectedVehicle());
+            Vehicle selectedVehicle = mVehicleAdapter.getSelectedVehicle();
+            selectedVehicle.setSeatCapacity(mSeatCount);
+            selectedVehicle.setSmallLuggageCapacity(mLuggageCount);
+            mRidesOption.setDefaultVehicle(selectedVehicle);
         } else {
             mRidesOption.setSeatRequired(mSeatCount);
             mRidesOption.setLuggageCapacityRequired(mLuggageCount);

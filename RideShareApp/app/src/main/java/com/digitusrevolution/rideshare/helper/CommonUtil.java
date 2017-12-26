@@ -8,6 +8,7 @@ import android.util.Log;
 import com.digitusrevolution.rideshare.activity.BaseActivity;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
+import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
@@ -60,6 +61,7 @@ public class CommonUtil {
     public void saveUserSignInResult(UserSignInResult userSignInResult) {
         saveInSharedPref(Constant.SHARED_PREFS_TOKEN_KEY,userSignInResult.getToken());
         saveInSharedPref(Constant.SHARED_PREFS_USER_KEY,new Gson().toJson(userSignInResult.getUser()));
+        saveInSharedPref(Constant.SHARED_PREFS_VIRTUAL_ACCOUNT_KEY,new Gson().toJson(((List<Account>) userSignInResult.getUser().getAccounts()).get(0)));
         saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_KEY,new Gson().toJson(userSignInResult.getCurrentRide()));
         saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY,new Gson().toJson(userSignInResult.getCurrentRideRequest()));
     }
@@ -94,6 +96,11 @@ public class CommonUtil {
     public FullUser getFullUser() {
         String user = getSharedPreferences().getString(Constant.SHARED_PREFS_FULL_USER_KEY,null);
         return new Gson().fromJson(user, FullUser.class);
+    }
+
+    public Account getAccount() {
+        String account = getSharedPreferences().getString(Constant.SHARED_PREFS_VIRTUAL_ACCOUNT_KEY,null);
+        return new Gson().fromJson(account, Account.class);
     }
 
     public FullRide getCurrentRide() {
@@ -142,6 +149,9 @@ public class CommonUtil {
         updateInSharedPref(Constant.SHARED_PREFS_FULL_USER_KEY,new Gson().toJson(user));
     }
 
+    public void updateAccount(Account account){
+        updateInSharedPref(Constant.SHARED_PREFS_VIRTUAL_ACCOUNT_KEY,new Gson().toJson(account));
+    }
 
     public void updateCurrentRide(FullRide currentRide){
         updateInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_KEY,new Gson().toJson(currentRide));

@@ -38,13 +38,17 @@ import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
+import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.dto.google.Bounds;
 import com.digitusrevolution.rideshare.model.dto.google.GoogleDirection;
 import com.digitusrevolution.rideshare.model.ride.domain.Point;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.domain.RideRequestPoint;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.ride.dto.PreBookingRideRequestResult;
 import com.digitusrevolution.rideshare.model.ride.dto.RideOfferInfo;
 import com.digitusrevolution.rideshare.model.ride.dto.RideOfferResult;
 import com.digitusrevolution.rideshare.model.ride.dto.RideRequestResult;
@@ -137,6 +141,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private View mMapView;
     private Place mFromPlace;
     private Place mToPlace;
+    private Account mAccount;
 
     public CreateRidesFragment() {
         Log.d(TAG, "CreateRidesFragment() Called");
@@ -192,6 +197,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         //IMP - This will ensure on fragment reload, user data is upto date e.g. in case of vehicle addition
         //new vehicle would reflect and role would also show up else it will again ask for adding vehicle
         mUser = mCommonUtil.getUser();
+        //Reason for putting it here so that we can get latest balance on refresh
+        mAccount = mCommonUtil.getAccount();
         Log.d(TAG,"User Name is:"+mUser.getFirstName());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_rides, container, false);
@@ -362,17 +369,64 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 } else {
                     if (validateInput()){
                         setRideRequest();
-                        RESTClient.post(getActivity(), APIUrl.REQUEST_RIDE_URL, mRideRequest, new JsonHttpResponseHandler(){
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                super.onSuccess(statusCode, headers, response);
-                                RideRequestResult rideRequestResult = new Gson().fromJson(response.toString(), RideRequestResult.class);
-                                Log.d(TAG, "Ride Request Successfully created with id:"+rideRequestResult.getRideRequest().getId());
-                                if (rideRequestResult.isCurrentRideRequest()) {
-                                    mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
-                                    Log.d(TAG, "Updated Current Ride Request");
+                        if (mRideRequest.getRideMode().equals(RideMode.Paid)){
+                            RESTClient.post(getActivity(), APIUrl.RIDE_REQUEST_PRE_BOOKING_INFO_URL, mRideRequest, new JsonHttpResponseHandler(){
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    PreBookingRideRequestResult preBookingRideRequestResult = new Gson().fromJson(
+                                            response.toString(), PreBookingRideRequestResult.class);
+
+                                    float pendingBillAmount = 0;
+                                    for (Bill bill: preBookingRideRequestResult.getPendingBills()){
+                                        pendingBillAmount += bill.getAmount();
+                                    }
+
+                                    float requiredWalletBalance = pendingBillAmount + preBookingRideRequestResult.getMaxFare();
+
+                                    //This is successful case when user has sufficient balance
+                                    if (mAccount.getBalance() >= requiredWalletBalance){
+                                        Log.d(TAG, "Sufficient Wallet Balance, so creating ride request");
+                                        createRideRequest();
+                                    }
+                                    //This is the case when user doesn't have sufficient balance
+                                    else {
+                                        Log.d(TAG, "InSufficient Wallet Balance, current balance/required balance:"
+                                                +mAccount.getBalance()+"/"+requiredWalletBalance);
+                                        mFragmentLoader.loadWalletFragment(true, requiredWalletBalance);
+                                    }
+
                                 }
-                                mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
+
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                                    //TODO Implement exception handling
+                                }
+                            });
+                        } else {
+                            //Its a free ride so no pre booking validation is required
+                            createRideRequest();
+                        }
+                    }
+
+                }
+            }
+        });
+    }
+
+    private void createRideRequest(){
+        RESTClient.post(getActivity(), APIUrl.REQUEST_RIDE_URL, mRideRequest, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                RideRequestResult rideRequestResult = new Gson().fromJson(response.toString(), RideRequestResult.class);
+                Log.d(TAG, "Ride Request Successfully created with id:"+rideRequestResult.getRideRequest().getId());
+                if (rideRequestResult.isCurrentRideRequest()) {
+                    mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
+                    Log.d(TAG, "Updated Current Ride Request");
+                }
+                mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
                                 /*
                                     //Blocked this for the time being as it was causing issue in loading proper page
                                     //e.g. even if its current ride but home should have current ride request, then current ride request
@@ -385,16 +439,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                     //This will load the Ride Request Info fragment
                                     mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
                                 }*/
-                            }
+            }
 
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                                super.onFailure(statusCode, headers, throwable, errorResponse);
-                            }
-                        });
-                    }
-
-                }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                //TODO Implement exception handling
             }
         });
     }

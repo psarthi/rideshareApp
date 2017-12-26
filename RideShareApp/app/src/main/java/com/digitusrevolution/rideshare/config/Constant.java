@@ -15,6 +15,7 @@ public class Constant {
     public static final String SHARED_PREFS_TOKEN_KEY = "token";
     public static final String SHARED_PREFS_USER_KEY = "user";
     public static final String SHARED_PREFS_FULL_USER_KEY = "fullUser";
+    public static final String SHARED_PREFS_VIRTUAL_ACCOUNT_KEY = "virtualAccount";
     public static final String SHARED_PREFS_CURRENT_RIDE_KEY = "currentRide";
     public static final String SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY = "currentRideRequest";
     public static final String SHARED_PREFS_RECENT_RIDE_LIST_KEY = "recentRideList";
