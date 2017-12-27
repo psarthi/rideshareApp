@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -20,14 +20,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.TrustNetworkComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
@@ -41,7 +39,9 @@ import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.dto.google.Bounds;
+import com.digitusrevolution.rideshare.model.dto.google.Element;
 import com.digitusrevolution.rideshare.model.dto.google.GoogleDirection;
+import com.digitusrevolution.rideshare.model.dto.google.GoogleDistance;
 import com.digitusrevolution.rideshare.model.ride.domain.Point;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.domain.RideRequestPoint;
@@ -52,6 +52,8 @@ import com.digitusrevolution.rideshare.model.ride.dto.PreBookingRideRequestResul
 import com.digitusrevolution.rideshare.model.ride.dto.RideOfferInfo;
 import com.digitusrevolution.rideshare.model.ride.dto.RideOfferResult;
 import com.digitusrevolution.rideshare.model.ride.dto.RideRequestResult;
+import com.digitusrevolution.rideshare.model.user.domain.Fuel;
+import com.digitusrevolution.rideshare.model.user.domain.FuelType;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.domain.Role;
 import com.digitusrevolution.rideshare.model.user.domain.RoleName;
@@ -77,12 +79,12 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
-import com.google.maps.android.SphericalUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -123,6 +125,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private TextView mDateTextView;
     private TextView mTimeTextView;
     private GoogleDirection mGoogleDirection;
+    private GoogleDistance mGoogleDistance;
     private Calendar mStartTimeCalendar;
     private boolean mTimeInPast;
     private BasicUser mUser;
@@ -142,6 +145,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private Place mFromPlace;
     private Place mToPlace;
     private Account mAccount;
+    private TextView mFare;
 
     public CreateRidesFragment() {
         Log.d(TAG, "CreateRidesFragment() Called");
@@ -202,8 +206,15 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         Log.d(TAG,"User Name is:"+mUser.getFirstName());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_rides, container, false);
-        //Make fare view invisible initially and make it visible later for ride request cases only
-        view.findViewById(R.id.create_rides_fare_text).setVisibility(View.GONE);
+        mFare = view.findViewById(R.id.create_rides_fare_text);
+
+        if (mRideType.equals(RideType.RequestRide)){
+            //Using invisible so that we can block the space and map would not move when it becomes visible
+            mFare.setVisibility(View.INVISIBLE);
+        } else {
+            mFare.setVisibility(View.GONE);
+        }
+
         mFromAddressTextView = view.findViewById(R.id.create_rides_from_address_text);
         mToAddressTextView = view.findViewById(R.id.create_rides_to_address_text);
         setAddressOnClickListener();
@@ -232,6 +243,11 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         //Since TrustnetworkComp has been initialized in OnCreate so member variable values would not get reset and state of trust category would be maintained
         mTrustNetworkComp.setTrustCategoryViews(view);
         setButtonsOnClickListener(view);
+
+        //When To and From is filled up and ride type is ride request, then show fare
+        if (mFromLatLng!=null && mToLatLng!=null && mRideType.equals(RideType.RequestRide)){
+            getDistanceAndSetFare();
+        }
 
         return view;
     }
@@ -658,23 +674,26 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         if (mToLatLng!=null) mMap.addMarker(new MarkerOptions().position(mToLatLng));
 
-        if (mRideType.equals(RideType.OfferRide)){
-            //Get Direction
-            getDirection();
-            //No Need to move camera as it would be done post drawing route in getDirection
-            //This will also avoid moving camera twice
-        } else {
-            //Draw Pickup/Drop Zone using circle
-            //TODO Replace with actual radius for each ride
-            if (mFromLatLng!=null) mMap.addCircle(new CircleOptions().center(mFromLatLng).radius(500));
-            if (mToLatLng!=null) mMap.addCircle(new CircleOptions().center(mToLatLng).radius(500));
-            //Move camera
-            moveCamera();
+        if (mFromLatLng!=null && mToLatLng!=null){
+            if (mRideType.equals(RideType.OfferRide)){
+                //Get Direction
+                getDirection();
+                //No Need to move camera as it would be done post drawing route in getDirection
+                //This will also avoid moving camera twice
+            } else {
+                //Draw Pickup/Drop Zone using circle
+                //TODO Replace with actual radius for each ride
+                if (mFromLatLng!=null) mMap.addCircle(new CircleOptions().center(mFromLatLng).radius(500));
+                if (mToLatLng!=null) mMap.addCircle(new CircleOptions().center(mToLatLng).radius(500));
+                //Move camera
+                moveCamera();
+                getDistanceAndSetFare();
+            }
         }
     }
 
+    //This function should be called only when To and From field is not null, otherwise it may throw NPE
     private void getDirection() {
-
         String GET_GOOGLE_DIRECTION_URL = APIUrl.GET_GOOGLE_DIRECTION_URL.replace(APIUrl.originLat_KEY, Double.toString(mFromLatLng.latitude))
                 .replace(APIUrl.originLng_KEY, Double.toString(mFromLatLng.longitude))
                 .replace(APIUrl.destinationLat_KEY, Double.toString(mToLatLng.latitude))
@@ -703,8 +722,79 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 Log.d(TAG, "Failed Response:" + errorResponse);
+                //TODO Handle the response properly
             }
         });
+    }
+
+    //This function should be called only when To and From field is not null, otherwise it may throw NPE
+    private void getDistanceAndSetFare(){
+
+        //IMP - Reason for setting the Ride request as fare uses vehicle sub category/ride mode etc.
+        setRideRequest();
+        Log.d(TAG, "Ride Request:"+new Gson().toJson(mRideRequest));
+
+        String GET_GOOGLE_DISTANCE_URL = APIUrl.GET_GOOGLE_DISTANCE_URL.replace(APIUrl.originLat_KEY, Double.toString(mFromLatLng.latitude))
+                .replace(APIUrl.originLng_KEY, Double.toString(mFromLatLng.longitude))
+                .replace(APIUrl.destinationLat_KEY, Double.toString(mToLatLng.latitude))
+                .replace(APIUrl.destinationLng_KEY, Double.toString(mToLatLng.longitude))
+                .replace(APIUrl.GOOGLE_API_KEY, getResources().getString(R.string.GOOGLE_API_KEY));
+
+        RESTClient.get(GET_GOOGLE_DISTANCE_URL, null, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Log.d(TAG, "Google Distance Success Response:" + response);
+                mGoogleDistance = new Gson().fromJson(response.toString(), GoogleDistance.class);
+                if (mGoogleDistance.getStatus().equals("OK")){
+                    Element element = mGoogleDistance.getRows().get(0).getElements().get(0);
+                    int travelDistance = element.getDistance().getValue();
+                    //Maxfare is applicable for All Sub-Categories else for specific sub-category you will get exact fare
+                    float maxFare = getFare(travelDistance);
+                    if (mRideRequest.getRideMode().equals(RideMode.Free)) {
+                        //This will give 100% discount
+                        setFare(0);
+                    } else {
+                        setFare(maxFare);
+                    }
+                }else {
+                    Toast.makeText(getActivity(),"No valid route found, please enter alternate location",Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.d(TAG, "Failed Response:" + errorResponse);
+                //TODO Handle the response properly
+            }
+        });
+
+    }
+
+    private void setFare(float maxFare) {
+        String symbol = mCommonUtil.getCurrencySymbol(mUser.getCountry());
+        String fareText = getResources().getString(R.string.fare_text)
+                + symbol + mCommonUtil.getDecimalFormattedString(maxFare);
+        mFare.setText(fareText);
+        mFare.setVisibility(View.VISIBLE);
+    }
+
+    //TravelDistance is in meters
+    private float getFare(int travelDistance) {
+        FuelType fuelType = mRideRequest.getVehicleSubCategory().getFuelType();
+        int averageMileage = mRideRequest.getVehicleSubCategory().getAverageMileage();
+        Collection<Fuel> fuels = mUser.getCountry().getFuels();
+        float farePerMeter = 0;
+        for (Fuel fuel : fuels) {
+            if (fuel.getType().name().equals(fuelType.name())){
+                //This will get fare per meter and not by Km
+                farePerMeter = fuel.getPrice() / (averageMileage * 1000);
+                break;
+            }
+        }
+        float maxFare = travelDistance * farePerMeter;
+        return maxFare;
     }
 
     private LatLngBounds getBounds(){

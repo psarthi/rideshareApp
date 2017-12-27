@@ -12,6 +12,9 @@ public class Element {
     @SerializedName("duration")
     @Expose
     private Duration duration;
+    @SerializedName("duration_in_traffic")
+    @Expose
+    private Duration_in_traffic duration_in_traffic;
     @SerializedName("status")
     @Expose
     private String status;
@@ -30,6 +33,14 @@ public class Element {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public Duration_in_traffic getDuration_in_traffic() {
+        return duration_in_traffic;
+    }
+
+    public void setDuration_in_traffic(Duration_in_traffic duration_in_traffic) {
+        this.duration_in_traffic = duration_in_traffic;
     }
 
     public String getStatus() {

@@ -85,7 +85,7 @@
         <TextView android:id="@+id/create_rides_fare_text"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="Fare Rs 45/-"
+                  android:text="@string/fare_text"
                   android:gravity="center"
                   android:background="@color/colorPrimary"
                   android:textColor="@android:color/white"

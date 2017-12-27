@@ -78,5 +78,6 @@
     <string name="selection_all">All</string>
     <string name="wallet_balance">Wallet Balance</string>
     <string name="required_wallet_balance">"Required Balance "</string>
+    <string name="fare_text">"Fare "</string>
 
 </resources>

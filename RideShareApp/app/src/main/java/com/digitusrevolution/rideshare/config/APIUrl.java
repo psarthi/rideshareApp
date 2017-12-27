@@ -6,9 +6,9 @@ package com.digitusrevolution.rideshare.config;
 
 public class APIUrl {
 
-    public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.4:8080/RSRideSystem/api";
-    public static final String BASE_URL_USER_SYSTEM = "http://10.0.0.4:8080/RSUserSystem/api";
-    public static final String BASE_URL_BILLING_SYSTEM = "http://10.0.0.4:8080/RSBillingSystem/api";
+    public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.7:8080/RSRideSystem/api";
+    public static final String BASE_URL_USER_SYSTEM = "http://10.0.0.7:8080/RSUserSystem/api";
+    public static final String BASE_URL_BILLING_SYSTEM = "http://10.0.0.7:8080/RSBillingSystem/api";
 
     public static final String USER_EMAIL_KEY = "{userEmail}";
     public static final String USER_ID_KEY = "{userId}";
@@ -69,6 +69,9 @@ public class APIUrl {
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +
             "&destination={destinationLat},{destinationLng}&departure_time={departureEpochSecond}&key={key}";
+    //Note - Departure time is not required here as this is used only for fare calculation and in the backend we will include departure time for duration caluclation
+    public static final String GET_GOOGLE_DISTANCE_URL="https://maps.googleapis.com/maps/api/distancematrix/json?origins={originLat},{originLng}" +
+            "&destinations={destinationLat},{destinationLng}&key={key}";
 
     public static final String OFFER_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/rides";
     public static final String REQUEST_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/riderequests";
