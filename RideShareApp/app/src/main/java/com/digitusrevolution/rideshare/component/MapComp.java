@@ -13,6 +13,7 @@ import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.model.app.RideType;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
@@ -64,23 +65,34 @@ public class MapComp{
         return latLngBoundsBuilder.build();
     }
 
-    public void setPadding(boolean standard){
+    public void setPadding(boolean standard, RideType rideType){
 
         mWidth = mBaseFragment.getResources().getDisplayMetrics().widthPixels;
         //This is here for experience purpose, we can use either heigth or width whichever make sense
         mHeight = mBaseFragment.getResources().getDisplayMetrics().heightPixels;
-        int topPadding = (int) (mHeight * Constant.LAT_LNG_TOP_PADDING_PERCENT);
-        mStandardPadding = (int) (mHeight * Constant.LAT_LNG_STANDARD_PADDING_PERCENT);
+        mStandardPadding = (int) (mHeight * Constant.LAT_LNG_MEDIUM_PADDING_PERCENT);
+
+        int topPadding = (int) (mHeight * Constant.LAT_LNG_LARGE_PADDING_PERCENT);
+        int smallPadding = (int) (mHeight * Constant.LAT_LNG_SMALL_PADDING_PERCENT);
         Log.d(TAG, "Width Pixel:"+mWidth+",Heigth Pixel:"+mHeight+",Customm Top Padding Pixel:"+topPadding+",Standard Padding Pixel:"+mStandardPadding);
 
         if (standard){
             Log.d(TAG, "Setting Standard Padding");
-            mMap.setPadding(mStandardPadding,mStandardPadding, mStandardPadding,mStandardPadding);
-        } else {
-            Log.d(TAG, "Setting Custom Padding");
-            //This is very important to customize the visibility range of camera
             // void setPadding (int left,int top,int right,int bottom)
-            mMap.setPadding(mStandardPadding,topPadding, mStandardPadding, mStandardPadding);
+            mMap.setPadding(smallPadding,mStandardPadding, smallPadding,smallPadding);
+        } else {
+            if (rideType.equals(RideType.RequestRide)){
+                Log.d(TAG, "Setting Custom Padding for Request Ride");
+                //This is very important to customize the visibility range of camera
+                // void setPadding (int left,int top,int right,int bottom)
+                mMap.setPadding(smallPadding,topPadding, smallPadding, mStandardPadding);
+            } else {
+                Log.d(TAG, "Setting Custom Padding for Offer Ride");
+                //This is very important to customize the visibility range of camera
+                // void setPadding (int left,int top,int right,int bottom)
+                mMap.setPadding(smallPadding,topPadding, smallPadding, smallPadding);
+
+            }
         }
     }
 

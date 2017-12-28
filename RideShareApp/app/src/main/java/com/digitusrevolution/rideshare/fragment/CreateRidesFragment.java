@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -145,7 +144,9 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private Place mFromPlace;
     private Place mToPlace;
     private Account mAccount;
-    private TextView mFare;
+    private TextView mFareTextView;
+    private boolean mLocationChanged;
+    private float mMaxFare;
 
     public CreateRidesFragment() {
         Log.d(TAG, "CreateRidesFragment() Called");
@@ -206,13 +207,13 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         Log.d(TAG,"User Name is:"+mUser.getFirstName());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_rides, container, false);
-        mFare = view.findViewById(R.id.create_rides_fare_text);
+        mFareTextView = view.findViewById(R.id.create_rides_fare_text);
 
         if (mRideType.equals(RideType.RequestRide)){
             //Using invisible so that we can block the space and map would not move when it becomes visible
-            mFare.setVisibility(View.INVISIBLE);
+            mFareTextView.setVisibility(View.INVISIBLE);
         } else {
-            mFare.setVisibility(View.GONE);
+            mFareTextView.setVisibility(View.GONE);
         }
 
         mFromAddressTextView = view.findViewById(R.id.create_rides_from_address_text);
@@ -245,8 +246,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         setButtonsOnClickListener(view);
 
         //When To and From is filled up and ride type is ride request, then show fare
+        //This will come into effect on page refresh or after saving options
         if (mFromLatLng!=null && mToLatLng!=null && mRideType.equals(RideType.RequestRide)){
-            getDistanceAndSetFare();
+            //This will reset the map with fare as well
+            drawOnMap();
         }
 
         return view;
@@ -258,7 +261,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         Log.d(TAG, "onMapReady Called");
         mMap = googleMap;
         mMapComp = new MapComp(this, googleMap);
-        mMapComp.setPadding(false);
+        mMapComp.setPadding(false, mRideType);
 
         setCurrentLocation();
     }
@@ -636,6 +639,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 Log.i(TAG, "From Place: " + mFromPlace.getName());
                 mFromAddressTextView.setText(mFromPlace.getName());
                 mFromLatLng = mFromPlace.getLatLng();
+                mLocationChanged = true;
                 drawOnMap();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
@@ -653,6 +657,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 Log.i(TAG, "To Place: " + mToPlace.getName());
                 mToAddressTextView.setText(mToPlace.getName());
                 mToLatLng = mToPlace.getLatLng();
+                mLocationChanged = true;
                 drawOnMap();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
@@ -665,6 +670,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         }
     }
 
+    //This will set marker as well as set fare if applicable
     private void drawOnMap(){
         //This will clear existing polylinem markers etc. from map
         mMap.clear();
@@ -682,12 +688,25 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 //This will also avoid moving camera twice
             } else {
                 //Draw Pickup/Drop Zone using circle
-                //TODO Replace with actual radius for each ride
-                if (mFromLatLng!=null) mMap.addCircle(new CircleOptions().center(mFromLatLng).radius(500));
-                if (mToLatLng!=null) mMap.addCircle(new CircleOptions().center(mToLatLng).radius(500));
+                //IMP - Reason for setting the Ride request as fare uses vehicle sub category/ride mode etc. Circle uses variation
+                setRideRequest();
+                Log.d(TAG, "Ride Request:"+new Gson().toJson(mRideRequest));
+                if (mFromLatLng!=null) mMap.addCircle(new CircleOptions().center(mFromLatLng).radius(mRideRequest.getPickupPointVariation()));
+                if (mToLatLng!=null) mMap.addCircle(new CircleOptions().center(mToLatLng).radius(mRideRequest.getDropPointVariation()));
                 //Move camera
                 moveCamera();
-                getDistanceAndSetFare();
+                //This will set the fare when both the to/from location is there
+                if (mRideRequest.getRideMode().equals(RideMode.Free)) {
+                    //This will give 100% discount
+                    setFare(0);
+                } else {
+                    if (mLocationChanged) {
+                        getDistanceAndSetFare();
+                    } else {
+                        setFare(mMaxFare);
+                    }
+
+                }
             }
         }
     }
@@ -730,9 +749,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     //This function should be called only when To and From field is not null, otherwise it may throw NPE
     private void getDistanceAndSetFare(){
 
-        //IMP - Reason for setting the Ride request as fare uses vehicle sub category/ride mode etc.
-        setRideRequest();
-        Log.d(TAG, "Ride Request:"+new Gson().toJson(mRideRequest));
+        //This will change the value of LocationChaged so that we don't keep calling distance function unncessarily even though when location has not changed
+        mLocationChanged = false;
 
         String GET_GOOGLE_DISTANCE_URL = APIUrl.GET_GOOGLE_DISTANCE_URL.replace(APIUrl.originLat_KEY, Double.toString(mFromLatLng.latitude))
                 .replace(APIUrl.originLng_KEY, Double.toString(mFromLatLng.longitude))
@@ -746,17 +764,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 super.onSuccess(statusCode, headers, response);
                 Log.d(TAG, "Google Distance Success Response:" + response);
                 mGoogleDistance = new Gson().fromJson(response.toString(), GoogleDistance.class);
-                if (mGoogleDistance.getStatus().equals("OK")){
+                if (mGoogleDistance.getStatus().equals("OK") && mGoogleDistance.getRows().get(0).getElements().get(0).getStatus().equals("OK")){
                     Element element = mGoogleDistance.getRows().get(0).getElements().get(0);
                     int travelDistance = element.getDistance().getValue();
                     //Maxfare is applicable for All Sub-Categories else for specific sub-category you will get exact fare
-                    float maxFare = getFare(travelDistance);
-                    if (mRideRequest.getRideMode().equals(RideMode.Free)) {
-                        //This will give 100% discount
-                        setFare(0);
-                    } else {
-                        setFare(maxFare);
-                    }
+                    mMaxFare = getFare(travelDistance);
+                    setFare(mMaxFare);
                 }else {
                     Toast.makeText(getActivity(),"No valid route found, please enter alternate location",Toast.LENGTH_LONG).show();
                 }
@@ -776,8 +789,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         String symbol = mCommonUtil.getCurrencySymbol(mUser.getCountry());
         String fareText = getResources().getString(R.string.fare_text)
                 + symbol + mCommonUtil.getDecimalFormattedString(maxFare);
-        mFare.setText(fareText);
-        mFare.setVisibility(View.VISIBLE);
+        mFareTextView.setText(fareText);
+        mFareTextView.setVisibility(View.VISIBLE);
     }
 
     //TravelDistance is in meters

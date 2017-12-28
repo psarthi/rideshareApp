@@ -76,20 +76,21 @@
 
     </LinearLayout>
 
+    <TextView android:id="@+id/create_rides_fare_text"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="@string/fare_text"
+              android:gravity="center"
+              android:background="@color/colorPrimary"
+              android:textColor="@android:color/white"
+              android:padding="@dimen/default_padding"
+              android:layout_above="@id/create_rides_bottom_layout"/>
+
     <LinearLayout android:id="@+id/create_rides_bottom_layout"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="vertical"
                   android:layout_alignParentBottom="true">
-
-        <TextView android:id="@+id/create_rides_fare_text"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="@string/fare_text"
-                  android:gravity="center"
-                  android:background="@color/colorPrimary"
-                  android:textColor="@android:color/white"
-                  android:padding="@dimen/default_padding"/>
 
         <include layout="@layout/trust_category_layout" android:id="@+id/trust_category_layout"/>
 

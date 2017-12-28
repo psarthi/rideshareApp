@@ -227,7 +227,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         Log.d(TAG, "onMapReady called of instance:"+this.hashCode());
         mMap = googleMap;
         mMapComp = new MapComp(this, googleMap);
-        mMapComp.setPadding(true);
+        mMapComp.setPadding(true, null);
 
         //TODO think on how to move this in common location so that we don't have to repeat this
         //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
