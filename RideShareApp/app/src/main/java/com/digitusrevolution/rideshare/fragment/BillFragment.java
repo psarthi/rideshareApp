@@ -118,6 +118,7 @@ public class BillFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.rate_per_km_text)).setText(mCommonUtil.getDecimalFormattedString(mBill.getRate()));
         ((TextView) view.findViewById(R.id.distance_text)).setText(mCommonUtil.getDecimalFormattedString(distance));
         ((TextView) view.findViewById(R.id.discount_text)).setText(mCommonUtil.getDecimalFormattedString(mBill.getDiscountPercentage()));
+        ((TextView) view.findViewById(R.id.co_traveller_count_text)).setText(Integer.toString(mBill.getRideRequest().getSeatRequired()));
 
         String currencySymbol = mCommonUtil.getCurrencySymbol(mUser.getCountry());
         String amountText = currencySymbol + mCommonUtil.getDecimalFormattedString(mBill.getAmount());

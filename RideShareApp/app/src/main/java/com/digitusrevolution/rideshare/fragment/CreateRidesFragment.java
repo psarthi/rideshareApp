@@ -77,11 +77,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.maps.android.PolyUtil;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -389,19 +394,19 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     if (validateInput()){
                         setRideRequest();
                         if (mRideRequest.getRideMode().equals(RideMode.Paid)){
-                            RESTClient.post(getActivity(), APIUrl.RIDE_REQUEST_PRE_BOOKING_INFO_URL, mRideRequest, new JsonHttpResponseHandler(){
+                            RESTClient.post(getActivity(), APIUrl.GET_PENDING_BILLS, mUser, new JsonHttpResponseHandler(){
                                 @Override
-                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                                     super.onSuccess(statusCode, headers, response);
-                                    PreBookingRideRequestResult preBookingRideRequestResult = new Gson().fromJson(
-                                            response.toString(), PreBookingRideRequestResult.class);
+                                    Type listType = new TypeToken<ArrayList<Bill>>(){}.getType();
+                                    ArrayList<Bill> pendingBills = new Gson().fromJson(response.toString(), listType);
 
                                     float pendingBillAmount = 0;
-                                    for (Bill bill: preBookingRideRequestResult.getPendingBills()){
+                                    for (Bill bill: pendingBills){
                                         pendingBillAmount += bill.getAmount();
                                     }
 
-                                    float requiredWalletBalance = pendingBillAmount + preBookingRideRequestResult.getMaxFare();
+                                    float requiredWalletBalance = pendingBillAmount + mMaxFare;
 
                                     //This is successful case when user has sufficient balance
                                     if (mAccount.getBalance() >= requiredWalletBalance){
@@ -414,7 +419,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                                 +mAccount.getBalance()+"/"+requiredWalletBalance);
                                         mFragmentLoader.loadWalletFragment(true, requiredWalletBalance);
                                     }
-
                                 }
 
                                 @Override
@@ -703,6 +707,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     if (mLocationChanged) {
                         getDistanceAndSetFare();
                     } else {
+                        //Reason for getting Fare again so that we take care of change of seats
+                        mMaxFare = getFare();
                         setFare(mMaxFare);
                     }
 
@@ -765,10 +771,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 Log.d(TAG, "Google Distance Success Response:" + response);
                 mGoogleDistance = new Gson().fromJson(response.toString(), GoogleDistance.class);
                 if (mGoogleDistance.getStatus().equals("OK") && mGoogleDistance.getRows().get(0).getElements().get(0).getStatus().equals("OK")){
-                    Element element = mGoogleDistance.getRows().get(0).getElements().get(0);
-                    int travelDistance = element.getDistance().getValue();
                     //Maxfare is applicable for All Sub-Categories else for specific sub-category you will get exact fare
-                    mMaxFare = getFare(travelDistance);
+                    mMaxFare = getFare();
                     setFare(mMaxFare);
                 }else {
                     Toast.makeText(getActivity(),"No valid route found, please enter alternate location",Toast.LENGTH_LONG).show();
@@ -793,8 +797,9 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         mFareTextView.setVisibility(View.VISIBLE);
     }
 
-    //TravelDistance is in meters
-    private float getFare(int travelDistance) {
+    private float getFare() {
+        Element element = mGoogleDistance.getRows().get(0).getElements().get(0);
+        int travelDistance = element.getDistance().getValue();
         FuelType fuelType = mRideRequest.getVehicleSubCategory().getFuelType();
         int averageMileage = mRideRequest.getVehicleSubCategory().getAverageMileage();
         Collection<Fuel> fuels = mUser.getCountry().getFuels();
@@ -806,7 +811,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 break;
             }
         }
-        float maxFare = travelDistance * farePerMeter;
+        float maxFare = travelDistance * farePerMeter * mRideRequest.getSeatRequired();
         return maxFare;
     }
 

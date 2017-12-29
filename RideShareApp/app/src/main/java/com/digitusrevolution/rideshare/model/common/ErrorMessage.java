@@ -58,4 +58,9 @@ public class ErrorMessage {
 		this.errorCause = errorCause;
 	}
 
+	@Override
+	public String toString() {
+		String errorMsg = "errorCode:errorType:errorMessage:errorCause -"+errorCode+":"+errorType+":"+errorMessage+":"+errorCause;
+		return errorMsg;
+	}
 }

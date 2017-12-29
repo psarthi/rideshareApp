@@ -99,6 +99,11 @@ public class RideInfoFragment extends BaseFragment implements
         mCoTravellerLinearLayout = view.findViewById(R.id.ride_info_co_traveller_layout);
         setRideInfoView(view);
 
+        for (int i=0; i<mCoTravellerLinearLayout.getChildCount();i++){
+            Log.d(TAG, "Rating is (Inside onCreateView):"+Float.toString(((RatingBar)
+                    mCoTravellerLinearLayout.getChildAt(i).findViewById(R.id.co_traveller_rating_bar)).getRating()));
+        }
+
         return view;
     }
 
@@ -135,6 +140,11 @@ public class RideInfoFragment extends BaseFragment implements
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_info_map);
         mapFragment.getMapAsync(this);
+
+        for (int i=0; i<mCoTravellerLinearLayout.getChildCount();i++){
+            Log.d(TAG, "Rating is (Set Ride Info View):"+Float.toString(((RatingBar)
+                    mCoTravellerLinearLayout.getChildAt(i).findViewById(R.id.co_traveller_rating_bar)).getRating()));
+        }
     }
 
     @Override
@@ -169,16 +179,15 @@ public class RideInfoFragment extends BaseFragment implements
 
     }
 
-
-    private void setCoTraveller(View view){
-
-    }
-
     @Override
     public void onResume() {
         super.onResume();
         getActivity().setTitle(TITLE);
         Log.d(TAG,"Inside OnResume");
+        for (int i=0; i<mCoTravellerLinearLayout.getChildCount();i++){
+            Log.d(TAG, "Rating is (Inside OnResume):"+Float.toString(((RatingBar)
+                    mCoTravellerLinearLayout.getChildAt(i).findViewById(R.id.co_traveller_rating_bar)).getRating()));
+        }
         showBackStackDetails();
         showChildFragmentDetails();
     }

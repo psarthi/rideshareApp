@@ -63,7 +63,7 @@ public class APIUrl {
     public static final String USER_FEEDBACK = BASE_URL_USER_SYSTEM + "/users/{userId}/feedback";
     public static final String GET_USER_PROFILE = BASE_URL_USER_SYSTEM + "/users/{userId}/profile";
     public static final String GET_USER_WALLET_TRANSACTION = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/transactions?page={page}";
-    public static final String RIDE_REQUEST_PRE_BOOKING_INFO_URL = BASE_URL_RIDE_SYSTEM + "/riderequests/prebookinginfo";
+    public static final String GET_PENDING_BILLS = BASE_URL_BILLING_SYSTEM + "/billing/pending";
 
 
 

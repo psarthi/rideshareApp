@@ -3,18 +3,15 @@ package com.digitusrevolution.rideshare.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
-import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
@@ -28,7 +25,6 @@ import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
@@ -54,9 +50,10 @@ public class TopUpFragment extends BaseFragment {
     private BasicUser mUser;
     private CommonUtil mCommonUtil;
     private Account mAccount;
-    private TextView mWalletBalance;
-    private TextView mTopUpAmount;
+    private TextView mWalletBalanceTextView;
+    private TextView mTopUpAmountTextView;
     private String mCurrencySymbol;
+    private int mMinTopUpAmount;
 
     public TopUpFragment() {
         // Required empty public constructor
@@ -101,31 +98,46 @@ public class TopUpFragment extends BaseFragment {
         mAccount = mCommonUtil.getAccount();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_top_up, container, false);
-        mWalletBalance = view.findViewById(R.id.wallet_balance_amount);
-        mTopUpAmount = view.findViewById(R.id.topup_amount);
-        setWalletBalance(mAccount.getBalance());
+        mWalletBalanceTextView = view.findViewById(R.id.wallet_balance_amount);
+        mTopUpAmountTextView = view.findViewById(R.id.topup_amount);
 
         if (mRequiredBalanceVisiblity){
-            String reqdAmount = getResources().getString(R.string.required_wallet_balance) +
+            String reqdAmount = getResources().getString(R.string.required_wallet_balance_label) +
                     mCurrencySymbol + mCommonUtil.getDecimalFormattedString(mRequiredBalanceAmount);
             ((TextView) view.findViewById(R.id.required_wallet_balance)).setText(reqdAmount);
             Log.d(TAG, "Required Min Balance:"+mRequiredBalanceAmount);
+            //Reason for adding 1 is to just take care of decimals
+            mMinTopUpAmount = (int) (mRequiredBalanceAmount - mAccount.getBalance() + 1);
+
+            view.findViewById(R.id.top_up_cancel_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hideSoftKeyBoard();
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
 
         } else {
             view.findViewById(R.id.required_wallet_balance).setVisibility(View.GONE);
+            view.findViewById(R.id.top_up_cancel_button).setVisibility(View.GONE);
         }
 
         setAddMoneyButtonListener(view);
+        //This should be post mTopUp amount calculation in case of ride request top up flow, so that we can show proper amount
+        setWalletBalance(mAccount.getBalance());
 
         return view;
     }
 
     private void setWalletBalance(float balance) {
         String balanceString = mCurrencySymbol + balance;
-        mWalletBalance.setText(balanceString);
+        mWalletBalanceTextView.setText(balanceString);
         String hint = getResources().getString(R.string.amount_hint)+" ("+mCurrencySymbol+")";
-        mTopUpAmount.setHint(hint);
-        mTopUpAmount.setText("");
+        if (mRequiredBalanceVisiblity){
+            hint = getResources().getString(R.string.min_amount_hint)+" ("+mCurrencySymbol+mMinTopUpAmount+")";
+        }
+        mTopUpAmountTextView.setHint(hint);
+        mTopUpAmountTextView.setText("");
     }
 
     private void setAddMoneyButtonListener(final View view) {
@@ -134,25 +146,30 @@ public class TopUpFragment extends BaseFragment {
             public void onClick(View v) {
                 //TODO Add Money via PayTm
 
-                String topUpAmount = ((TextView) view.findViewById(R.id.topup_amount)).getText().toString();
-                String ADD_MONEY = APIUrl.ADD_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY,Integer.toString(mAccount.getNumber()))
-                        .replace(APIUrl.AMOUNT_KEY, topUpAmount);
-                RESTClient.get(ADD_MONEY, null, new JsonHttpResponseHandler(){
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mAccount = new Gson().fromJson(response.toString(), Account.class);
-                        mCommonUtil.updateAccount(mAccount);
-                        //This will refresh the wallet balance
-                        setWalletBalance(mAccount.getBalance());
-                        if (mRequiredBalanceVisiblity){
-                            //This will go back to the create rides page
-                            hideSoftKeyBoard();
-                            Toast.makeText(getActivity(), "New Wallet Balance:"+mCurrencySymbol+mAccount.getBalance(),Toast.LENGTH_LONG);
-                            getActivity().getSupportFragmentManager().popBackStack();
+                String topUpAmountString = ((TextView) view.findViewById(R.id.topup_amount)).getText().toString();
+                int topUpAmount = Integer.parseInt(topUpAmountString);
+                if (topUpAmount < mMinTopUpAmount) {
+                    Toast.makeText(getActivity(), "Min. Top up amount is " + mCurrencySymbol + mMinTopUpAmount, Toast.LENGTH_LONG);
+                } else {
+                    String ADD_MONEY = APIUrl.ADD_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
+                            .replace(APIUrl.AMOUNT_KEY, topUpAmountString);
+                    RESTClient.get(ADD_MONEY, null, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            super.onSuccess(statusCode, headers, response);
+                            mAccount = new Gson().fromJson(response.toString(), Account.class);
+                            mCommonUtil.updateAccount(mAccount);
+                            //This will refresh the wallet balance
+                            setWalletBalance(mAccount.getBalance());
+                            if (mRequiredBalanceVisiblity) {
+                                //This will go back to the create rides page
+                                hideSoftKeyBoard();
+                                Log.d(TAG, "New Wallet Balance:" + mCurrencySymbol + mAccount.getBalance());
+                                getActivity().getSupportFragmentManager().popBackStack();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
     }

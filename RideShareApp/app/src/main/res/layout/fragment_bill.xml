@@ -108,6 +108,26 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin">
 
+        <TextView android:id="@+id/co_traveller_count_label"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Number of CoTraveller"
+                  android:textSize="@dimen/heading3_text_size"/>
+
+        <TextView android:id="@+id/co_traveller_count_text"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="0"
+                  android:textAlignment="viewEnd"
+                  android:textSize="@dimen/heading3_text_size"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin">
+
         <TextView android:id="@+id/total_amount_label"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"

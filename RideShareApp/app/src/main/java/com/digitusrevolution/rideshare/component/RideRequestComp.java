@@ -298,30 +298,43 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 Log.d(TAG, "Navigate to Pickup Point for Id:"+mRideRequest.getId());
             }
         });
-
-        setRatingBar(mRatingBar);
-
+        
+        boolean feedbackAvailable = false;
+        Log.d(TAG,"RatingBar Instance:"+mRatingBar.hashCode());
         //This will show the user given rating
         for (UserFeedback feedback: mRideRequest.getFeedbacks()) {
             if (feedback.getForUser().getId() == mRideRequest.getAcceptedRide().getDriver().getId()) {
+                Log.d(TAG,"Setting Rating:"+feedback.getRating());
                 mRatingBar.setRating(feedback.getRating());
                 mRatingBar.setEnabled(false);
+                feedbackAvailable = true;
             }
         }
+        if (!feedbackAvailable){
+            setRatingBar(mRatingBar, RideType.RequestRide);   
+        }
+
     }
 
-    public void setRatingBar(final RatingBar userRatingBar) {
+    public void setRatingBar(final RatingBar userRatingBar, final RideType rideType) {
         userRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                Log.d(TAG, "Rating is:"+rating);
-                String USER_FEEDBACK = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getDriver().getId()));
+                String USER_FEEDBACK_URL;
                 UserFeedbackInfo feedbackInfo = new UserFeedbackInfo();
-                feedbackInfo.setGivenByUser(mRideRequest.getPassenger());
+                if (rideType.equals(RideType.RequestRide)){
+                    Log.d(TAG, "Rating is:"+rating+" Given By Passenger User Id:"+mRideRequest.getPassenger().getId());
+                    USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getDriver().getId()));
+                    feedbackInfo.setGivenByUser(mRideRequest.getPassenger());
+                } else {
+                    Log.d(TAG, "Rating is:"+rating+"Given By Driver User Id:"+mRideRequest.getAcceptedRide().getDriver().getId());
+                    USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mRideRequest.getPassenger().getId()));
+                    feedbackInfo.setGivenByUser(mRideRequest.getAcceptedRide().getDriver());
+                }
                 feedbackInfo.setRating(rating);
                 feedbackInfo.setRide(mRideRequest.getAcceptedRide());
                 feedbackInfo.setRideRequest(mRideRequest);
-                RESTClient.post(mBaseFragment.getActivity(), USER_FEEDBACK, feedbackInfo, new JsonHttpResponseHandler(){
+                RESTClient.post(mBaseFragment.getActivity(), USER_FEEDBACK_URL, feedbackInfo, new JsonHttpResponseHandler(){
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

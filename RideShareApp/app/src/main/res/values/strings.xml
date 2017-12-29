@@ -75,9 +75,10 @@
     <string name="pending_bills_ride_owner_amount_label">Payable to Ride Owner</string>
     <string name="paid_bills_ride_owner_amount_label">Paid to Ride Owner</string>
     <string name="amount_hint">Amount</string>
+    <string name="min_amount_hint">Min Amount</string>
     <string name="selection_all">All</string>
     <string name="wallet_balance">Wallet Balance</string>
-    <string name="required_wallet_balance">"Required Balance "</string>
+    <string name="required_wallet_balance_label">"Required Balance for all unpaid rides "</string>
     <string name="fare_text">"Fare "</string>
 
 </resources>
