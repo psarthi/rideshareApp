@@ -19,6 +19,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.CoTravellerAdapter;
 import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideComp;
+import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.CancelCoTravellerFragment;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
@@ -30,6 +31,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -95,14 +98,12 @@ public class RideInfoFragment extends BaseFragment implements
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_info, container, false);
         mMapView = view.findViewById(R.id.ride_info_map);
-
         mCoTravellerLinearLayout = view.findViewById(R.id.ride_info_co_traveller_layout);
-        setRideInfoView(view);
 
-        for (int i=0; i<mCoTravellerLinearLayout.getChildCount();i++){
-            Log.d(TAG, "Rating is (Inside onCreateView):"+Float.toString(((RatingBar)
-                    mCoTravellerLinearLayout.getChildAt(i).findViewById(R.id.co_traveller_rating_bar)).getRating()));
-        }
+        //VERY VERY IMP - Rating bar value is getting overwritten in onResume function,
+        // so moved the setRideInfoView in onResume post calling its super.onResume method
+        // Don't move it here else rating bar would not show up the rating properly
+        //No clarity on the reason, needs to be analyzed later
 
         return view;
     }
@@ -184,10 +185,20 @@ public class RideInfoFragment extends BaseFragment implements
         super.onResume();
         getActivity().setTitle(TITLE);
         Log.d(TAG,"Inside OnResume");
+
+        //VERY VERY IMP - Rating bar value is getting overwritten when super.onResume function is called,
+        // so moved the setRideInfoView in onResume post calling its super.onResume method
+        // Don't move it to onCreate else rating bar would not show up the rating properly
+        //No clarity on the reason, needs to be analyzed later
+
+        Log.d(TAG, "Setting Ride Info View from inside onResume");
+        setRideInfoView(getView());
+
         for (int i=0; i<mCoTravellerLinearLayout.getChildCount();i++){
             Log.d(TAG, "Rating is (Inside OnResume):"+Float.toString(((RatingBar)
                     mCoTravellerLinearLayout.getChildAt(i).findViewById(R.id.co_traveller_rating_bar)).getRating()));
         }
+
         showBackStackDetails();
         showChildFragmentDetails();
     }

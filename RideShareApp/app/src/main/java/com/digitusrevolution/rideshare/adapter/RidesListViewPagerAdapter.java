@@ -1,20 +1,12 @@
 package com.digitusrevolution.rideshare.adapter;
 
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
-import android.view.ViewGroup;
 
-import com.digitusrevolution.rideshare.fragment.BaseFragment;
-import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
-import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListFragment;
-import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.model.app.RideType;
-import com.google.gson.Gson;
+import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 
 /**
  * Created by psarthi on 12/8/17.

@@ -15,7 +15,7 @@ import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
-import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.UserFeedback;
@@ -82,12 +82,13 @@ public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
                 feedbackAvailable = true;
             }
         }
-        Log.d(TAG, "Actual Rating-"+coTravellerRatingBar.getRating());
-        if (!feedbackAvailable){
-            rideRequestComp.setRatingBar(coTravellerRatingBar, RideType.OfferRide);
-        }
 
         RideComp rideComp = new RideComp(mBaseFragment, rideRequest.getAcceptedRide());
+        Log.d(TAG, "Actual Rating-"+coTravellerRatingBar.getRating());
+        if (!feedbackAvailable){
+            rideComp.setCoTravellerRatingBar(coTravellerRatingBar, rideRequest);
+        }
+
         //This will set the visibility of co traveller buttons initially
         rideComp.updateCoTravellerButtonsVisibility(convertView, rideRequest);
         //This will set the listeners on co traveller buttons
@@ -96,4 +97,5 @@ public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
         Log.d(TAG, "Final Rating before exiting-"+coTravellerRatingBar.getRating());
         return convertView;
     }
+
 }

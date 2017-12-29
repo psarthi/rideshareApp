@@ -6,10 +6,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.digitusrevolution.rideshare.fragment.RedeemFragment;
-import com.digitusrevolution.rideshare.fragment.RidesListFragment;
 import com.digitusrevolution.rideshare.fragment.TopUpFragment;
 import com.digitusrevolution.rideshare.fragment.TransactionFragment;
-import com.digitusrevolution.rideshare.model.app.RideType;
 
 /**
  * Created by psarthi on 12/8/17.

@@ -19,10 +19,9 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
-import com.digitusrevolution.rideshare.model.app.RideType;
+import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
-import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
@@ -34,7 +33,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONObject;
 
 import java.util.Calendar;
-import java.util.Currency;
 import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
@@ -298,7 +296,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 Log.d(TAG, "Navigate to Pickup Point for Id:"+mRideRequest.getId());
             }
         });
-        
+
         boolean feedbackAvailable = false;
         Log.d(TAG,"RatingBar Instance:"+mRatingBar.hashCode());
         //This will show the user given rating
@@ -311,26 +309,22 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             }
         }
         if (!feedbackAvailable){
-            setRatingBar(mRatingBar, RideType.RequestRide);   
+            setRideOwnerRatingBar(mRatingBar);
         }
 
     }
 
-    public void setRatingBar(final RatingBar userRatingBar, final RideType rideType) {
+    //Reason behind having seperate rating function for ride owner and cotraveller as we have to refresh different page on recieving response
+    public void setRideOwnerRatingBar(final RatingBar userRatingBar) {
         userRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 String USER_FEEDBACK_URL;
-                UserFeedbackInfo feedbackInfo = new UserFeedbackInfo();
-                if (rideType.equals(RideType.RequestRide)){
-                    Log.d(TAG, "Rating is:"+rating+" Given By Passenger User Id:"+mRideRequest.getPassenger().getId());
-                    USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getDriver().getId()));
-                    feedbackInfo.setGivenByUser(mRideRequest.getPassenger());
-                } else {
-                    Log.d(TAG, "Rating is:"+rating+"Given By Driver User Id:"+mRideRequest.getAcceptedRide().getDriver().getId());
-                    USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mRideRequest.getPassenger().getId()));
-                    feedbackInfo.setGivenByUser(mRideRequest.getAcceptedRide().getDriver());
-                }
+                final UserFeedbackInfo feedbackInfo = new UserFeedbackInfo();
+                Log.d(TAG, "Rating is:"+rating+" Given By Passenger User Id:"+mRideRequest.getPassenger().getId());
+                USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getDriver().getId()))
+                .replace(APIUrl.RIDE_TYPE_KEY, RideType.RequestRide.toString());
+                feedbackInfo.setGivenByUser(mRideRequest.getPassenger());
                 feedbackInfo.setRating(rating);
                 feedbackInfo.setRide(mRideRequest.getAcceptedRide());
                 feedbackInfo.setRideRequest(mRideRequest);
@@ -340,6 +334,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         userRatingBar.setEnabled(false);
+                        mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
+                        mListener.onRideRequestRefresh(mRideRequest);
                     }
 
                     @Override

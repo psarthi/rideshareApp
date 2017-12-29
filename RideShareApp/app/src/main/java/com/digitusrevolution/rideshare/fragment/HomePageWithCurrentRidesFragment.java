@@ -30,8 +30,7 @@ import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.app.FetchType;
-import com.digitusrevolution.rideshare.model.app.RideType;
-import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRidesInfo;
@@ -200,6 +199,10 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         Log.d(TAG, "Setting Home Page View");
         //This will get status based on current ride and ride request value
         mCurrentRidesStatus = getCurrentRidesStatus();
+        //This will ensure title is updated on page refresh as well, when full page is not reloaded and onResume function doesn't get called
+        //This is the scenario when you are already on the fragment and when you take some action only view gets refreshed by calling setHomePageView
+        //so no onResume and if you set title there, then title doesn't change.
+        setTitle();
 
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
             Log.d(TAG, "Setting Current Ride View");
@@ -328,7 +331,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         showChildFragmentDetails();
         //Don't set title anywhere else otherwise since this a base fragment and whenever backstack is cleared,
         //this will try to get loaded and in between if you load any other fragment then title of that page would change
-        setTitle();
     }
 
     private void setTitle(){

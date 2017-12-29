@@ -1,8 +1,6 @@
 package com.digitusrevolution.rideshare.component;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.activity.LandingPageActivity;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.dialog.CancelCoTravellerFragment;
@@ -23,26 +20,24 @@ import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.StandardAlertDialog;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
-import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
+import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
-import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
-import com.digitusrevolution.rideshare.model.ride.dto.FullRidesInfo;
+import com.digitusrevolution.rideshare.model.user.dto.UserFeedbackInfo;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -555,6 +550,40 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
     @Override
     public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, FullRideRequest rideRequest) {
         Log.d(TAG, "CoTraveller Not Cancelled");
+    }
+
+    //Reason behind having seperate rating function for ride owner and cotraveller as we have to refresh different page on recieving response
+    public void setCoTravellerRatingBar(final RatingBar userRatingBar, final FullRideRequest rideRequest) {
+        userRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                String USER_FEEDBACK_URL;
+                final UserFeedbackInfo feedbackInfo = new UserFeedbackInfo();
+                Log.d(TAG, "Rating is:"+rating+"Given By Driver User Id:"+mRide.getDriver().getId());
+                USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(rideRequest.getPassenger().getId()))
+                .replace(APIUrl.RIDE_TYPE_KEY, RideType.OfferRide.toString());
+                feedbackInfo.setGivenByUser(mRide.getDriver());
+                feedbackInfo.setRating(rating);
+                feedbackInfo.setRide(mRide);
+                feedbackInfo.setRideRequest(rideRequest);
+                RESTClient.post(mBaseFragment.getActivity(), USER_FEEDBACK_URL, feedbackInfo, new JsonHttpResponseHandler(){
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        userRatingBar.setEnabled(false);
+                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                        mListener.onRideRefresh(mRide);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                    }
+                });
+
+            }
+        });
     }
 
     public interface RideCompListener{
