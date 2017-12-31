@@ -34,6 +34,16 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void startLandingPageActivity(){
+        Intent intent = new Intent(this, LandingPageActivity.class);
+        //This will clear all activity from the stack so that when user clicks on back it will not take you to home page
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+
+    //Note - Not using commonUtil show/dismiss function from convinience perspective
+    //Let it be duplicate for the time being until we get better solution
     public void showProgressDialog(){
         mProgressDialog = ProgressDialog.show(this, "", Constant.LOADING_MSG);
     }

@@ -136,9 +136,10 @@ public class LandingPageActivity extends BaseActivity{
                                     @Override
                                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                                         super.onFailure(statusCode, headers, throwable, errorResponse);
+                                        dismissProgressDialog();
                                         ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                                         Log.d(TAG, errorMessage.getErrorMessage());
-                                        dismissProgressDialog();
+
                                     }
                                 });
                     }

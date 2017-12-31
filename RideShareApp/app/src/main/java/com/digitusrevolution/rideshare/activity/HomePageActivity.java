@@ -2,6 +2,7 @@ package com.digitusrevolution.rideshare.activity;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -37,6 +38,11 @@ import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -187,12 +193,33 @@ public class HomePageActivity extends BaseActivity
             }
             else if (id == R.id.nav_signout) {
                 Log.d(TAG, "Signout Clicked");
+                signOut();
             }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void signOut() {
+
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.server_client_id))
+                .build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this,gso);
+
+        googleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                startLandingPageActivity();
+            }
+        });
+
     }
 
     private void removeAllBackStacks() {

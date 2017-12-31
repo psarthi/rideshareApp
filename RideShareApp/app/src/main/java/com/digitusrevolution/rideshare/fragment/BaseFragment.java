@@ -75,6 +75,8 @@ public class BaseFragment extends Fragment{
         }
     }
 
+    //Note - Not using commonUtil show/dismiss function from convinience perspective
+    //Let it be duplicate for the time being until we get better solution
     public void showProgressDialog(){
         mProgressDialog = ProgressDialog.show(getActivity(), "", Constant.LOADING_MSG);
     }

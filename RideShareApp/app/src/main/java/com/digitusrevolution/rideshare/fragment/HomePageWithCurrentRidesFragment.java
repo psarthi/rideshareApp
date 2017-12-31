@@ -204,7 +204,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         //This will ensure title is updated on page refresh as well, when full page is not reloaded and onResume function doesn't get called
         //This is the scenario when you are already on the fragment and when you take some action only view gets refreshed by calling setHomePageView
         //so no onResume and if you set title there, then title doesn't change.
-        setTitle();
+        //setTitle();
 
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
             Log.d(TAG, "Setting Current Ride View");
@@ -329,6 +329,11 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         super.onResume();
         //((HomePageActivity)getActivity()).showBackButton(false);
         Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
+        //We are using this temporarily as there is an issue with setting title on page load as whenever we click any item in left nav
+        //Home page get refreshed as we are poppping all backstacks and home is the only fragment which would get reloaded
+        //so that's having issue in the title as it overwrites the title when we get the response late
+        //TODO Need to find better solution
+        getActivity().setTitle(NO_RIDE_TITLE);
         showBackStackDetails();
         showChildFragmentDetails();
         //Don't set title anywhere else otherwise since this a base fragment and whenever backstack is cleared,
