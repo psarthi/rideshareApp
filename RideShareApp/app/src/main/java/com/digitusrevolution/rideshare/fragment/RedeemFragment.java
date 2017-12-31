@@ -130,7 +130,7 @@ public class RedeemFragment extends BaseFragment {
     }
 
     private void setWalletBalance(float balance) {
-        String balanceString = mCurrencySymbol + balance;
+        String balanceString = mCurrencySymbol + mCommonUtil.getDecimalFormattedString(balance);
         mWalletBalance.setText(balanceString);
         String hint = getResources().getString(R.string.amount_hint)+" ("+mCurrencySymbol+")";
         mRedeemAmount.setHint(hint);

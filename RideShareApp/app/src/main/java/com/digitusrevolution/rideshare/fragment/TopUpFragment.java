@@ -130,7 +130,7 @@ public class TopUpFragment extends BaseFragment {
     }
 
     private void setWalletBalance(float balance) {
-        String balanceString = mCurrencySymbol + balance;
+        String balanceString = mCurrencySymbol + mCommonUtil.getDecimalFormattedString(balance);
         mWalletBalanceTextView.setText(balanceString);
         String hint = getResources().getString(R.string.amount_hint)+" ("+mCurrencySymbol+")";
         if (mRequiredBalanceVisiblity){
