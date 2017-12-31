@@ -214,9 +214,10 @@ public class CommonUtil {
 
     public Calendar getRideRequestMaxEndTime(BasicRideRequest rideRequest) {
         Calendar endTime = Calendar.getInstance();
-        endTime.setTime(rideRequest.getPickupTime());
-        endTime.add(Calendar.MINUTE, getMinsFromLocalTimeString(rideRequest.getPickupTimeVariation()));
-        endTime.add(Calendar.SECOND, rideRequest.getTravelTime());
+        //This will get the expected drop point time
+        endTime.setTime(rideRequest.getDropPoint().getDateTime());
+        //This will get time variation which includes drop time buffer e.g. 30 mins considering any delay in dropping etc.
+        endTime.add(Calendar.MINUTE, getMinsFromLocalTimeString(rideRequest.getDropPoint().getTimeVariation()));
         return endTime;
     }
 

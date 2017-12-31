@@ -228,21 +228,21 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
                 //Invisible Buttons
                 mRideRequestCancelButton.setVisibility(View.GONE);
-            }
 
-            Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mBasicRideRequest);
-            //Log.d(TAG, "Drop Time with Variation:"+maxEndTime.getTime().toString());
-            //Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
+                Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mBasicRideRequest);
+                //Log.d(TAG, "Drop Time with Variation:"+maxEndTime.getTime().toString());
+                //Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
 
-            //Exception Rules common for both cases
-            //This will make cancel invisible if current time is after pickup time + pickup variation + travel time
-            if (maxEndTime.before(Calendar.getInstance())){
-                Log.d(TAG, "Pickup time lapsed, so no cancel and Destination button for id:"+mBasicRideRequest.getId());
-                mRideRequestCancelButton.setVisibility(View.GONE);
-                mDestinationNavigationButton.setVisibility(View.GONE);
+                //Exception Rules
+                //This will make destination button invisible if current time is after drop time + drop variation which includes drop time buffer as well
+                if (maxEndTime.before(Calendar.getInstance())){
+                    Log.d(TAG, "Drop time has passed, so no Destination button for id:"+mBasicRideRequest.getId());
+                    //IMP - Disabling this so that user can cancel ride request at any point of time so that his money can be released
+                    //mRideRequestCancelButton.setVisibility(View.GONE);
+                    mDestinationNavigationButton.setVisibility(View.GONE);
+                }
             }
         }
-
         if (mBasicRideRequest.getStatus().equals(RideRequestStatus.Cancelled)){
             mBasicRideRequestButtonsLayout.setVisibility(View.GONE);
         }
@@ -356,7 +356,9 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
 
             Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mRideRequest);
-            if (maxEndTime.before(Calendar.getInstance().getTime())){
+            Log.d(TAG, "Current Time is:"+Calendar.getInstance().getTime().toString());
+            Log.d(TAG, "Max End Time is:"+maxEndTime.getTime().toString());
+            if (maxEndTime.before(Calendar.getInstance())){
                 //Visible Buttons
                 mRatingBar.setVisibility(View.VISIBLE);
 
