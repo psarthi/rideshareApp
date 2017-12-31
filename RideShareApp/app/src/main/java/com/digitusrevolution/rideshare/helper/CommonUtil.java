@@ -1,5 +1,7 @@
 package com.digitusrevolution.rideshare.helper;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -38,6 +40,7 @@ public class CommonUtil {
 
     private BaseFragment mBaseFragment;
     private BaseActivity mBaseActivity;
+    private ProgressDialog mProgressDialog;
 
     public CommonUtil(BaseFragment fragment){
         mBaseFragment = fragment;
@@ -56,6 +59,15 @@ public class CommonUtil {
         } else {
             return mBaseActivity.getSharedPreferences(mBaseActivity.getPackageName() + Constant.SHARED_PREFS_KEY_FILE, Context.MODE_PRIVATE);
         }
+    }
+
+    private Activity getActivity(){
+        if (mBaseFragment!=null){
+            return mBaseFragment.getActivity();
+        } else {
+            return mBaseActivity;
+        }
+
     }
 
     public void saveUserSignInResult(UserSignInResult userSignInResult) {
@@ -230,4 +242,13 @@ public class CommonUtil {
     public String getCurrencySymbol(Country country) {
         return Currency.getInstance(country.getCurrency().getName()).getSymbol();
     }
+
+    public void showProgressDialog(){
+        mProgressDialog = ProgressDialog.show(getActivity(), "", Constant.LOADING_MSG);
+    }
+
+    public void dismissProgressDialog(){
+        mProgressDialog.dismiss();
+    }
+
 }

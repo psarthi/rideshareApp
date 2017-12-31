@@ -120,10 +120,12 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 @Override
                 public void onClick(View v) {
                     String GET_RIDE_URL = APIUrl.GET_RIDE_URL.replace(APIUrl.ID_KEY,Integer.toString(mBasicRide.getId()));
+                    mCommonUtil.showProgressDialog();
                     RESTClient.get(GET_RIDE_URL, null, new JsonHttpResponseHandler(){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
                             FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
                             fragmentLoader.loadRideInfoFragment(response.toString());
                         }
@@ -146,10 +148,12 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     public void onPositiveStandardAlertDialog() {
                         //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
                         String CANCEL_RIDE = APIUrl.CANCEL_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mBasicRide.getId()));
+                        mCommonUtil.showProgressDialog();
                         RESTClient.get(CANCEL_RIDE, null, new JsonHttpResponseHandler(){
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
                                 Log.d(TAG, "Ride Cancelled");
                                 //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
@@ -160,6 +164,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                             @Override
                             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                                mCommonUtil.dismissProgressDialog();
                                 if (errorResponse!=null) {
                                     ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                                     Log.d(TAG, errorMessage.getErrorMessage());
@@ -188,10 +193,12 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             public void onClick(View v) {
                 //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
                 String START_RIDE = APIUrl.START_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mBasicRide.getId()));
+                mCommonUtil.showProgressDialog();
                 RESTClient.get(START_RIDE, null, new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
                         Log.d(TAG, "Ride Started");
                         //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
@@ -202,6 +209,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
+                        mCommonUtil.dismissProgressDialog();
                         if (errorResponse!=null) {
                             ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                             Log.d(TAG, errorMessage.getErrorMessage());
@@ -242,10 +250,12 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
 
             private void endRide() {
                 String END_RIDE = APIUrl.END_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mBasicRide.getId()));
+                mCommonUtil.showProgressDialog();
                 RESTClient.get(END_RIDE, null, new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
                         Log.d(TAG, "Ride Ended");
                         //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
@@ -256,6 +266,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
+                        mCommonUtil.dismissProgressDialog();
                         if (errorResponse!=null) {
                             ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                             Log.d(TAG, errorMessage.getErrorMessage());
@@ -354,11 +365,13 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 //Input is fine as Full Ride as caller set the fullride in constructor
                 String PICKUP_PASSENGER = APIUrl.PICKUP_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRide.getId()))
                         .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()));
+                mCommonUtil.showProgressDialog();
                 RESTClient.get(PICKUP_PASSENGER, null, new JsonHttpResponseHandler(){
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
                         Log.d(TAG, "CoTraveller Picked");
                         //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
@@ -369,6 +382,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
+                        mCommonUtil.dismissProgressDialog();
                         if (errorResponse!=null) {
                             ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                             Log.d(TAG, errorMessage.getErrorMessage());
@@ -473,12 +487,13 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()))
                 .replace(APIUrl.RIDE_MODE_KEY, rideMode.toString())
                 .replace(APIUrl.PAYMENT_CODE_KEY, code);
-
+        mCommonUtil.showProgressDialog();
         RESTClient.get(DROP_PASSENGER, null, new JsonHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                mCommonUtil.dismissProgressDialog();
                 Log.d(TAG, "CoTraveller Dropped");
                 //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
@@ -489,6 +504,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                mCommonUtil.dismissProgressDialog();
                 if (errorResponse!=null) {
                     ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                     Log.d(TAG, errorMessage.getErrorMessage());
@@ -517,12 +533,13 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         String CANCEL_PASSENGER = APIUrl.CANCEL_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRide.getId()))
                 .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()))
                 .replace(APIUrl.RATING_KEY, Float.toString(ratingBar.getRating()));
-
+        mCommonUtil.showProgressDialog();
         RESTClient.get(CANCEL_PASSENGER, null, new JsonHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                mCommonUtil.dismissProgressDialog();
                 Log.d(TAG, "CoTraveller Cancelled");
                 //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
@@ -533,6 +550,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                mCommonUtil.dismissProgressDialog();
                 if (errorResponse!=null) {
                     ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                     Log.d(TAG, errorMessage.getErrorMessage());
@@ -566,11 +584,13 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 feedbackInfo.setRating(rating);
                 feedbackInfo.setRide(mRide);
                 feedbackInfo.setRideRequest(rideRequest);
+                mCommonUtil.showProgressDialog();
                 RESTClient.post(mBaseFragment.getActivity(), USER_FEEDBACK_URL, feedbackInfo, new JsonHttpResponseHandler(){
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
                         userRatingBar.setEnabled(false);
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
@@ -579,6 +599,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
+                        mCommonUtil.dismissProgressDialog();
                     }
                 });
 

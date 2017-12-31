@@ -1,16 +1,19 @@
 package com.digitusrevolution.rideshare.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
@@ -84,18 +87,17 @@ public class LandingPageActivity extends BaseActivity{
     private void googleSignIn() {
         Log.d(TAG,"Google Sign In Button Clicked");
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        showProgressDialog();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
-
         }
     }
 
@@ -110,7 +112,6 @@ public class LandingPageActivity extends BaseActivity{
             CHECK_USER_EXIST_URL = CHECK_USER_EXIST_URL.replace(APIUrl.USER_EMAIL_KEY, account.getEmail());
 
             RESTClient.get(CHECK_USER_EXIST_URL,null,new JsonHttpResponseHandler(){
-
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
@@ -118,7 +119,7 @@ public class LandingPageActivity extends BaseActivity{
                     UserStatus status = new Gson().fromJson(response.toString(), UserStatus.class);
                     if (status.isUserExist()){
                         Log.d(TAG,"Redirect to Home Page as User exist");
-                        Toast.makeText(LandingPageActivity.this,"User Exist, Redirecting to Home Page",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(LandingPageActivity.this,"User Exist, Redirecting to Home Page",Toast.LENGTH_SHORT).show();
 
                         GoogleSignInInfo googleSignInInfo = new GoogleSignInInfo();
                         googleSignInInfo.setEmail(account.getEmail());
@@ -130,24 +131,28 @@ public class LandingPageActivity extends BaseActivity{
                                         UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                                         mCommonUtil.saveUserSignInResult(userSignInResult);
                                         startHomePageActivity(userSignInResult);
+                                        dismissProgressDialog();
                                     }
                                     @Override
                                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                                         super.onFailure(statusCode, headers, throwable, errorResponse);
                                         ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                                         Log.d(TAG, errorMessage.getErrorMessage());
+                                        dismissProgressDialog();
                                     }
                                 });
                     }
                     else {
                         Log.d(TAG,"User doesn't exist:" + account.getEmail());
                         mobileRegistration(account);
+                        dismissProgressDialog();
                     }
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
+                    dismissProgressDialog();
 
                     if (errorResponse!=null){
                         ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
@@ -165,6 +170,8 @@ public class LandingPageActivity extends BaseActivity{
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            dismissProgressDialog();
+            Toast.makeText(LandingPageActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
             // updateUI(null);
         }
     }

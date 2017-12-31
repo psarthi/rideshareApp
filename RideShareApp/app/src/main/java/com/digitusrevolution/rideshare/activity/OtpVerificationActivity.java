@@ -178,17 +178,18 @@ public class OtpVerificationActivity extends BaseActivity {
             String encodedQueryString = URLEncoder.encode(mUserRegistration.getMobileNumber(), "UTF-8");
             String VALIDATE_OTP_URL = APIUrl.VALIDATE_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString)
                     .replace(APIUrl.OTP_KEY,mOTPInput);
+            showProgressDialog();
             RESTClient.get(VALIDATE_OTP_URL, null, new TextHttpResponseHandler() {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    dismissProgressDialog();
                     Log.d(TAG,"Response Failed:"+responseString);
                 }
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
-
+                    dismissProgressDialog();
                     boolean OTPMatch = Boolean.parseBoolean(responseString);
-
                     Log.d(TAG,"Response Success:"+responseString);
 
                     if (OTPMatch) {
@@ -203,17 +204,19 @@ public class OtpVerificationActivity extends BaseActivity {
                 }
             });
         } catch (UnsupportedEncodingException e) {
+            dismissProgressDialog();
             //TODO This needs to be figured out how to handle this exception
             e.printStackTrace();
         }
     }
 
     private void registerUser() {
-
+        showProgressDialog();
         RESTClient.post(this,APIUrl.USER_REGISTRATION_URL,mUserRegistration,new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                dismissProgressDialog();
                 UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                 Log.d(TAG,"User has been successfully registered, Redirect to Home Page");
                 Log.d(TAG,"Access Token:"+userSignInResult.getToken());
@@ -225,6 +228,7 @@ public class OtpVerificationActivity extends BaseActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                dismissProgressDialog();
                 Log.d(TAG,"Response Failed:"+errorResponse);
             }
         });
@@ -232,14 +236,17 @@ public class OtpVerificationActivity extends BaseActivity {
 
     private void reSendOTP() {
         String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,mUserRegistration.getMobileNumber());
+        showProgressDialog();
         RESTClient.get(GET_OTP_URL, null, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                dismissProgressDialog();
                 Log.d(TAG, "Response Failure:" + responseString);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                dismissProgressDialog();
                 Log.d(TAG, "Response Success:" + responseString);
                 Toast.makeText(OtpVerificationActivity.this,"OTP:"+responseString,Toast.LENGTH_LONG).show();
             }

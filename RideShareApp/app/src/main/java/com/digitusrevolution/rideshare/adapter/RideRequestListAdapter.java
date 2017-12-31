@@ -11,6 +11,7 @@ import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
@@ -34,10 +35,12 @@ implements RideRequestComp.RideRequestCompListener{
     private static final String TAG = RideRequestListAdapter.class.getName();
     private List<BasicRideRequest> mRideRequests;
     private BaseFragment mBaseFragment;
+    private CommonUtil mCommonUtil;
 
     public RideRequestListAdapter(List<BasicRideRequest> rideRequests, BaseFragment fragment) {
         mRideRequests = rideRequests;
         mBaseFragment = fragment;
+        mCommonUtil = new CommonUtil(fragment);
     }
 
     @Override
@@ -60,11 +63,12 @@ implements RideRequestComp.RideRequestCompListener{
 
                 String rideRequestId = Integer.toString(mRideRequests.get(position).getId());
                 String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.ID_KEY,rideRequestId);
-
+                mCommonUtil.showProgressDialog();
                 RESTClient.get(GET_RIDE_REQUEST_URL, null, new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
                         FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
                         fragmentLoader.loadRideRequestInfoFragment(response.toString());
                     }

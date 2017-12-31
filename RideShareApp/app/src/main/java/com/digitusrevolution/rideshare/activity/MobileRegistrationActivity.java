@@ -1,5 +1,6 @@
 package com.digitusrevolution.rideshare.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -107,10 +108,12 @@ public class MobileRegistrationActivity extends BaseActivity {
                     //Reason for doing encoding as we have to send + sign in mobile number as query parameters and without encoding that data would interpreted differently
                     String encodedQueryString = URLEncoder.encode(mSelectedCountryCode + mMobileNumber.getText().toString(), "UTF-8");
                     String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString);
+                    showProgressDialog();
                     RESTClient.get(GET_OTP_URL, null, new TextHttpResponseHandler() {
                         @Override
                         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                             Log.d(TAG, "Response Failure:" + responseString);
+                            dismissProgressDialog();
                         }
 
                         @Override
@@ -122,6 +125,7 @@ public class MobileRegistrationActivity extends BaseActivity {
                             //Reason for storing key name as well, so that calling class don't have to know the key name
                             otpVerificationIntent.putExtra(getExtraDataKey(),data);
                             startActivity(otpVerificationIntent);
+                            dismissProgressDialog();
                         }
                     });
                 } catch (UnsupportedEncodingException e) {
@@ -144,6 +148,7 @@ public class MobileRegistrationActivity extends BaseActivity {
     }
 
     private void setCountryList(){
+        showProgressDialog();
         RESTClient.get(APIUrl.GET_COUNTRIES_URL,null,new JsonHttpResponseHandler(){
 
             //Note - Its important to use proper OnSuccess method with JsonArray instead of JsonObject as we are expecting JsonArray from the response
@@ -169,12 +174,14 @@ public class MobileRegistrationActivity extends BaseActivity {
                 //If you are using plain String in ArrayAdapter then no need to write custom adapter and below set function would do the job
                 countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 */
+                dismissProgressDialog();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 Log.d(TAG,"Response Failed:"+errorResponse);
+                dismissProgressDialog();
             }
         });
     }

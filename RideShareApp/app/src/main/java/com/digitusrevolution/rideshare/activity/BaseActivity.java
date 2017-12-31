@@ -1,5 +1,6 @@
 package com.digitusrevolution.rideshare.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 public class BaseActivity extends AppCompatActivity {
 
     private static final String TAG = BaseActivity.class.getName();
+    private ProgressDialog mProgressDialog;
 
     public String getExtraDataKey(){
         //Reason for appending packageName as per recommendation on android docs so that
@@ -32,4 +34,11 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void showProgressDialog(){
+        mProgressDialog = ProgressDialog.show(this, "", Constant.LOADING_MSG);
+    }
+
+    public void dismissProgressDialog(){
+        mProgressDialog.dismiss();
+    }
 }

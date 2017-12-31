@@ -356,10 +356,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         Log.d(TAG, "User is a driver, so create ride directly");
                         if (validateInput()){
                             setRideOffer();
+                            showProgressDialog();
                             RESTClient.post(getActivity(), APIUrl.OFFER_RIDE_URL, mRideOfferInfo, new JsonHttpResponseHandler(){
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     super.onSuccess(statusCode, headers, response);
+                                    dismissProgressDialog();
                                     RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
                                     Log.d(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
                                     if (rideOfferResult.isCurrentRide()) {
@@ -384,6 +386,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                 @Override
                                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                                     super.onFailure(statusCode, headers, throwable, errorResponse);
+                                    dismissProgressDialog();
                                 }
                             });
                         }
@@ -392,10 +395,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     if (validateInput()){
                         setRideRequest();
                         if (mRideRequest.getRideMode().equals(RideMode.Paid)){
+                            showProgressDialog();
                             RESTClient.post(getActivity(), APIUrl.GET_PENDING_BILLS, mUser, new JsonHttpResponseHandler(){
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                                     super.onSuccess(statusCode, headers, response);
+                                    dismissProgressDialog();
                                     Type listType = new TypeToken<ArrayList<Bill>>(){}.getType();
                                     ArrayList<Bill> pendingBills = new Gson().fromJson(response.toString(), listType);
 
@@ -422,6 +427,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                 @Override
                                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                                     super.onFailure(statusCode, headers, throwable, errorResponse);
+                                    dismissProgressDialog();
                                     //TODO Implement exception handling
                                 }
                             });
@@ -437,10 +443,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     }
 
     private void createRideRequest(){
+        showProgressDialog();
         RESTClient.post(getActivity(), APIUrl.REQUEST_RIDE_URL, mRideRequest, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                dismissProgressDialog();
                 RideRequestResult rideRequestResult = new Gson().fromJson(response.toString(), RideRequestResult.class);
                 Log.d(TAG, "Ride Request Successfully created with id:"+rideRequestResult.getRideRequest().getId());
                 if (rideRequestResult.isCurrentRideRequest()) {
@@ -465,6 +473,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                dismissProgressDialog();
                 //TODO Implement exception handling
             }
         });
@@ -723,11 +732,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 .replace(APIUrl.destinationLng_KEY, Double.toString(mToLatLng.longitude))
                 .replace(APIUrl.departureEpochSecond_KEY, Long.toString(mStartTimeCalendar.getTimeInMillis()))
                 .replace(APIUrl.GOOGLE_API_KEY, getResources().getString(R.string.GOOGLE_API_KEY));
-
+        showProgressDialog();
         RESTClient.get(GET_GOOGLE_DIRECTION_URL, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                dismissProgressDialog();
                 Log.d(TAG, "Google Direction Success Response:" + response);
                 mGoogleDirection = new Gson().fromJson(response.toString(), GoogleDirection.class);
                 //Draw Route
@@ -744,6 +754,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                dismissProgressDialog();
                 Log.d(TAG, "Failed Response:" + errorResponse);
                 //TODO Handle the response properly
             }
@@ -761,11 +772,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 .replace(APIUrl.destinationLat_KEY, Double.toString(mToLatLng.latitude))
                 .replace(APIUrl.destinationLng_KEY, Double.toString(mToLatLng.longitude))
                 .replace(APIUrl.GOOGLE_API_KEY, getResources().getString(R.string.GOOGLE_API_KEY));
-
+        showProgressDialog();
         RESTClient.get(GET_GOOGLE_DISTANCE_URL, null, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                dismissProgressDialog();
                 Log.d(TAG, "Google Distance Success Response:" + response);
                 mGoogleDistance = new Gson().fromJson(response.toString(), GoogleDistance.class);
                 if (mGoogleDistance.getStatus().equals("OK") && mGoogleDistance.getRows().get(0).getElements().get(0).getStatus().equals("OK")){
@@ -780,6 +792,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                dismissProgressDialog();
                 Log.d(TAG, "Failed Response:" + errorResponse);
                 //TODO Handle the response properly
             }

@@ -1,5 +1,6 @@
 package com.digitusrevolution.rideshare.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import com.digitusrevolution.rideshare.config.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.List;
 public class BaseFragment extends Fragment{
 
     public static final String TAG = BaseFragment.class.getName();
+    private ProgressDialog mProgressDialog;
 
     public void showBackStackDetails(){
 
@@ -69,6 +73,14 @@ public class BaseFragment extends Fragment{
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public void showProgressDialog(){
+        mProgressDialog = ProgressDialog.show(getActivity(), "", Constant.LOADING_MSG);
+    }
+
+    public void dismissProgressDialog(){
+        mProgressDialog.dismiss();
     }
 
 

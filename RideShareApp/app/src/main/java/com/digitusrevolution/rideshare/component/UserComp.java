@@ -74,11 +74,13 @@ public class UserComp {
                 @Override
                 public void onClick(View v) {
                     String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.USER_ID_KEY, Integer.toString(user.getId()));
+                    mCommonUtil.showProgressDialog();
                     RESTClient.post(mBaseFragment.getActivity(), GET_USER_PROFILE, mUser, new JsonHttpResponseHandler() {
 
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
                             FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
                             fragmentLoader.loadUserProfileFragment(response.toString(), null);
 

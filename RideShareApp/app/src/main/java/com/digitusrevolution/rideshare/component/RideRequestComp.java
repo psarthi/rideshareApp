@@ -115,11 +115,12 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 public void onClick(View v) {
 
                     String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.ID_KEY, Integer.toString(mBasicRideRequest.getId()));
-
+                    mCommonUtil.showProgressDialog();
                     RESTClient.get(GET_RIDE_REQUEST_URL, null, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
                             FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
                             fragmentLoader.loadRideRequestInfoFragment(response.toString());
                         }
@@ -157,10 +158,12 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                     @Override
                     public void onPositiveStandardAlertDialog() {
                         String CANCEL_RIDE_REQUEST = APIUrl.CANCEL_RIDE_REQUEST.replace(APIUrl.ID_KEY, Integer.toString(mBasicRideRequest.getId()));
+                        mCommonUtil.showProgressDialog();
                         RESTClient.get(CANCEL_RIDE_REQUEST, null, new JsonHttpResponseHandler(){
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
                                 Log.d(TAG, "Ride Request Cancelled");
                                 mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
                                 mListener.onRideRequestRefresh(mRideRequest);
@@ -170,6 +173,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                             @Override
                             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                                mCommonUtil.dismissProgressDialog();
                                 if (errorResponse!=null) {
                                     ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                                     Log.d(TAG, errorMessage.getErrorMessage());
@@ -328,11 +332,13 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 feedbackInfo.setRating(rating);
                 feedbackInfo.setRide(mRideRequest.getAcceptedRide());
                 feedbackInfo.setRideRequest(mRideRequest);
+                mCommonUtil.showProgressDialog();
                 RESTClient.post(mBaseFragment.getActivity(), USER_FEEDBACK_URL, feedbackInfo, new JsonHttpResponseHandler(){
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
                         userRatingBar.setEnabled(false);
                         mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
                         mListener.onRideRequestRefresh(mRideRequest);
@@ -341,6 +347,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
+                        mCommonUtil.dismissProgressDialog();
                     }
                 });
 
@@ -427,12 +434,13 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         String CANCEL_DRIVER = APIUrl.CANCEL_DRIVER.replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()))
                 .replace(APIUrl.RIDE_ID_KEY, Integer.toString(rideRequest.getAcceptedRide().getId()))
                 .replace(APIUrl.RATING_KEY, Float.toString(ratingBar.getRating()));
-
+        mCommonUtil.showProgressDialog();
         RESTClient.get(CANCEL_DRIVER, null, new JsonHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                mCommonUtil.dismissProgressDialog();
                 Log.d(TAG, "Ride Owner Cancelled");
                 mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
                 mListener.onRideRequestRefresh(mRideRequest);
@@ -442,6 +450,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                mCommonUtil.dismissProgressDialog();
                 if (errorResponse!=null) {
                     ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                     Log.d(TAG, errorMessage.getErrorMessage());

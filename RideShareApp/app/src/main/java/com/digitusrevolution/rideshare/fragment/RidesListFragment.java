@@ -136,10 +136,12 @@ public class RidesListFragment extends BaseFragment{
             String GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
                     .replace(APIUrl.PAGE_KEY, Integer.toString(0));
 
+            showProgressDialog();
             RESTClient.get(GET_USER_RIDES_URL, null, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
+                    dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<BasicRide>>(){}.getType();
                     mRides = new Gson().fromJson(response.toString(), listType);
                     mInitialDataLoaded = true;
@@ -151,11 +153,12 @@ public class RidesListFragment extends BaseFragment{
             //Initial Data loading
             String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
                     .replace(APIUrl.PAGE_KEY, Integer.toString(0));
-
+            showProgressDialog();
             RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
+                    dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<BasicRideRequest>>(){}.getType();
                     mRideRequests = new Gson().fromJson(response.toString(), listType);
                     mInitialDataLoaded = true;
@@ -191,12 +194,12 @@ public class RidesListFragment extends BaseFragment{
         if (mRideType.equals(RideType.OfferRide)){
             String GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
                     .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
-
+            showProgressDialog();
             RESTClient.get(GET_USER_RIDES_URL, null, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
-
+                    dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
                     List<FullRide> newRides = new Gson().fromJson(response.toString(), listType);
                     //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
@@ -208,11 +211,12 @@ public class RidesListFragment extends BaseFragment{
         } else {
             String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
                     .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
-
+            showProgressDialog();
             RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
+                    dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
                     List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
                     mRideRequests.addAll(rideRequests);

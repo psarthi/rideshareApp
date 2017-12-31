@@ -114,11 +114,12 @@ public class RedeemFragment extends BaseFragment {
                 String redeemAmount = ((TextView) view.findViewById(R.id.redeem_amount)).getText().toString();
                 String REDEEM_MONEY = APIUrl.REDEEM_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY,Integer.toString(mAccount.getNumber()))
                         .replace(APIUrl.AMOUNT_KEY, redeemAmount);
-
+                showProgressDialog();
                 RESTClient.get(REDEEM_MONEY, null, new JsonHttpResponseHandler(){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
+                        dismissProgressDialog();
                         mAccount = new Gson().fromJson(response.toString(), Account.class);
                         mCommonUtil.updateAccount(mAccount);
                         //This will refresh the wallet balance

@@ -133,10 +133,12 @@ public class TransactionFragment extends BaseFragment {
 
         String GET_USER_WALLET_TRANSACTION = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
                 .replace(APIUrl.PAGE_KEY, Integer.toString(0));
+        //showProgressDialog();
         RESTClient.get(GET_USER_WALLET_TRANSACTION, null, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
+                //dismissProgressDialog();
                 Type listType = new TypeToken<ArrayList<Transaction>>(){}.getType();
                 mTransactions = new Gson().fromJson(response.toString(), listType);
                 setAdapter();
@@ -163,10 +165,12 @@ public class TransactionFragment extends BaseFragment {
 
         String GET_USER_WALLET_TRANSACTION = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
                 .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+        //showProgressDialog();
         RESTClient.get(GET_USER_WALLET_TRANSACTION, null, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
+                //dismissProgressDialog();
                 Type listType = new TypeToken<ArrayList<Transaction>>(){}.getType();
                 List<Transaction> transactions = new Gson().fromJson(response.toString(), listType);
                 mTransactions.addAll(transactions);

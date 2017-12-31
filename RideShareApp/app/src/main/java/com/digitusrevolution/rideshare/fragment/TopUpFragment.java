@@ -149,14 +149,16 @@ public class TopUpFragment extends BaseFragment {
                 String topUpAmountString = ((TextView) view.findViewById(R.id.topup_amount)).getText().toString();
                 int topUpAmount = Integer.parseInt(topUpAmountString);
                 if (topUpAmount < mMinTopUpAmount) {
-                    Toast.makeText(getActivity(), "Min. Top up amount is " + mCurrencySymbol + mMinTopUpAmount, Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity(), "Min. Top up amount is " + mCurrencySymbol + mMinTopUpAmount, Toast.LENGTH_LONG).show();
                 } else {
                     String ADD_MONEY = APIUrl.ADD_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
                             .replace(APIUrl.AMOUNT_KEY, topUpAmountString);
+                    showProgressDialog();
                     RESTClient.get(ADD_MONEY, null, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
+                            dismissProgressDialog();
                             mAccount = new Gson().fromJson(response.toString(), Account.class);
                             mCommonUtil.updateAccount(mAccount);
                             //This will refresh the wallet balance

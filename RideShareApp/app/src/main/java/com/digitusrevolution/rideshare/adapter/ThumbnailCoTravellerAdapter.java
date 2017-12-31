@@ -40,6 +40,7 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
     private List<FullRideRequest> mRideRequests;
     private BaseFragment mBaseFragment;
     private BasicUser mUser;
+    private CommonUtil mCommonUtil;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextView;
@@ -55,8 +56,8 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
     public ThumbnailCoTravellerAdapter(BaseFragment fragment, List<FullRideRequest> rideRequests) {
         mRideRequests = rideRequests;
         mBaseFragment = fragment;
-        CommonUtil commonUtil = new CommonUtil(fragment);
-        mUser = commonUtil.getUser();
+        mCommonUtil = new CommonUtil(fragment);
+        mUser = mCommonUtil.getUser();
 
     }
 
@@ -80,11 +81,13 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
             public void onClick(View v) {
 
                 String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.USER_ID_KEY, Integer.toString(rideRequest.getPassenger().getId()));
+                mCommonUtil.showProgressDialog();
                 RESTClient.post(mBaseFragment.getActivity(), GET_USER_PROFILE, mUser, new JsonHttpResponseHandler(){
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
                         FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
                         fragmentLoader.loadUserProfileFragment(response.toString(), null);
 

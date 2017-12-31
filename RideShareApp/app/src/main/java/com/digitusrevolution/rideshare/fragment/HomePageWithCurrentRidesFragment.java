@@ -181,10 +181,12 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     public void fetchRidesFromServer(final View view) {
         String GET_USER_CURRENT_RIDES = APIUrl.GET_USER_CURRENT_RIDES.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+        showProgressDialog();
         RESTClient.get(GET_USER_CURRENT_RIDES, null, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                dismissProgressDialog();
                 FullRidesInfo fullRidesInfo = new Gson().fromJson(response.toString(), FullRidesInfo.class);
                 mCurrentRide = fullRidesInfo.getRide();
                 mCurrentRideRequest = fullRidesInfo.getRideRequest();

@@ -81,8 +81,9 @@
               android:layout_height="wrap_content"
               android:text="@string/fare_text"
               android:gravity="center"
-              android:background="@color/colorPrimaryLight_shade1"
-              android:textColor="@android:color/black"
+              android:background="@color/colorPrimaryLight_shade2"
+              android:textColor="@android:color/white"
+              android:textStyle="bold"
               android:padding="@dimen/default_padding"
               android:layout_above="@id/create_rides_bottom_layout"/>
 
