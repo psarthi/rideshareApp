@@ -810,7 +810,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             }
         }
         float maxFare = travelDistance * farePerMeter * mRideRequest.getSeatRequired();
-        if (travelDistance >= Constant.LONG_DISTANCE){
+        if (travelDistance >= Constant.LONG_DISTANCE_IN_METERS){
             // IMP - If we don't share the fuel cost, then travel cost would be much higher than public transports
             // We need to offer 50% discount on long distance fare
             maxFare = maxFare / 2;

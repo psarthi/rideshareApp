@@ -40,6 +40,6 @@ public class Constant {
     public static final int MAX_LUGGAGE = 6;
     public static final int MIN_TOPUP_AMOUNT = 1;
     public static final int MAX_TOPUP_AMOUNT = 1000;
-    public static final int LONG_DISTANCE=100;
+    public static final int LONG_DISTANCE_IN_METERS=100000;
 
 }
