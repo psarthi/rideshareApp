@@ -3,12 +3,15 @@ package com.digitusrevolution.rideshare.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.MobileRegistrationActivity;
 import com.digitusrevolution.rideshare.model.user.domain.Country;
 
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.List;
 
 public class CustomCountryAdapter extends ArrayAdapter<Country>{
 
+    private static final String TAG = CustomCountryAdapter.class.getName();
     private List<Country> mCountries;
     private Context mContext;
 
@@ -36,6 +40,7 @@ public class CustomCountryAdapter extends ArrayAdapter<Country>{
 
     @Override
     public int getCount() {
+        Log.d(TAG, "Country Count:"+mCountries.size());
         return mCountries.size();
     }
 
@@ -55,9 +60,12 @@ public class CustomCountryAdapter extends ArrayAdapter<Country>{
         if (convertView == null){
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(android.R.layout.simple_spinner_item, parent, false);
+            //Don't use simple_spinner_item as it inherits text color etc property from somewhere
+            //which makes some times text as white color, so use our own spinner layout so that
+            //we are sure we have text color as black
+            convertView = inflater.inflate(R.layout.spinner_item, parent, false);
             //text1 is the id of the TextView configured in spinner_item
-            viewHolder.countryTextView = (TextView) convertView.findViewById(android.R.id.text1);
+            viewHolder.countryTextView = convertView.findViewById(android.R.id.text1);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -65,7 +73,9 @@ public class CustomCountryAdapter extends ArrayAdapter<Country>{
 
         // Reason for adding "+" in the code as while sending the GET request for getting OTP with +91,
         // somehow + gets omitted, so we are storing the data without + and while sending OTP we can drawable.add + from backend
-        viewHolder.countryTextView.setText(country.getName() +" (" + country.getCode() +")");
+        String countryNameWithCode = country.getName() +" (" + country.getCode() +")";
+        Log.d(TAG, "Country Name with Code:"+countryNameWithCode);
+        viewHolder.countryTextView.setText(countryNameWithCode);
         return convertView;
     }
 
@@ -74,7 +84,9 @@ public class CustomCountryAdapter extends ArrayAdapter<Country>{
     //Then adapter would use Object.toString method to get the view on dropdown. So its mandatory to override this whenever you have custom object which is not String
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        return getView(position,convertView,parent);
+        convertView = getView(position,convertView,parent);
+        Log.d(TAG, "Get Drop Down view:"+((ViewHolder)convertView.getTag()).countryTextView.getText().toString());
+        return convertView;
     }
 
 }

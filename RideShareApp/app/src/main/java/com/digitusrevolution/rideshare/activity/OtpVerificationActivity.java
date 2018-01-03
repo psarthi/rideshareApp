@@ -91,6 +91,12 @@ public class OtpVerificationActivity extends BaseActivity {
             }
         });
 
+        findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
     }
 
     private void addTextChangedListenerOnOTPTextField() {
@@ -235,23 +241,28 @@ public class OtpVerificationActivity extends BaseActivity {
     }
 
     private void reSendOTP() {
-        String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,mUserRegistration.getMobileNumber());
-        showProgressDialog();
-        RESTClient.get(GET_OTP_URL, null, new TextHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                dismissProgressDialog();
-                Log.d(TAG, "Response Failure:" + responseString);
-            }
+        try {
+            String encodedQueryString = URLEncoder.encode(mUserRegistration.getMobileNumber(), "UTF-8");
+            String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString);
+            showProgressDialog();
+            RESTClient.get(GET_OTP_URL, null, new TextHttpResponseHandler() {
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    dismissProgressDialog();
+                    Log.d(TAG, "Response Failure:" + responseString);
+                }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                dismissProgressDialog();
-                Log.d(TAG, "Response Success:" + responseString);
-                Toast.makeText(OtpVerificationActivity.this,"OTP:"+responseString,Toast.LENGTH_LONG).show();
-            }
-        });
-
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    dismissProgressDialog();
+                    Log.d(TAG, "Response Success:" + responseString);
+                    Toast.makeText(OtpVerificationActivity.this,"OTP:"+responseString,Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), R.string.system_exception_msg, Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

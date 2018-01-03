@@ -24,6 +24,7 @@
     <dimen name="user_mobile_registration_photo_size">50dp</dimen>
     <dimen name="date_time_text_size">12sp</dimen>
     <dimen name="standard_text_size">14sp</dimen>
+    <dimen name="medium_text_size">16sp</dimen>
     <dimen name="large_text_size">20sp</dimen>
     <dimen name="medium_block_height">150dp</dimen>
     <dimen name="lite_map_fragment_height">140dp</dimen>

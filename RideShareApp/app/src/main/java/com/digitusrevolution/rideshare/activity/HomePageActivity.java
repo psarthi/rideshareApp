@@ -202,26 +202,6 @@ public class HomePageActivity extends BaseActivity
         return true;
     }
 
-    private void signOut() {
-
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.server_client_id))
-                .build();
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this,gso);
-
-        googleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                startLandingPageActivity();
-            }
-        });
-
-    }
-
     private void removeAllBackStacks() {
         //This will remove all the fragment from backstack and would start from clean slate
         //So that we don't have too many backstacks items when user clicks on navigation items from anywhere

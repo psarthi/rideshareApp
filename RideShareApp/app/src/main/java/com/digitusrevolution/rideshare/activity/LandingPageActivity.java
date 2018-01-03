@@ -31,6 +31,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -40,6 +41,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpStatus;
 
 public class LandingPageActivity extends BaseActivity{
 
@@ -154,17 +156,11 @@ public class LandingPageActivity extends BaseActivity{
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
                     dismissProgressDialog();
-
-                    if (errorResponse!=null){
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
-                        Toast.makeText(LandingPageActivity.this, errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                    } else {
-                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                        Toast.makeText(LandingPageActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                    }
+                    //This will take care of all type of exception as we can't handle any exception here, so showing generic error
+                    //in most likely chances this would Internal Server error or Time Out etc.
+                    Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
+                    Toast.makeText(LandingPageActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
                 }
-
             });
 
         } catch (ApiException e) {

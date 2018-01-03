@@ -67,12 +67,18 @@ public class MobileRegistrationActivity extends BaseActivity {
         mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
         Log.d(TAG,"Photo URL:"+mUserRegistration.getPhoto().getImageLocation());
         displayProfilePhoto();
-        setCountryList();
 
         mSendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendOTP();
+            }
+        });
+
+        findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
             }
         });
 
@@ -93,6 +99,12 @@ public class MobileRegistrationActivity extends BaseActivity {
             }
         });
         */
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setCountryList();
     }
 
     private void sendOTP(){

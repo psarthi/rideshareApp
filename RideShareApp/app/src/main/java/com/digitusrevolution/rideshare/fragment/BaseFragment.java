@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.Constant;
 
 import java.util.ArrayList;
@@ -49,11 +50,17 @@ public class BaseFragment extends Fragment{
 
     public void populateSpinner(ArrayList<String> arrayList, Spinner spinner){
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item,arrayList);
+        //Don't use simple_spinner_item as it inherits text color etc property from somewhere
+        //which makes some times text as white color, so use our own spinner layout so that
+        //we are sure we have text color as black
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),R.layout.spinner_item,arrayList);
         // Specify the layout to use when the list of choices appears
         // Don't setDropDownView here and instead overwrite getDropDownView since we are using Object instead of String.
         //If you are using plan String in ArrayAdapter then no need to write custom adapter and below set function would do the job
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Don't use simple_dropdown_spinner_item as it inherits text color etc property from somewhere
+        //which makes some times text as white color, so use our own spinner layout so that
+        //we are sure we have text color as black
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(arrayAdapter);
 
     }

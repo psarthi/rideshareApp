@@ -10,7 +10,7 @@
     <string name="title_activity_mobile_registration">MobileRegistrationActivity</string>
     <string name="mobile_registration_heading">Mobile Registration</string>
     <string name="mobile_registration_sub_heading">Please enter your mobile number.</string>
-    <string name="send_verification_code">Send Verification Code</string>
+    <string name="send_verification_code">Send Code</string>
     <string name="default_country_code">+91</string>
     <string name="verification_code_message">"Please type the verification code sent to "</string>
     <string name="verification_code_heading">Verification Code</string>
