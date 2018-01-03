@@ -51,9 +51,9 @@ public class FragmentLoader {
         }
     }
 
-    public void loadRidesOptionFragment(RideType rideType, String data) {
+    public void loadRidesOptionFragment(RideType rideType, String data, int travelDistance) {
         RidesOptionFragment ridesOptionFragment = RidesOptionFragment.
-                newInstance(rideType,data);
+                newInstance(rideType,data, travelDistance);
         getFragmentManager().beginTransaction()
                 .replace(R.id.home_page_container, ridesOptionFragment, RidesOptionFragment.TAG)
                 .addToBackStack(RidesOptionFragment.TAG)

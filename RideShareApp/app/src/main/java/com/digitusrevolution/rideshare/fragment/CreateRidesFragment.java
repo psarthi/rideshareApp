@@ -152,6 +152,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private TextView mFareTextView;
     private boolean mLocationChanged;
     private float mMaxFare;
+    private int mTravelDistance;
 
     public CreateRidesFragment() {
         Log.d(TAG, "CreateRidesFragment() Called");
@@ -336,7 +337,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         view.findViewById(R.id.create_rides_option_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentLoader.loadRidesOptionFragment(mRideType, ridesOption);
+                mFragmentLoader.loadRidesOptionFragment(mRideType, ridesOption, mTravelDistance);
             }
         });
 
@@ -353,7 +354,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         }
                     }
                     if (!driverStatus){
-                        mFragmentLoader.loadRidesOptionFragment(mRideType, ridesOption);
+                        mFragmentLoader.loadRidesOptionFragment(mRideType, ridesOption, mTravelDistance);
                     } else {
                         Log.d(TAG, "User is a driver, so create ride directly");
                         if (validateInput()){
@@ -788,6 +789,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     mMap.addPolyline(new PolylineOptions().addAll(latLngs));
                     //Move Camera to cover all markers on Map
                     moveCamera();
+                    mTravelDistance = mGoogleDirection.getRoutes().get(0).getLegs().get(0).getDistance().getValue();
                 } else {
                     Toast.makeText(getActivity(),"No valid route found, please enter alternate location",Toast.LENGTH_LONG).show();
                 }
@@ -866,7 +868,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     private float getFare() {
         Element element = mGoogleDistance.getRows().get(0).getElements().get(0);
-        int travelDistance = element.getDistance().getValue();
+        mTravelDistance = element.getDistance().getValue();
         FuelType fuelType = mRideRequest.getVehicleSubCategory().getFuelType();
         int averageMileage = mRideRequest.getVehicleSubCategory().getAverageMileage();
         Collection<Fuel> fuels = mUser.getCountry().getFuels();
@@ -878,8 +880,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 break;
             }
         }
-        float maxFare = travelDistance * farePerMeter * mRideRequest.getSeatRequired();
-        if (travelDistance >= Constant.LONG_DISTANCE_IN_METERS){
+        float maxFare = mTravelDistance * farePerMeter * mRideRequest.getSeatRequired();
+        if (mTravelDistance >= Constant.LONG_DISTANCE_IN_METERS){
             // IMP - If we don't share the fuel cost, then travel cost would be much higher than public transports
             // We need to offer 50% discount on long distance fare
             maxFare = maxFare / 2;

@@ -22,6 +22,7 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
@@ -149,14 +150,14 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     private void setExtraOfBasicLayout(View layout) {
         String paymentCode = mRideRequest.getConfirmationCode();
         //IMP - This will work fine when getting called from Ride Request Info with Full Ride Request
-        if (mRideRequest.getAcceptedRide()!=null){
+        if (mRideRequest.getAcceptedRide()!=null && mRideRequest.getRideMode().equals(RideMode.Paid)){
             Log.d(TAG, "Accepted Ride Request for Id:"+mRideRequest.getId()+" is :"+mRideRequest.getAcceptedRide().getId());
             //Reason behind making it visible so that its visible on refresh
             layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.VISIBLE);
             String paymentLabel = mBaseFragment.getString(R.string.ride_request_payment_code_text);
             ((TextView) layout.findViewById(R.id.ride_request_confirmation_code_text)).setText(paymentLabel+paymentCode);
         }else {
-            Log.d(TAG, "No Accepted Ride for Id:"+mBasicRideRequest.getId());
+            Log.d(TAG, "No Accepted Ride for Id or Its a Free Ride:"+mBasicRideRequest.getId());
             layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.GONE);
         }
     }

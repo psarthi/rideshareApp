@@ -54,10 +54,12 @@ public class RidesOptionFragment extends BaseFragment
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_RIDE_TYPE = "rideType";
     private static final String ARG_RIDES_OPTION = "ridesOption";
+    private static final String ARG_TRAVEL_DIST = "travelDistance";
 
     // TODO: Rename and change types of parameters
     private RideType mRideType;
     private String mRidesOptionData;
+    private int mTravelDistance;
 
     private OnFragmentInteractionListener mListener;
     private BasicUser mUser;
@@ -92,11 +94,12 @@ public class RidesOptionFragment extends BaseFragment
      * @param ridesOption  Data in Json format
      * @return A new instance of fragment RidesOptionFragment.
      */
-    public static RidesOptionFragment newInstance(RideType rideType, String ridesOption) {
+    public static RidesOptionFragment newInstance(RideType rideType, String ridesOption, int travelDistance) {
         RidesOptionFragment fragment = new RidesOptionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_RIDE_TYPE, rideType.toString());
         args.putString(ARG_RIDES_OPTION, ridesOption);
+        args.putInt(ARG_TRAVEL_DIST, travelDistance);
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,6 +110,7 @@ public class RidesOptionFragment extends BaseFragment
         if (getArguments() != null) {
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
             mRidesOptionData = getArguments().getString(ARG_RIDES_OPTION);
+            mTravelDistance = getArguments().getInt(ARG_TRAVEL_DIST);
         }
         mCommonUtil = new CommonUtil(this);
         mFragmentLoader = new FragmentLoader(this);
@@ -228,16 +232,33 @@ public class RidesOptionFragment extends BaseFragment
         if (mRideType.equals(RideType.RequestRide)){
             //IMP - Note the sequence of setMax and Progress. First you should set the value of Max and then progress,
             //otherwise progress value gets changed if the sequence is not correct
-            mPickupPointVariationSeekBar.setMax(Constant.PICKUP_POINT_DISTANCE_MAX_VALUE);
+            int multiplier = mTravelDistance / Constant.TRAVEL_DISTANCE_BLOCK;
+            int pickupVariationMax;
+            int dropVaritaionMax;
+            int timeVariationMax;
+
+            //This will take care of changing the max value of seekbar depending on the travel distance
+            //Note - We are not changing the default values
+            if (multiplier <=1){
+                pickupVariationMax = Constant.PICKUP_POINT_DISTANCE_MAX_VALUE;
+                dropVaritaionMax = Constant.DROP_POINT_DISTANCE_MAX_VALUE;
+                timeVariationMax = Constant.PICKUP_TIME_MAX_VALUE;
+            } else {
+                pickupVariationMax = Constant.PICKUP_POINT_DISTANCE_MAX_VALUE * multiplier;
+                dropVaritaionMax = Constant.DROP_POINT_DISTANCE_MAX_VALUE * multiplier;
+                timeVariationMax = Constant.PICKUP_TIME_MAX_VALUE * 2;
+            }
+
+            mPickupPointVariationSeekBar.setMax(pickupVariationMax);
             mPickupPointVariationSeekBar.setProgress(mRidesOption.getPickupPointVariation());
 
-            mDropPointVariationSeekBar.setMax(Constant.DROP_POINT_DISTANCE_MAX_VALUE);
+            mDropPointVariationSeekBar.setMax(dropVaritaionMax);
             mDropPointVariationSeekBar.setProgress(mRidesOption.getDropPointVariation());
 
             //This will get minute value from LocalTime of 00:30 format
             int pickupTimeVariation = mCommonUtil.getMinsFromLocalTimeString(mRidesOption.getPickupTimeVariation());
 
-            mPickupTimeVariationSeekBar.setMax(Constant.PICKUP_TIME_MAX_VALUE);
+            mPickupTimeVariationSeekBar.setMax(timeVariationMax);
             mPickupTimeVariationSeekBar.setProgress(pickupTimeVariation);
 
             Log.d(TAG, "Pickup Time Seekbar value - Current, Max:"+mPickupTimeVariationSeekBar.getProgress() +","+mPickupTimeVariationSeekBar.getMax());
