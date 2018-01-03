@@ -1,5 +1,7 @@
 package com.digitusrevolution.rideshare.component;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,6 +17,7 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
+import com.digitusrevolution.rideshare.model.ride.domain.Point;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
@@ -200,5 +203,19 @@ public class CommonComp {
     public interface onSeatLuggageSelectionListener{
         public void onSeatSelection(int seatCount);
         public void onLuggageSelection(int luggageCount);
+    }
+
+    public void googleNavigation(Point destination) {
+
+        String locationString = "";
+        locationString += Double.toString(destination.getLatitude()) + ",";
+        locationString += Double.toString(destination.getLongitude());
+
+        Log.d(TAG, "Location String:" + locationString);
+
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+locationString);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        mBaseFragment.startActivity(mapIntent);
     }
 }

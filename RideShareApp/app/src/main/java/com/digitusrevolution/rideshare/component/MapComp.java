@@ -1,5 +1,7 @@
 package com.digitusrevolution.rideshare.component;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 
 import com.digitusrevolution.rideshare.config.Constant;
@@ -167,7 +169,6 @@ public class MapComp{
                 SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 45.0);
         return new LatLngBounds(southwestCorner, northeastCorner);
     }
-
 }
 
 

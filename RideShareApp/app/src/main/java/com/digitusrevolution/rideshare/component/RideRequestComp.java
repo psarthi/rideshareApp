@@ -214,6 +214,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Navigate to Destination for Id:"+mBasicRideRequest.getId());
+                CommonComp commonComp = new CommonComp(mBaseFragment);
+                commonComp.googleNavigation(mRideRequest.getDropPoint().getPoint());
             }
         });
     }
@@ -314,6 +316,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Navigate to Pickup Point for Id:"+mRideRequest.getId());
+                CommonComp commonComp = new CommonComp(mBaseFragment);
+                commonComp.googleNavigation(mRideRequest.getRidePickupPoint().getPoint());
             }
         });
 
@@ -499,7 +503,6 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     public interface RideRequestCompListener{
         public void onRideRequestRefresh(FullRideRequest rideRequest);
     }
-
 }
 
 
