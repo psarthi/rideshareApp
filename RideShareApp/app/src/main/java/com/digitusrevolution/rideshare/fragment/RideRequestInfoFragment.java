@@ -21,6 +21,7 @@ import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 /**
@@ -48,6 +49,9 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     private MapComp mMapComp;
     private View mMapView;
     private boolean mMapLoaded;
+    private boolean mMapFullView;
+    private View mBasicRideRequestLayout;
+    private View mRideOwnerLayout;
 
 
     public RideRequestInfoFragment() {
@@ -85,6 +89,9 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ride_request_info, container, false);
         mMapView = view.findViewById(R.id.ride_request_info_map);
+        mBasicRideRequestLayout = view.findViewById(R.id.basic_ride_request_layout);
+        mRideOwnerLayout = view.findViewById(R.id.ride_owner_layout);
+
 
         setRideRequestInfoView(view);
 
@@ -105,14 +112,25 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         }
 
         //This will adjust height of map
-        if (mRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)){
-            ViewGroup.LayoutParams layoutParams = mMapView.getLayoutParams();
-            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            mMapView.setLayoutParams(layoutParams);
+        if (!mRideRequest.getStatus().equals(RideRequestStatus.Fulfilled)){
+            expandMapLayout();
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_request_info_map);
         mapFragment.getMapAsync(this);
+
+    }
+
+    private void expandMapLayout() {
+        ViewGroup.LayoutParams layoutParams = mMapView.getLayoutParams();
+        layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        mMapView.setLayoutParams(layoutParams);
+    }
+
+    private void collapseMapLayout() {
+        ViewGroup.LayoutParams layoutParams = mMapView.getLayoutParams();
+        layoutParams.height = (int) getResources().getDimension(R.dimen.ride_request_info_map_fragment_height);
+        mMapView.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -151,7 +169,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         mMap.clear();
         mMapComp = new MapComp(this, googleMap);
         //This will set standard padding for the map
-        //mMapComp.setPadding(true);
+        mMapComp.setPadding(true, null);
 
         //TODO think on how to move this in common location so that we don't have to repeat this
         //IMP - Its very important to draw on Map and move camera only when layout is ready and below listener would do the job
@@ -175,6 +193,27 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
             Log.d(TAG, "Map already loaded");
             mMapComp.setRideRequestOnMap(mRideRequest);
         }
+
+        /* Disabling this as its not looking well and too much of flickering is happening
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (mMapFullView){
+                    Log.d(TAG, "Map Clicked, Current state is Full View");
+                    mBasicRideRequestLayout.setVisibility(View.GONE);
+                    mRideOwnerLayout.setVisibility(View.GONE);
+                    expandMapLayout();
+                    mMapFullView=false;
+                } else {
+                    Log.d(TAG, "Map Clicked, Current state is Small View");
+                    mBasicRideRequestLayout.setVisibility(View.VISIBLE);
+                    mRideOwnerLayout.setVisibility(View.VISIBLE);
+                    collapseMapLayout();
+                    mMapFullView=true;
+                }
+            }
+        });
+        */
 
     }
 

@@ -1,26 +1,33 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                tools:context="com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            tools:context="com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment">
 
-    <include layout="@layout/basic_ride_request_layout" android:id="@+id/basic_ride_request_layout"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <include layout="@layout/ride_owner_layout" android:id="@+id/ride_owner_layout" android:layout_below="@id/basic_ride_request_layout"
-             android:layout_height="wrap_content"
-             android:layout_width="match_parent"
-             android:layout_marginTop="1dp"/>
+        <include layout="@layout/basic_ride_request_layout" android:id="@+id/basic_ride_request_layout"/>
 
+        <fragment android:id="@+id/ride_request_info_map" android:layout_below="@id/basic_ride_request_layout"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:map="http://schemas.android.com/apk/res-auto"
+                  android:name="com.google.android.gms.maps.SupportMapFragment"
+                  android:layout_width="match_parent"
+                  android:layout_height="@dimen/ride_request_info_map_fragment_height"
+                  map:cameraZoom="13"
+                  map:mapType="normal"
+                  map:liteMode="true"/>
 
-    <fragment android:id="@+id/ride_request_info_map" android:layout_below="@id/ride_owner_layout"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:map="http://schemas.android.com/apk/res-auto"
-              android:name="com.google.android.gms.maps.SupportMapFragment"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              map:cameraZoom="13"
-              map:mapType="normal"
-              map:liteMode="true"/>
+        <include layout="@layout/ride_owner_layout" android:id="@+id/ride_owner_layout"
+                 android:layout_below="@id/ride_request_info_map"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:layout_marginTop="4dp"/>
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>

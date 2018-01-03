@@ -64,6 +64,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -516,6 +517,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         RidePoint endPoint = new RidePoint();
         endPoint.setPoint(getEndPoint());
         mRide.setEndPoint(endPoint);
+        //Setting address from Place API result as this is different than the google direction api results as with minor lat/lng change address varies
+        //Reason for checking mFromPlace as this value would be null and only ToPlace would be filled up based on user action
+        if (mFromPlace!=null) mRide.setStartPointAddress(getPlaceFullAddress(mFromPlace));
+        mRide.setEndPointAddress(getPlaceFullAddress(mToPlace));
         mRide.setTrustNetwork(mTrustNetworkComp.getTrustNetworkFromView());
         mRide.setDriver(mUser);
         if (mRidesOptionUpdated){
@@ -549,6 +554,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         RideRequestPoint dropPoint = new RideRequestPoint();
         dropPoint.setPoint(getEndPoint());
         mRideRequest.setDropPoint(dropPoint);
+        //Setting address from Place API result as this is different than the google direction api results as with minor lat/lng change address varies
+        //Reason for checking mFromPlace as this value would be null and only ToPlace would be filled up based on user action
+        if (mFromPlace!=null) mRideRequest.setPickupPointAddress(getPlaceFullAddress(mFromPlace));
+        mRideRequest.setDropPointAddress(getPlaceFullAddress(mToPlace));
         mRideRequest.setPickupTime(mStartTimeCalendar.getTime());
         mRideRequest.setTrustNetwork(mTrustNetworkComp.getTrustNetworkFromView());
 
@@ -584,6 +593,11 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         Point point = new Point(mToLatLng.longitude, mToLatLng.latitude);
         return point;
     }
+
+    private String getPlaceFullAddress(Place place) {
+        return place.getName().toString()+", "+place.getAddress().toString();
+    }
+
 
 
     private boolean validateInput(){
@@ -691,9 +705,11 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         if (requestCode == PLACE_TO_ADDRESS_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 mToPlace = PlaceAutocomplete.getPlace(getActivity(), data);
-                Log.i(TAG, "To Place: " + mToPlace.getName());
+                Log.i(TAG, "To Place Name: " + mToPlace.getName());
+                Log.i(TAG, "To Place Address: " + mToPlace.getAddress());
                 mToAddressTextView.setText(mToPlace.getName());
                 mToLatLng = mToPlace.getLatLng();
+                Log.d(TAG, "To Place:"+new Gson().toJson(mToPlace));
                 mLocationChanged = true;
                 drawOnMap();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {

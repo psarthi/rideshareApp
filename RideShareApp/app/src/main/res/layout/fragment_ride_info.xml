@@ -19,7 +19,7 @@
                   xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:map="http://schemas.android.com/apk/res-auto"
                   android:layout_width="match_parent"
-                  android:layout_height="@dimen/lite_map_fragment_height"
+                  android:layout_height="@dimen/ride_info_map_fragment_height"
                   map:cameraZoom="13"
                   map:liteMode="true"
                   map:mapType="normal"/>

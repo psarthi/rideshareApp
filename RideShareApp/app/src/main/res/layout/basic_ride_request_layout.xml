@@ -101,6 +101,7 @@ as well as inside any other layout as well e.g. In HomePage as well as RidesList
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_seperator_thickness"
-        android:background="@color/colorGrayLight"/>
+        android:background="@color/colorGrayLight"
+        android:layout_marginTop="@dimen/default_margin"/>
 
 </LinearLayout>
