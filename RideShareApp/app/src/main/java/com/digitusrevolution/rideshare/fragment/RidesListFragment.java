@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
@@ -17,6 +18,7 @@ import com.digitusrevolution.rideshare.adapter.RideRequestListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
@@ -28,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -148,22 +151,56 @@ public class RidesListFragment extends BaseFragment{
                     //This will load adapter only when data is loaded
                     setAdapter();
                 }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    dismissProgressDialog();
+                    if (errorResponse!=null) {
+                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                        Log.d(TAG, errorMessage.getErrorMessage());
+                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                    }
+                }
+
             });
         } else {
             //Initial Data loading
             String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
                     .replace(APIUrl.PAGE_KEY, Integer.toString(0));
-            showProgressDialog();
+            //Reason for commenting as we are already showing progress dialog for Rides
+            //and in the same time we should get logically ride request as well
+            //This will not show multiple progress dialog at the same time
+            //showProgressDialog();
             RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
-                    dismissProgressDialog();
+                    //dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<BasicRideRequest>>(){}.getType();
                     mRideRequests = new Gson().fromJson(response.toString(), listType);
                     mInitialDataLoaded = true;
                     //This will load adapter only when data is loaded
                     setAdapter();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    dismissProgressDialog();
+                    if (errorResponse!=null) {
+                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                        Log.d(TAG, errorMessage.getErrorMessage());
+                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
@@ -207,6 +244,22 @@ public class RidesListFragment extends BaseFragment{
                     Log.d(TAG, "Ride Size changed. Current Size is:"+mRides.size());
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRides.size()-1);
                 }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    dismissProgressDialog();
+                    if (errorResponse!=null) {
+                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                        Log.d(TAG, errorMessage.getErrorMessage());
+                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                    }
+                }
+
             });
         } else {
             String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
@@ -223,6 +276,22 @@ public class RidesListFragment extends BaseFragment{
                     Log.d(TAG, "Ride Request Size changed. Current Size is:"+mRideRequests.size());
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRideRequests.size()-1);
                 }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    dismissProgressDialog();
+                    if (errorResponse!=null) {
+                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                        Log.d(TAG, errorMessage.getErrorMessage());
+                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                    }
+                }
+
             });
         }
     }

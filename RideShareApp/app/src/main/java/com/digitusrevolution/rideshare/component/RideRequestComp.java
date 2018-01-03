@@ -124,6 +124,21 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                             FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
                             fragmentLoader.loadRideRequestInfoFragment(response.toString());
                         }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                            mCommonUtil.dismissProgressDialog();
+                            if (errorResponse!=null) {
+                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                Log.d(TAG, errorMessage.getErrorMessage());
+                                Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                                Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                            }
+                        }
                     });
                 }
             });
@@ -327,7 +342,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 final UserFeedbackInfo feedbackInfo = new UserFeedbackInfo();
                 Log.d(TAG, "Rating is:"+rating+" Given By Passenger User Id:"+mRideRequest.getPassenger().getId());
                 USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getDriver().getId()))
-                .replace(APIUrl.RIDE_TYPE_KEY, RideType.RequestRide.toString());
+                        .replace(APIUrl.RIDE_TYPE_KEY, RideType.RequestRide.toString());
                 feedbackInfo.setGivenByUser(mRideRequest.getPassenger());
                 feedbackInfo.setRating(rating);
                 feedbackInfo.setRide(mRideRequest.getAcceptedRide());
@@ -348,6 +363,15 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
                         mCommonUtil.dismissProgressDialog();
+                        if (errorResponse!=null) {
+                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                            Log.d(TAG, errorMessage.getErrorMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 

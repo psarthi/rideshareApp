@@ -139,9 +139,15 @@ public class LandingPageActivity extends BaseActivity{
                                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                                         super.onFailure(statusCode, headers, throwable, errorResponse);
                                         dismissProgressDialog();
-                                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                        Log.d(TAG, errorMessage.getErrorMessage());
-
+                                        if (errorResponse!=null) {
+                                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                            Log.d(TAG, errorMessage.getErrorMessage());
+                                            Toast.makeText(LandingPageActivity.this, errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                        else {
+                                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                                            Toast.makeText(LandingPageActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                                        }
                                     }
                                 });
                     }

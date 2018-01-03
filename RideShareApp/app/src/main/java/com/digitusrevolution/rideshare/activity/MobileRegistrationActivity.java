@@ -17,6 +17,8 @@ import com.digitusrevolution.rideshare.adapter.CustomCountryAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.common.ErrorMessage;
+import com.digitusrevolution.rideshare.model.common.ResponseMessage;
 import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
 import com.google.gson.Gson;
@@ -121,23 +123,34 @@ public class MobileRegistrationActivity extends BaseActivity {
                     String encodedQueryString = URLEncoder.encode(mSelectedCountryCode + mMobileNumber.getText().toString(), "UTF-8");
                     String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString);
                     showProgressDialog();
-                    RESTClient.get(GET_OTP_URL, null, new TextHttpResponseHandler() {
+                    RESTClient.get(GET_OTP_URL, null, new JsonHttpResponseHandler() {
                         @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                            Log.d(TAG, "Response Failure:" + responseString);
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            super.onSuccess(statusCode, headers, response);
                             dismissProgressDialog();
-                        }
-
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                            Log.d(TAG, "Response Success:" + responseString);
-                            mOTP = responseString;
+                            Log.d(TAG, "Response Success:" + response);
+                            ResponseMessage responseMessage = new Gson().fromJson(response.toString(), ResponseMessage.class);
+                            mOTP = responseMessage.getResult();
                             String data = getExtraData();
                             Intent otpVerificationIntent = new Intent(getApplicationContext(), OtpVerificationActivity.class);
                             //Reason for storing key name as well, so that calling class don't have to know the key name
                             otpVerificationIntent.putExtra(getExtraDataKey(),data);
                             startActivity(otpVerificationIntent);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
                             dismissProgressDialog();
+                            if (errorResponse!=null) {
+                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                Log.d(TAG, errorMessage.getErrorMessage());
+                                Toast.makeText(MobileRegistrationActivity.this, errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                                Toast.makeText(MobileRegistrationActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
                 } catch (UnsupportedEncodingException e) {

@@ -351,18 +351,13 @@ public class RidesOptionFragment extends BaseFragment
         buttonLayoutView.findViewById(R.id.rides_option_save_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mUser.getVehicles().size()==0){
+                //This condition needs to be validated only in case of offer ride
+                if (mRideType.equals(RideType.OfferRide) && mUser.getVehicles().size()==0){
                     Toast.makeText(getActivity(), "Please add a vehicle", Toast.LENGTH_LONG).show();
                 } else {
                     Log.d(TAG, "Rides Option Saved");
                     setRidesOption();
-                    if (mListener != null) {
-                        if (mRideType.equals(RideType.OfferRide)){
-                            mListener.onRidesOptionFragmentInteraction(mRidesOption);
-                        } else {
-                            mListener.onRidesOptionFragmentInteraction(mRidesOption);
-                        }
-                    }
+                    if (mListener != null) mListener.onRidesOptionFragmentInteraction(mRidesOption);
                 }
             }
         });

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
@@ -14,6 +15,7 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.google.gson.Gson;
@@ -30,7 +32,7 @@ import cz.msebera.android.httpclient.Header;
  */
 
 public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.ViewHolder>
-implements RideComp.RideCompListener{
+        implements RideComp.RideCompListener{
 
     private static final String TAG = RideListAdapter.class.getName();
     private List<BasicRide> mRides;
@@ -73,6 +75,21 @@ implements RideComp.RideCompListener{
                         fragmentLoader.loadRideInfoFragment(response.toString());
                     }
 
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        mCommonUtil.dismissProgressDialog();
+                        if (errorResponse!=null) {
+                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                            Log.d(TAG, errorMessage.getErrorMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
                 });
             }
         });
@@ -91,12 +108,12 @@ implements RideComp.RideCompListener{
         int i = 0 ;
         for (BasicRide basicRide: mRides){
             if (basicRide.getId() == ride.getId()){
-               mRides.set(i,ride);
-               //Somehow its not working, so using notifydatasetChanged
-               //notifyItemChanged(i + 1);
+                mRides.set(i,ride);
+                //Somehow its not working, so using notifydatasetChanged
+                //notifyItemChanged(i + 1);
                 notifyDataSetChanged();
-               Log.d(TAG, "Item matched at position:"+i);
-               break;
+                Log.d(TAG, "Item matched at position:"+i);
+                break;
             }
             i++;
         }

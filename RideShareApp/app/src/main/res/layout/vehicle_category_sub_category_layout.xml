@@ -9,15 +9,16 @@
     <LinearLayout
         android:id="@+id/vehicle_category_sub_category_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/default_padding">
+        android:layout_height="wrap_content">
 
+        <!-- Don't move padding to LinearLayout propery else it will show flicker when loading the spinner item-->
         <TextView
             android:id="@+id/vehicle_category_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/category_label"
             android:textSize="@dimen/standard_text_size"
+            android:padding="@dimen/default_padding"
             android:layout_weight="1"/>
 
         <Spinner
@@ -30,15 +31,16 @@
     <LinearLayout
         android:id="@+id/vehicle_sub_category_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/default_padding">
+        android:layout_height="wrap_content">
 
+        <!-- Don't move padding to LinearLayout propery else it will show flicker when loading the spinner item-->
         <TextView
             android:id="@+id/vehicle_sub_category_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sub_category_label"
             android:textSize="@dimen/standard_text_size"
+            android:padding="@dimen/default_padding"
             android:layout_weight="1"/>
 
         <Spinner

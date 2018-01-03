@@ -130,6 +130,21 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                             fragmentLoader.loadRideInfoFragment(response.toString());
                         }
 
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                            mCommonUtil.dismissProgressDialog();
+                            if (errorResponse!=null) {
+                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                Log.d(TAG, errorMessage.getErrorMessage());
+                                Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                                Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                            }
+                        }
+
                     });
                 }
             });
@@ -579,7 +594,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 final UserFeedbackInfo feedbackInfo = new UserFeedbackInfo();
                 Log.d(TAG, "Rating is:"+rating+"Given By Driver User Id:"+mRide.getDriver().getId());
                 USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(rideRequest.getPassenger().getId()))
-                .replace(APIUrl.RIDE_TYPE_KEY, RideType.OfferRide.toString());
+                        .replace(APIUrl.RIDE_TYPE_KEY, RideType.OfferRide.toString());
                 feedbackInfo.setGivenByUser(mRide.getDriver());
                 feedbackInfo.setRating(rating);
                 feedbackInfo.setRide(mRide);
@@ -600,9 +615,17 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
                         mCommonUtil.dismissProgressDialog();
+                        if (errorResponse!=null) {
+                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                            Log.d(TAG, errorMessage.getErrorMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
-
             }
         });
     }
