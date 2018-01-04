@@ -132,7 +132,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private GoogleDirection mGoogleDirection;
     private GoogleDistance mGoogleDistance;
     private Calendar mStartTimeCalendar;
-    private boolean mTimeInPast;
     private BasicUser mUser;
     private boolean mRidesOptionUpdated = false;
     private Preference mUpdatedRidesOption;
@@ -583,12 +582,15 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     private boolean validateInput(){
 
-        if (mToLatLng ==null || mFromLatLng == null || mTimeInPast){
+        if (mToLatLng ==null || mFromLatLng == null){
             Toast.makeText(getActivity(), "Please ensure input is valid",Toast.LENGTH_LONG).show();
             return false;
         }
         if (mRideType.equals(RideType.OfferRide) && mGoogleDirection == null){
             Toast.makeText(getActivity(), "Please wait for route to show up",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (!validateStartTime()){
             return false;
         }
         return true;
@@ -730,13 +732,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 //Move camera
                 moveCamera();
                 //This will set the fare when both the to/from location is there
-                if (mRideRequest.getRideMode().equals(RideMode.Free)) {
-                    //This will give 100% discount
-                    setFare(0);
-                } else {
-                    //This will take care of getting the fare and setting the same
-                    getFare();
-                }
+                //Need to check if the input is valid before calling getFare this will save unnecessary calls
+                if (validateInput()) getFare();
             }
         }
     }
@@ -842,34 +839,39 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     private void getFare() {
 
-        showProgressDialog();
-        RESTClient.post(getActivity(),APIUrl.GET_PRE_BOOKING_RIDE_REQUEST_INFO, mRideRequest, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                dismissProgressDialog();
-                mPreBookingRideRequestResult =
-                        new Gson().fromJson(response.toString(), PreBookingRideRequestResult.class);
-                mMaxFare = mPreBookingRideRequestResult.getMaxFare();
-                setFare(mMaxFare);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                dismissProgressDialog();
-                if (errorResponse!=null) {
-                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                    Log.d(TAG, errorMessage.getErrorMessage());
-                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+        if (mRideRequest.getRideMode().equals(RideMode.Free)) {
+            //This will give 100% discount
+            setFare(0);
+        } else {
+            showProgressDialog();
+            RESTClient.post(getActivity(),APIUrl.GET_PRE_BOOKING_RIDE_REQUEST_INFO, mRideRequest, new JsonHttpResponseHandler(){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    dismissProgressDialog();
+                    mPreBookingRideRequestResult =
+                            new Gson().fromJson(response.toString(), PreBookingRideRequestResult.class);
+                    mMaxFare = mPreBookingRideRequestResult.getMaxFare();
+                    setFare(mMaxFare);
                 }
-                else {
-                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                }
-            }
 
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    dismissProgressDialog();
+                    if (errorResponse!=null) {
+                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                        Log.d(TAG, errorMessage.getErrorMessage());
+                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            });
+        }
     }
 
     private LatLngBounds getBounds(){
@@ -957,14 +959,14 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     }
 
     //This will validate if start time is valid or not
-    private void validateStartTime() {
+    private boolean validateStartTime() {
         if (mStartTimeCalendar.getTime().before(mMinStartTime)){
             Toast.makeText(getActivity(),"Earliest start time can be "+Constant.START_TIME_INCREMENT+"mins from now",Toast.LENGTH_LONG).show();
             mTimeTextView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-            mTimeInPast = true;
+            return false;
         } else {
             mTimeTextView.setTextColor(mDefaultTextColor);
-            mTimeInPast = false;
+            return true;
         }
     }
 
