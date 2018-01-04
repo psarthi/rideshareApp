@@ -148,46 +148,55 @@ public class TopUpFragment extends BaseFragment {
                 //TODO Add Money via PayTm
 
                 String topUpAmountString = ((TextView) view.findViewById(R.id.topup_amount)).getText().toString();
-                int topUpAmount = Integer.parseInt(topUpAmountString);
-                if (topUpAmount < mMinTopUpAmount) {
-                    Toast.makeText(getActivity(), "Min. Top up amount is " + mCurrencySymbol + mMinTopUpAmount, Toast.LENGTH_LONG).show();
+                Log.d(TAG, "Top Up Amount:"+topUpAmountString);
+                if (topUpAmountString.equals("")){
+                    Toast.makeText(getActivity(), "Please enter the amount.", Toast.LENGTH_LONG).show();
                 } else {
-                    String ADD_MONEY = APIUrl.ADD_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
-                            .replace(APIUrl.AMOUNT_KEY, topUpAmountString);
-                    showProgressDialog();
-                    RESTClient.get(ADD_MONEY, null, new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            dismissProgressDialog();
-                            mAccount = new Gson().fromJson(response.toString(), Account.class);
-                            mCommonUtil.updateAccount(mAccount);
-                            //This will refresh the wallet balance
-                            setWalletBalance(mAccount.getBalance());
-                            if (mRequiredBalanceVisiblity) {
-                                //This will go back to the create rides page
-                                hideSoftKeyBoard();
-                                Log.d(TAG, "New Wallet Balance:" + mCurrencySymbol + mAccount.getBalance());
-                                getActivity().getSupportFragmentManager().popBackStack();
+                    int topUpAmount = Integer.parseInt(topUpAmountString);
+                    if (topUpAmount < mMinTopUpAmount) {
+                        Toast.makeText(getActivity(), "Min. Top up amount is " + mCurrencySymbol + mMinTopUpAmount, Toast.LENGTH_LONG).show();
+                    }
+                    if (topUpAmount == 0){
+                        Toast.makeText(getActivity(), "Please enter the valid amount.", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        String ADD_MONEY = APIUrl.ADD_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
+                                .replace(APIUrl.AMOUNT_KEY, topUpAmountString);
+                        showProgressDialog();
+                        RESTClient.get(ADD_MONEY, null, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                dismissProgressDialog();
+                                mAccount = new Gson().fromJson(response.toString(), Account.class);
+                                mCommonUtil.updateAccount(mAccount);
+                                //This will refresh the wallet balance
+                                setWalletBalance(mAccount.getBalance());
+                                if (mRequiredBalanceVisiblity) {
+                                    //This will go back to the create rides page
+                                    hideSoftKeyBoard();
+                                    Log.d(TAG, "New Wallet Balance:" + mCurrencySymbol + mAccount.getBalance());
+                                    getActivity().getSupportFragmentManager().popBackStack();
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            super.onFailure(statusCode, headers, throwable, errorResponse);
-                            dismissProgressDialog();
-                            if (errorResponse!=null) {
-                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                Log.d(TAG, errorMessage.getErrorMessage());
-                                Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                super.onFailure(statusCode, headers, throwable, errorResponse);
+                                dismissProgressDialog();
+                                if (errorResponse!=null) {
+                                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                    Log.d(TAG, errorMessage.getErrorMessage());
+                                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                                }
                             }
-                            else {
-                                Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                                Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                            }
-                        }
 
-                    });
+                        });
+                    }
                 }
             }
         });

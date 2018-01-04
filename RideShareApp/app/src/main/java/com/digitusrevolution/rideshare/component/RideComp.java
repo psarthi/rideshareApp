@@ -24,6 +24,7 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.Point;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
@@ -518,6 +519,9 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 Log.d(TAG, "CoTraveller Dropped");
                 //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                Account account = ((List<Account>) mRide.getDriver().getAccounts()).get(0);
+                //This will update the account balance post dropping any passenger
+                mCommonUtil.updateAccount(account);
                 mListener.onRideRefresh(mRide);
                 Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Dropped", Toast.LENGTH_LONG).show();
                 navigate(mRide);

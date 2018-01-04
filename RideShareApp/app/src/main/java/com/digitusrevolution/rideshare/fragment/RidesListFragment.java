@@ -221,7 +221,7 @@ public class RidesListFragment extends BaseFragment{
 
     // Append the next page of data into the adapter
     // This method probably sends out a network request and appends new data items to your adapter.
-    public void loadNextDataFromApi(int offset) {
+    public void loadNextDataFromApi(final int offset) {
         // Send an API request to retrieve appropriate paginated data
         //  --> Send the request including an offset value (i.e `page`) as a query parameter.
         //  --> Deserialize and construct new model objects from the API response
@@ -231,12 +231,14 @@ public class RidesListFragment extends BaseFragment{
         if (mRideType.equals(RideType.OfferRide)){
             String GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
                     .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
-            showProgressDialog();
+            //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
+            //and unnecssarily we will show multiple dialog which creates flicker on the screen
+            if (offset != 1) showProgressDialog();
             RESTClient.get(GET_USER_RIDES_URL, null, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
-                    dismissProgressDialog();
+                    if (offset != 1) dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
                     List<FullRide> newRides = new Gson().fromJson(response.toString(), listType);
                     //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
@@ -248,7 +250,7 @@ public class RidesListFragment extends BaseFragment{
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
-                    dismissProgressDialog();
+                    if (offset != 1) dismissProgressDialog();
                     if (errorResponse!=null) {
                         ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                         Log.d(TAG, errorMessage.getErrorMessage());
@@ -264,12 +266,14 @@ public class RidesListFragment extends BaseFragment{
         } else {
             String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
                     .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
-            showProgressDialog();
+            //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
+            //and unnecssarily we will show multiple dialog which creates flicker on the screen
+            if (offset != 1) showProgressDialog();
             RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
-                    dismissProgressDialog();
+                    if (offset != 1) dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
                     List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
                     mRideRequests.addAll(rideRequests);
@@ -280,7 +284,7 @@ public class RidesListFragment extends BaseFragment{
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
-                    dismissProgressDialog();
+                    if (offset != 1) dismissProgressDialog();
                     if (errorResponse!=null) {
                         ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
                         Log.d(TAG, errorMessage.getErrorMessage());

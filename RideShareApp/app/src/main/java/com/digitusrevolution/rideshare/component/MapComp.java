@@ -144,8 +144,9 @@ public class MapComp{
         mMap.addMarker(new MarkerOptions().position(rideDropPoint).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
 
         //Draw Circle with Pickup Distance and Drop Distance Variation
-        mMap.addCircle(new CircleOptions().center(pickupPoint).radius(pickupPointVariation));
-        mMap.addCircle(new CircleOptions().center(dropPoint).radius(dropPointVariation));
+        //Commenting it as on lite mode map, circle is too small to have any effect and its coming as a spot on the map
+        //mMap.addCircle(new CircleOptions().center(pickupPoint).radius(pickupPointVariation));
+        //mMap.addCircle(new CircleOptions().center(dropPoint).radius(dropPointVariation));
 
         //Get Bound covering all points
         LatLngBounds pickupZonelatLngBounds = getCircleBounds(pickupPoint, pickupPointVariation);

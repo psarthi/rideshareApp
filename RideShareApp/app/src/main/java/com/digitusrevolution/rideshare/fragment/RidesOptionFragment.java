@@ -237,6 +237,7 @@ public class RidesOptionFragment extends BaseFragment
             int dropVaritaionMax;
             int timeVariationMax;
 
+            Log.d(TAG, "Travel Distance, Multiplier:"+mTravelDistance+","+multiplier);
             //This will take care of changing the max value of seekbar depending on the travel distance
             //Note - We are not changing the default values
             if (multiplier <=1){
