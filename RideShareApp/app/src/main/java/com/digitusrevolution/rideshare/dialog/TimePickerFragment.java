@@ -34,9 +34,11 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current time as the default values for the picker
         final Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
         //This will drawable.add extra time from current time, so that we don't get into issues of creating rides in the past
         c.add(Calendar.MINUTE, Constant.START_TIME_INCREMENT);
+        //Please ensure hour needs to be fetched post increment else you will get past time e.g. when time is 4:55
+        //and if you increment by 10 mins then minute would change but if you don't get updated hour then time is in the past
+        int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
 
         // Create a new instance of TimePickerDialog and return it

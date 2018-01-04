@@ -408,7 +408,11 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     if (validateInput()){
                         setRideRequest();
                         if (mRideRequest.getRideMode().equals(RideMode.Paid)){
-                            validateWalletBalance(mPreBookingRideRequestResult.getPendingBills());
+                            if (mPreBookingRideRequestResult!=null){
+                                validateWalletBalance(mPreBookingRideRequestResult.getPendingBills());
+                            } else {
+                                Toast.makeText(getActivity(), "Please wait for fare to show up",Toast.LENGTH_LONG).show();
+                            }
                         } else {
                             //Its a free ride so no pre booking validation is required
                             createRideRequest();
