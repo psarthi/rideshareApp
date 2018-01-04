@@ -6,9 +6,9 @@ package com.digitusrevolution.rideshare.config;
 
 public class APIUrl {
 
-    public static final String BASE_URL_RIDE_SYSTEM = "http://api.digitusrevolution.com/RSRideSystem/api";
-    public static final String BASE_URL_USER_SYSTEM = "http://api.digitusrevolution.com/RSUserSystem/api";
-    public static final String BASE_URL_BILLING_SYSTEM = "http://api.digitusrevolution.com/RSBillingSystem/api";
+    public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.7:8080/RSRideSystem/api";
+    public static final String BASE_URL_USER_SYSTEM = "http://10.0.0.7:8080/RSUserSystem/api";
+    public static final String BASE_URL_BILLING_SYSTEM = "http://10.0.0.7:8080/RSBillingSystem/api";
 
     public static final String USER_EMAIL_KEY = "{userEmail}";
     public static final String USER_ID_KEY = "{userId}";
@@ -65,6 +65,7 @@ public class APIUrl {
     public static final String GET_USER_PROFILE = BASE_URL_USER_SYSTEM + "/users/{userId}/profile";
     public static final String GET_USER_WALLET_TRANSACTION = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/transactions?page={page}";
     public static final String GET_PENDING_BILLS = BASE_URL_BILLING_SYSTEM + "/billing/pending";
+    public static final String GET_PRE_BOOKING_RIDE_REQUEST_INFO = BASE_URL_RIDE_SYSTEM + "/riderequests/prebookinginfo";
 
 
 

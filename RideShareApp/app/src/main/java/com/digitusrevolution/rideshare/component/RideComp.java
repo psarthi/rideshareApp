@@ -116,10 +116,17 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         TextView rideEndPointTextView = basic_ride_layout.findViewById(R.id.ride_end_point_text);
         rideEndPointTextView.setText(mBasicRide.getEndPointAddress());
 
-        //This will set the visibility of ride buttons initially
-        updateBasicRideLayoutButtonsVisibility();
-        //This will set listeners for ride buttons
-        setBasicRideLayoutButtonsOnClickListener();
+        if (mRide!=null){
+            //This will set the visibility of ride buttons initially
+            updateBasicRideLayoutButtonsVisibility();
+            //This will set listeners for ride buttons
+            setBasicRideLayoutButtonsOnClickListener();
+        } else {
+            //This will ensure that no buttons are visible if fullride has not been set
+            //In case of Ride List, this will ensure that Start/Continue navigation buttons
+            //doesn't fail as all those action require fullride
+            mBasicRideButtonsLayout.setVisibility(View.GONE);
+        }
 
         RideInfoFragment fragment = (RideInfoFragment) mBaseFragment.getActivity().getSupportFragmentManager()
                 .findFragmentByTag(RideInfoFragment.TAG);

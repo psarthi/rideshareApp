@@ -102,9 +102,16 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.GONE);
         }
 
-        //This will setup initial button visibility
-        updateRideRequestBasicLayoutButtonsVisiblity();
-        setRideRequestBasicLayoutButtonsOnClickListener();
+        if (mRideRequest!=null){
+            //This will setup initial button visibility
+            updateRideRequestBasicLayoutButtonsVisiblity();
+            setRideRequestBasicLayoutButtonsOnClickListener();
+        } else {
+            //This will ensure that no buttons are visible if fullride request has not been set
+            //In case of Ride Request List, this will ensure that Destination Point navigation buttons
+            //doesn't fail as all those action require fullride rrequest
+            mBasicRideRequestButtonsLayout.setVisibility(View.GONE);
+        }
 
         RideRequestInfoFragment fragment = (RideRequestInfoFragment) mBaseFragment.getActivity().getSupportFragmentManager()
                 .findFragmentByTag(RideRequestInfoFragment.TAG);
@@ -397,11 +404,14 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             Log.d(TAG, "Max End Time is:"+maxEndTime.getTime().toString());
             if (maxEndTime.before(Calendar.getInstance())){
                 //Visible Buttons
-                mRatingBar.setVisibility(View.VISIBLE);
+                mRideOwnerCancelButton.setVisibility(View.VISIBLE);
 
-                //This will make Ride Owner buttons layout invisible post ride request drop point time has lapsed
-                //i.e. No cancel and Pickup Point Navigation button would be visible
-                mRideOwnerButtonsLayout.setVisibility(View.GONE);
+                //Invisible Buttons
+                //i.e. No Pickup Point Navigation button would be invisible post ride request drop point time has lapsed
+                mPickupPointNavigationButton.setVisibility(View.GONE);
+
+                //No Rating Bar as he has not been picked, and while cancelling user get an option to give feedback
+                mRatingBar.setVisibility(View.GONE);
             } else {
                 //Visible Buttons
                 mRideOwnerCancelButton.setVisibility(View.VISIBLE);

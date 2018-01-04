@@ -114,45 +114,51 @@ public class RedeemFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 String redeemAmount = ((TextView) view.findViewById(R.id.redeem_amount)).getText().toString();
-                if (redeemAmount.equals("")){
-                    Toast.makeText(getActivity(), "Please enter the amount.", Toast.LENGTH_LONG).show();
-                } else {
-                    if (Integer.parseInt(redeemAmount) == 0){
-                        Toast.makeText(getActivity(), "Please enter the valid amount.", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        String REDEEM_MONEY = APIUrl.REDEEM_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
-                                .replace(APIUrl.AMOUNT_KEY, redeemAmount);
-                        showProgressDialog();
-                        RESTClient.get(REDEEM_MONEY, null, new JsonHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                super.onSuccess(statusCode, headers, response);
-                                dismissProgressDialog();
-                                mAccount = new Gson().fromJson(response.toString(), Account.class);
-                                mCommonUtil.updateAccount(mAccount);
-                                //This will refresh the wallet balance
-                                setWalletBalance(mAccount.getBalance());
-                            }
+                if (validateInput(redeemAmount)){
+                    String REDEEM_MONEY = APIUrl.REDEEM_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
+                            .replace(APIUrl.AMOUNT_KEY, redeemAmount);
+                    showProgressDialog();
+                    RESTClient.get(REDEEM_MONEY, null, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            super.onSuccess(statusCode, headers, response);
+                            dismissProgressDialog();
+                            mAccount = new Gson().fromJson(response.toString(), Account.class);
+                            mCommonUtil.updateAccount(mAccount);
+                            //This will refresh the wallet balance
+                            setWalletBalance(mAccount.getBalance());
+                        }
 
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                                super.onFailure(statusCode, headers, throwable, errorResponse);
-                                dismissProgressDialog();
-                                if (errorResponse != null) {
-                                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                    Log.d(TAG, errorMessage.getErrorMessage());
-                                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                                } else {
-                                    Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
-                                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                                }
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                            dismissProgressDialog();
+                            if (errorResponse != null) {
+                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                Log.d(TAG, errorMessage.getErrorMessage());
+                                Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                            } else {
+                                Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
+                                Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }
         });
+    }
+
+    private boolean validateInput(String redeemAmount){
+        if (redeemAmount.equals("")){
+            Toast.makeText(getActivity(), "Please enter the amount.", Toast.LENGTH_LONG).show();
+            return false;
+        } else {
+            if (Integer.parseInt(redeemAmount) == 0) {
+                Toast.makeText(getActivity(), "Please enter the valid amount.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+        return true;
     }
 
     private void setWalletBalance(float balance) {

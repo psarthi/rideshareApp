@@ -48,6 +48,7 @@ import com.digitusrevolution.rideshare.model.ride.domain.RideRequestPoint;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.ride.dto.PreBookingRideRequestResult;
 import com.digitusrevolution.rideshare.model.ride.dto.RideOfferInfo;
 import com.digitusrevolution.rideshare.model.ride.dto.RideOfferResult;
 import com.digitusrevolution.rideshare.model.ride.dto.RideRequestResult;
@@ -153,6 +154,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private boolean mLocationChanged;
     private float mMaxFare;
     private int mTravelDistance;
+    private PreBookingRideRequestResult mPreBookingRideRequestResult;
 
     public CreateRidesFragment() {
         Log.d(TAG, "CreateRidesFragment() Called");
@@ -407,50 +409,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     if (validateInput()){
                         setRideRequest();
                         if (mRideRequest.getRideMode().equals(RideMode.Paid)){
-                            showProgressDialog();
-                            RESTClient.post(getActivity(), APIUrl.GET_PENDING_BILLS, mUser, new JsonHttpResponseHandler(){
-                                @Override
-                                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                                    super.onSuccess(statusCode, headers, response);
-                                    dismissProgressDialog();
-                                    Type listType = new TypeToken<ArrayList<Bill>>(){}.getType();
-                                    ArrayList<Bill> pendingBills = new Gson().fromJson(response.toString(), listType);
-
-                                    float pendingBillAmount = 0;
-                                    for (Bill bill: pendingBills){
-                                        pendingBillAmount += bill.getAmount();
-                                    }
-
-                                    float requiredWalletBalance = pendingBillAmount + mMaxFare;
-
-                                    //This is successful case when user has sufficient balance
-                                    if (mAccount.getBalance() >= requiredWalletBalance){
-                                        Log.d(TAG, "Sufficient Wallet Balance, so creating ride request");
-                                        createRideRequest();
-                                    }
-                                    //This is the case when user doesn't have sufficient balance
-                                    else {
-                                        Log.d(TAG, "InSufficient Wallet Balance, current balance/required balance:"
-                                                +mAccount.getBalance()+"/"+requiredWalletBalance);
-                                        mFragmentLoader.loadWalletFragment(true, requiredWalletBalance);
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                                    dismissProgressDialog();
-                                    if (errorResponse!=null) {
-                                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                        Log.d(TAG, errorMessage.getErrorMessage());
-                                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                    else {
-                                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
+                            validateWalletBalance(mPreBookingRideRequestResult.getPendingBills());
                         } else {
                             //Its a free ride so no pre booking validation is required
                             createRideRequest();
@@ -460,6 +419,27 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 }
             }
         });
+    }
+
+    private void validateWalletBalance(List<Bill> pendingBills) {
+        float pendingBillAmount = 0;
+        for (Bill bill: pendingBills){
+            pendingBillAmount += bill.getAmount();
+        }
+
+        float requiredWalletBalance = pendingBillAmount + mMaxFare;
+
+        //This is successful case when user has sufficient balance
+        if (mAccount.getBalance() >= requiredWalletBalance){
+            Log.d(TAG, "Sufficient Wallet Balance, so creating ride request");
+            createRideRequest();
+        }
+        //This is the case when user doesn't have sufficient balance
+        else {
+            Log.d(TAG, "InSufficient Wallet Balance, current balance/required balance:"
+                    +mAccount.getBalance()+"/"+requiredWalletBalance);
+            mFragmentLoader.loadWalletFragment(true, requiredWalletBalance);
+        }
     }
 
     private void createRideRequest(){
@@ -754,14 +734,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     //This will give 100% discount
                     setFare(0);
                 } else {
-                    if (mLocationChanged) {
-                        getDistanceAndSetFare();
-                    } else {
-                        //Reason for getting Fare again so that we take care of change of seats
-                        mMaxFare = getFare();
-                        setFare(mMaxFare);
-                    }
-
+                    //This will take care of getting the fare and setting the same
+                    getFare();
                 }
             }
         }
@@ -812,6 +786,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         });
     }
 
+    //Keeping this function for future use, for now we are getting distance in the backend and calculating fare as well
     //This function should be called only when To and From field is not null, otherwise it may throw NPE
     private void getDistanceAndSetFare(){
 
@@ -833,8 +808,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 mGoogleDistance = new Gson().fromJson(response.toString(), GoogleDistance.class);
                 if (mGoogleDistance.getStatus().equals("OK") && mGoogleDistance.getRows().get(0).getElements().get(0).getStatus().equals("OK")){
                     //Maxfare is applicable for All Sub-Categories else for specific sub-category you will get exact fare
-                    mMaxFare = getFare();
-                    setFare(mMaxFare);
+                    getFare();
                 }else {
                     Toast.makeText(getActivity(),"No valid route found, please enter alternate location",Toast.LENGTH_LONG).show();
                 }
@@ -866,27 +840,36 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         mFareTextView.setVisibility(View.VISIBLE);
     }
 
-    private float getFare() {
-        Element element = mGoogleDistance.getRows().get(0).getElements().get(0);
-        mTravelDistance = element.getDistance().getValue();
-        FuelType fuelType = mRideRequest.getVehicleSubCategory().getFuelType();
-        int averageMileage = mRideRequest.getVehicleSubCategory().getAverageMileage();
-        Collection<Fuel> fuels = mUser.getCountry().getFuels();
-        float farePerMeter = 0;
-        for (Fuel fuel : fuels) {
-            if (fuel.getType().name().equals(fuelType.name())){
-                //This will get fare per meter and not by Km
-                farePerMeter = fuel.getPrice() / (averageMileage * 1000);
-                break;
+    private void getFare() {
+
+        showProgressDialog();
+        RESTClient.post(getActivity(),APIUrl.GET_PRE_BOOKING_RIDE_REQUEST_INFO, mRideRequest, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                dismissProgressDialog();
+                mPreBookingRideRequestResult =
+                        new Gson().fromJson(response.toString(), PreBookingRideRequestResult.class);
+                mMaxFare = mPreBookingRideRequestResult.getMaxFare();
+                setFare(mMaxFare);
             }
-        }
-        float maxFare = mTravelDistance * farePerMeter * mRideRequest.getSeatRequired();
-        if (mTravelDistance >= Constant.LONG_DISTANCE_IN_METERS){
-            // IMP - If we don't share the fuel cost, then travel cost would be much higher than public transports
-            // We need to offer 50% discount on long distance fare
-            maxFare = maxFare / 2;
-        }
-        return maxFare;
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                dismissProgressDialog();
+                if (errorResponse!=null) {
+                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                    Log.d(TAG, errorMessage.getErrorMessage());
+                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                }
+            }
+
+        });
     }
 
     private LatLngBounds getBounds(){
