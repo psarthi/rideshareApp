@@ -397,7 +397,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
         //This means that only when passenger is in confirmed state i.e. he/she has not been picked up, he can cancel / navigate
         //As far as rating is concerned, he can rate post pickup up or cancel. In case of cancel, we will ask for rating in dialog bar itself
-        if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)){
+        if (mRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)
+                || mRideRequest.getPassengerStatus().equals(PassengerStatus.Picked)){
 
             Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mRideRequest);
             Log.d(TAG, "Current Time is:"+Calendar.getInstance().getTime().toString());

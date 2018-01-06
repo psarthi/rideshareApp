@@ -846,7 +846,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         if (mRideRequest.getRideMode().equals(RideMode.Free)) {
             //This will give 100% discount
             setFare(0);
-        } else {
+        }
+        else {
             showProgressDialog();
             RESTClient.post(getActivity(),APIUrl.GET_PRE_BOOKING_RIDE_REQUEST_INFO, mRideRequest, new JsonHttpResponseHandler(){
                 @Override
@@ -856,6 +857,9 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     mPreBookingRideRequestResult =
                             new Gson().fromJson(response.toString(), PreBookingRideRequestResult.class);
                     mMaxFare = mPreBookingRideRequestResult.getMaxFare();
+                    //This is important for getting the dynamic value in pickup time/distance variation
+                    mTravelDistance = mPreBookingRideRequestResult.getGoogleDistance().getRows().get(0).getElements().get(0).getDistance().getValue();
+
                     setFare(mMaxFare);
                 }
 

@@ -51,9 +51,9 @@
     <string name="vehicle_sub_category_label">Vehicle Sub Category</string>
     <string name="save_button_text">Save</string>
     <string name="option_button_text">Option</string>
-    <string name="drop_distance_variation">Drop Distance Variation (mts)</string>
-    <string name="pickup_distance_variation">Pickup Distance Variation (mts)</string>
-    <string name="pickup_time_variation">Pickup Time Variation (min)</string>
+    <string name="drop_distance_variation">Max Drop Distance (mts)</string>
+    <string name="pickup_distance_variation">Max Pickup Distance (mts)</string>
+    <string name="pickup_time_variation">Pickup Time Flexibility (+/- min)</string>
     <string name="from_adress_hint">From</string>
     <string name="to_address_hint">To</string>
     <string name="ride_offer_id_text">"Ride Offer No. "</string>
