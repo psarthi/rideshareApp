@@ -40,7 +40,7 @@
             android:drawableStart="@drawable/ic_green_person_marker"
             android:gravity="center_vertical"
             android:text="Gopalan Grandeur, Hoodi, Bangalore"
-            android:maxLines="1"/>
+            android:maxLines="@integer/address_max_line"/>
 
         <TextView
             android:id="@+id/ride_pickup_point_variation_text"
@@ -65,7 +65,7 @@
             android:drawableStart="@drawable/ic_red_person_marker"
             android:gravity="center_vertical"
             android:text="Ajmera Infinity, Electronic City, Bangalore"
-            android:maxLines="1"/>
+            android:maxLines="@integer/address_max_line"/>
 
         <TextView
             android:id="@+id/ride_drop_point_variation_text"

@@ -419,13 +419,20 @@ public class RidesOptionFragment extends BaseFragment
     public void onVehicleCategoriesReady(List<VehicleCategory> vehicleCategories) {
         mVehicleCategories = vehicleCategories;
 
-        int i=0;
-        for (VehicleSubCategory subCategory: mRidesOption.getVehicleCategory().getSubCategories()){
+        //This will set vehicle category as per the preference
+        for (int i =0; i <mVehicleCategorySpinner.getCount(); i++){
+            if (mVehicleCategorySpinner.getItemAtPosition(i).equals(mRidesOption.getVehicleCategory().getName())){
+                mVehicleCategorySpinner.setSelection(i);
+                break;
+            }
+        }
+
+        //This will set vehicle sub category as per the preference
+        for (int i =0; i <mVehicleSubCategorySpinner.getCount(); i++){
             if (mVehicleSubCategorySpinner.getItemAtPosition(i).equals(mRidesOption.getVehicleSubCategory().getName())){
                 mVehicleSubCategorySpinner.setSelection(i);
                 break;
             }
-            i++;
         }
 
     }

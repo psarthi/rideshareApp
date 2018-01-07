@@ -737,7 +737,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 moveCamera();
                 //This will set the fare when both the to/from location is there
                 //Need to check if the input is valid before calling getFare this will save unnecessary calls
-                if (validateInput()) getFare();
+                if (validateInput()) getDistanceAndSetFare();
             }
         }
     }
@@ -804,14 +804,20 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                dismissProgressDialog();
+                //No need to dismiss progress dialog as we are calling getFare and we are dismissing there
                 Log.d(TAG, "Google Distance Success Response:" + response);
                 mGoogleDistance = new Gson().fromJson(response.toString(), GoogleDistance.class);
                 if (mGoogleDistance.getStatus().equals("OK") && mGoogleDistance.getRows().get(0).getElements().get(0).getStatus().equals("OK")){
+                    Element element = mGoogleDistance.getRows().get(0).getElements().get(0);
+                    //This is important for getting the dynamic value in pickup time/distance variation
+                    mTravelDistance = element.getDistance().getValue();
+                    mRideRequest.setTravelDistance(mTravelDistance);
                     //Maxfare is applicable for All Sub-Categories else for specific sub-category you will get exact fare
                     getFare();
                 }else {
                     Toast.makeText(getActivity(),"No valid route found, please enter alternate location",Toast.LENGTH_LONG).show();
+                    mFareTextView.setVisibility(View.INVISIBLE);
+                    dismissProgressDialog();
                 }
             }
 
@@ -848,7 +854,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             setFare(0);
         }
         else {
-            showProgressDialog();
+            //No need to show progress dialog as this would be called
+            //post getting direction and we are already showing progress dialog there
             RESTClient.post(getActivity(),APIUrl.GET_PRE_BOOKING_RIDE_REQUEST_INFO, mRideRequest, new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -857,9 +864,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     mPreBookingRideRequestResult =
                             new Gson().fromJson(response.toString(), PreBookingRideRequestResult.class);
                     mMaxFare = mPreBookingRideRequestResult.getMaxFare();
-                    //This is important for getting the dynamic value in pickup time/distance variation
-                    mTravelDistance = mPreBookingRideRequestResult.getGoogleDistance().getRows().get(0).getElements().get(0).getDistance().getValue();
-
                     setFare(mMaxFare);
                 }
 

@@ -63,7 +63,7 @@ as well as inside any other layout as well e.g. In HomePage as well as RidesList
               android:text="Gopalan Grandeur, Hoodi, Bangalore"
               android:gravity="center_vertical"
               android:drawableLeft="@drawable/ic_green_flag"
-              android:maxLines="1"/>
+              android:maxLines="@integer/address_max_line"/>
 
     <TextView android:id="@+id/ride_request_drop_point_text"
               android:layout_width="wrap_content"
@@ -71,7 +71,7 @@ as well as inside any other layout as well e.g. In HomePage as well as RidesList
               android:text="Ajmera Infinity, Electronic City, Bangalore"
               android:gravity="center_vertical"
               android:drawableLeft="@drawable/ic_red_flag"
-              android:maxLines="1"/>
+              android:maxLines="@integer/address_max_line"/>
 
     <LinearLayout android:id="@+id/ride_request_buttons_layout"
                   android:layout_width="match_parent"
