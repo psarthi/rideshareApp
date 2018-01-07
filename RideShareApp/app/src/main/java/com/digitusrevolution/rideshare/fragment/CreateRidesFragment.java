@@ -554,6 +554,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             mRideRequest.setVehicleCategory(mUpdatedRidesOption.getVehicleCategory());
             mRideRequest.setVehicleSubCategory(mUpdatedRidesOption.getVehicleSubCategory());
             mRideRequest.setRideMode(mUpdatedRidesOption.getRideMode());
+            mRideRequest.setTravelDistance(mTravelDistance);
         } else {
             mRideRequest.setSeatRequired(mUser.getPreference().getSeatRequired());
             mRideRequest.setLuggageCapacityRequired(mUser.getPreference().getLuggageCapacityRequired());
@@ -563,6 +564,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             mRideRequest.setVehicleCategory(mUser.getPreference().getVehicleCategory());
             mRideRequest.setVehicleSubCategory(mUser.getPreference().getVehicleSubCategory());
             mRideRequest.setRideMode(mUser.getPreference().getRideMode());
+            mRideRequest.setTravelDistance(mTravelDistance);
         }
     }
 
@@ -587,7 +589,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private boolean validateInput(){
 
         if (mToLatLng ==null || mFromLatLng == null){
-            Toast.makeText(getActivity(), "Please ensure input is valid",Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Please ensure location is valid",Toast.LENGTH_LONG).show();
             return false;
         }
         if (mRideType.equals(RideType.OfferRide) && mGoogleDirection == null){
