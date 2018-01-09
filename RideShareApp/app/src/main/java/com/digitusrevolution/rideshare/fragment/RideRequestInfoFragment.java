@@ -139,13 +139,6 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         getActivity().setTitle(TITLE);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onRideRequestInfoFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -241,7 +234,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onRideRequestInfoFragmentInteraction(Uri uri);
+        void onRideRequestInfoFragmentInteraction(String data);
     }
 
     public void updateBill(Bill bill){

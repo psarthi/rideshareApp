@@ -1,8 +1,6 @@
 package com.digitusrevolution.rideshare.activity;
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +17,8 @@ import android.widget.TextView;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BillFragment;
+import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
+import com.digitusrevolution.rideshare.fragment.GroupListFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RedeemFragment;
@@ -27,6 +27,7 @@ import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
+import com.digitusrevolution.rideshare.fragment.SearchFragment;
 import com.digitusrevolution.rideshare.fragment.TopUpFragment;
 import com.digitusrevolution.rideshare.fragment.TransactionFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
@@ -38,11 +39,6 @@ import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -61,7 +57,10 @@ public class HomePageActivity extends BaseActivity
         WalletFragment.OnFragmentInteractionListener,
         TopUpFragment.OnFragmentInteractionListener,
         TransactionFragment.OnFragmentInteractionListener,
-        RedeemFragment.OnFragmentInteractionListener{
+        RedeemFragment.OnFragmentInteractionListener,
+        GroupHomePageFragment.OnFragmentInteractionListener,
+        GroupListFragment.OnFragmentInteractionListener,
+        SearchFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -185,6 +184,7 @@ public class HomePageActivity extends BaseActivity
             } else if (id == R.id.nav_friends) {
                 Log.d(TAG, "Friends Clicked");
             } else if (id == R.id.nav_groups) {
+                mFragmentLoader.loadGroupHomePageFragment();
                 Log.d(TAG, "Groups Clicked");
             }
             else if (id == R.id.nav_wallet) {
@@ -302,13 +302,15 @@ public class HomePageActivity extends BaseActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        Log.d(TAG,item.getTitle().toString());
+        Log.d(TAG,"Selected Item is-"+item.getTitle().toString());
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
-        return super.onOptionsItemSelected(item);
+        //Reason for returning false, so that onOptionItemsSelected method of fragment would get called,
+        //else it won't get called
+        return false;
+        //return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -320,17 +322,17 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onRideInfoFragmentInteraction(Uri uri) {
+    public void onRideInfoFragmentInteraction(String data) {
 
     }
 
     @Override
-    public void onRideRequestInfoFragmentInteraction(Uri uri) {
+    public void onRideRequestInfoFragmentInteraction(String data) {
 
     }
 
     @Override
-    public void onUserProfileFragmentInteraction(Uri uri) {
+    public void onUserProfileFragmentInteraction(String data) {
 
     }
 
@@ -380,6 +382,21 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onAddVehicleFragmentFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onGroupHomePageFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onGroupListFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onSearchFragmentInteraction(String data) {
 
     }
 }

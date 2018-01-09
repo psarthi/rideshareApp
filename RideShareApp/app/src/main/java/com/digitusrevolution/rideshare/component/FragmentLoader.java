@@ -10,11 +10,13 @@ import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.BillFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
+import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
+import com.digitusrevolution.rideshare.fragment.SearchFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.fragment.WalletFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
@@ -144,6 +146,22 @@ public class FragmentLoader {
                 newInstance(requiredBalanceVisiblity, requiredBalanceAmount);
         fragmentTransaction.replace(R.id.home_page_container, walletFragment, WalletFragment.TAG);
         fragmentTransaction.addToBackStack(WalletFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadGroupHomePageFragment() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        GroupHomePageFragment groupHomePageFragment = GroupHomePageFragment.newInstance(null, null);
+        fragmentTransaction.replace(R.id.home_page_container, groupHomePageFragment, GroupHomePageFragment.TAG);
+        fragmentTransaction.addToBackStack(GroupHomePageFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadSearchFragment() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        SearchFragment searchFragment = SearchFragment.newInstance(null, null);
+        fragmentTransaction.replace(R.id.home_page_container, searchFragment, SearchFragment.TAG);
+        fragmentTransaction.addToBackStack(SearchFragment.TAG);
         fragmentTransaction.commit();
     }
 

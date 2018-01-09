@@ -145,13 +145,6 @@ public class UserProfileFragment extends BaseFragment {
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onUserProfileFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -187,7 +180,7 @@ public class UserProfileFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onUserProfileFragmentInteraction(Uri uri);
+        void onUserProfileFragmentInteraction(String data);
     }
 
     public int getUserId(){

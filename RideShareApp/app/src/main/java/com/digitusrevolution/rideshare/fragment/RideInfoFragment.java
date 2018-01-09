@@ -203,13 +203,6 @@ public class RideInfoFragment extends BaseFragment implements
         showChildFragmentDetails();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onRideInfoFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -274,7 +267,7 @@ public class RideInfoFragment extends BaseFragment implements
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onRideInfoFragmentInteraction(Uri uri);
+        void onRideInfoFragmentInteraction(String data);
     }
 
     public void updateBill(Bill bill){
