@@ -12,11 +12,11 @@ import com.digitusrevolution.rideshare.model.app.GroupResultType;
  * Created by psarthi on 1/8/18.
  */
 
-public class GroupViewPagerAdapter extends FragmentStatePagerAdapter{
+public class GroupHomePageViewPagerAdapter extends FragmentStatePagerAdapter{
 
-    public static final String TAG = GroupViewPagerAdapter.class.getName();
+    public static final String TAG = GroupHomePageViewPagerAdapter.class.getName();
 
-    public GroupViewPagerAdapter(FragmentManager fm) {
+    public GroupHomePageViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 

@@ -1,15 +1,11 @@
 package com.digitusrevolution.rideshare.fragment;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +16,7 @@ import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
-import com.digitusrevolution.rideshare.adapter.GroupViewPagerAdapter;
+import com.digitusrevolution.rideshare.adapter.GroupHomePageViewPagerAdapter;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 
 /**
@@ -46,7 +42,7 @@ public class GroupHomePageFragment extends BaseFragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    private GroupViewPagerAdapter mGroupViewPagerAdapter;
+    private GroupHomePageViewPagerAdapter mGroupHomePageViewPagerAdapter;
     private FragmentLoader mFragmentLoader;
 
     public GroupHomePageFragment() {
@@ -78,7 +74,7 @@ public class GroupHomePageFragment extends BaseFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        mGroupViewPagerAdapter = new GroupViewPagerAdapter(getChildFragmentManager());
+        mGroupHomePageViewPagerAdapter = new GroupHomePageViewPagerAdapter(getChildFragmentManager());
         //This will append items option menu by invoking fragment onCreateOptionMenu
         //So that you can have customer option menu for each fragment
         setHasOptionsMenu(true);
@@ -98,7 +94,8 @@ public class GroupHomePageFragment extends BaseFragment {
         createGroupFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mFragmentLoader.loadCreateGroupFragment();
+                //mFragmentLoader.loadCreateGroupFragment();
+                mFragmentLoader.loadGroupInfoFragment();
             }
         });
 
@@ -106,7 +103,7 @@ public class GroupHomePageFragment extends BaseFragment {
         tabLayout.addTab(tabLayout.newTab());
 
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setAdapter(mGroupViewPagerAdapter);
+        viewPager.setAdapter(mGroupHomePageViewPagerAdapter);
 
         tabLayout.getTabAt(0).setText("My Groups");
         tabLayout.getTabAt(1).setText("Invites");

@@ -1,19 +1,24 @@
 package com.digitusrevolution.rideshare.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v7.app.ActionBar;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
+import com.digitusrevolution.rideshare.adapter.GroupInfoViewPager;
+import com.digitusrevolution.rideshare.adapter.RidesListViewPagerAdapter;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,6 +80,38 @@ public class GroupInfoFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_info, container, false);
+        TabLayout tabLayout = view.findViewById(R.id.group_tab);
+        ImageView imageView = view.findViewById(R.id.group_imageView);
+        CommonUtil commonUtil = new CommonUtil(this);
+        BasicUser user = commonUtil.getUser();
+        Picasso.with(getActivity()).load(user.getPhoto().getImageLocation()).into(imageView);
+        final ViewPager viewPager = view.findViewById(R.id.group_viewPager);
+
+        int pageCount = 3;
+
+        //This is very important else you will have issue in syncing tab selection with view pager content
+        //i.e. view pager may show request ride but tab selection would show offer ride
+        tabLayout.setupWithViewPager(viewPager);
+        GroupInfoViewPager groupInfoViewPager = new GroupInfoViewPager(getChildFragmentManager(), pageCount);
+        viewPager.setAdapter(groupInfoViewPager);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Log.d(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                Log.d(TAG, "Tab Unselected:"+tab.getText());
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                Log.d(TAG, "Tab Reselected:"+tab.getText());
+            }
+        });
+
         return view;
     }
 

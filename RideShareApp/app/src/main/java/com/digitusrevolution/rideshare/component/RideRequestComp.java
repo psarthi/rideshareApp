@@ -98,7 +98,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         if (mListener instanceof BaseFragment){
             setExtraOfBasicLayout(layout);
         } else {
-            Log.d(TAG, "Basic Ride Request Layout within Rides List, So Payment Code information for Id:"+mBasicRideRequest.getId());
+            Log.d(TAG, "Basic Ride Request Layout found. Called from Rides List, so hiding payment code information for Id:"+mBasicRideRequest.getId());
             layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.GONE);
         }
 

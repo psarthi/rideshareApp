@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:gravity="center_vertical"
+    tools:showIn="@layout/fragment_group_info">
+
+    <TextView
+        android:id="@+id/group_member"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_group_large"
+        android:drawablePadding="@dimen/default_padding"
+        android:text="100"
+        android:gravity="center_vertical"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/default_margin"/>
+
+    <TextView
+        android:id="@+id/group_up_vote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_thumb_up_large"
+        android:drawablePadding="@dimen/default_padding"
+        android:text="90"
+        android:gravity="center_vertical"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/default_margin"/>
+
+    <TextView
+        android:id="@+id/group_down_vote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_thumb_down_large"
+        android:drawablePadding="@dimen/default_padding"
+        android:text="10"
+        android:gravity="center_vertical"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/default_margin"/>
+
+    <ImageView
+        android:id="@+id/group_invite_friend"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_person_add_large"
+        android:gravity="center_vertical"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/default_margin"/>
+
+</LinearLayout>

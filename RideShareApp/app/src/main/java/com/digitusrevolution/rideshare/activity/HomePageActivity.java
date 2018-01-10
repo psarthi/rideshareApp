@@ -304,6 +304,15 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //Reason for mentiong this switch case, so that it can handle back button
+        //By default even without this fragment back button is getting handled
+        //but activity back button would not be handled if this is not there
+        //so for consistency and future requirement, lets have this line
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
         //Reason for returning false, so that onOptionItemsSelected method of fragment would get called,
         //else it won't get called
         return false;
