@@ -187,6 +187,9 @@ public class RideInfoFragment extends BaseFragment implements
         //Commenting this as post ride confirmation, this takes you back to create ride screen which looks awkward
         //This is fine for Rides List screen but not good for Create Rides post confirmation screen
         //((HomePageActivity)getActivity()).showBackButton(true);
+
+        //Disabling the back button as user profile enabled it
+        ((HomePageActivity)getActivity()).showBackButton(false);
         getActivity().setTitle(TITLE);
         Log.d(TAG,"Inside OnResume");
 

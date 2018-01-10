@@ -7,33 +7,33 @@
     <group android:checkableBehavior="single" android:id="@+id/core_group_menu">
         <item
             android:id="@+id/nav_home"
-            android:icon="@android:drawable/btn_default"
+            android:icon="@drawable/ic_home_medium"
             android:title="Home"/>
         <item
             android:id="@+id/nav_rides"
-            android:icon="@android:drawable/btn_default"
+            android:icon="@drawable/ic_vehicle_medium"
             android:title="Rides"/>
     </group>
 
     <group android:checkableBehavior="single" android:id="@+id/trust_network_menu">
         <item
             android:id="@+id/nav_groups"
-            android:icon="@drawable/ic_group"
+            android:icon="@drawable/ic_group_medium"
             android:title="Groups"/>
         <item
             android:id="@+id/nav_friends"
-            android:icon="@drawable/ic_friends"
+            android:icon="@drawable/ic_friend_medium"
             android:title="Friends"/>
     </group>
 
     <group android:checkableBehavior="single" android:id="@+id/misc_group_menu">
         <item
             android:id="@+id/nav_wallet"
-            android:icon="@android:drawable/btn_default"
+            android:icon="@drawable/ic_wallet_card_medium"
             android:title="Wallet"/>
         <item
             android:id="@+id/nav_signout"
-            android:icon="@android:drawable/btn_default"
+            android:icon="@drawable/ic_sign_out_medium"
             android:title="SignOut"/>
     </group>
 
