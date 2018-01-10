@@ -94,8 +94,7 @@ public class GroupHomePageFragment extends BaseFragment {
         createGroupFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //mFragmentLoader.loadCreateGroupFragment();
-                mFragmentLoader.loadGroupInfoFragment();
+                mFragmentLoader.loadCreateGroupFragment();
             }
         });
 

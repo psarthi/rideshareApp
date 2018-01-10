@@ -5,8 +5,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
+import com.digitusrevolution.rideshare.fragment.AboutGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupListFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListFragment;
+import com.digitusrevolution.rideshare.fragment.UserListFragment;
 import com.digitusrevolution.rideshare.model.app.GroupResultType;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 
@@ -28,15 +30,13 @@ public class GroupInfoViewPager extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = null;
         if (position==0){
-            fragment = GroupListFragment.newInstance(GroupResultType.Member, null);
+            fragment = AboutGroupFragment.newInstance(null, null);
         }
         if (position==1){
-            Log.d(TAG, "Getting Ride List Fragment with Offered Ride Type");
-            fragment = RidesListFragment.newInstance(RideType.OfferRide);
+            fragment = UserListFragment.newInstance(null, null);
         }
         if (position == 2){
-            Log.d(TAG, "Getting Ride List Fragment with Requested Ride Type");
-            fragment = RidesListFragment.newInstance(RideType.RequestRide);
+            fragment = UserListFragment.newInstance(null, null);
         }
         return fragment;
 

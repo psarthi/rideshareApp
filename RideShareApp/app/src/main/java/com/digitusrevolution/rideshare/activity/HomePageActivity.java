@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.fragment.AboutGroupFragment;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BillFragment;
 import com.digitusrevolution.rideshare.fragment.CreateGroupFragment;
@@ -33,6 +34,7 @@ import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.fragment.SearchFragment;
 import com.digitusrevolution.rideshare.fragment.TopUpFragment;
 import com.digitusrevolution.rideshare.fragment.TransactionFragment;
+import com.digitusrevolution.rideshare.fragment.UserListFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.fragment.WalletFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
@@ -66,7 +68,9 @@ public class HomePageActivity extends BaseActivity
         SearchFragment.OnFragmentInteractionListener,
         CreateGroupFragment.OnFragmentInteractionListener,
         MembershipFormFragment.OnFragmentInteractionListener,
-        GroupInfoFragment.OnFragmentInteractionListener{
+        GroupInfoFragment.OnFragmentInteractionListener,
+        UserListFragment.OnFragmentInteractionListener,
+        AboutGroupFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -418,6 +422,16 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onGroupInfoFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onUserListFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onAboutGroupFragmentInteraction(String data) {
 
     }
 }
