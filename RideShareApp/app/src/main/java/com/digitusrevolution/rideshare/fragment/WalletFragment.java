@@ -80,9 +80,11 @@ public class WalletFragment extends BaseFragment {
         final TabLayout tabLayout = view.findViewById(R.id.wallet_tab);
         mViewPager = view.findViewById(R.id.wallet_viewPager);
 
+        /* Commenting this as we have added the page title in viewpager adapter itself
         tabLayout.addTab(tabLayout.newTab());
         tabLayout.addTab(tabLayout.newTab());
         tabLayout.addTab(tabLayout.newTab());
+        */
 
         //This is very important else you will have issue in syncing tab selection with view pager content
         //i.e. view pager may show request ride but tab selection would show offer ride
@@ -90,9 +92,11 @@ public class WalletFragment extends BaseFragment {
         mViewPager.setAdapter(mWalletViewPagerAdapter);
 
         //This is very important else Tab heading would be blank and don't set this upfront while adding tab, as that doesn't come into effect
+        /* Commenting this as we have added the page title in viewpager adapter itself
         tabLayout.getTabAt(0).setText("Top Up");
         tabLayout.getTabAt(1).setText("Transaction");
         tabLayout.getTabAt(2).setText("Redeem");
+        */
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

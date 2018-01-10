@@ -39,4 +39,17 @@ public class GroupHomePageViewPagerAdapter extends FragmentStatePagerAdapter{
     public int getCount() {
         return 2;
     }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position) {
+            case 0:
+                return "My Groups";
+            case 1:
+                return "Invites";
+            default:
+                return "My Groups";
+        }
+    }
+
 }

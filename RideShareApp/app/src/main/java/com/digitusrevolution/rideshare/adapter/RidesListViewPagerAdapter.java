@@ -43,4 +43,17 @@ public class RidesListViewPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return 2;
     }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position) {
+            case 0:
+                return "Offered Rides";
+            case 1:
+                return "Requested Rides";
+            default:
+                return "Offered Rides";
+        }
+    }
+
 }

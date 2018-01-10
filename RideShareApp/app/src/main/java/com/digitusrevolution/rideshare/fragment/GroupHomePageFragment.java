@@ -99,14 +99,8 @@ public class GroupHomePageFragment extends BaseFragment {
             }
         });
 
-        tabLayout.addTab(tabLayout.newTab());
-        tabLayout.addTab(tabLayout.newTab());
-
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setAdapter(mGroupHomePageViewPagerAdapter);
-
-        tabLayout.getTabAt(0).setText("My Groups");
-        tabLayout.getTabAt(1).setText("Invites");
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
