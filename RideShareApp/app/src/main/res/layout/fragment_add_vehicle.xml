@@ -57,6 +57,7 @@
                   android:padding="@dimen/default_padding"
                   android:gravity="bottom">
 
+        <!-- Commented this as we have enabled back button on toolbar
         <Button
             android:id="@+id/add_vehicle_cancel_button"
             style="@style/Widget.AppCompat.Button.Colored"
@@ -66,14 +67,15 @@
             android:background="@color/colorPrimary"
             android:text="@string/cancel_button_text"
             android:textAllCaps="false"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:layout_marginRight="@dimen/default_margin"/>
+         -->
 
         <Button
             android:id="@+id/add_vehicle_add_button"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
             android:layout_weight="1"
             android:background="@color/colorPrimary"
             android:text="@string/add_button_text"

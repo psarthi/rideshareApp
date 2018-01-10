@@ -17,10 +17,13 @@ import android.widget.TextView;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BillFragment;
+import com.digitusrevolution.rideshare.fragment.CreateGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
+import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
 import com.digitusrevolution.rideshare.fragment.GroupListFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
+import com.digitusrevolution.rideshare.fragment.MembershipFormFragment;
 import com.digitusrevolution.rideshare.fragment.RedeemFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
@@ -60,7 +63,10 @@ public class HomePageActivity extends BaseActivity
         RedeemFragment.OnFragmentInteractionListener,
         GroupHomePageFragment.OnFragmentInteractionListener,
         GroupListFragment.OnFragmentInteractionListener,
-        SearchFragment.OnFragmentInteractionListener{
+        SearchFragment.OnFragmentInteractionListener,
+        CreateGroupFragment.OnFragmentInteractionListener,
+        MembershipFormFragment.OnFragmentInteractionListener,
+        GroupInfoFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -298,15 +304,6 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        Log.d(TAG,"Selected Item is-"+item.getTitle().toString());
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
         //Reason for returning false, so that onOptionItemsSelected method of fragment would get called,
         //else it won't get called
         return false;
@@ -397,6 +394,21 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onSearchFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onCreateGroupFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onMembershipFormFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onGroupInfoFragmentInteraction(String data) {
 
     }
 }

@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 import android.widget.RatingBar;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.CoTravellerAdapter;
 import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideComp;
@@ -183,6 +184,9 @@ public class RideInfoFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
+        //Commenting this as post ride confirmation, this takes you back to create ride screen which looks awkward
+        //This is fine for Rides List screen but not good for Create Rides post confirmation screen
+        //((HomePageActivity)getActivity()).showBackButton(true);
         getActivity().setTitle(TITLE);
         Log.d(TAG,"Inside OnResume");
 

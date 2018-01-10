@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
@@ -110,6 +111,7 @@ public class TopUpFragment extends BaseFragment {
             //Reason for adding 1 is to just take care of decimals
             mMinTopUpAmount = (int) (mRequiredBalanceAmount - mAccount.getBalance() + 1);
 
+            /* Commented this as have enabled back button on the toolbar
             view.findViewById(R.id.top_up_cancel_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -117,10 +119,11 @@ public class TopUpFragment extends BaseFragment {
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
             });
+            */
 
         } else {
             view.findViewById(R.id.required_wallet_balance).setVisibility(View.GONE);
-            view.findViewById(R.id.top_up_cancel_button).setVisibility(View.GONE);
+            //view.findViewById(R.id.top_up_cancel_button).setVisibility(View.GONE);
         }
 
         setAddMoneyButtonListener(view);
@@ -165,7 +168,7 @@ public class TopUpFragment extends BaseFragment {
                             if (mRequiredBalanceVisiblity) {
                                 //This will go back to the create rides page
                                 hideSoftKeyBoard();
-                                Log.d(TAG, "New Wallet Balance:" + mCurrencySymbol + mAccount.getBalance());
+                                Toast.makeText(getActivity(), "New Wallet Balance:" + mCurrencySymbol + mAccount.getBalance(), Toast.LENGTH_LONG).show();
                                 getActivity().getSupportFragmentManager().popBackStack();
                             }
                         }

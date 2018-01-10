@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.ThumbnailVehicleAdapter;
 import com.digitusrevolution.rideshare.component.CommonComp;
 import com.digitusrevolution.rideshare.config.Constant;
@@ -361,6 +362,7 @@ public class RidesOptionFragment extends BaseFragment
     private void setButtonsOnClickListener(View view) {
         View buttonLayoutView = view.findViewById(R.id.button_layout);
 
+        /* Commented this as we have enabled back button on toolbar
         buttonLayoutView.findViewById(R.id.rides_option_cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -369,6 +371,7 @@ public class RidesOptionFragment extends BaseFragment
                 getActivity().getSupportFragmentManager().popBackStack(CreateRidesFragment.TAG, 0);
             }
         });
+        */
 
         buttonLayoutView.findViewById(R.id.rides_option_save_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -388,7 +391,7 @@ public class RidesOptionFragment extends BaseFragment
     @Override
     public void onResume() {
         super.onResume();
-        //((HomePageActivity)getActivity()).showBackButton(true);
+        ((HomePageActivity)getActivity()).showBackButton(true);
         if (mRideType.equals(RideType.OfferRide)){
             getActivity().setTitle(OFFER_RIDE_OPTION_TITLE);
         } else {

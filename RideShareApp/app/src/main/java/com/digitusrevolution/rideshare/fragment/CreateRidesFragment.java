@@ -25,6 +25,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.TrustNetworkComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
@@ -606,6 +607,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     public void onResume() {
         Log.d(TAG,"onResume Called");
         super.onResume();
+        ((HomePageActivity)getActivity()).showBackButton(false);
         //Its important to set Title here else while loading fragment from backstack, title would not change
         if (mRideType.equals(RideType.OfferRide)){
             getActivity().setTitle(OFFER_RIDE_TITLE);

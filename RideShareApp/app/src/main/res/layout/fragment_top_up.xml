@@ -33,6 +33,7 @@
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin">
 
+        <!-- Commented this as we have enabled back button on toolbar
         <Button
             android:id="@+id/top_up_cancel_button"
             style="@style/Widget.AppCompat.Button.Colored"
@@ -42,6 +43,7 @@
             android:background="@color/colorPrimary"
             android:text="@string/cancel_button_text"
             android:layout_marginRight="@dimen/default_margin"/>
+        -->
 
         <Button
             android:id="@+id/add_money_button"

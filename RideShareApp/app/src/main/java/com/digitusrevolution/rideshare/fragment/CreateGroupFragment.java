@@ -1,15 +1,9 @@
 package com.digitusrevolution.rideshare.fragment;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,24 +11,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
-import com.digitusrevolution.rideshare.adapter.GroupViewPagerAdapter;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link GroupHomePageFragment.OnFragmentInteractionListener} interface
+ * {@link CreateGroupFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link GroupHomePageFragment#newInstance} factory method to
+ * Use the {@link CreateGroupFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupHomePageFragment extends BaseFragment {
+public class CreateGroupFragment extends BaseFragment {
 
-    public static final String TAG = GroupHomePageFragment.class.getName();
-    public static final String TITLE = "Groups";
+    public static final String TAG = CreateGroupFragment.class.getName();
+    public static final String TITLE = "Create Group";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,10 +40,8 @@ public class GroupHomePageFragment extends BaseFragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    private GroupViewPagerAdapter mGroupViewPagerAdapter;
-    private FragmentLoader mFragmentLoader;
 
-    public GroupHomePageFragment() {
+    public CreateGroupFragment() {
         // Required empty public constructor
     }
 
@@ -59,11 +51,11 @@ public class GroupHomePageFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment GroupHomePageFragment.
+     * @return A new instance of fragment CreateGroupFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroupHomePageFragment newInstance(String param1, String param2) {
-        GroupHomePageFragment fragment = new GroupHomePageFragment();
+    public static CreateGroupFragment newInstance(String param1, String param2) {
+        CreateGroupFragment fragment = new CreateGroupFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -78,59 +70,22 @@ public class GroupHomePageFragment extends BaseFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        mGroupViewPagerAdapter = new GroupViewPagerAdapter(getChildFragmentManager());
-        //This will append items option menu by invoking fragment onCreateOptionMenu
-        //So that you can have customer option menu for each fragment
-        setHasOptionsMenu(true);
-        mFragmentLoader = new FragmentLoader(this);
+        //setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_group_home_page, container, false);
-
-        TabLayout tabLayout = view.findViewById(R.id.group_tab);
-        final ViewPager viewPager = view.findViewById(R.id.group_viewPager);
-        FloatingActionButton createGroupFab = view.findViewById(R.id.create_group);
-
-        createGroupFab.setOnClickListener(new View.OnClickListener() {
+        View view = inflater.inflate(R.layout.fragment_create_group, container, false);
+        Button nextButton = view.findViewById(R.id.create_group_next_button);
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                mFragmentLoader.loadCreateGroupFragment();
+            public void onClick(View v) {
+                FragmentLoader fragmentLoader = new FragmentLoader(CreateGroupFragment.this);
+                fragmentLoader.loadMembershipFormFragment();
             }
         });
-
-        tabLayout.addTab(tabLayout.newTab());
-        tabLayout.addTab(tabLayout.newTab());
-
-        tabLayout.setupWithViewPager(viewPager);
-        viewPager.setAdapter(mGroupViewPagerAdapter);
-
-        tabLayout.getTabAt(0).setText("My Groups");
-        tabLayout.getTabAt(1).setText("Invites");
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                Log.d(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                Log.d(TAG, "Tab Unselected:"+tab.getText());
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                Log.d(TAG, "Tab Reselected:"+tab.getText());
-            }
-        });
-
-
-
         return view;
     }
 
@@ -138,18 +93,10 @@ public class GroupHomePageFragment extends BaseFragment {
     public void onResume() {
         Log.d(TAG,"onResume");
         super.onResume();
-        ((HomePageActivity)getActivity()).showBackButton(false);
-        showBackStackDetails();
+        ((HomePageActivity)getActivity()).showBackButton(true);
         getActivity().setTitle(TITLE);
-        hideSoftKeyBoard();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(String data) {
-        if (mListener != null) {
-            mListener.onGroupHomePageFragmentInteraction(data);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -180,7 +127,7 @@ public class GroupHomePageFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onGroupHomePageFragmentInteraction(String data);
+        void onCreateGroupFragmentInteraction(String data);
     }
 
     @Override
@@ -188,7 +135,7 @@ public class GroupHomePageFragment extends BaseFragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.option_menu_item, menu);
         MenuItem item = menu.findItem(R.id.action_item);
-        item.setIcon(R.drawable.ic_search);
+        item.setTitle("NEXT");
     }
 
     @Override
@@ -200,8 +147,9 @@ public class GroupHomePageFragment extends BaseFragment {
         Log.d(TAG,"Selected Item is-"+item.getTitle().toString());
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_item) {
-            Log.d(TAG, "Search Clicked");
-            mFragmentLoader.loadSearchFragment();
+            Log.d(TAG, "Next Clicked");
+            FragmentLoader fragmentLoader = new FragmentLoader(CreateGroupFragment.this);
+            fragmentLoader.loadMembershipFormFragment();
             return true;
         }
         return super.onOptionsItemSelected(item);

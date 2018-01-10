@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
 import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
@@ -148,6 +149,7 @@ public class UserProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((HomePageActivity)getActivity()).showBackButton(true);
         getActivity().setTitle(TITLE);
     }
 

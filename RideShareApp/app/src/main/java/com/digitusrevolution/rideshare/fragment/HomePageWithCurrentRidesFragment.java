@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
 import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideComp;
@@ -345,7 +346,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     @Override
     public void onResume() {
         super.onResume();
-        //((HomePageActivity)getActivity()).showBackButton(false);
+        ((HomePageActivity)getActivity()).showBackButton(false);
         Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
         //We are using this temporarily as there is an issue with setting title on page load as whenever we click any item in left nav
         //Home page get refreshed as we are poppping all backstacks and home is the only fragment which would get reloaded

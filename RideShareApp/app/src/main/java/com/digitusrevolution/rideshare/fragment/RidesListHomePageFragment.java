@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.RidesListViewPagerAdapter;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -133,6 +134,7 @@ public class RidesListHomePageFragment extends BaseFragment {
         Log.d(TAG,"onResume");
         super.onResume();
         showBackStackDetails();
+        ((HomePageActivity)getActivity()).showBackButton(false);
         getActivity().setTitle(TITLE);
     }
 

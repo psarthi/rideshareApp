@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.WalletViewPagerAdapter;
 
 /**
@@ -123,6 +124,9 @@ public class WalletFragment extends BaseFragment {
         Log.d(TAG,"onResume");
         super.onResume();
         showBackStackDetails();
+        if (mRequiredBalanceVisiblity){
+            ((HomePageActivity)getActivity()).showBackButton(true);
+        }
         getActivity().setTitle(TITLE);
     }
 

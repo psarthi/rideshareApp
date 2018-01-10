@@ -12,6 +12,7 @@ import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
@@ -136,6 +137,9 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     @Override
     public void onResume() {
         super.onResume();
+        //Commenting this as post ride confirmation, this takes you back to create ride screen which looks awkward
+        //This is fine for Rides List screen but not good for Create Rides post confirmation screen
+        //((HomePageActivity)getActivity()).showBackButton(true);
         getActivity().setTitle(TITLE);
     }
 

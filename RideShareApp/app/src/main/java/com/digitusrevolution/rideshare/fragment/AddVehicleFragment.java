@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.CommonComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
@@ -124,19 +125,22 @@ CommonComp.onSeatLuggageSelectionListener{
         mModelText = view.findViewById(R.id.add_vehicle_model_text);
 
         mAddButton = view.findViewById(R.id.add_vehicle_add_button);
-        mCancelButton = view.findViewById(R.id.add_vehicle_cancel_button);
+        //Commented this as we have enabled back button on toolbar
+        //mCancelButton = view.findViewById(R.id.add_vehicle_cancel_button);
         setButtonsOnClickListener();
 
         return view;
     }
 
     private void setButtonsOnClickListener() {
+        /* Commented this as we have enabled back button on toolbar
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
+        */
 
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,6 +206,7 @@ CommonComp.onSeatLuggageSelectionListener{
     @Override
     public void onResume() {
         super.onResume();
+        ((HomePageActivity)getActivity()).showBackButton(true);
         getActivity().setTitle(TITLE);
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
