@@ -2,22 +2,49 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:orientation="vertical"
+             android:layout_margin="@dimen/default_margin"
              tools:context="com.digitusrevolution.rideshare.fragment.CreateGroupFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/photo_name_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Group Information"/>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/photo_camera_image_view"
+            android:layout_width="@dimen/medium_image_size"
+            android:layout_height="@dimen/medium_image_size"
+            android:src="@drawable/ic_photo_camera"/>
+
+        <EditText
+            android:id="@+id/group_name_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Group Name"
+            android:padding="@dimen/default_padding"
+            android:inputType="textNoSuggestions"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/group_description"
+        android:layout_below="@id/photo_name_layout"
+        android:padding="@dimen/default_padding"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/large_block_height"
+        android:background="@drawable/border"
+        android:hint="Brief Description (Optional)"
+        android:textStyle="italic"
+        android:gravity="start"/>
 
     <Button
         android:id="@+id/create_group_next_button"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
         android:background="@color/colorPrimary"
         android:layout_alignParentBottom="true"
         android:text="Next"/>

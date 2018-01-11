@@ -8,6 +8,7 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_medium"
+            android:iconTint="@android:color/black"
             android:title="Home"/>
         <item
             android:id="@+id/nav_rides"

@@ -51,13 +51,13 @@ public class GroupInfoViewPager extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "About us";
+                return "About Us";
             case 1:
                 return "Members";
             case 2:
                 return "Requests";
             default:
-                return "About us";
+                return "About Us";
         }
     }
 

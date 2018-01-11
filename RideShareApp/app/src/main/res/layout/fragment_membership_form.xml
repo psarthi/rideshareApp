@@ -1,25 +1,99 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.digitusrevolution.rideshare.fragment.MembershipFormFragment">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/default_margin"
+            android:fillViewport="true"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            tools:context="com.digitusrevolution.rideshare.fragment.MembershipFormFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Membership Form"/>
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/create_group_submit_button"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        android:background="@color/colorPrimary"
-        android:layout_alignParentBottom="true"
-        android:text="Create"/>
+        <TextView
+            android:id="@+id/add_question_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:text="Add Questions"
+            android:textAllCaps="true"
+            android:textSize="@dimen/heading1_text_size"/>
 
-</RelativeLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_question_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            app:fabSize="mini"
+            android:layout_toRightOf="@id/add_question_label"
+            android:src="@drawable/ic_add_white_custom"/>
+
+        <LinearLayout
+            android:id="@+id/sample_questions_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_question_label"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/sample_questions_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/add_question_label"
+                android:text="Sample Questions"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:textStyle="bold"/>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/add_question_label"
+                android:text="What's your employee Id ?"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/add_question_label"
+                android:text="What's your official email Id ?"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/add_question_label"
+                android:text="What's your flat Number ?"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/add_question_label"
+                android:text="What's your flat owner name ?"/>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/sample_questions_layout">
+
+            <include layout="@layout/membership_form_question"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/create_group_submit_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:layout_alignParentBottom="true"
+            android:text="Submit"/>
+
+    </RelativeLayout>
+
+</ScrollView>

@@ -28,7 +28,7 @@ import com.digitusrevolution.rideshare.component.FragmentLoader;
 public class MembershipFormFragment extends BaseFragment {
 
     public static final String TAG = MembershipFormFragment.class.getName();
-    public static final String TITLE = "Membership Form";
+    public static final String TITLE = "Create Membership Form";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
