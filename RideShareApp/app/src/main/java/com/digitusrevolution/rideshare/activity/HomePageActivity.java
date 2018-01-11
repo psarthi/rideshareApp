@@ -24,7 +24,7 @@ import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
 import com.digitusrevolution.rideshare.fragment.GroupListFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
-import com.digitusrevolution.rideshare.fragment.MembershipFormFragment;
+import com.digitusrevolution.rideshare.fragment.CreateMembershipFormFragment;
 import com.digitusrevolution.rideshare.fragment.RedeemFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
@@ -67,7 +67,7 @@ public class HomePageActivity extends BaseActivity
         GroupListFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         CreateGroupFragment.OnFragmentInteractionListener,
-        MembershipFormFragment.OnFragmentInteractionListener,
+        CreateMembershipFormFragment.OnFragmentInteractionListener,
         GroupInfoFragment.OnFragmentInteractionListener,
         UserListFragment.OnFragmentInteractionListener,
         AboutGroupFragment.OnFragmentInteractionListener{

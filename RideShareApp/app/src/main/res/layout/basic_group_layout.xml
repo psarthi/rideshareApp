@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/default_margin">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/group_imageView"
+        android:layout_width="@dimen/medium_image_size"
+        android:layout_height="@dimen/medium_image_size"
+        android:src="@drawable/ic_profile"/>
+
+    <LinearLayout
+        android:id="@+id/group_name_status_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_toRightOf="@id/group_imageView"
+        android:layout_marginStart="@dimen/small_margin">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Group Name"
+            android:layout_weight="0.7"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:text="Member"
+            android:textAllCaps="true"
+            android:textStyle="italic"
+            android:textColor="@color/colorPrimary"/>
+
+    </LinearLayout>
+
+    <include layout="@layout/group_info_single_row_small_icons_layout"
+             android:id="@+id/group_info_single_row_small_icons_layout"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_below="@id/group_name_status_layout"
+             android:layout_toRightOf="@id/group_imageView"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:background="@color/colorGrayLight"
+        android:layout_below="@id/group_info_single_row_small_icons_layout"
+        android:layout_marginTop="@dimen/default_margin"/>
+
+</RelativeLayout>

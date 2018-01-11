@@ -9,15 +9,17 @@
     android:gravity="center"
     android:layout_marginTop="@dimen/small_margin"
     android:layout_marginBottom="@dimen/small_margin"
-    tools:showIn="@layout/fragment_membership_form">
+    tools:showIn="@layout/fragment_create_membership_form">
 
     <ImageView
+        android:id="@+id/question_delete_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
         android:src="@drawable/ic_minus_circle"/>
 
     <EditText
+        android:id="@+id/question_text"
         android:layout_width="0dp"
         android:layout_weight="0.9"
         android:layout_height="wrap_content"

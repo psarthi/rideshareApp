@@ -14,7 +14,7 @@
         android:layout_marginBottom="@dimen/default_margin">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/photo_camera_image_view"
+            android:id="@+id/group_photo_image_view"
             android:layout_width="@dimen/medium_image_size"
             android:layout_height="@dimen/medium_image_size"
             android:src="@drawable/ic_photo_camera"/>

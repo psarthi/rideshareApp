@@ -1,7 +1,6 @@
 package com.digitusrevolution.rideshare.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,14 +19,14 @@ import com.digitusrevolution.rideshare.component.FragmentLoader;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MembershipFormFragment.OnFragmentInteractionListener} interface
+ * {@link CreateMembershipFormFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MembershipFormFragment#newInstance} factory method to
+ * Use the {@link CreateMembershipFormFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MembershipFormFragment extends BaseFragment {
+public class CreateMembershipFormFragment extends BaseFragment {
 
-    public static final String TAG = MembershipFormFragment.class.getName();
+    public static final String TAG = CreateMembershipFormFragment.class.getName();
     public static final String TITLE = "Create Membership Form";
 
     // TODO: Rename parameter arguments, choose names that match
@@ -41,7 +40,7 @@ public class MembershipFormFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public MembershipFormFragment() {
+    public CreateMembershipFormFragment() {
         // Required empty public constructor
     }
 
@@ -51,11 +50,11 @@ public class MembershipFormFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MembershipFormFragment.
+     * @return A new instance of fragment CreateMembershipFormFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MembershipFormFragment newInstance(String param1, String param2) {
-        MembershipFormFragment fragment = new MembershipFormFragment();
+    public static CreateMembershipFormFragment newInstance(String param1, String param2) {
+        CreateMembershipFormFragment fragment = new CreateMembershipFormFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -77,12 +76,12 @@ public class MembershipFormFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_membership_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_create_membership_form, container, false);
         Button submitButton = view.findViewById(R.id.create_group_submit_button);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentLoader fragmentLoader = new FragmentLoader(MembershipFormFragment.this);
+                FragmentLoader fragmentLoader = new FragmentLoader(CreateMembershipFormFragment.this);
                 fragmentLoader.loadGroupInfoFragment();
             }
         });
@@ -147,7 +146,7 @@ public class MembershipFormFragment extends BaseFragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_item) {
             Log.d(TAG, "Create Clicked");
-            FragmentLoader fragmentLoader = new FragmentLoader(MembershipFormFragment.this);
+            FragmentLoader fragmentLoader = new FragmentLoader(CreateMembershipFormFragment.this);
             fragmentLoader.loadGroupInfoFragment();
             return true;
         }

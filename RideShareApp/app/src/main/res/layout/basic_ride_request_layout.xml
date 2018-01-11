@@ -19,15 +19,17 @@ as well as inside any other layout as well e.g. In HomePage as well as RidesList
         android:layout_marginBottom="@dimen/default_margin">
 
         <TextView android:id="@+id/ride_request_id_text"
-                  android:layout_width="wrap_content"
+                  android:layout_width="0dp"
                   android:layout_height="wrap_content"
+                  android:layout_weight="0.7"
                   android:text="@string/ride_request_id_text"
                   android:textStyle="bold"
                   android:textColor="@color/colorPrimaryDark"/>
 
         <TextView android:id="@+id/ride_request_status_text"
-                  android:layout_width="match_parent"
+                  android:layout_width="0dp"
                   android:layout_height="wrap_content"
+                  android:layout_weight="0.3"
                   android:text="Unfulfilled"
                   android:gravity="end"
                   android:textStyle="bold|italic"
@@ -42,14 +44,16 @@ as well as inside any other layout as well e.g. In HomePage as well as RidesList
         android:layout_marginBottom="@dimen/default_margin">
 
         <TextView android:id="@+id/ride_request_pickup_time_text"
-                  android:layout_width="wrap_content"
+                  android:layout_width="0dp"
                   android:layout_height="wrap_content"
+                  android:layout_weight="1"
                   android:text="Sat Dec 2, 9:00 AM"
                   android:textStyle="bold|italic"/>
 
         <TextView android:id="@+id/ride_request_confirmation_code_text"
-                  android:layout_width="match_parent"
+                  android:layout_width="0dp"
                   android:layout_height="wrap_content"
+                  android:layout_weight="1"
                   android:text="Payment Code 1234"
                   android:gravity="end"
                   android:textStyle="bold|italic"

@@ -5,7 +5,7 @@
             android:layout_margin="@dimen/default_margin"
             android:fillViewport="true"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            tools:context="com.digitusrevolution.rideshare.fragment.MembershipFormFragment">
+            tools:context="com.digitusrevolution.rideshare.fragment.CreateMembershipFormFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:textSize="@dimen/heading1_text_size"/>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/add_question_fab"
+            android:id="@+id/add_question_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
@@ -73,15 +73,13 @@
 
         </LinearLayout>
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_below="@id/sample_questions_layout">
 
-            <include layout="@layout/membership_form_question"/>
+            <include layout="@layout/membership_form_question" android:id="@+id/membership_form_question"/>
 
         </LinearLayout>
 

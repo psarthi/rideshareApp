@@ -10,11 +10,11 @@ import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.BillFragment;
 import com.digitusrevolution.rideshare.fragment.CreateGroupFragment;
+import com.digitusrevolution.rideshare.fragment.CreateMembershipFormFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
-import com.digitusrevolution.rideshare.fragment.MembershipFormFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
@@ -178,9 +178,9 @@ public class FragmentLoader {
 
     public void loadMembershipFormFragment() {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        MembershipFormFragment membershipFormFragment = MembershipFormFragment.newInstance(null, null);
-        fragmentTransaction.replace(R.id.home_page_container, membershipFormFragment, MembershipFormFragment.TAG);
-        fragmentTransaction.addToBackStack(MembershipFormFragment.TAG);
+        CreateMembershipFormFragment createMembershipFormFragment = CreateMembershipFormFragment.newInstance(null, null);
+        fragmentTransaction.replace(R.id.home_page_container, createMembershipFormFragment, CreateMembershipFormFragment.TAG);
+        fragmentTransaction.addToBackStack(CreateMembershipFormFragment.TAG);
         fragmentTransaction.commit();
     }
 
