@@ -34,7 +34,7 @@
         android:layout_below="@id/photo_name_layout"
         android:padding="@dimen/default_padding"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/large_block_height"
+        android:layout_height="@dimen/medium_block_height"
         android:background="@drawable/border"
         android:hint="Brief Description (Optional)"
         android:textStyle="italic"

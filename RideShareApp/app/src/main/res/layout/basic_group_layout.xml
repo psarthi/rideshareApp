@@ -38,8 +38,9 @@
 
     </LinearLayout>
 
+    <!-- Id should be same for both layout small icons as well as standard icons so that our code would work for both -->
     <include layout="@layout/group_info_single_row_small_icons_layout"
-             android:id="@+id/group_info_single_row_small_icons_layout"
+             android:id="@+id/group_info_single_row_layout"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_below="@id/group_name_status_layout"
@@ -49,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_seperator_thickness"
         android:background="@color/colorGrayLight"
-        android:layout_below="@id/group_info_single_row_small_icons_layout"
+        android:layout_below="@id/group_info_single_row_layout"
         android:layout_marginTop="@dimen/default_margin"/>
 
 </RelativeLayout>

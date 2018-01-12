@@ -184,9 +184,9 @@ public class FragmentLoader {
         fragmentTransaction.commit();
     }
 
-    public void loadGroupInfoFragment() {
+    public void loadGroupInfoFragment(String group) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        GroupInfoFragment groupInfoFragment = GroupInfoFragment.newInstance(null, null);
+        GroupInfoFragment groupInfoFragment = GroupInfoFragment.newInstance(group);
         fragmentTransaction.replace(R.id.home_page_container, groupInfoFragment, GroupInfoFragment.TAG);
         fragmentTransaction.addToBackStack(GroupInfoFragment.TAG);
         fragmentTransaction.commit();

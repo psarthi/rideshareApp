@@ -16,8 +16,12 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.GroupInfoViewPager;
 import com.digitusrevolution.rideshare.adapter.RidesListViewPagerAdapter;
+import com.digitusrevolution.rideshare.component.GroupComp;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.digitusrevolution.rideshare.model.user.dto.FullGroup;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -31,18 +35,16 @@ import com.squareup.picasso.Picasso;
 public class GroupInfoFragment extends BaseFragment {
 
     public static final String TAG = GroupInfoFragment.class.getName();
-    public static final String TITLE = "Group Info";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_GROUP = "group";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String mGroupData;
 
     private OnFragmentInteractionListener mListener;
+    private FullGroup mGroup;
 
     public GroupInfoFragment() {
         // Required empty public constructor
@@ -52,16 +54,14 @@ public class GroupInfoFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param group fullGroup in Json format
      * @return A new instance of fragment GroupInfoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroupInfoFragment newInstance(String param1, String param2) {
+    public static GroupInfoFragment newInstance(String group) {
         GroupInfoFragment fragment = new GroupInfoFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_GROUP, group);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,9 +70,9 @@ public class GroupInfoFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mGroupData = getArguments().getString(ARG_GROUP);
         }
+        mGroup = new Gson().fromJson(mGroupData, FullGroup.class);
     }
 
     @Override
@@ -81,10 +81,11 @@ public class GroupInfoFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_info, container, false);
         TabLayout tabLayout = view.findViewById(R.id.group_tab);
-        ImageView imageView = view.findViewById(R.id.group_imageView);
+        ImageView imageView = view.findViewById(R.id.group_photo_image_view);
         CommonUtil commonUtil = new CommonUtil(this);
-        BasicUser user = commonUtil.getUser();
-        Picasso.with(getActivity()).load(user.getPhoto().getImageLocation()).into(imageView);
+
+        GroupComp groupComp = new GroupComp(this, mGroup);
+        groupComp.setGroupBasicInfo(view);
         final ViewPager viewPager = view.findViewById(R.id.group_viewPager);
 
         int pageCount = 3;
@@ -120,7 +121,8 @@ public class GroupInfoFragment extends BaseFragment {
         Log.d(TAG,"onResume");
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(false);
-        getActivity().setTitle(TITLE);
+        //This will set the title as group name
+        getActivity().setTitle(mGroup.getName());
     }
 
     @Override

@@ -27,7 +27,7 @@
 
             <!-- This is group image view-->
             <ImageView
-                android:id="@+id/group_imageView"
+                android:id="@+id/group_photo_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:background="@drawable/ic_car"

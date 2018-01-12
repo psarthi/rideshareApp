@@ -7,46 +7,89 @@
     android:gravity="center_vertical"
     tools:showIn="@layout/fragment_group_info">
 
-    <TextView
-        android:id="@+id/group_member"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_group_large"
-        android:drawablePadding="@dimen/default_padding"
-        android:text="100"
-        android:gravity="center_vertical"
         android:layout_weight="1"
-        android:layout_margin="@dimen/default_margin"/>
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/group_up_vote"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_thumb_up_large"
-        android:drawablePadding="@dimen/default_padding"
-        android:text="90"
-        android:gravity="center_vertical"
-        android:layout_weight="1"
-        android:layout_margin="@dimen/default_margin"/>
+        <TextView
+            android:id="@+id/group_member_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_group_large"
+            android:drawablePadding="@dimen/default_padding"
+            android:text="100"
+            android:gravity="center_vertical"
+            android:layout_margin="@dimen/default_margin"/>
 
-    <TextView
-        android:id="@+id/group_down_vote"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_thumb_down_large"
-        android:drawablePadding="@dimen/default_padding"
-        android:text="10"
-        android:gravity="center_vertical"
-        android:layout_weight="1"
-        android:layout_margin="@dimen/default_margin"/>
+        <!-- Commented this as a placeholde, in case in future if we want to add label for icons
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Members"
+            android:textAllCaps="true"/>
+        -->
 
-    <ImageView
-        android:id="@+id/group_invite_friend"
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_person_add_large"
-        android:gravity="center_vertical"
         android:layout_weight="1"
-        android:layout_margin="@dimen/default_margin"/>
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/group_up_vote_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_thumb_up_large"
+            android:drawablePadding="@dimen/default_padding"
+            android:text="90"
+            android:gravity="center_vertical"
+            android:layout_margin="@dimen/default_margin"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/group_down_vote_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_thumb_down_large"
+            android:drawablePadding="@dimen/default_padding"
+            android:text="10"
+            android:gravity="center_vertical"
+            android:layout_margin="@dimen/default_margin"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/group_invite_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_person_add_large"
+            android:gravity="center_vertical"
+            android:layout_margin="@dimen/default_margin"/>
+
+    </LinearLayout>
 
 </LinearLayout>

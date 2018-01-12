@@ -8,7 +8,7 @@
     tools:showIn="@layout/basic_group_layout">
 
     <TextView
-        android:id="@+id/group_member"
+        android:id="@+id/group_member_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_group_standard"
@@ -19,7 +19,7 @@
         android:layout_margin="@dimen/default_margin"/>
 
     <TextView
-        android:id="@+id/group_up_vote"
+        android:id="@+id/group_up_vote_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_thumb_up"
@@ -30,7 +30,7 @@
         android:layout_margin="@dimen/default_margin"/>
 
     <TextView
-        android:id="@+id/group_down_vote"
+        android:id="@+id/group_down_vote_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_thumb_down"

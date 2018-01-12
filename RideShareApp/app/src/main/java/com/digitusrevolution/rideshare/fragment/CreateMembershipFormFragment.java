@@ -25,6 +25,7 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
 import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
+import com.digitusrevolution.rideshare.model.user.dto.FullGroup;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -122,9 +123,12 @@ public class CreateMembershipFormFragment extends BaseFragment {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
+                            Log.d(TAG, "Group Created:"+response.toString());
                             dismissProgressDialog();
+                            hideSoftKeyBoard();
                             FragmentLoader fragmentLoader = new FragmentLoader(CreateMembershipFormFragment.this);
-                            fragmentLoader.loadGroupInfoFragment();
+                            //Response is full group
+                            fragmentLoader.loadGroupInfoFragment(response.toString());
                         }
 
                         @Override
@@ -149,8 +153,17 @@ public class CreateMembershipFormFragment extends BaseFragment {
 
     private boolean validateInput(){
         if (mQuestionsLayout.getChildCount() == 0){
-            Toast.makeText(getActivity(), "You need to have min one question, please add one", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Min one question is required", Toast.LENGTH_SHORT).show();
             return false;
+        } else {
+            for (int i = 0; i < mQuestionsLayout.getChildCount(); i++){
+                String question = ((EditText)mQuestionsLayout.getChildAt(i).findViewById(R.id.question_text)).getText().toString();
+                question = question.trim();
+                if (question.equals("")){
+                    Toast.makeText(getActivity(), "Question can't be blank", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
         }
         return true;
     }
