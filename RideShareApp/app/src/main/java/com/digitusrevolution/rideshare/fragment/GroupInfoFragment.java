@@ -119,7 +119,7 @@ public class GroupInfoFragment extends BaseFragment {
     public void onResume() {
         Log.d(TAG,"onResume");
         super.onResume();
-        ((HomePageActivity)getActivity()).showBackButton(true);
+        ((HomePageActivity)getActivity()).showBackButton(false);
         getActivity().setTitle(TITLE);
     }
 

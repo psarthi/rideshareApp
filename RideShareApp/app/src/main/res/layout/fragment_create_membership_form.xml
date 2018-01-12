@@ -74,12 +74,11 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/membership_form_question_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_below="@id/sample_questions_layout">
-
-            <include layout="@layout/membership_form_question" android:id="@+id/membership_form_question"/>
 
         </LinearLayout>
 
@@ -89,7 +88,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_below="@id/membership_form_question_layout"
             android:text="Submit"/>
 
     </RelativeLayout>

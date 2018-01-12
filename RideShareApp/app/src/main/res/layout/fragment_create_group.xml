@@ -46,7 +46,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/group_description"
+        android:layout_marginTop="@dimen/small_margin"
         android:text="Next"/>
 
 </RelativeLayout>

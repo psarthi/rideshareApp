@@ -176,9 +176,9 @@ public class FragmentLoader {
         fragmentTransaction.commit();
     }
 
-    public void loadMembershipFormFragment() {
+    public void loadMembershipFormFragment(String group) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        CreateMembershipFormFragment createMembershipFormFragment = CreateMembershipFormFragment.newInstance(null, null);
+        CreateMembershipFormFragment createMembershipFormFragment = CreateMembershipFormFragment.newInstance(group);
         fragmentTransaction.replace(R.id.home_page_container, createMembershipFormFragment, CreateMembershipFormFragment.TAG);
         fragmentTransaction.addToBackStack(CreateMembershipFormFragment.TAG);
         fragmentTransaction.commit();

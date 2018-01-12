@@ -12,10 +12,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +49,7 @@ public class CreateGroupFragment extends BaseFragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private BasicGroup mGroup;
 
     public CreateGroupFragment() {
         // Required empty public constructor
@@ -70,7 +80,7 @@ public class CreateGroupFragment extends BaseFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        //setHasOptionsMenu(true);
+        mGroup = new BasicGroup();
     }
 
     @Override
@@ -82,11 +92,34 @@ public class CreateGroupFragment extends BaseFragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentLoader fragmentLoader = new FragmentLoader(CreateGroupFragment.this);
-                fragmentLoader.loadMembershipFormFragment();
+                if (validateInput()){
+                    setGroup();
+                    FragmentLoader fragmentLoader = new FragmentLoader(CreateGroupFragment.this);
+                    fragmentLoader.loadMembershipFormFragment(new Gson().toJson(mGroup));
+                }
             }
         });
         return view;
+    }
+
+    private boolean validateInput(){
+        String name = ((EditText) getView().findViewById(R.id.group_name_text)).getText().toString();
+        name = name.trim();
+        if (name.equals("")){
+            Toast.makeText(getActivity(), "Group Name can't be empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void setGroup(){
+        String groupName = ((EditText) getView().findViewById(R.id.group_name_text)).getText().toString();
+        String groupDesription = ((EditText) getView().findViewById(R.id.group_description)).getText().toString();
+        CommonUtil commonUtil = new CommonUtil(this);
+        BasicUser user = commonUtil.getUser();
+        mGroup.setName(groupName);
+        mGroup.setInformation(groupDesription);
+        mGroup.setOwner(user);
     }
 
     @Override
@@ -128,31 +161,6 @@ public class CreateGroupFragment extends BaseFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onCreateGroupFragmentInteraction(String data);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.option_menu_item, menu);
-        MenuItem item = menu.findItem(R.id.action_item);
-        item.setTitle("NEXT");
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        Log.d(TAG,"Selected Item is-"+item.getTitle().toString());
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_item) {
-            Log.d(TAG, "Next Clicked");
-            FragmentLoader fragmentLoader = new FragmentLoader(CreateGroupFragment.this);
-            fragmentLoader.loadMembershipFormFragment();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }

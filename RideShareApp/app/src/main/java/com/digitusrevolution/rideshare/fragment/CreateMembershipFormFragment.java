@@ -2,6 +2,7 @@ package com.digitusrevolution.rideshare.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,10 +12,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.common.ErrorMessage;
+import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
+import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
+import com.google.gson.Gson;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,14 +47,15 @@ public class CreateMembershipFormFragment extends BaseFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_GROUP = "group";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String mGroupData;
 
     private OnFragmentInteractionListener mListener;
+    private BasicGroup mGroup;
+    private LinearLayout mQuestionsLayout;
+    private MembershipForm mMembershipForm;
 
     public CreateMembershipFormFragment() {
         // Required empty public constructor
@@ -48,16 +65,14 @@ public class CreateMembershipFormFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param group basicGroup in Json format
      * @return A new instance of fragment CreateMembershipFormFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CreateMembershipFormFragment newInstance(String param1, String param2) {
+    public static CreateMembershipFormFragment newInstance(String group) {
         CreateMembershipFormFragment fragment = new CreateMembershipFormFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_GROUP, group);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,26 +81,87 @@ public class CreateMembershipFormFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mGroupData = getArguments().getString(ARG_GROUP);
         }
-        //setHasOptionsMenu(true);
+        mGroup = new Gson().fromJson(mGroupData, BasicGroup.class);
+        mMembershipForm = new MembershipForm();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_membership_form, container, false);
+        FloatingActionButton addQuestionButton = view.findViewById(R.id.add_question_button);
+        mQuestionsLayout = view.findViewById(R.id.membership_form_question_layout);
+
+        addQuestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final View questionView = inflater.inflate(R.layout.membership_form_question, container, false);
+                mQuestionsLayout.addView(questionView);
+
+                ImageView questionRemoveImageView = questionView.findViewById(R.id.question_delete_button);
+                questionRemoveImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mQuestionsLayout.removeView(questionView);
+                    }
+                });
+            }
+        });
+
         Button submitButton = view.findViewById(R.id.create_group_submit_button);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentLoader fragmentLoader = new FragmentLoader(CreateMembershipFormFragment.this);
-                fragmentLoader.loadGroupInfoFragment();
+                if (validateInput()){
+                    setupGroup();
+                    showProgressDialog();
+                    RESTClient.post(getActivity(), APIUrl.CREATE_GROUP, mGroup, new JsonHttpResponseHandler(){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            super.onSuccess(statusCode, headers, response);
+                            dismissProgressDialog();
+                            FragmentLoader fragmentLoader = new FragmentLoader(CreateMembershipFormFragment.this);
+                            fragmentLoader.loadGroupInfoFragment();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+                            dismissProgressDialog();
+                            if (errorResponse != null) {
+                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                                Log.d(TAG, errorMessage.getErrorMessage());
+                                Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                            } else {
+                                Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
+                                Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
             }
         });
         return view;
+    }
+
+    private boolean validateInput(){
+        if (mQuestionsLayout.getChildCount() == 0){
+            Toast.makeText(getActivity(), "You need to have min one question, please add one", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void setupGroup(){
+        for (int i = 0; i < mQuestionsLayout.getChildCount(); i++){
+            String question = ((EditText)mQuestionsLayout.getChildAt(i).findViewById(R.id.question_text)).getText().toString();
+            Log.d(TAG, "Question No "+i+":"+question);
+            mMembershipForm.getQuestions().add(question);
+        }
+        mGroup.setMembershipForm(mMembershipForm);
     }
 
     @Override
@@ -127,30 +203,4 @@ public class CreateMembershipFormFragment extends BaseFragment {
         // TODO: Update argument type and name
         void onMembershipFormFragmentInteraction(String data);
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.option_menu_item, menu);
-        MenuItem item = menu.findItem(R.id.action_item);
-        item.setTitle("CREATE");
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        Log.d(TAG,"Selected Item is-"+item.getTitle().toString());
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_item) {
-            Log.d(TAG, "Create Clicked");
-            FragmentLoader fragmentLoader = new FragmentLoader(CreateMembershipFormFragment.this);
-            fragmentLoader.loadGroupInfoFragment();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }
