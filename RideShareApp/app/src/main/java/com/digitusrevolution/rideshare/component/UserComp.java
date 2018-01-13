@@ -73,7 +73,7 @@ public class UserComp {
         if (fragment!=null && mUser.getId() == fragment.getUserId()){
             Log.d(TAG, "User Profile is already loaded");
         } else {
-            userProfileImageView.setOnClickListener(new View.OnClickListener() {
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));

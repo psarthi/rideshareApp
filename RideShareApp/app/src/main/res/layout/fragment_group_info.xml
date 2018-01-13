@@ -30,8 +30,8 @@
                 android:id="@+id/group_photo_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:background="@drawable/ic_car"
-                android:scaleType="centerCrop"/>
+                android:background="@drawable/ic_profile"
+                android:scaleType="center"/>
 
             <include layout="@layout/group_info_single_row_layout" android:id="@+id/group_info_single_row_layout"/>
 
