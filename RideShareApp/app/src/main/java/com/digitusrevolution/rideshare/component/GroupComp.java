@@ -8,8 +8,7 @@ import android.widget.TextView;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.model.user.dto.FullGroup;
-import com.digitusrevolution.rideshare.model.user.dto.FullUser;
+import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -20,10 +19,10 @@ public class GroupComp {
 
     public static final String TAG = UserComp.class.getName();
     BaseFragment mBaseFragment;
-    private FullGroup mGroup;
+    private GroupDetail mGroup;
     private CommonUtil mCommonUtil;
 
-    public GroupComp(BaseFragment fragment, FullGroup group){
+    public GroupComp(BaseFragment fragment, GroupDetail group){
         mBaseFragment = fragment;
         mGroup = group;
         mCommonUtil = new CommonUtil(fragment);
@@ -31,6 +30,7 @@ public class GroupComp {
 
     public void setGroupBasicInfo(View view){
         ImageView groupImageView = view.findViewById(R.id.group_photo_image_view);
+
         LinearLayout group_info_single_row_layout = view.findViewById(R.id.group_info_single_row_layout);
         TextView groupMemberCount = group_info_single_row_layout.findViewById(R.id.group_member_count);
         TextView groupUpVoteCount = group_info_single_row_layout.findViewById(R.id.group_up_vote_count);
@@ -40,9 +40,16 @@ public class GroupComp {
             String imageUrl = mGroup.getPhoto().getImageLocation();
             Picasso.with(mBaseFragment.getActivity()).load(imageUrl).into(groupImageView);
         }
-        groupMemberCount.setText(Integer.toString(mGroup.getMembers().size()));
+
+        groupMemberCount.setText(Integer.toString(mGroup.getMemberCount()));
         groupUpVoteCount.setText(Integer.toString(mGroup.getGenuineVotes()));
         groupDownVoteCount.setText(Integer.toString(mGroup.getFakeVotes()));
+    }
+
+    public void setGroupExtraForList(View view){
+        TextView groupName = view.findViewById(R.id.group_name_text);
+        TextView userMembershipStatus = view.findViewById(R.id.user_membership_status_text);
+        groupName.setText(mGroup.getName());
     }
 
 }

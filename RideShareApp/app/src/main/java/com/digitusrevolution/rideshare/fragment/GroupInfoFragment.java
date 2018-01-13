@@ -15,14 +15,10 @@ import android.widget.ImageView;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.GroupInfoViewPager;
-import com.digitusrevolution.rideshare.adapter.RidesListViewPagerAdapter;
 import com.digitusrevolution.rideshare.component.GroupComp;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
-import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.user.dto.FullGroup;
+import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +40,7 @@ public class GroupInfoFragment extends BaseFragment {
     private String mGroupData;
 
     private OnFragmentInteractionListener mListener;
-    private FullGroup mGroup;
+    private GroupDetail mGroup;
 
     public GroupInfoFragment() {
         // Required empty public constructor
@@ -54,7 +50,7 @@ public class GroupInfoFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param group fullGroup in Json format
+     * @param group Group Detail in Json format
      * @return A new instance of fragment GroupInfoFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -72,7 +68,7 @@ public class GroupInfoFragment extends BaseFragment {
         if (getArguments() != null) {
             mGroupData = getArguments().getString(ARG_GROUP);
         }
-        mGroup = new Gson().fromJson(mGroupData, FullGroup.class);
+        mGroup = new Gson().fromJson(mGroupData, GroupDetail.class);
     }
 
     @Override

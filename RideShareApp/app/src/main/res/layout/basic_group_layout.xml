@@ -2,11 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/default_margin">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/group_imageView"
+        android:id="@+id/group_photo_image_view"
         android:layout_width="@dimen/medium_image_size"
         android:layout_height="@dimen/medium_image_size"
         android:src="@drawable/ic_profile"/>
@@ -16,10 +16,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_toRightOf="@id/group_imageView"
+        android:layout_toRightOf="@id/group_photo_image_view"
         android:layout_marginStart="@dimen/small_margin">
 
         <TextView
+            android:id="@+id/group_name_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Group Name"
@@ -28,6 +29,7 @@
             android:textColor="@color/colorPrimary"/>
 
         <TextView
+            android:id="@+id/user_membership_status_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
@@ -44,7 +46,7 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_below="@id/group_name_status_layout"
-             android:layout_toRightOf="@id/group_imageView"/>
+             android:layout_toRightOf="@id/group_photo_image_view"/>
 
     <View
         android:layout_width="match_parent"

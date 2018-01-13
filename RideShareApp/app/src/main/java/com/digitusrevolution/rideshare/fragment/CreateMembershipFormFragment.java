@@ -25,7 +25,6 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
 import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
-import com.digitusrevolution.rideshare.model.user.dto.FullGroup;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -127,7 +126,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
                             dismissProgressDialog();
                             hideSoftKeyBoard();
                             FragmentLoader fragmentLoader = new FragmentLoader(CreateMembershipFormFragment.this);
-                            //Response is full group
+                            //Response is Group Detail
                             fragmentLoader.loadGroupInfoFragment(response.toString());
                         }
 

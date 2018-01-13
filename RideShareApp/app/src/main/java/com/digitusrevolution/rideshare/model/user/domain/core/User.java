@@ -20,7 +20,7 @@ import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.State;
 import com.digitusrevolution.rideshare.model.user.domain.UserFeedback;
 
-public class User {
+public class User implements Comparable<User>{
 	
 	private int id;
 	private String firstName;
@@ -321,6 +321,13 @@ public class User {
 
 	public void setRegistrationType(RegistrationType registrationType) {
 		this.registrationType = registrationType;
+	}
+
+	@Override
+	public int compareTo(User user) {
+		//Negative number is desc order, positive is asc order
+		//This will return in assending order
+		return this.firstName.compareTo(user.firstName);
 	}
 }
 

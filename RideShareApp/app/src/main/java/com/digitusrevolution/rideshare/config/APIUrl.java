@@ -67,6 +67,11 @@ public class APIUrl {
     public static final String GET_PENDING_BILLS = BASE_URL_BILLING_SYSTEM + "/billing/pending";
     public static final String GET_PRE_BOOKING_RIDE_REQUEST_INFO = BASE_URL_RIDE_SYSTEM + "/riderequests/prebookinginfo";
     public static final String CREATE_GROUP = BASE_URL_USER_SYSTEM + "/groups/create";
+    public static final String GET_GROUP = BASE_URL_USER_SYSTEM + "/groups/{id}";
+    public static final String GET_GROUP_MEMBERS = BASE_URL_USER_SYSTEM + "/groups/{id}/members?page={page}";
+    public static final String GET_USER_GROUPS = BASE_URL_USER_SYSTEM + "/users/{id}/groups?page={page}";
+
+
 
 
 
