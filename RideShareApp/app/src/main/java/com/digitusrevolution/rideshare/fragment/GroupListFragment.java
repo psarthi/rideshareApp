@@ -14,16 +14,11 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
 import com.digitusrevolution.rideshare.adapter.GroupListAdapter;
-import com.digitusrevolution.rideshare.adapter.RideListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
-import com.digitusrevolution.rideshare.model.app.GroupResultType;
+import com.digitusrevolution.rideshare.model.app.GroupListType;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
-import com.digitusrevolution.rideshare.model.ride.domain.RideType;
-import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
-import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
-import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
@@ -54,7 +49,7 @@ public class GroupListFragment extends BaseFragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private GroupResultType mGroupResultType;
+    private GroupListType mGroupListType;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
@@ -75,15 +70,15 @@ public class GroupListFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param groupResultType Group Result Type (e.g. All, Member, Invite)
+     * @param groupListType Group Result Type (e.g. All, Member, Invite)
      * @param param2 Parameter 2.
      * @return A new instance of fragment GroupListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroupListFragment newInstance(GroupResultType groupResultType, String param2) {
+    public static GroupListFragment newInstance(GroupListType groupListType, String param2) {
         GroupListFragment fragment = new GroupListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_GROUP_RESULT_TYPE, groupResultType.toString());
+        args.putString(ARG_GROUP_RESULT_TYPE, groupListType.toString());
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -93,7 +88,7 @@ public class GroupListFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mGroupResultType = GroupResultType.valueOf(getArguments().getString(ARG_GROUP_RESULT_TYPE));
+            mGroupListType = GroupListType.valueOf(getArguments().getString(ARG_GROUP_RESULT_TYPE));
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         mCommonUtil = new CommonUtil(this);
@@ -106,7 +101,7 @@ public class GroupListFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_list, container, false);
-        Log.d(TAG, "Group Result Type is:"+mGroupResultType);
+        Log.d(TAG, "Group Result Type is:"+ mGroupListType);
         mRecyclerView = view.findViewById(R.id.group_list);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);

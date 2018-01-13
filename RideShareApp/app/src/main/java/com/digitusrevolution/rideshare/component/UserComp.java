@@ -32,25 +32,26 @@ public class UserComp {
 
     public static final String TAG = UserComp.class.getName();
     BaseFragment mBaseFragment;
-    private FullUser mUser;
+    //Note - You will not get FullUser as its a very heavy object, so we will use only BasicUser
+    private BasicUser mUser;
     private CommonUtil mCommonUtil;
 
-    public UserComp(BaseFragment fragment, FullUser user){
+    public UserComp(BaseFragment fragment, BasicUser user){
         mBaseFragment = fragment;
         mUser = user;
         mCommonUtil = new CommonUtil(fragment);
     }
 
-    public void setUserProfileSingleRow(View view, final BasicUser user){
+    public void setUserProfileSingleRow(View view){
 
         View user_profile_layout = view.findViewById(R.id.user_profile_single_row_layout);
         ImageView userProfileImageView = user_profile_layout.findViewById(R.id.user_image);
-        Picasso.with(mBaseFragment.getActivity()).load(user.getPhoto().getImageLocation()).into(userProfileImageView);
+        Picasso.with(mBaseFragment.getActivity()).load(mUser.getPhoto().getImageLocation()).into(userProfileImageView);
         TextView userNameTextView = user_profile_layout.findViewById(R.id.user_name_text);
-        String userName = user.getFirstName() + " " + user.getLastName();
+        String userName = mUser.getFirstName() + " " + mUser.getLastName();
         userNameTextView.setText(userName);
         TextView userRatingTextView = user_profile_layout.findViewById(R.id.user_rating_text);
-        String profileRating = mCommonUtil.getDecimalFormattedString(user.getProfileRating());
+        String profileRating = mCommonUtil.getDecimalFormattedString(mUser.getProfileRating());
         userRatingTextView.setText(profileRating);
 
         ImageView mobileImageView = user_profile_layout.findViewById(R.id.user_mobile_image);
@@ -58,7 +59,7 @@ public class UserComp {
             @Override
             public void onClick(View v) {
                 //TODO Needs to be replaced with proper logic of calling user
-                Log.d(TAG, "Calling User Mobile - "+user.getCountry().getCode() + user.getMobileNumber());
+                Log.d(TAG, "Calling User Mobile - "+mUser.getCountry().getCode() + mUser.getMobileNumber());
             }
         });
 
@@ -69,13 +70,13 @@ public class UserComp {
 
         UserProfileFragment fragment = (UserProfileFragment) mBaseFragment.getActivity().getSupportFragmentManager()
                 .findFragmentByTag(UserProfileFragment.TAG);
-        if (fragment!=null && user.getId() == fragment.getUserId()){
+        if (fragment!=null && mUser.getId() == fragment.getUserId()){
             Log.d(TAG, "User Profile is already loaded");
         } else {
             userProfileImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.USER_ID_KEY, Integer.toString(user.getId()));
+                    String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
                     mCommonUtil.showProgressDialog();
                     RESTClient.get(GET_USER_PROFILE, null, new JsonHttpResponseHandler() {
 

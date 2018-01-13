@@ -3,14 +3,12 @@ package com.digitusrevolution.rideshare.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import com.digitusrevolution.rideshare.fragment.AboutGroupFragment;
-import com.digitusrevolution.rideshare.fragment.GroupListFragment;
-import com.digitusrevolution.rideshare.fragment.RidesListFragment;
 import com.digitusrevolution.rideshare.fragment.UserListFragment;
-import com.digitusrevolution.rideshare.model.app.GroupResultType;
-import com.digitusrevolution.rideshare.model.ride.domain.RideType;
+import com.digitusrevolution.rideshare.model.app.UserListType;
+import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
+import com.google.gson.Gson;
 
 /**
  * Created by psarthi on 1/10/18.
@@ -20,10 +18,12 @@ public class GroupInfoViewPager extends FragmentStatePagerAdapter {
 
     public static final String TAG = GroupInfoViewPager.class.getName();
     private int mPageCount;
+    private GroupDetail mGroupDetail;
 
-    public GroupInfoViewPager(FragmentManager fm, int pageCount) {
+    public GroupInfoViewPager(FragmentManager fm, int pageCount, GroupDetail groupDetail) {
         super(fm);
         mPageCount = pageCount;
+        mGroupDetail = groupDetail;
     }
 
     @Override
@@ -33,10 +33,10 @@ public class GroupInfoViewPager extends FragmentStatePagerAdapter {
             fragment = AboutGroupFragment.newInstance(null, null);
         }
         if (position==1){
-            fragment = UserListFragment.newInstance(null, null);
+            fragment = UserListFragment.newInstance(UserListType.Member, new Gson().toJson(mGroupDetail));
         }
         if (position == 2){
-            fragment = UserListFragment.newInstance(null, null);
+            fragment = UserListFragment.newInstance(UserListType.Membership_Request, new Gson().toJson(mGroupDetail));
         }
         return fragment;
 

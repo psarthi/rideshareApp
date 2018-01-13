@@ -281,8 +281,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
     public void setRideOwnerLayout(View view){
 
-        UserComp userComp = new UserComp(mBaseFragment, null);
-        userComp.setUserProfileSingleRow(view, mRideRequest.getAcceptedRide().getDriver());
+        UserComp userComp = new UserComp(mBaseFragment, mRideRequest.getAcceptedRide().getDriver());
+        userComp.setUserProfileSingleRow(view);
 
         String vehicle = mRideRequest.getAcceptedRide().getVehicle().getModel() + " " +
                 mRideRequest.getAcceptedRide().getVehicle().getRegistrationNumber();

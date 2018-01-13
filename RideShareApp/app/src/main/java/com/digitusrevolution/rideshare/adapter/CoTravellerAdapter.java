@@ -62,8 +62,8 @@ public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
         LayoutInflater inflater = LayoutInflater.from(mBaseFragment.getActivity());
         convertView = inflater.inflate(R.layout.ride_co_traveller_layout, parent, false);
 
-        UserComp userComp = new UserComp(mBaseFragment, null);
-        userComp.setUserProfileSingleRow(convertView, rideRequest.getPassenger());
+        UserComp userComp = new UserComp(mBaseFragment, rideRequest.getPassenger());
+        userComp.setUserProfileSingleRow(convertView);
 
         RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, rideRequest);
         rideRequestComp.setPickupTimeAndBillLayout(convertView, RideType.OfferRide);

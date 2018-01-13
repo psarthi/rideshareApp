@@ -4,11 +4,37 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
+import com.digitusrevolution.rideshare.adapter.GroupListAdapter;
+import com.digitusrevolution.rideshare.adapter.UserListAdapter;
+import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.model.app.UserListType;
+import com.digitusrevolution.rideshare.model.common.ErrorMessage;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,14 +47,23 @@ import com.digitusrevolution.rideshare.R;
 public class UserListFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_USER_LIST_TYPE = "userListType";
+    private static final String ARG_GROUP_DETAIL = "groupDetail";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private UserListType mUserListType;
+    private String mGroupDetailData;
 
     private OnFragmentInteractionListener mListener;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    // Store a member variable for the listener
+    private EndlessRecyclerViewScrollListener mScrollListener;
+    private boolean mInitialDataLoaded;
+    private CommonUtil mCommonUtil;
+    private List<BasicUser> mUsers = new ArrayList<>();
+    private GroupDetail mGroupDetail;
+
 
     public UserListFragment() {
         // Required empty public constructor
@@ -38,16 +73,16 @@ public class UserListFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param userListType User List Type (e.g. Member, Membership_Request etc)
+     * @param groupDetail GroupDetail in Json format
      * @return A new instance of fragment UserListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static UserListFragment newInstance(String param1, String param2) {
+    public static UserListFragment newInstance(UserListType userListType, String groupDetail) {
         UserListFragment fragment = new UserListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_USER_LIST_TYPE, userListType.toString());
+        args.putString(ARG_GROUP_DETAIL, groupDetail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,17 +91,131 @@ public class UserListFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mUserListType = UserListType.valueOf(getArguments().getString(ARG_USER_LIST_TYPE));
+            mGroupDetailData = getArguments().getString(ARG_GROUP_DETAIL);
         }
+        mCommonUtil = new CommonUtil(this);
+        mGroupDetail = new Gson().fromJson(mGroupDetailData, GroupDetail.class);
+        loadInitialData();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_list, container, false);
+        mRecyclerView = view.findViewById(R.id.user_list);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        layoutManager.setAutoMeasureEnabled(true);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+
+        //VERY IMP - This will get called only when fragment is reloaded and without this it will show up blank screen as adapter is not set
+        if (mInitialDataLoaded) {
+            setAdapter();
+        }
+
+        mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(page);
+            }
+        };
+
+        mRecyclerView.addOnScrollListener(mScrollListener);
+
+        return view;
     }
+
+    private void loadInitialData() {
+        //Initial Data loading
+        String GET_GROUP_MEMBERS = APIUrl.GET_GROUP_MEMBERS.replace(APIUrl.ID_KEY,Integer.toString(mGroupDetail.getId()))
+                .replace(APIUrl.PAGE_KEY, Integer.toString(0));
+
+        showProgressDialog();
+        RESTClient.get(GET_GROUP_MEMBERS, null, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                dismissProgressDialog();
+                Type listType = new TypeToken<ArrayList<BasicUser>>(){}.getType();
+                mUsers = new Gson().fromJson(response.toString(), listType);
+                mInitialDataLoaded = true;
+                //This will load adapter only when data is loaded
+                setAdapter();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                dismissProgressDialog();
+                if (errorResponse!=null) {
+                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                    Log.d(TAG, errorMessage.getErrorMessage());
+                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                }
+            }
+
+        });
+
+    }
+
+    private void setAdapter() {
+        mAdapter = new UserListAdapter(mUsers, this);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi(final int offset) {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+        String GET_GROUP_MEMBERS = APIUrl.GET_GROUP_MEMBERS.replace(APIUrl.ID_KEY,Integer.toString(mGroupDetail.getId()))
+                .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+        //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
+        //and unnecssarily we will show multiple dialog which creates flicker on the screen
+        if (offset != 1) showProgressDialog();
+        RESTClient.get(GET_GROUP_MEMBERS, null, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                if (offset != 1) dismissProgressDialog();
+                Type listType = new TypeToken<ArrayList<BasicUser>>(){}.getType();
+                List<BasicUser> newUsers = new Gson().fromJson(response.toString(), listType);
+                //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
+                mUsers.addAll(newUsers);
+                Log.d(TAG, "User Size changed. Current Size is:"+mUsers.size());
+                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mUsers.size()-1);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                if (offset != 1) dismissProgressDialog();
+                if (errorResponse!=null) {
+                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
+                    Log.d(TAG, errorMessage.getErrorMessage());
+                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
+                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+                }
+            }
+
+        });
+    }
+
 
     @Override
     public void onAttach(Context context) {

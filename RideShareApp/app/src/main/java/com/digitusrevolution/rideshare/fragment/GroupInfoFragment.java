@@ -89,7 +89,7 @@ public class GroupInfoFragment extends BaseFragment {
         //This is very important else you will have issue in syncing tab selection with view pager content
         //i.e. view pager may show request ride but tab selection would show offer ride
         tabLayout.setupWithViewPager(viewPager);
-        GroupInfoViewPager groupInfoViewPager = new GroupInfoViewPager(getChildFragmentManager(), pageCount);
+        GroupInfoViewPager groupInfoViewPager = new GroupInfoViewPager(getChildFragmentManager(), pageCount, mGroup);
         viewPager.setAdapter(groupInfoViewPager);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

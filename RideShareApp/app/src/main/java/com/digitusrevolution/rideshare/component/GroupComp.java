@@ -19,6 +19,7 @@ public class GroupComp {
 
     public static final String TAG = UserComp.class.getName();
     BaseFragment mBaseFragment;
+    //Note - You will not get Full Group as its a very heavy object, so we will use only GroupDetail
     private GroupDetail mGroup;
     private CommonUtil mCommonUtil;
 

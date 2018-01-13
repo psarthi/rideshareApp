@@ -101,8 +101,8 @@ public class UserProfileFragment extends BaseFragment {
         Picasso.with(getActivity()).load(mUserProfile.getUser().getPhoto().getImageLocation())
                 .into(userProfileImageView);
 
-        UserComp userComp = new UserComp(this, null);
-        userComp.setUserProfileSingleRow(view, mUserProfile.getUser());
+        UserComp userComp = new UserComp(this, mUserProfile.getUser());
+        userComp.setUserProfileSingleRow(view);
 
         View user_profile_layout = view.findViewById(R.id.user_profile_single_row_layout);
         //This will make small user image invisible
