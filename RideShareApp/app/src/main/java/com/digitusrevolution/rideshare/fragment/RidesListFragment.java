@@ -141,10 +141,11 @@ public class RidesListFragment extends BaseFragment{
     private void loadInitialData() {
         if (mRideType.equals(RideType.OfferRide)){
             //Initial Data loading
-            GET_USER_RIDES_URL = GET_USER_RIDES_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
+            //Its important to use local variable else you will get updated string
+            String URL = GET_USER_RIDES_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
 
             mCommonUtil.showProgressDialog();
-            RESTClient.get(GET_USER_RIDES_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
+            RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
@@ -158,12 +159,12 @@ public class RidesListFragment extends BaseFragment{
             });
         } else {
             //Initial Data loading
-            GET_USER_RIDE_REQUESTS_URL = GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
+            String URL = GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
             //Reason for commenting as we are already showing progress dialog for Rides
             //and in the same time we should get logically ride request as well
             //This will not show multiple progress dialog at the same time
             //showProgressDialog();
-            RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
+            RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
@@ -201,11 +202,11 @@ public class RidesListFragment extends BaseFragment{
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
 
         if (mRideType.equals(RideType.OfferRide)){
-            GET_USER_RIDES_URL = GET_USER_RIDES_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+            String URL = GET_USER_RIDES_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
             //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
             //and unnecssarily we will show multiple dialog which creates flicker on the screen
             if (offset != 1) mCommonUtil.showProgressDialog();
-            RESTClient.get(GET_USER_RIDES_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
+            RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
@@ -219,11 +220,11 @@ public class RidesListFragment extends BaseFragment{
                 }
             });
         } else {
-            GET_USER_RIDE_REQUESTS_URL = GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+            String URL = GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
             //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
             //and unnecssarily we will show multiple dialog which creates flicker on the screen
             if (offset != 1) mCommonUtil.showProgressDialog();
-            RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
+            RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);

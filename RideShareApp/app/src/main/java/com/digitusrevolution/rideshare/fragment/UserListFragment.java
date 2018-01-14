@@ -130,10 +130,11 @@ public class UserListFragment extends BaseFragment {
 
     private void loadInitialData() {
         //Initial Data loading
-        GET_GROUP_MEMBERS_URL = GET_GROUP_MEMBERS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
+        //Its important to use local variable else you will get updated string
+        String URL = GET_GROUP_MEMBERS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
 
         mCommonUtil.showProgressDialog();
-        RESTClient.get(GET_GROUP_MEMBERS_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
+        RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
@@ -161,11 +162,12 @@ public class UserListFragment extends BaseFragment {
         //  --> Deserialize and construct new model objects from the API response
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
-        GET_GROUP_MEMBERS_URL = GET_GROUP_MEMBERS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+        //Its important to use local variable else you will get updated string
+        String URL = GET_GROUP_MEMBERS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
         //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
         //and unnecssarily we will show multiple dialog which creates flicker on the screen
         if (offset != 1) mCommonUtil.showProgressDialog();
-        RESTClient.get(GET_GROUP_MEMBERS_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
+        RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);

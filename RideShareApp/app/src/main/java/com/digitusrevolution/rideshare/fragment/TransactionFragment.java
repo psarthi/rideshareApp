@@ -141,9 +141,9 @@ public class TransactionFragment extends BaseFragment {
         Log.d(TAG, "loadInitialData Called");
         //Initial Data loading
 
-        GET_USER_WALLET_TRANSACTION_URL = GET_USER_WALLET_TRANSACTION_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
+        String URL = GET_USER_WALLET_TRANSACTION_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
         //showProgressDialog();
-        RESTClient.get(GET_USER_WALLET_TRANSACTION_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
+        RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
@@ -173,9 +173,9 @@ public class TransactionFragment extends BaseFragment {
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
 
-        GET_USER_WALLET_TRANSACTION_URL = GET_USER_WALLET_TRANSACTION_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+        String URL = GET_USER_WALLET_TRANSACTION_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
         //showProgressDialog();
-        RESTClient.get(GET_USER_WALLET_TRANSACTION_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
+        RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
