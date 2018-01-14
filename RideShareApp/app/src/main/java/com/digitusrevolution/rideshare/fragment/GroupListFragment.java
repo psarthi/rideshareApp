@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
@@ -18,16 +17,13 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
-import com.digitusrevolution.rideshare.model.app.GroupListType;
-import com.digitusrevolution.rideshare.model.common.ErrorMessage;
+import com.digitusrevolution.rideshare.model.user.dto.GroupListType;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -62,6 +58,7 @@ public class GroupListFragment extends BaseFragment {
     private BasicUser mUser;
     private CommonUtil mCommonUtil;
     private List<GroupDetail> mGroups = new ArrayList<>();
+    private String GET_USER_GROUPS_URL;
 
     public GroupListFragment() {
         // Required empty public constructor
@@ -94,6 +91,8 @@ public class GroupListFragment extends BaseFragment {
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
+        GET_USER_GROUPS_URL = APIUrl.GET_USER_GROUPS.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
+        .replace(APIUrl.GROUP_LIST_TYPE_KEY,mGroupListType.toString());
         loadInitialData();
     }
 
@@ -131,15 +130,14 @@ public class GroupListFragment extends BaseFragment {
 
     private void loadInitialData() {
         //Initial Data loading
-        String GET_USER_GROUPS = APIUrl.GET_USER_GROUPS.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
-                .replace(APIUrl.PAGE_KEY, Integer.toString(0));
+        GET_USER_GROUPS_URL = GET_USER_GROUPS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
 
-        showProgressDialog();
-        RESTClient.get(GET_USER_GROUPS, null, new RSJsonHttpResponseHandler(mCommonUtil){
+        mCommonUtil.showProgressDialog();
+        RESTClient.get(GET_USER_GROUPS_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                dismissProgressDialog();
+                mCommonUtil.dismissProgressDialog();
                 Type listType = new TypeToken<ArrayList<GroupDetail>>(){}.getType();
                 mGroups = new Gson().fromJson(response.toString(), listType);
                 mInitialDataLoaded = true;
@@ -147,7 +145,6 @@ public class GroupListFragment extends BaseFragment {
                 setAdapter();
             }
         });
-
     }
 
     private void setAdapter() {
@@ -163,16 +160,16 @@ public class GroupListFragment extends BaseFragment {
         //  --> Deserialize and construct new model objects from the API response
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
-        String GET_USER_GROUPS = APIUrl.GET_USER_GROUPS.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
-                .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+        GET_USER_GROUPS_URL = GET_USER_GROUPS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+
         //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
         //and unnecssarily we will show multiple dialog which creates flicker on the screen
-        if (offset != 1) showProgressDialog();
-        RESTClient.get(GET_USER_GROUPS, null, new RSJsonHttpResponseHandler(mCommonUtil){
+        if (offset != 1) mCommonUtil.showProgressDialog();
+        RESTClient.get(GET_USER_GROUPS_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                if (offset != 1) dismissProgressDialog();
+                if (offset != 1) mCommonUtil.dismissProgressDialog();
                 Type listType = new TypeToken<ArrayList<GroupDetail>>(){}.getType();
                 List<GroupDetail> newGroups = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere

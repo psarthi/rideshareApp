@@ -164,12 +164,12 @@ public class BillFragment extends BaseFragment {
 
                 BillInfo billInfo = new BillInfo();
                 billInfo.setBillNumber(mBill.getNumber());
-                showProgressDialog();
+                mCommonUtil.showProgressDialog();
                 RESTClient.post(getActivity(), APIUrl.PAY_BILL,billInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
-                        dismissProgressDialog();
+                        mCommonUtil.dismissProgressDialog();
                         mBill = new Gson().fromJson(response.toString(), Bill.class);
                         setBillView(getView());
                         Toast.makeText(getActivity(),"Bill Paid Successfully", Toast.LENGTH_LONG).show();

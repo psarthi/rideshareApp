@@ -12,10 +12,23 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.adapter.GroupListAdapter;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
+import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by psarthi on 11/21/17.
@@ -81,16 +94,4 @@ public class BaseFragment extends Fragment{
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
-
-    //Note - Not using commonUtil show/dismiss function from convinience perspective
-    //Let it be duplicate for the time being until we get better solution
-    public void showProgressDialog(){
-        mProgressDialog = ProgressDialog.show(getActivity(), "", Constant.LOADING_MSG);
-    }
-
-    public void dismissProgressDialog(){
-        mProgressDialog.dismiss();
-    }
-
-
 }

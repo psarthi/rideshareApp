@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.digitusrevolution.rideshare.fragment.GroupListFragment;
-import com.digitusrevolution.rideshare.model.app.GroupListType;
+import com.digitusrevolution.rideshare.model.user.dto.GroupListType;
 
 /**
  * Created by psarthi on 1/8/18.

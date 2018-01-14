@@ -64,6 +64,8 @@ public class RidesListFragment extends BaseFragment{
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private boolean mInitialDataLoaded;
+    private String GET_USER_RIDES_URL;
+    private String GET_USER_RIDE_REQUESTS_URL;
 
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener mScrollListener;
@@ -98,6 +100,8 @@ public class RidesListFragment extends BaseFragment{
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
+        GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()));
+        GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()));
         loadInitialData();
     }
 
@@ -137,15 +141,14 @@ public class RidesListFragment extends BaseFragment{
     private void loadInitialData() {
         if (mRideType.equals(RideType.OfferRide)){
             //Initial Data loading
-            String GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
-                    .replace(APIUrl.PAGE_KEY, Integer.toString(0));
+            GET_USER_RIDES_URL = GET_USER_RIDES_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
 
-            showProgressDialog();
+            mCommonUtil.showProgressDialog();
             RESTClient.get(GET_USER_RIDES_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
-                    dismissProgressDialog();
+                    mCommonUtil.dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<BasicRide>>(){}.getType();
                     mRides = new Gson().fromJson(response.toString(), listType);
                     mInitialDataLoaded = true;
@@ -155,8 +158,7 @@ public class RidesListFragment extends BaseFragment{
             });
         } else {
             //Initial Data loading
-            String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
-                    .replace(APIUrl.PAGE_KEY, Integer.toString(0));
+            GET_USER_RIDE_REQUESTS_URL = GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
             //Reason for commenting as we are already showing progress dialog for Rides
             //and in the same time we should get logically ride request as well
             //This will not show multiple progress dialog at the same time
@@ -199,16 +201,15 @@ public class RidesListFragment extends BaseFragment{
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
 
         if (mRideType.equals(RideType.OfferRide)){
-            String GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
-                    .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+            GET_USER_RIDES_URL = GET_USER_RIDES_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
             //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
             //and unnecssarily we will show multiple dialog which creates flicker on the screen
-            if (offset != 1) showProgressDialog();
+            if (offset != 1) mCommonUtil.showProgressDialog();
             RESTClient.get(GET_USER_RIDES_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
-                    if (offset != 1) dismissProgressDialog();
+                    if (offset != 1) mCommonUtil.dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
                     List<FullRide> newRides = new Gson().fromJson(response.toString(), listType);
                     //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
@@ -218,16 +219,15 @@ public class RidesListFragment extends BaseFragment{
                 }
             });
         } else {
-            String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
-                    .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+            GET_USER_RIDE_REQUESTS_URL = GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
             //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
             //and unnecssarily we will show multiple dialog which creates flicker on the screen
-            if (offset != 1) showProgressDialog();
+            if (offset != 1) mCommonUtil.showProgressDialog();
             RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
-                    if (offset != 1) dismissProgressDialog();
+                    if (offset != 1) mCommonUtil.dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
                     List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
                     mRideRequests.addAll(rideRequests);

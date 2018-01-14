@@ -59,9 +59,11 @@ public class TransactionFragment extends BaseFragment {
     private CommonUtil mCommonUtil;
     private List<Transaction> mTransactions = new ArrayList<>();
     private Account mAccount;
+    private boolean mInitialDataLoaded;
 
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener mScrollListener;
+    private String GET_USER_WALLET_TRANSACTION_URL;
 
     public TransactionFragment() {
         // Required empty public constructor
@@ -95,6 +97,9 @@ public class TransactionFragment extends BaseFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         mCommonUtil = new CommonUtil(this);
+        mAccount = mCommonUtil.getAccount();
+        GET_USER_WALLET_TRANSACTION_URL = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()));
+        loadInitialData();
     }
 
     @Override
@@ -110,8 +115,9 @@ public class TransactionFragment extends BaseFragment {
         mRecyclerView.setHasFixedSize(true);
 
         //VERY IMP - This will get called only when fragment is reloaded and without this it will show up blank screen as adapter is not set
-        mAccount = mCommonUtil.getAccount();
-        loadInitialData();
+        if (mInitialDataLoaded) {
+            setAdapter();
+        }
 
         mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -135,16 +141,16 @@ public class TransactionFragment extends BaseFragment {
         Log.d(TAG, "loadInitialData Called");
         //Initial Data loading
 
-        String GET_USER_WALLET_TRANSACTION = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
-                .replace(APIUrl.PAGE_KEY, Integer.toString(0));
+        GET_USER_WALLET_TRANSACTION_URL = GET_USER_WALLET_TRANSACTION_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
         //showProgressDialog();
-        RESTClient.get(GET_USER_WALLET_TRANSACTION, null, new RSJsonHttpResponseHandler(mCommonUtil){
+        RESTClient.get(GET_USER_WALLET_TRANSACTION_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 //dismissProgressDialog();
                 Type listType = new TypeToken<ArrayList<Transaction>>(){}.getType();
                 mTransactions = new Gson().fromJson(response.toString(), listType);
+                mInitialDataLoaded = true;
                 setAdapter();
                 //This will load adapter only when data is loaded
             }
@@ -167,10 +173,9 @@ public class TransactionFragment extends BaseFragment {
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
 
-        String GET_USER_WALLET_TRANSACTION = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
-                .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+        GET_USER_WALLET_TRANSACTION_URL = GET_USER_WALLET_TRANSACTION_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
         //showProgressDialog();
-        RESTClient.get(GET_USER_WALLET_TRANSACTION, null, new RSJsonHttpResponseHandler(mCommonUtil){
+        RESTClient.get(GET_USER_WALLET_TRANSACTION_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
@@ -178,6 +183,7 @@ public class TransactionFragment extends BaseFragment {
                 Type listType = new TypeToken<ArrayList<Transaction>>(){}.getType();
                 List<Transaction> transactions = new Gson().fromJson(response.toString(), listType);
                 mTransactions.addAll(transactions);
+                Log.d(TAG, "Transaction Size changed. Current Size is:"+mTransactions.size());
                 mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mTransactions.size()-1);
             }
         });

@@ -126,12 +126,12 @@ public class MobileRegistrationActivity extends BaseActivity {
                     //Reason for doing encoding as we have to send + sign in mobile number as query parameters and without encoding that data would interpreted differently
                     String encodedQueryString = URLEncoder.encode(mSelectedCountryCode + mMobileNumber.getText().toString(), "UTF-8");
                     String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString);
-                    showProgressDialog();
+                    mCommonUtil.showProgressDialog();
                     RESTClient.get(GET_OTP_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
-                            dismissProgressDialog();
+                            mCommonUtil.dismissProgressDialog();
                             Log.d(TAG, "Response Success:" + response);
                             ResponseMessage responseMessage = new Gson().fromJson(response.toString(), ResponseMessage.class);
                             mOTP = responseMessage.getResult();
@@ -162,7 +162,7 @@ public class MobileRegistrationActivity extends BaseActivity {
     }
 
     private void setCountryList(){
-        showProgressDialog();
+        mCommonUtil.showProgressDialog();
         RESTClient.get(APIUrl.GET_COUNTRIES_URL,null,new RSJsonHttpResponseHandler(mCommonUtil){
 
             //Note - Its important to use proper OnSuccess method with JsonArray instead of JsonObject as we are expecting JsonArray from the response
@@ -188,7 +188,7 @@ public class MobileRegistrationActivity extends BaseActivity {
                 //If you are using plain String in ArrayAdapter then no need to write custom adapter and below set function would do the job
                 countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 */
-                dismissProgressDialog();
+                mCommonUtil.dismissProgressDialog();
             }
         });
     }

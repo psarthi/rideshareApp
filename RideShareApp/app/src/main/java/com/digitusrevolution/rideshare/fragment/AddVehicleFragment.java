@@ -149,12 +149,12 @@ CommonComp.onSeatLuggageSelectionListener{
                 String ADD_VEHICLE_URL = APIUrl.ADD_VEHICLE_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()));
                 if (validateInput()){
                     setVehicle();
-                    showProgressDialog();
+                    mCommonUtil.showProgressDialog();
                     RESTClient.post(getActivity(),ADD_VEHICLE_URL, mVehicle, new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
-                            dismissProgressDialog();
+                            mCommonUtil.dismissProgressDialog();
                             mUser = new Gson().fromJson(response.toString(), BasicUser.class);
                             mCommonUtil.updateUser(mUser);
                             Log.d(TAG, "Vehicle Added");

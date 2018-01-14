@@ -48,17 +48,6 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-    //Note - Not using commonUtil show/dismiss function from convinience perspective
-    //Let it be duplicate for the time being until we get better solution
-    public void showProgressDialog(){
-        mProgressDialog = ProgressDialog.show(this, "", Constant.LOADING_MSG);
-    }
-
-    public void dismissProgressDialog(){
-        mProgressDialog.dismiss();
-    }
-
     public void signOut() {
 
         // Configure sign-in to request the user's ID, email address, and basic

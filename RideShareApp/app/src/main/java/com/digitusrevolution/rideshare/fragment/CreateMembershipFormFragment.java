@@ -121,13 +121,13 @@ public class CreateMembershipFormFragment extends BaseFragment {
             public void onClick(View v) {
                 if (validateInput()){
                     setupGroup();
-                    showProgressDialog();
+                    mCommonUtil.showProgressDialog();
                     RESTClient.post(getActivity(), APIUrl.CREATE_GROUP, mGroup, new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
                             Log.d(TAG, "Group Created:"+response.toString());
-                            dismissProgressDialog();
+                            mCommonUtil.dismissProgressDialog();
                             hideSoftKeyBoard();
                             FragmentLoader fragmentLoader = new FragmentLoader(CreateMembershipFormFragment.this);
                             //Response is Group Detail

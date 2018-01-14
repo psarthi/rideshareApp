@@ -243,11 +243,17 @@ public class CommonUtil {
     }
 
     public void showProgressDialog(){
-        mProgressDialog = ProgressDialog.show(getActivity(), "", Constant.LOADING_MSG);
+        Log.d(TAG, "Showing Progress Dialog");
+        mProgressDialog = ProgressDialog.show(getActivity(), "", Constant.LOADING_MSG, true, true);
     }
 
     public void dismissProgressDialog(){
-        if (mProgressDialog!=null) mProgressDialog.dismiss();
+        if(mProgressDialog != null && mProgressDialog.isShowing()){
+            Log.d(TAG, "Dismissing Progress Dialog");
+            mProgressDialog.dismiss();
+        } else {
+            Log.d(TAG, "Progress Dialog is not visible, so not dismissing");
+        }
     }
 
 }

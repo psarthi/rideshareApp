@@ -35,15 +35,17 @@ public class RSJsonHttpResponseHandler extends JsonHttpResponseHandler {
         mCommonUtil.dismissProgressDialog();
         if (errorResponse!=null) {
             ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-            Log.d(TAG, errorMessage.getErrorMessage());
+            Log.d(TAG, "Inside onFailure(JsonObject) - Proper ErrorMessage:"+ errorMessage.getErrorMessage());
             Toast.makeText(mCommonUtil.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
         }
+        //This would be the case, where we got Json response but errorResponse is not our custom ErrorMessage
         else {
             Log.d(TAG, "Inside onFailure(JsonObject) - Request Failed with error:"+ throwable.getMessage());
             Toast.makeText(mCommonUtil.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
         }
     }
 
+    // This function would be called when we didn't get Json response e.g. in case of 500 error
     @Override
     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
         super.onFailure(statusCode, headers, responseString, throwable);

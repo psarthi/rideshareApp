@@ -90,7 +90,7 @@ public class LandingPageActivity extends BaseActivity{
     private void googleSignIn() {
         Log.d(TAG,"Google Sign In Button Clicked");
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        showProgressDialog();
+        mCommonUtil.showProgressDialog();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
@@ -134,14 +134,14 @@ public class LandingPageActivity extends BaseActivity{
                                         UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                                         mCommonUtil.saveUserSignInResult(userSignInResult);
                                         startHomePageActivity(userSignInResult);
-                                        dismissProgressDialog();
+                                        mCommonUtil.dismissProgressDialog();
                                     }
                                 });
                     }
                     else {
                         Log.d(TAG,"User doesn't exist:" + account.getEmail());
                         mobileRegistration(account);
-                        dismissProgressDialog();
+                        mCommonUtil.dismissProgressDialog();
                     }
                 }
             });
@@ -150,7 +150,7 @@ public class LandingPageActivity extends BaseActivity{
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            dismissProgressDialog();
+            mCommonUtil.dismissProgressDialog();
             Toast.makeText(LandingPageActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
             // updateUI(null);
         }

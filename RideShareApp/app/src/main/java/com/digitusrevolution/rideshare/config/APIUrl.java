@@ -31,6 +31,8 @@ public class APIUrl {
     public static final String ACCOUNT_NUMBER_KEY = "{accountNumber}";
     public static final String AMOUNT_KEY = "{amount}";
     public static final String RIDE_TYPE_KEY = "{rideType}";
+    public static final String USER_LIST_TYPE_KEY = "{UserListType}";
+    public static final String GROUP_LIST_TYPE_KEY = "{GroupListType}";
 
     public static final String SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/signin";
     public static final String GOOGLE_SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/googlesignin";
@@ -68,11 +70,8 @@ public class APIUrl {
     public static final String GET_PRE_BOOKING_RIDE_REQUEST_INFO = BASE_URL_RIDE_SYSTEM + "/riderequests/prebookinginfo";
     public static final String CREATE_GROUP = BASE_URL_USER_SYSTEM + "/groups/create";
     public static final String GET_GROUP = BASE_URL_USER_SYSTEM + "/groups/{id}";
-    public static final String GET_GROUP_MEMBERS = BASE_URL_USER_SYSTEM + "/groups/{id}/members?page={page}";
-    public static final String GET_USER_GROUPS = BASE_URL_USER_SYSTEM + "/users/{id}/groups?page={page}";
-
-
-
+    public static final String GET_GROUP_MEMBERS = BASE_URL_USER_SYSTEM + "/groups/{id}/members?listType={UserListType}&page={page}";
+    public static final String GET_USER_GROUPS = BASE_URL_USER_SYSTEM + "/users/{id}/groups?listType={GroupListType}&page={page}";
 
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +
