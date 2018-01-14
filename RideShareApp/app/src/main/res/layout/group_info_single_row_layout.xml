@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
+    android:layout_height="80dp"
     android:gravity="center_vertical"
     tools:showIn="@layout/fragment_group_info">
 
@@ -24,13 +24,12 @@
             android:gravity="center_vertical"
             android:layout_margin="@dimen/default_margin"/>
 
-        <!-- Commented this as a placeholde, in case in future if we want to add label for icons
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Members"
-            android:textAllCaps="true"/>
-        -->
+            android:textStyle="italic"
+            android:textColor="@color/colorPrimary"/>
 
     </LinearLayout>
 
@@ -52,6 +51,13 @@
             android:gravity="center_vertical"
             android:layout_margin="@dimen/default_margin"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Up"
+            android:textStyle="italic"
+            android:textColor="@color/colorPrimary"/>
+
     </LinearLayout>
 
 
@@ -72,6 +78,13 @@
             android:gravity="center_vertical"
             android:layout_margin="@dimen/default_margin"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Down"
+            android:textStyle="italic"
+            android:textColor="@color/colorPrimary"/>
+
     </LinearLayout>
 
 
@@ -89,6 +102,13 @@
             android:src="@drawable/ic_person_add_large"
             android:gravity="center_vertical"
             android:layout_margin="@dimen/default_margin"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invite"
+            android:textStyle="italic"
+            android:textColor="@color/colorPrimary"/>
 
     </LinearLayout>
 

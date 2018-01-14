@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/default_margin"
         android:layout_below="@id/user_profile_single_row_layout">
 
         <TextView
@@ -29,10 +29,11 @@
             android:id="@+id/membership_form"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical|center"
             android:layout_weight="1"
-            android:gravity="center_vertical|end"
             android:text="Membership Form"
-            android:drawableRight="@drawable/ic_receipt"/>
+            android:textAllCaps="true"
+            android:textColor="@color/colorAccent"/>
 
     </LinearLayout>
 

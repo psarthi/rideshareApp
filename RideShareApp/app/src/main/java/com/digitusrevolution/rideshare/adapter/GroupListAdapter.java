@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
@@ -46,9 +47,14 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        GroupComp groupComp = new GroupComp(mBaseFragment, mGroups.get(position));
-        groupComp.setGroupBasicInfo(holder.itemView);
-        groupComp.setGroupExtraForList(holder.itemView);
+        View view = holder.itemView;
+        GroupDetail groupDetail = mGroups.get(position);
+        GroupComp groupComp = new GroupComp(mBaseFragment, groupDetail);
+        groupComp.setGroupBasicInfo(view);
+        //This will set the name of the group which has been handled differently for different view
+        //e.g. in case of group Info it has been set as title and for adapter, it has been set as text view
+        TextView groupName = view.findViewById(R.id.group_name_text);
+        groupName.setText(groupDetail.getName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

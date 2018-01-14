@@ -37,20 +37,14 @@ public class GroupComp {
         TextView groupUpVoteCount = group_info_single_row_layout.findViewById(R.id.group_up_vote_count);
         TextView groupDownVoteCount = group_info_single_row_layout.findViewById(R.id.group_down_vote_count);
 
-        if (mGroup.getPhoto()!=null){
-            String imageUrl = mGroup.getPhoto().getImageLocation();
+        if (mGroup.getOwner().getPhoto()!=null){
+            String imageUrl = mGroup.getOwner().getPhoto().getImageLocation();
             Picasso.with(mBaseFragment.getActivity()).load(imageUrl).into(groupImageView);
         }
 
         groupMemberCount.setText(Integer.toString(mGroup.getMemberCount()));
         groupUpVoteCount.setText(Integer.toString(mGroup.getGenuineVotes()));
         groupDownVoteCount.setText(Integer.toString(mGroup.getFakeVotes()));
-    }
-
-    public void setGroupExtraForList(View view){
-        TextView groupName = view.findViewById(R.id.group_name_text);
-        TextView userMembershipStatus = view.findViewById(R.id.user_membership_status_text);
-        groupName.setText(mGroup.getName());
     }
 
 }

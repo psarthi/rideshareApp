@@ -150,7 +150,7 @@ public class UserListFragment extends BaseFragment {
     }
 
     private void setAdapter() {
-        mAdapter = new UserListAdapter(mUsers, this);
+        mAdapter = new UserListAdapter(mUserListType, mUsers, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 

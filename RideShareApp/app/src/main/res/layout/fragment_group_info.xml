@@ -15,7 +15,7 @@
     <android.support.design.widget.CollapsingToolbarLayout
         android:layout_width="match_parent"
         android:layout_height="256dp"
-        app:contentScrim="@android:color/white"
+        app:contentScrim="@color/colorPrimary"
         app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
         app:titleEnabled="false">
 
@@ -26,19 +26,15 @@
             android:orientation="vertical">
 
             <!-- This is group image view-->
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/group_photo_image_view"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:background="@drawable/ic_profile"
-                android:scaleType="center"/>
+                android:layout_width="@dimen/large_image_size"
+                android:layout_height="@dimen/large_image_size"
+                android:src="@drawable/ic_profile"
+                android:padding="@dimen/default_padding"
+                android:layout_gravity="center"/>
 
             <include layout="@layout/group_info_single_row_layout" android:id="@+id/group_info_single_row_layout"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/line_seperator_thickness"
-                android:background="@color/colorGrayLight"/>
 
         </LinearLayout>
 
@@ -61,6 +57,10 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/group_tab"
+            android:background="@color/colorPrimary"
+            app:tabIndicatorColor="@color/colorAccent"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="@color/colorGrayLight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"/>

@@ -18,6 +18,7 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
+import com.digitusrevolution.rideshare.model.user.dto.UserListType;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -37,8 +38,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     private List<BasicUser> mUsers;
     private BaseFragment mBaseFragment;
     private CommonUtil mCommonUtil;
+    private UserListType mUserListType;
 
-    public UserListAdapter(List<BasicUser> users, BaseFragment fragment) {
+    public UserListAdapter(UserListType userListType, List<BasicUser> users, BaseFragment fragment) {
+        mUserListType = userListType;
         mUsers = users;
         mBaseFragment = fragment;
         mCommonUtil = new CommonUtil(fragment);

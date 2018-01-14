@@ -28,15 +28,18 @@
             android:textStyle="bold"
             android:textColor="@color/colorPrimary"/>
 
+        <!-- Keeping it here for future reference purpose
         <TextView
             android:id="@+id/user_membership_status_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
             android:text="Member"
+            android:gravity="center"
             android:textAllCaps="true"
             android:textStyle="italic"
             android:textColor="@color/colorPrimary"/>
+        -->
 
     </LinearLayout>
 

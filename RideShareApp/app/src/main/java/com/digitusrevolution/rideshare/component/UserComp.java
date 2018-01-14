@@ -17,6 +17,7 @@ import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.FullUser;
+import com.digitusrevolution.rideshare.model.user.dto.UserListType;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
@@ -46,6 +47,13 @@ public class UserComp {
     public void setUserProfileSingleRow(View view){
 
         View user_profile_layout = view.findViewById(R.id.user_profile_single_row_layout);
+
+        //Marking all extra elements invisible and let this be set by calling functions as per their requirement
+        user_profile_layout.findViewById(R.id.add_friend_image).setVisibility(View.GONE);
+        user_profile_layout.findViewById(R.id.friend_image).setVisibility(View.GONE);
+        user_profile_layout.findViewById(R.id.more_options_image).setVisibility(View.GONE);
+
+        //Below are the view's on which we will actually operate
         ImageView userProfileImageView = user_profile_layout.findViewById(R.id.user_image);
         Picasso.with(mBaseFragment.getActivity()).load(mUser.getPhoto().getImageLocation()).into(userProfileImageView);
         TextView userNameTextView = user_profile_layout.findViewById(R.id.user_name_text);
@@ -63,11 +71,6 @@ public class UserComp {
                 Log.d(TAG, "Calling User Mobile - "+mUser.getCountry().getCode() + mUser.getMobileNumber());
             }
         });
-
-        //Making it invisible for the time being as it will unnecessarily makes another call
-        //to backend to check user relationship with signed in user
-        user_profile_layout.findViewById(R.id.add_friend_image).setVisibility(View.GONE);
-        user_profile_layout.findViewById(R.id.friend_image).setVisibility(View.GONE);
 
         UserProfileFragment fragment = (UserProfileFragment) mBaseFragment.getActivity().getSupportFragmentManager()
                 .findFragmentByTag(UserProfileFragment.TAG);
