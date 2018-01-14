@@ -14,6 +14,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
@@ -66,7 +67,7 @@ implements RideRequestComp.RideRequestCompListener{
                 String rideRequestId = Integer.toString(mRideRequests.get(position).getId());
                 String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.ID_KEY,rideRequestId);
                 mCommonUtil.showProgressDialog();
-                RESTClient.get(GET_RIDE_REQUEST_URL, null, new JsonHttpResponseHandler(){
+                RESTClient.get(GET_RIDE_REQUEST_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
@@ -74,22 +75,6 @@ implements RideRequestComp.RideRequestCompListener{
                         FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
                         fragmentLoader.loadRideRequestInfoFragment(response.toString());
                     }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        mCommonUtil.dismissProgressDialog();
-                        if (errorResponse!=null) {
-                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                            Log.d(TAG, errorMessage.getErrorMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                        }
-                    }
-
                 });
 
             }

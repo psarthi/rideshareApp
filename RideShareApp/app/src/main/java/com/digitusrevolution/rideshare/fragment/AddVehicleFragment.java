@@ -20,6 +20,7 @@ import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
@@ -149,7 +150,7 @@ CommonComp.onSeatLuggageSelectionListener{
                 if (validateInput()){
                     setVehicle();
                     showProgressDialog();
-                    RESTClient.post(getActivity(),ADD_VEHICLE_URL, mVehicle, new JsonHttpResponseHandler(){
+                    RESTClient.post(getActivity(),ADD_VEHICLE_URL, mVehicle, new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
@@ -159,21 +160,6 @@ CommonComp.onSeatLuggageSelectionListener{
                             Log.d(TAG, "Vehicle Added");
                             getActivity().getSupportFragmentManager().popBackStack();
 
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            super.onFailure(statusCode, headers, throwable, errorResponse);
-                            mCommonUtil.dismissProgressDialog();
-                            if (errorResponse!=null) {
-                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                Log.d(TAG, errorMessage.getErrorMessage());
-                                Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                                Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                            }
                         }
                     });
                 }

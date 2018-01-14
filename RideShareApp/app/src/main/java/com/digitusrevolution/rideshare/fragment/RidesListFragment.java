@@ -18,6 +18,7 @@ import com.digitusrevolution.rideshare.adapter.RideRequestListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
@@ -140,7 +141,7 @@ public class RidesListFragment extends BaseFragment{
                     .replace(APIUrl.PAGE_KEY, Integer.toString(0));
 
             showProgressDialog();
-            RESTClient.get(GET_USER_RIDES_URL, null, new JsonHttpResponseHandler(){
+            RESTClient.get(GET_USER_RIDES_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
@@ -151,22 +152,6 @@ public class RidesListFragment extends BaseFragment{
                     //This will load adapter only when data is loaded
                     setAdapter();
                 }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    dismissProgressDialog();
-                    if (errorResponse!=null) {
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
-                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                    }
-                }
-
             });
         } else {
             //Initial Data loading
@@ -176,7 +161,7 @@ public class RidesListFragment extends BaseFragment{
             //and in the same time we should get logically ride request as well
             //This will not show multiple progress dialog at the same time
             //showProgressDialog();
-            RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new JsonHttpResponseHandler(){
+            RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
@@ -186,21 +171,6 @@ public class RidesListFragment extends BaseFragment{
                     mInitialDataLoaded = true;
                     //This will load adapter only when data is loaded
                     setAdapter();
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    //dismissProgressDialog();
-                    if (errorResponse!=null) {
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
-                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                    }
                 }
             });
         }
@@ -234,7 +204,7 @@ public class RidesListFragment extends BaseFragment{
             //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
             //and unnecssarily we will show multiple dialog which creates flicker on the screen
             if (offset != 1) showProgressDialog();
-            RESTClient.get(GET_USER_RIDES_URL, null, new JsonHttpResponseHandler(){
+            RESTClient.get(GET_USER_RIDES_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
@@ -246,22 +216,6 @@ public class RidesListFragment extends BaseFragment{
                     Log.d(TAG, "Ride Size changed. Current Size is:"+mRides.size());
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRides.size()-1);
                 }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    if (offset != 1) dismissProgressDialog();
-                    if (errorResponse!=null) {
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
-                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                    }
-                }
-
             });
         } else {
             String GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()))
@@ -269,7 +223,7 @@ public class RidesListFragment extends BaseFragment{
             //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
             //and unnecssarily we will show multiple dialog which creates flicker on the screen
             if (offset != 1) showProgressDialog();
-            RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new JsonHttpResponseHandler(){
+            RESTClient.get(GET_USER_RIDE_REQUESTS_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     super.onSuccess(statusCode, headers, response);
@@ -280,22 +234,6 @@ public class RidesListFragment extends BaseFragment{
                     Log.d(TAG, "Ride Request Size changed. Current Size is:"+mRideRequests.size());
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRideRequests.size()-1);
                 }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    if (offset != 1) dismissProgressDialog();
-                    if (errorResponse!=null) {
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
-                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                    }
-                }
-
             });
         }
     }

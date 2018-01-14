@@ -24,6 +24,7 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.Point;
@@ -138,7 +139,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 public void onClick(View v) {
                     String GET_RIDE_URL = APIUrl.GET_RIDE_URL.replace(APIUrl.ID_KEY, Integer.toString(mBasicRide.getId()));
                     mCommonUtil.showProgressDialog();
-                    RESTClient.get(GET_RIDE_URL, null, new JsonHttpResponseHandler() {
+                    RESTClient.get(GET_RIDE_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
@@ -146,21 +147,6 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                             FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
                             fragmentLoader.loadRideInfoFragment(response.toString());
                         }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            super.onFailure(statusCode, headers, throwable, errorResponse);
-                            mCommonUtil.dismissProgressDialog();
-                            if (errorResponse != null) {
-                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                Log.d(TAG, errorMessage.getErrorMessage());
-                                Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                            } else {
-                                Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
-                                Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                            }
-                        }
-
                     });
                 }
             });
@@ -180,7 +166,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                         //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
                         String CANCEL_RIDE = APIUrl.CANCEL_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mBasicRide.getId()));
                         mCommonUtil.showProgressDialog();
-                        RESTClient.get(CANCEL_RIDE, null, new JsonHttpResponseHandler() {
+                        RESTClient.get(CANCEL_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);
@@ -190,20 +176,6 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
                                 mListener.onRideRefresh(mRide);
                                 Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Cancelled", Toast.LENGTH_LONG).show();
-                            }
-
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                                super.onFailure(statusCode, headers, throwable, errorResponse);
-                                mCommonUtil.dismissProgressDialog();
-                                if (errorResponse != null) {
-                                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                    Log.d(TAG, errorMessage.getErrorMessage());
-                                    Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                                } else {
-                                    Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
-                                    Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                                }
                             }
                         });
                     }
@@ -224,7 +196,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
                 String START_RIDE = APIUrl.START_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mBasicRide.getId()));
                 mCommonUtil.showProgressDialog();
-                RESTClient.get(START_RIDE, null, new JsonHttpResponseHandler() {
+                RESTClient.get(START_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
@@ -235,20 +207,6 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                         mListener.onRideRefresh(mRide);
                         Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Started", Toast.LENGTH_LONG).show();
                         navigate(mRide);
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        mCommonUtil.dismissProgressDialog();
-                        if (errorResponse != null) {
-                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                            Log.d(TAG, errorMessage.getErrorMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        } else {
-                            Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                        }
                     }
                 });
             }
@@ -281,7 +239,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             private void endRide() {
                 String END_RIDE = APIUrl.END_RIDE.replace(APIUrl.ID_KEY, Integer.toString(mBasicRide.getId()));
                 mCommonUtil.showProgressDialog();
-                RESTClient.get(END_RIDE, null, new JsonHttpResponseHandler() {
+                RESTClient.get(END_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
@@ -291,20 +249,6 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
                         Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Ended", Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        mCommonUtil.dismissProgressDialog();
-                        if (errorResponse != null) {
-                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                            Log.d(TAG, errorMessage.getErrorMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        } else {
-                            Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                        }
                     }
                 });
             }
@@ -396,7 +340,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 String PICKUP_PASSENGER = APIUrl.PICKUP_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Integer.toString(mRide.getId()))
                         .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()));
                 mCommonUtil.showProgressDialog();
-                RESTClient.get(PICKUP_PASSENGER, null, new JsonHttpResponseHandler() {
+                RESTClient.get(PICKUP_PASSENGER, null, new RSJsonHttpResponseHandler(mCommonUtil) {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -408,20 +352,6 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                         mListener.onRideRefresh(mRide);
                         Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Picked", Toast.LENGTH_LONG).show();
                         navigate(mRide);
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        mCommonUtil.dismissProgressDialog();
-                        if (errorResponse != null) {
-                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                            Log.d(TAG, errorMessage.getErrorMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        } else {
-                            Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                        }
                     }
                 });
             }
@@ -517,8 +447,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 .replace(APIUrl.RIDE_MODE_KEY, rideMode.toString())
                 .replace(APIUrl.PAYMENT_CODE_KEY, code);
         mCommonUtil.showProgressDialog();
-        RESTClient.get(DROP_PASSENGER, null, new JsonHttpResponseHandler() {
-
+        RESTClient.get(DROP_PASSENGER, null, new RSJsonHttpResponseHandler(mCommonUtil) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -532,20 +461,6 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 mListener.onRideRefresh(mRide);
                 Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Dropped", Toast.LENGTH_LONG).show();
                 navigate(mRide);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                mCommonUtil.dismissProgressDialog();
-                if (errorResponse != null) {
-                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                    Log.d(TAG, errorMessage.getErrorMessage());
-                    Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                } else {
-                    Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
-                    Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                }
             }
         });
     }
@@ -566,7 +481,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 .replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()))
                 .replace(APIUrl.RATING_KEY, Float.toString(ratingBar.getRating()));
         mCommonUtil.showProgressDialog();
-        RESTClient.get(CANCEL_PASSENGER, null, new JsonHttpResponseHandler() {
+        RESTClient.get(CANCEL_PASSENGER, null, new RSJsonHttpResponseHandler(mCommonUtil) {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -577,20 +492,6 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
                 mListener.onRideRefresh(mRide);
                 Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Cancelled", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                mCommonUtil.dismissProgressDialog();
-                if (errorResponse != null) {
-                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                    Log.d(TAG, errorMessage.getErrorMessage());
-                    Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                } else {
-                    Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
-                    Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                }
             }
         });
 
@@ -616,7 +517,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 feedbackInfo.setRide(mRide);
                 feedbackInfo.setRideRequest(rideRequest);
                 mCommonUtil.showProgressDialog();
-                RESTClient.post(mBaseFragment.getActivity(), USER_FEEDBACK_URL, feedbackInfo, new JsonHttpResponseHandler() {
+                RESTClient.post(mBaseFragment.getActivity(), USER_FEEDBACK_URL, feedbackInfo, new RSJsonHttpResponseHandler(mCommonUtil) {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -625,20 +526,6 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                         userRatingBar.setEnabled(false);
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        mCommonUtil.dismissProgressDialog();
-                        if (errorResponse != null) {
-                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                            Log.d(TAG, errorMessage.getErrorMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        } else {
-                            Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
-                            Toast.makeText(mBaseFragment.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                        }
                     }
                 });
             }

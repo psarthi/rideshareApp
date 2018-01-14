@@ -15,6 +15,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.common.ResponseMessage;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
@@ -42,12 +43,14 @@ public class OtpVerificationActivity extends BaseActivity {
     private Button mOTPConfirmationButton;
     private UserRegistration mUserRegistration;
     private String mOTPInput;
+    private CommonUtil mCommonUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp_verification);
         getSupportActionBar().hide();
+        mCommonUtil = new CommonUtil(this);
 
         mVerificationCodeSubHeading = findViewById(R.id.otp_verification_sub_heading);
         mOTPCode1stNumber = findViewById(R.id.otp_code_1st_number);
@@ -187,7 +190,7 @@ public class OtpVerificationActivity extends BaseActivity {
             String VALIDATE_OTP_URL = APIUrl.VALIDATE_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString)
                     .replace(APIUrl.OTP_KEY,mOTPInput);
             showProgressDialog();
-            RESTClient.get(VALIDATE_OTP_URL, null, new JsonHttpResponseHandler() {
+            RESTClient.get(VALIDATE_OTP_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -206,21 +209,6 @@ public class OtpVerificationActivity extends BaseActivity {
                         Toast.makeText(OtpVerificationActivity.this,"OTP Validation Failed, please reenter valid OTP",Toast.LENGTH_SHORT).show();
                     }
                 }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    dismissProgressDialog();
-                    if (errorResponse!=null) {
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
-                        Toast.makeText(OtpVerificationActivity.this, errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                        Toast.makeText(OtpVerificationActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                    }
-                }
-
             });
         } catch (UnsupportedEncodingException e) {
             dismissProgressDialog();
@@ -231,7 +219,7 @@ public class OtpVerificationActivity extends BaseActivity {
 
     private void registerUser() {
         showProgressDialog();
-        RESTClient.post(this,APIUrl.USER_REGISTRATION_URL,mUserRegistration,new JsonHttpResponseHandler(){
+        RESTClient.post(this,APIUrl.USER_REGISTRATION_URL,mUserRegistration,new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -243,21 +231,6 @@ public class OtpVerificationActivity extends BaseActivity {
                 commonUtil.saveUserSignInResult(userSignInResult);
                 startHomePageActivity(userSignInResult);
             }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                dismissProgressDialog();
-                if (errorResponse!=null) {
-                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                    Log.d(TAG, errorMessage.getErrorMessage());
-                    Toast.makeText(OtpVerificationActivity.this, errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                    Toast.makeText(OtpVerificationActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                }
-            }
         });
     }
 
@@ -266,7 +239,7 @@ public class OtpVerificationActivity extends BaseActivity {
             String encodedQueryString = URLEncoder.encode(mUserRegistration.getMobileNumber(), "UTF-8");
             String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString);
             showProgressDialog();
-            RESTClient.get(GET_OTP_URL, null, new JsonHttpResponseHandler() {
+            RESTClient.get(GET_OTP_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
@@ -275,21 +248,6 @@ public class OtpVerificationActivity extends BaseActivity {
                     ResponseMessage responseMessage = new Gson().fromJson(response.toString(), ResponseMessage.class);
                     Toast.makeText(OtpVerificationActivity.this,"OTP:"+responseMessage.getResult(),Toast.LENGTH_LONG).show();
 
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    dismissProgressDialog();
-                    if (errorResponse!=null) {
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
-                        Toast.makeText(OtpVerificationActivity.this, errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                        Toast.makeText(OtpVerificationActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                    }
                 }
             });
         } catch (UnsupportedEncodingException e) {

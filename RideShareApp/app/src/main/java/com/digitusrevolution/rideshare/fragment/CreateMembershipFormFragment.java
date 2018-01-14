@@ -21,7 +21,9 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
 import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
@@ -56,6 +58,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
     private BasicGroup mGroup;
     private LinearLayout mQuestionsLayout;
     private MembershipForm mMembershipForm;
+    private CommonUtil mCommonUtil;
 
     public CreateMembershipFormFragment() {
         // Required empty public constructor
@@ -85,6 +88,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
         }
         mGroup = new Gson().fromJson(mGroupData, BasicGroup.class);
         mMembershipForm = new MembershipForm();
+        mCommonUtil = new CommonUtil(this);
     }
 
     @Override
@@ -118,7 +122,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
                 if (validateInput()){
                     setupGroup();
                     showProgressDialog();
-                    RESTClient.post(getActivity(), APIUrl.CREATE_GROUP, mGroup, new JsonHttpResponseHandler(){
+                    RESTClient.post(getActivity(), APIUrl.CREATE_GROUP, mGroup, new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
@@ -128,20 +132,6 @@ public class CreateMembershipFormFragment extends BaseFragment {
                             FragmentLoader fragmentLoader = new FragmentLoader(CreateMembershipFormFragment.this);
                             //Response is Group Detail
                             fragmentLoader.loadGroupInfoFragment(response.toString());
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            super.onFailure(statusCode, headers, throwable, errorResponse);
-                            dismissProgressDialog();
-                            if (errorResponse != null) {
-                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                Log.d(TAG, errorMessage.getErrorMessage());
-                                Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                            } else {
-                                Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
-                                Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                            }
                         }
                     });
                 }

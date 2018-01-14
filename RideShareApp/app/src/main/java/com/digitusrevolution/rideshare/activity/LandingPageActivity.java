@@ -16,6 +16,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
@@ -113,7 +114,7 @@ public class LandingPageActivity extends BaseActivity{
             String CHECK_USER_EXIST_URL = APIUrl.CHECK_USER_EXIST_URL;
             CHECK_USER_EXIST_URL = CHECK_USER_EXIST_URL.replace(APIUrl.USER_EMAIL_KEY, account.getEmail());
 
-            RESTClient.get(CHECK_USER_EXIST_URL,null,new JsonHttpResponseHandler(){
+            RESTClient.get(CHECK_USER_EXIST_URL,null,new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
@@ -126,7 +127,7 @@ public class LandingPageActivity extends BaseActivity{
                         GoogleSignInInfo googleSignInInfo = new GoogleSignInInfo();
                         googleSignInInfo.setEmail(account.getEmail());
                         RESTClient.post(LandingPageActivity.this,APIUrl.GOOGLE_SIGN_IN_URL,
-                                googleSignInInfo,new JsonHttpResponseHandler(){
+                                googleSignInInfo,new RSJsonHttpResponseHandler(mCommonUtil){
                                     @Override
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                         super.onSuccess(statusCode, headers, response);
@@ -135,20 +136,6 @@ public class LandingPageActivity extends BaseActivity{
                                         startHomePageActivity(userSignInResult);
                                         dismissProgressDialog();
                                     }
-                                    @Override
-                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                                        dismissProgressDialog();
-                                        if (errorResponse!=null) {
-                                            ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                            Log.d(TAG, errorMessage.getErrorMessage());
-                                            Toast.makeText(LandingPageActivity.this, errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                        else {
-                                            Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                                            Toast.makeText(LandingPageActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                                        }
-                                    }
                                 });
                     }
                     else {
@@ -156,16 +143,6 @@ public class LandingPageActivity extends BaseActivity{
                         mobileRegistration(account);
                         dismissProgressDialog();
                     }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    dismissProgressDialog();
-                    //This will take care of all type of exception as we can't handle any exception here, so showing generic error
-                    //in most likely chances this would Internal Server error or Time Out etc.
-                    Log.d(TAG, "Request Failed with error:" + throwable.getMessage());
-                    Toast.makeText(LandingPageActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
                 }
             });
 

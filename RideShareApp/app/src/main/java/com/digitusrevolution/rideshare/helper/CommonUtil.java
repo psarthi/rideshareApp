@@ -61,13 +61,12 @@ public class CommonUtil {
         }
     }
 
-    private Activity getActivity(){
+    public Activity getActivity(){
         if (mBaseFragment!=null){
             return mBaseFragment.getActivity();
         } else {
             return mBaseActivity;
         }
-
     }
 
     public void saveUserSignInResult(UserSignInResult userSignInResult) {
@@ -248,7 +247,7 @@ public class CommonUtil {
     }
 
     public void dismissProgressDialog(){
-        mProgressDialog.dismiss();
+        if (mProgressDialog!=null) mProgressDialog.dismiss();
     }
 
 }

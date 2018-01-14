@@ -19,6 +19,7 @@ import com.digitusrevolution.rideshare.adapter.UserListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.UserListType;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -136,7 +137,7 @@ public class UserListFragment extends BaseFragment {
                 .replace(APIUrl.PAGE_KEY, Integer.toString(0));
 
         showProgressDialog();
-        RESTClient.get(GET_GROUP_MEMBERS, null, new JsonHttpResponseHandler(){
+        RESTClient.get(GET_GROUP_MEMBERS, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
@@ -147,22 +148,6 @@ public class UserListFragment extends BaseFragment {
                 //This will load adapter only when data is loaded
                 setAdapter();
             }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                dismissProgressDialog();
-                if (errorResponse!=null) {
-                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                    Log.d(TAG, errorMessage.getErrorMessage());
-                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                }
-            }
-
         });
 
     }
@@ -185,7 +170,7 @@ public class UserListFragment extends BaseFragment {
         //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
         //and unnecssarily we will show multiple dialog which creates flicker on the screen
         if (offset != 1) showProgressDialog();
-        RESTClient.get(GET_GROUP_MEMBERS, null, new JsonHttpResponseHandler(){
+        RESTClient.get(GET_GROUP_MEMBERS, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
@@ -197,22 +182,6 @@ public class UserListFragment extends BaseFragment {
                 Log.d(TAG, "User Size changed. Current Size is:"+mUsers.size());
                 mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mUsers.size()-1);
             }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                if (offset != 1) dismissProgressDialog();
-                if (errorResponse!=null) {
-                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                    Log.d(TAG, errorMessage.getErrorMessage());
-                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                }
-            }
-
         });
     }
 

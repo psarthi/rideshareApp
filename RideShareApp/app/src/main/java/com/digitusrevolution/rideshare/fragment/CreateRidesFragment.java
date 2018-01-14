@@ -35,6 +35,7 @@ import com.digitusrevolution.rideshare.dialog.TimePickerFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
@@ -359,7 +360,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         if (validateInput()){
                             setRideOffer();
                             showProgressDialog();
-                            RESTClient.post(getActivity(), APIUrl.OFFER_RIDE_URL, mRideOfferInfo, new JsonHttpResponseHandler(){
+                            RESTClient.post(getActivity(), APIUrl.OFFER_RIDE_URL, mRideOfferInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     super.onSuccess(statusCode, headers, response);
@@ -383,21 +384,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                         //This will load the Ride Info fragment
                                         mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
                                     }*/
-                                }
-
-                                @Override
-                                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                                    dismissProgressDialog();
-                                    if (errorResponse!=null) {
-                                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                        Log.d(TAG, errorMessage.getErrorMessage());
-                                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                    else {
-                                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                                    }
                                 }
                             });
                         }
@@ -445,7 +431,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     private void createRideRequest(){
         showProgressDialog();
-        RESTClient.post(getActivity(), APIUrl.REQUEST_RIDE_URL, mRideRequest, new JsonHttpResponseHandler(){
+        RESTClient.post(getActivity(), APIUrl.REQUEST_RIDE_URL, mRideRequest, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -469,21 +455,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                     //This will load the Ride Request Info fragment
                                     mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
                                 }*/
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                dismissProgressDialog();
-                if (errorResponse!=null) {
-                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                    Log.d(TAG, errorMessage.getErrorMessage());
-                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                }
             }
         });
     }
@@ -750,7 +721,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 .replace(APIUrl.departureEpochSecond_KEY, Long.toString(mStartTimeCalendar.getTimeInMillis()))
                 .replace(APIUrl.GOOGLE_API_KEY, getResources().getString(R.string.GOOGLE_API_KEY));
         showProgressDialog();
-        RESTClient.get(GET_GOOGLE_DIRECTION_URL, null, new JsonHttpResponseHandler() {
+        RESTClient.get(GET_GOOGLE_DIRECTION_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -766,21 +737,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     mTravelDistance = mGoogleDirection.getRoutes().get(0).getLegs().get(0).getDistance().getValue();
                 } else {
                     Toast.makeText(getActivity(),"No valid route found, please enter alternate location",Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                dismissProgressDialog();
-                if (errorResponse!=null) {
-                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                    Log.d(TAG, errorMessage.getErrorMessage());
-                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -799,7 +755,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 .replace(APIUrl.destinationLng_KEY, Double.toString(mToLatLng.longitude))
                 .replace(APIUrl.GOOGLE_API_KEY, getResources().getString(R.string.GOOGLE_API_KEY));
         showProgressDialog();
-        RESTClient.get(GET_GOOGLE_DISTANCE_URL, null, new JsonHttpResponseHandler(){
+        RESTClient.get(GET_GOOGLE_DISTANCE_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -817,21 +773,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     Toast.makeText(getActivity(),"No valid route found, please enter alternate location",Toast.LENGTH_LONG).show();
                     mFareTextView.setVisibility(View.INVISIBLE);
                     dismissProgressDialog();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                dismissProgressDialog();
-                if (errorResponse!=null) {
-                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                    Log.d(TAG, errorMessage.getErrorMessage());
-                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -855,7 +796,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         else {
             //No need to show progress dialog as this would be called
             //post getting direction and we are already showing progress dialog there
-            RESTClient.post(getActivity(),APIUrl.GET_PRE_BOOKING_RIDE_REQUEST_INFO, mRideRequest, new JsonHttpResponseHandler(){
+            RESTClient.post(getActivity(),APIUrl.GET_PRE_BOOKING_RIDE_REQUEST_INFO, mRideRequest, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
@@ -865,22 +806,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     mMaxFare = mPreBookingRideRequestResult.getMaxFare();
                     setFare(mMaxFare);
                 }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    dismissProgressDialog();
-                    if (errorResponse!=null) {
-                        ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                        Log.d(TAG, errorMessage.getErrorMessage());
-                        Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                    }
-                }
-
             });
         }
     }

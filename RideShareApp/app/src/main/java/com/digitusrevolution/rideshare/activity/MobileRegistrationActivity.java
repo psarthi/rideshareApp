@@ -16,7 +16,9 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.CustomCountryAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.common.ResponseMessage;
 import com.digitusrevolution.rideshare.model.user.domain.Country;
@@ -50,6 +52,7 @@ public class MobileRegistrationActivity extends BaseActivity {
     private UserRegistration mUserRegistration;
     private String mSelectedCountryCode;
     private Country mSelectedCountry;
+    private CommonUtil mCommonUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class MobileRegistrationActivity extends BaseActivity {
         setContentView(R.layout.activity_mobile_registration);
         getSupportActionBar().hide();
 
+        mCommonUtil = new CommonUtil(this);
         mCountryNameSpinner = findViewById(R.id.country_name_spinner);
         mMobileNumber = findViewById(R.id.mobile_number);
         mSendOTPButton = findViewById(R.id.send_otp_button);
@@ -123,7 +127,7 @@ public class MobileRegistrationActivity extends BaseActivity {
                     String encodedQueryString = URLEncoder.encode(mSelectedCountryCode + mMobileNumber.getText().toString(), "UTF-8");
                     String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString);
                     showProgressDialog();
-                    RESTClient.get(GET_OTP_URL, null, new JsonHttpResponseHandler() {
+                    RESTClient.get(GET_OTP_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
@@ -136,21 +140,6 @@ public class MobileRegistrationActivity extends BaseActivity {
                             //Reason for storing key name as well, so that calling class don't have to know the key name
                             otpVerificationIntent.putExtra(getExtraDataKey(),data);
                             startActivity(otpVerificationIntent);
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            super.onFailure(statusCode, headers, throwable, errorResponse);
-                            dismissProgressDialog();
-                            if (errorResponse!=null) {
-                                ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                                Log.d(TAG, errorMessage.getErrorMessage());
-                                Toast.makeText(MobileRegistrationActivity.this, errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                                Toast.makeText(MobileRegistrationActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                            }
                         }
                     });
                 } catch (UnsupportedEncodingException e) {
@@ -174,7 +163,7 @@ public class MobileRegistrationActivity extends BaseActivity {
 
     private void setCountryList(){
         showProgressDialog();
-        RESTClient.get(APIUrl.GET_COUNTRIES_URL,null,new JsonHttpResponseHandler(){
+        RESTClient.get(APIUrl.GET_COUNTRIES_URL,null,new RSJsonHttpResponseHandler(mCommonUtil){
 
             //Note - Its important to use proper OnSuccess method with JsonArray instead of JsonObject as we are expecting JsonArray from the response
             @Override
@@ -199,13 +188,6 @@ public class MobileRegistrationActivity extends BaseActivity {
                 //If you are using plain String in ArrayAdapter then no need to write custom adapter and below set function would do the job
                 countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 */
-                dismissProgressDialog();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                Log.d(TAG,"Response Failed:"+errorResponse);
                 dismissProgressDialog();
             }
         });

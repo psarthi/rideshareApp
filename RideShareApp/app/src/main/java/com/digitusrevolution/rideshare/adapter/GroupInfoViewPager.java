@@ -29,14 +29,15 @@ public class GroupInfoViewPager extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
+        String mGroupDetailJson = new Gson().toJson(mGroupDetail);
         if (position==0){
-            fragment = AboutGroupFragment.newInstance(null, null);
+            fragment = AboutGroupFragment.newInstance(mGroupDetailJson);
         }
         if (position==1){
-            fragment = UserListFragment.newInstance(UserListType.Member, new Gson().toJson(mGroupDetail));
+            fragment = UserListFragment.newInstance(UserListType.Member, mGroupDetailJson);
         }
         if (position == 2){
-            fragment = UserListFragment.newInstance(UserListType.Membership_Request, new Gson().toJson(mGroupDetail));
+            fragment = UserListFragment.newInstance(UserListType.Membership_Request, mGroupDetailJson);
         }
         return fragment;
 

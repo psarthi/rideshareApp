@@ -17,6 +17,7 @@ import com.digitusrevolution.rideshare.adapter.TransactionAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Transaction;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
@@ -137,7 +138,7 @@ public class TransactionFragment extends BaseFragment {
         String GET_USER_WALLET_TRANSACTION = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
                 .replace(APIUrl.PAGE_KEY, Integer.toString(0));
         //showProgressDialog();
-        RESTClient.get(GET_USER_WALLET_TRANSACTION, null, new JsonHttpResponseHandler(){
+        RESTClient.get(GET_USER_WALLET_TRANSACTION, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
@@ -147,22 +148,6 @@ public class TransactionFragment extends BaseFragment {
                 setAdapter();
                 //This will load adapter only when data is loaded
             }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                //dismissProgressDialog();
-                if (errorResponse!=null) {
-                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                    Log.d(TAG, errorMessage.getErrorMessage());
-                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                }
-            }
-
         });
     }
 
@@ -185,7 +170,7 @@ public class TransactionFragment extends BaseFragment {
         String GET_USER_WALLET_TRANSACTION = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
                 .replace(APIUrl.PAGE_KEY, Integer.toString(offset));
         //showProgressDialog();
-        RESTClient.get(GET_USER_WALLET_TRANSACTION, null, new JsonHttpResponseHandler(){
+        RESTClient.get(GET_USER_WALLET_TRANSACTION, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
@@ -195,22 +180,6 @@ public class TransactionFragment extends BaseFragment {
                 mTransactions.addAll(transactions);
                 mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mTransactions.size()-1);
             }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                //dismissProgressDialog();
-                if (errorResponse!=null) {
-                    ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-                    Log.d(TAG, errorMessage.getErrorMessage());
-                    Toast.makeText(getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Log.d(TAG, "Request Failed with error:"+ throwable.getMessage());
-                    Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-                }
-            }
-
         });
     }
     @Override
