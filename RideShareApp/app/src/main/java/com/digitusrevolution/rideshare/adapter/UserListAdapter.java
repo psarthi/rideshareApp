@@ -1,32 +1,19 @@
 package com.digitusrevolution.rideshare.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.component.FragmentLoader;
-import com.digitusrevolution.rideshare.component.GroupComp;
 import com.digitusrevolution.rideshare.component.UserComp;
-import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.helper.RESTClient;
-import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.digitusrevolution.rideshare.model.user.dto.UserListType;
-import com.google.gson.Gson;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONObject;
 
 import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by psarthi on 1/13/18.
@@ -59,8 +46,21 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final BasicUser user = getItem(position);
+        View view = holder.itemView;
         UserComp userComp = new UserComp(mBaseFragment, user);
-        userComp.setUserProfileSingleRow(holder.itemView);
+        userComp.setUserProfileSingleRow(view);
+        TextView memberRole = view.findViewById(R.id.member_role_text);
+        TextView membershipForm = view.findViewById(R.id.membership_form_text);
+        if (mUserListType.equals(UserListType.Member)){
+            //TODO set the role of the user for that group
+            memberRole.setVisibility(View.VISIBLE);
+            membershipForm.setVisibility(View.GONE);
+        }
+        if (mUserListType.equals(UserListType.Membership_Request)){
+            //TODO link the click of form with the user membership form
+            memberRole.setVisibility(View.GONE);
+            membershipForm.setVisibility(View.VISIBLE);
+        }
     }
 
     public BasicUser getItem(int position){

@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
@@ -15,6 +16,7 @@ import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
+import com.digitusrevolution.rideshare.model.user.dto.GroupListType;
 import com.google.gson.Gson;
 
 import java.util.List;

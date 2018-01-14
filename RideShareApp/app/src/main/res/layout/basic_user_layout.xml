@@ -18,7 +18,7 @@
         android:layout_below="@id/user_profile_single_row_layout">
 
         <TextView
-            android:id="@+id/member_status"
+            android:id="@+id/member_role_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -26,7 +26,7 @@
             android:gravity="start"/>
 
         <TextView
-            android:id="@+id/membership_form"
+            android:id="@+id/membership_form_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center"
