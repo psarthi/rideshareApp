@@ -9,6 +9,7 @@ public class GroupDetail extends BasicGroup{
 	//This is an additional property than DO reason for having this 
 	//so that we don't have to get full list of member to get the count
 	private int memberCount;
+	private MembershipStatus membershipStatus;
 	
 	public int getMemberCount() {
 		return memberCount;
@@ -16,5 +17,13 @@ public class GroupDetail extends BasicGroup{
 
 	public void setMemberCount(int memberCount) {
 		this.memberCount = memberCount;
+	}
+
+	public MembershipStatus getMembershipStatus() {
+		return membershipStatus;
+	}
+
+	public void setMembershipStatus(MembershipStatus membershipStatus) {
+		this.membershipStatus = membershipStatus;
 	}
 }

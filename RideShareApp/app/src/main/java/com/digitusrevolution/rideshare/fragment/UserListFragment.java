@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
+import com.digitusrevolution.rideshare.adapter.GroupMemberListAdapter;
 import com.digitusrevolution.rideshare.adapter.UserListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
+import com.digitusrevolution.rideshare.model.user.dto.GroupMember;
 import com.digitusrevolution.rideshare.model.user.dto.UserListType;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
@@ -57,8 +59,8 @@ public class UserListFragment extends BaseFragment {
     private boolean mInitialDataLoaded;
     private CommonUtil mCommonUtil;
     private List<BasicUser> mUsers = new ArrayList<>();
-    private GroupDetail mGroupDetail;
     private String GET_GROUP_MEMBERS_URL;
+    private BasicUser mUser;
 
 
     public UserListFragment() {
@@ -91,9 +93,10 @@ public class UserListFragment extends BaseFragment {
             mGroupDetailData = getArguments().getString(ARG_GROUP_DETAIL);
         }
         mCommonUtil = new CommonUtil(this);
-        mGroupDetail = new Gson().fromJson(mGroupDetailData, GroupDetail.class);
-        GET_GROUP_MEMBERS_URL = APIUrl.GET_GROUP_MEMBERS.replace(APIUrl.ID_KEY,Integer.toString(mGroupDetail.getId()))
-        .replace(APIUrl.USER_LIST_TYPE_KEY, mUserListType.toString());
+        mUser = mCommonUtil.getUser();
+        GroupDetail groupDetail = new Gson().fromJson(mGroupDetailData, GroupDetail.class);
+        GET_GROUP_MEMBERS_URL = APIUrl.GET_GROUP_MEMBERS.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                .replace(APIUrl.GROUP_ID_KEY,Integer.toString(groupDetail.getId()));
         loadInitialData();
     }
 

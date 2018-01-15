@@ -5,5 +5,5 @@ package com.digitusrevolution.rideshare.model.user.dto;
  */
 
 public enum  UserListType {
-    Member, Membership_Request
+    Membership_Request
 }

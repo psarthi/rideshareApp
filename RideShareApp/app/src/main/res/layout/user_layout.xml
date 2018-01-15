@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This layout is only to add margin to the user profile layout, so that we can use it directly as well
+e.g. in case of user list-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/default_margin">
+
+    <include layout="@layout/user_profile_single_row_layout"
+             android:id="@+id/user_profile_single_row_layout"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:background="@color/colorGrayLight"
+        android:layout_marginTop="@dimen/default_margin"/>
+
+</LinearLayout>

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
@@ -31,6 +32,10 @@ public class AboutGroupFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private GroupDetail mGroup;
+    private Button mLeaveButton;
+    private Button mMemberShipFormButton;
+    private Button mJoinButton;
+
 
     public AboutGroupFragment() {
         // Required empty public constructor
@@ -67,6 +72,20 @@ public class AboutGroupFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_about_group, container, false);
         ((TextView) view.findViewById(R.id.group_description)).setText(mGroup.getInformation());
+        mLeaveButton = view.findViewById(R.id.leave_group_button);
+        mJoinButton = view.findViewById(R.id.group_join_button);
+        mMemberShipFormButton = view.findViewById(R.id.membership_form_button);
+
+        if (mGroup.getMembershipStatus().isMember()){
+            mJoinButton.setVisibility(View.GONE);
+            if (!mGroup.getMembershipStatus().isAdmin()){
+                mMemberShipFormButton.setVisibility(View.GONE);
+            }
+        } else {
+            mLeaveButton.setVisibility(View.GONE);
+            mMemberShipFormButton.setVisibility(View.GONE);
+        }
+
         return view;
     }
 

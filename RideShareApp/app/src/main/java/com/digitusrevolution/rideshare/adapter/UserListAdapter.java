@@ -4,7 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.UserComp;
@@ -38,7 +39,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.basic_user_layout, parent, false);
+                .inflate(R.layout.user_layout, parent, false);
         UserListAdapter.ViewHolder vh = new UserListAdapter.ViewHolder(v);
         return vh;
     }
@@ -46,20 +47,18 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final BasicUser user = getItem(position);
-        View view = holder.itemView;
+        View view = holder.view;
         UserComp userComp = new UserComp(mBaseFragment, user);
         userComp.setUserProfileSingleRow(view);
-        TextView memberRole = view.findViewById(R.id.member_role_text);
-        TextView membershipForm = view.findViewById(R.id.membership_form_text);
-        if (mUserListType.equals(UserListType.Member)){
-            //TODO set the role of the user for that group
-            memberRole.setVisibility(View.VISIBLE);
-            membershipForm.setVisibility(View.GONE);
-        }
+        ImageView formImageView = view.findViewById(R.id.membership_form_image);
         if (mUserListType.equals(UserListType.Membership_Request)){
-            //TODO link the click of form with the user membership form
-            memberRole.setVisibility(View.GONE);
-            membershipForm.setVisibility(View.VISIBLE);
+            formImageView.setVisibility(View.VISIBLE);
+            formImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mBaseFragment.getActivity(), "Membership From", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -73,8 +72,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        //I have added this view variable instead of using itemView just from cleanniness of usage front
+        //otherwise we can use itemView directly as well
+        private View view;
         public ViewHolder(View itemView) {
             super(itemView);
+            view = itemView;
         }
     }
 }

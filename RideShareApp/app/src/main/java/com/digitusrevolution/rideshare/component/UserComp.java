@@ -52,6 +52,7 @@ public class UserComp {
         user_profile_layout.findViewById(R.id.add_friend_image).setVisibility(View.GONE);
         user_profile_layout.findViewById(R.id.friend_image).setVisibility(View.GONE);
         user_profile_layout.findViewById(R.id.more_options_image).setVisibility(View.GONE);
+        user_profile_layout.findViewById(R.id.membership_form_image).setVisibility(View.GONE);
 
         //Below are the view's on which we will actually operate
         ImageView userProfileImageView = user_profile_layout.findViewById(R.id.user_image);

@@ -27,6 +27,8 @@ import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
 import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.google.android.gms.common.api.Api;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -59,6 +61,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
     private LinearLayout mQuestionsLayout;
     private MembershipForm mMembershipForm;
     private CommonUtil mCommonUtil;
+    private BasicUser mUser;
 
     public CreateMembershipFormFragment() {
         // Required empty public constructor
@@ -89,6 +92,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
         mGroup = new Gson().fromJson(mGroupData, BasicGroup.class);
         mMembershipForm = new MembershipForm();
         mCommonUtil = new CommonUtil(this);
+        mUser = mCommonUtil.getUser();
     }
 
     @Override
@@ -121,8 +125,9 @@ public class CreateMembershipFormFragment extends BaseFragment {
             public void onClick(View v) {
                 if (validateInput()){
                     setupGroup();
+                    String CREATE_GROUP = APIUrl.CREATE_GROUP.replace(APIUrl.USER_ID_KEY,Integer.toString(mUser.getId()));
                     mCommonUtil.showProgressDialog();
-                    RESTClient.post(getActivity(), APIUrl.CREATE_GROUP, mGroup, new RSJsonHttpResponseHandler(mCommonUtil){
+                    RESTClient.post(getActivity(), CREATE_GROUP, mGroup, new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);

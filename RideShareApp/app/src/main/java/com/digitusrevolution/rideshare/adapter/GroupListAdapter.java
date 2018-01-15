@@ -1,6 +1,7 @@
 package com.digitusrevolution.rideshare.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     public void onBindViewHolder(ViewHolder holder, final int position) {
         View view = holder.itemView;
         GroupDetail groupDetail = mGroups.get(position);
+        Log.d(TAG, "Group is:"+new Gson().toJson(mGroups.get(position)));
         GroupComp groupComp = new GroupComp(mBaseFragment, groupDetail);
         groupComp.setGroupBasicInfo(view);
         //This will set the name of the group which has been handled differently for different view

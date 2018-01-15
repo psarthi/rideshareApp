@@ -12,14 +12,16 @@ import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
-import com.digitusrevolution.rideshare.adapter.GroupListAdapter;
+import com.digitusrevolution.rideshare.adapter.GroupMemberListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
-import com.digitusrevolution.rideshare.model.user.dto.GroupListType;
+import com.digitusrevolution.rideshare.model.user.domain.core.Group;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
+import com.digitusrevolution.rideshare.model.user.dto.GroupMember;
+import com.digitusrevolution.rideshare.model.user.dto.UserListType;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -34,20 +36,18 @@ import cz.msebera.android.httpclient.Header;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link GroupListFragment.OnFragmentInteractionListener} interface
+ * {@link GroupMemberFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link GroupListFragment#newInstance} factory method to
+ * Use the {@link GroupMemberFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupListFragment extends BaseFragment {
+public class GroupMemberFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_GROUP_RESULT_TYPE = "groupResultType";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_GROUP_DETAIL = "groupDetail";
 
     // TODO: Rename and change types of parameters
-    private GroupListType mGroupListType;
-    private String mParam2;
+    private String mGroupDetailData;
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
@@ -55,12 +55,14 @@ public class GroupListFragment extends BaseFragment {
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener mScrollListener;
     private boolean mInitialDataLoaded;
-    private BasicUser mUser;
     private CommonUtil mCommonUtil;
-    private List<GroupDetail> mGroups = new ArrayList<>();
-    private String GET_USER_GROUPS_URL;
+    private List<GroupMember> mGroupMembers = new ArrayList<>();
+    private GroupDetail mGroupDetail;
+    private String GET_GROUP_MEMBERS_URL;
+    private BasicUser mUser;
 
-    public GroupListFragment() {
+
+    public GroupMemberFragment() {
         // Required empty public constructor
     }
 
@@ -68,16 +70,14 @@ public class GroupListFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param groupListType Group Result Type (e.g. All, Member, Invite)
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment GroupListFragment.
+     * @param groupDetail GroupDetail in Json format
+     * @return A new instance of fragment UserListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroupListFragment newInstance(GroupListType groupListType, String param2) {
-        GroupListFragment fragment = new GroupListFragment();
+    public static GroupMemberFragment newInstance(String groupDetail) {
+        GroupMemberFragment fragment = new GroupMemberFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_GROUP_RESULT_TYPE, groupListType.toString());
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_GROUP_DETAIL, groupDetail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -86,14 +86,13 @@ public class GroupListFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mGroupListType = GroupListType.valueOf(getArguments().getString(ARG_GROUP_RESULT_TYPE));
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mGroupDetailData = getArguments().getString(ARG_GROUP_DETAIL);
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        GET_USER_GROUPS_URL = APIUrl.GET_USER_GROUPS.replace(APIUrl.USER_ID_KEY,Integer.toString(mUser.getId()))
-                .replace(APIUrl.GROUP_ID_KEY,Integer.toString(mUser.getId()))
-                .replace(APIUrl.GROUP_LIST_TYPE_KEY,mGroupListType.toString());
+        mGroupDetail = new Gson().fromJson(mGroupDetailData, GroupDetail.class);
+        GET_GROUP_MEMBERS_URL = APIUrl.GET_GROUP_MEMBERS.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                .replace(APIUrl.GROUP_ID_KEY,Integer.toString(mGroupDetail.getId()));
         loadInitialData();
     }
 
@@ -101,9 +100,8 @@ public class GroupListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_group_list, container, false);
-        Log.d(TAG, "Group Result Type is:"+ mGroupListType);
-        mRecyclerView = view.findViewById(R.id.group_list);
+        View view = inflater.inflate(R.layout.fragment_user_list, container, false);
+        mRecyclerView = view.findViewById(R.id.user_list);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         layoutManager.setAutoMeasureEnabled(true);
@@ -132,30 +130,26 @@ public class GroupListFragment extends BaseFragment {
     private void loadInitialData() {
         //Initial Data loading
         //Its important to use local variable else you will get updated string
-        String URL = GET_USER_GROUPS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
+        String URL = GET_GROUP_MEMBERS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
 
         mCommonUtil.showProgressDialog();
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                Log.d(TAG,"Raw Response:"+response.toString());
                 mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<GroupDetail>>(){}.getType();
-                mGroups = new Gson().fromJson(response.toString(), listType);
-                for (GroupDetail groupDetail:mGroups){
-                    Log.d(TAG,"Original Groups:"+new Gson().toJson(groupDetail));
-                }
-
+                Type listType = new TypeToken<ArrayList<GroupMember>>(){}.getType();
+                mGroupMembers = new Gson().fromJson(response.toString(), listType);
                 mInitialDataLoaded = true;
                 //This will load adapter only when data is loaded
                 setAdapter();
             }
         });
+
     }
 
     private void setAdapter() {
-        mAdapter = new GroupListAdapter(mGroups, this);
+        mAdapter = new GroupMemberListAdapter(mGroupMembers, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -167,8 +161,8 @@ public class GroupListFragment extends BaseFragment {
         //  --> Deserialize and construct new model objects from the API response
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
-        String URL = GET_USER_GROUPS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
-
+        //Its important to use local variable else you will get updated string
+        String URL = GET_GROUP_MEMBERS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
         //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
         //and unnecssarily we will show multiple dialog which creates flicker on the screen
         if (offset != 1) mCommonUtil.showProgressDialog();
@@ -177,23 +171,16 @@ public class GroupListFragment extends BaseFragment {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 if (offset != 1) mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<GroupDetail>>(){}.getType();
-                List<GroupDetail> newGroups = new Gson().fromJson(response.toString(), listType);
+                Type listType = new TypeToken<ArrayList<GroupMember>>(){}.getType();
+                List<GroupMember> newGroupMembers = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
-                mGroups.addAll(newGroups);
-                Log.d(TAG, "Group Size changed. Current Size is:"+mGroups.size());
-                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mGroups.size()-1);
+                mGroupMembers.addAll(newGroupMembers);
+                Log.d(TAG, "Group Member Size changed. Current Size is:"+mGroupMembers.size());
+                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mGroupMembers.size()-1);
             }
         });
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(String data) {
-        if (mListener != null) {
-            mListener.onGroupListFragmentInteraction(data);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -224,6 +211,6 @@ public class GroupListFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onGroupListFragmentInteraction(String data);
+        void onGroupMemberFragmentInteraction(String data);
     }
 }
