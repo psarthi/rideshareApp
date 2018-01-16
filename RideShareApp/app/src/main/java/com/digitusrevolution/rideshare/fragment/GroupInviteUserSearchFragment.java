@@ -13,8 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
@@ -24,7 +22,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
-import com.digitusrevolution.rideshare.model.app.SearchType;
+import com.digitusrevolution.rideshare.model.app.GroupInviteUserSearchResultWrapper;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.digitusrevolution.rideshare.model.user.dto.GroupInviteUserSearchResult;
@@ -35,6 +33,7 @@ import org.json.JSONArray;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -50,7 +49,7 @@ import cz.msebera.android.httpclient.Header;
 public class GroupInviteUserSearchFragment extends BaseFragment {
 
     public static final String TAG = GroupInviteUserSearchFragment.class.getName();
-    public static final String TITLE = "Search Users";
+    public static final String TITLE = "Search User";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -66,7 +65,7 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
     private String SEARCH_URL_WITH_QUERY;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private List<GroupInviteUserSearchResult> mUserSearchResults;
+    private List<GroupInviteUserSearchResultWrapper> mUserSearchResultsWrappers;
 
 
     public GroupInviteUserSearchFragment() {
@@ -153,7 +152,7 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
                 //This will reset the query
                 searchView.setQuery("",false);
                 Log.d(TAG, "Search View - Clicked on close");
-                if (mUserSearchResults!=null) mUserSearchResults.clear();
+                if (mUserSearchResultsWrappers!=null) mUserSearchResultsWrappers.clear();
                 if (mAdapter!=null) mAdapter.notifyDataSetChanged();
             }
         });
@@ -167,13 +166,24 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                Type listType = new TypeToken<ArrayList<GroupInviteUserSearchResult>>() {
-                }.getType();
-                mUserSearchResults = new Gson().fromJson(response.toString(), listType);
-                mAdapter = new GroupInviteUserSearchListAdapter(mUserSearchResults, GroupInviteUserSearchFragment.this);
+                Type listType = new TypeToken<ArrayList<GroupInviteUserSearchResult>>() {}.getType();
+                List<GroupInviteUserSearchResult> userSearchResults = new Gson().fromJson(response.toString(), listType);
+                //IMP - This will ensure we get clean linkedList whenever a search is performed, else it will keep adding to the main list on subsequent search
+                mUserSearchResultsWrappers = new LinkedList<>();
+                for (GroupInviteUserSearchResult userSearchResult: userSearchResults) {
+                    mUserSearchResultsWrappers.add(getWrapper(userSearchResult));
+                }
+                mAdapter = new GroupInviteUserSearchListAdapter(mUserSearchResultsWrappers, GroupInviteUserSearchFragment.this);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });
+    }
+
+    private GroupInviteUserSearchResultWrapper getWrapper(GroupInviteUserSearchResult userSearchResult) {
+            GroupInviteUserSearchResultWrapper userSearchResultWrapper = new GroupInviteUserSearchResultWrapper();
+            userSearchResultWrapper.setUser(userSearchResult.getUser());
+            userSearchResult.setMember(userSearchResult.isMember());
+            return userSearchResultWrapper;
     }
 
     // Append the next page of data into the adapter
@@ -197,9 +207,12 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
                 Type listType = new TypeToken<ArrayList<GroupInviteUserSearchResult>>(){}.getType();
                 List<GroupInviteUserSearchResult> newSearchResults = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
-                mUserSearchResults.addAll(newSearchResults);
-                Log.d(TAG, "User Size changed. Current Size is:"+mUserSearchResults.size());
-                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mUserSearchResults.size()-1);
+                //mUserSearchResults.addAll(newSearchResults);
+                for (GroupInviteUserSearchResult userSearchResult: newSearchResults) {
+                    mUserSearchResultsWrappers.add(getWrapper(userSearchResult));
+                }
+                Log.d(TAG, "User Size changed. Current Size is:"+mUserSearchResultsWrappers.size());
+                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mUserSearchResultsWrappers.size()-1);
             }
         });
     }
@@ -289,6 +302,9 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
         if (id == R.id.action_item) {
             Log.d(TAG, "Invite Clicked");
             //TODO Implement Invite logic
+            for (GroupInviteUserSearchResultWrapper userSearchResultWrapper:mUserSearchResultsWrappers){
+                Log.d(TAG, "User Selected:"+userSearchResultWrapper.getUser().getFirstName()+"-"+userSearchResultWrapper.isSelected());
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);

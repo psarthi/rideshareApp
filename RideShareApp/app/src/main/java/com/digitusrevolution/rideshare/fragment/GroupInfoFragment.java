@@ -17,7 +17,6 @@ import com.digitusrevolution.rideshare.adapter.GroupInfoViewPager;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.component.GroupComp;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.model.app.SearchType;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
 

@@ -11,6 +11,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.model.app.GroupInviteUserSearchResultWrapper;
 import com.digitusrevolution.rideshare.model.user.domain.MemberRole;
 import com.digitusrevolution.rideshare.model.user.dto.GroupInviteUserSearchResult;
 import com.digitusrevolution.rideshare.model.user.dto.GroupMember;
@@ -24,11 +25,11 @@ import java.util.List;
 public class GroupInviteUserSearchListAdapter extends RecyclerView.Adapter<GroupInviteUserSearchListAdapter.ViewHolder> {
 
     private static final String TAG = RideListAdapter.class.getName();
-    private List<GroupInviteUserSearchResult> mUserSearchResults;
+    private List<GroupInviteUserSearchResultWrapper> mUserSearchResults;
     private BaseFragment mBaseFragment;
     private CommonUtil mCommonUtil;
 
-    public GroupInviteUserSearchListAdapter(List<GroupInviteUserSearchResult> userSearchResults, BaseFragment fragment) {
+    public GroupInviteUserSearchListAdapter(List<GroupInviteUserSearchResultWrapper> userSearchResults, BaseFragment fragment) {
         mUserSearchResults = userSearchResults;
         mBaseFragment = fragment;
         mCommonUtil = new CommonUtil(fragment);
@@ -44,24 +45,29 @@ public class GroupInviteUserSearchListAdapter extends RecyclerView.Adapter<Group
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        final GroupInviteUserSearchResult userSearchResult = getItem(position);
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         View view = holder.itemView;
         //We can set groupMember as its also an extension of BasicUser
-        UserComp userComp = new UserComp(mBaseFragment, userSearchResult.getUser());
+        UserComp userComp = new UserComp(mBaseFragment, getItem(position).getUser());
         userComp.setUserNamePhoto(view);
         TextView membershipStatus = view.findViewById(R.id.membership_status);
         CheckBox inviteCheckBox = view.findViewById(R.id.invite_checkbox);
-        if (userSearchResult.isMember()){
+        if (getItem(position).isMember()){
             membershipStatus.setText(MemberRole.Member.toString());
             inviteCheckBox.setVisibility(View.GONE);
         } else {
             membershipStatus.setVisibility(View.GONE);
             inviteCheckBox.setVisibility(View.VISIBLE);
+            inviteCheckBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getItem(position).setSelected(!getItem(position).isSelected());
+                }
+            });
         }
     }
 
-    public GroupInviteUserSearchResult getItem(int position){
+    public GroupInviteUserSearchResultWrapper getItem(int position){
         return mUserSearchResults.get(position);
     }
 

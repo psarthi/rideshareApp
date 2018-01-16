@@ -24,7 +24,6 @@ import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.fragment.WalletFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.app.FetchType;
-import com.digitusrevolution.rideshare.model.app.SearchType;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 
 /**
