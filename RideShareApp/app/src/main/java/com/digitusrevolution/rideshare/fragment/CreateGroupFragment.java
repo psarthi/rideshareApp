@@ -104,9 +104,15 @@ public class CreateGroupFragment extends BaseFragment {
 
     private boolean validateInput(){
         String name = ((EditText) getView().findViewById(R.id.group_name_text)).getText().toString();
+        String desciption = ((EditText) getView().findViewById(R.id.group_description)).getText().toString();
         name = name.trim();
+        desciption = desciption.trim();
         if (name.equals("")){
             Toast.makeText(getActivity(), "Group Name can't be empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (desciption.equals("")){
+            Toast.makeText(getActivity(), "Description can't be empty", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

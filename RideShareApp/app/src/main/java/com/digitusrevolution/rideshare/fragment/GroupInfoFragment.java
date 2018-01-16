@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
@@ -78,12 +79,12 @@ public class GroupInfoFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_group_info, container, false);
         TabLayout tabLayout = view.findViewById(R.id.group_tab);
         ImageView groupImageView = view.findViewById(R.id.group_photo_image_view);
-        ImageView inviteUserImageView = view.findViewById(R.id.group_invite_user);
+        LinearLayout groupInviteLayout = view.findViewById(R.id.group_invite_layout);
         CommonUtil commonUtil = new CommonUtil(this);
 
         GroupComp groupComp = new GroupComp(this, mGroup);
         groupComp.setGroupBasicInfo(view);
-        inviteUserImageView.setOnClickListener(new View.OnClickListener() {
+        groupInviteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentLoader fragmentLoader = new FragmentLoader(GroupInfoFragment.this);
@@ -92,8 +93,18 @@ public class GroupInfoFragment extends BaseFragment {
         });
 
         final ViewPager viewPager = view.findViewById(R.id.group_viewPager);
-
-        int pageCount = 3;
+        int pageCount;
+        //This will take care of setting the visibility of page and icons based on role and membership status
+        if (mGroup.getMembershipStatus().isAdmin()){
+             pageCount = 3;
+        } else {
+            if (mGroup.getMembershipStatus().isMember()){
+                pageCount = 2;
+            } else {
+                pageCount = 1;
+                groupInviteLayout.setVisibility(View.GONE);
+            }
+        }
 
         //This is very important else you will have issue in syncing tab selection with view pager content
         //i.e. view pager may show request ride but tab selection would show offer ride

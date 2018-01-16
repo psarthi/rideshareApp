@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_block_height"
         android:background="@drawable/border"
-        android:hint="Brief Description (Optional)"
+        android:hint="Brief Description"
         android:textStyle="italic"
         android:gravity="start"/>
 
