@@ -13,11 +13,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
 import com.digitusrevolution.rideshare.adapter.GroupInviteUserSearchListAdapter;
+import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
@@ -30,6 +32,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -66,6 +69,7 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private List<GroupInviteUserSearchResultWrapper> mUserSearchResultsWrappers;
+    private GroupDetail mGroupDetail;
 
 
     public GroupInviteUserSearchFragment() {
@@ -96,9 +100,9 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        GroupDetail groupDetail = new Gson().fromJson(mGroupDetailData, GroupDetail.class);
+        mGroupDetail = new Gson().fromJson(mGroupDetailData, GroupDetail.class);
         SEARCH_URL = APIUrl.SEARCH_USER_FOR_GROUP_INVITE.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                .replace(APIUrl.GROUP_ID_KEY,Integer.toString(groupDetail.getId()));
+                .replace(APIUrl.GROUP_ID_KEY,Integer.toString(mGroupDetail.getId()));
         setHasOptionsMenu(true);
     }
 
@@ -182,7 +186,8 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
     private GroupInviteUserSearchResultWrapper getWrapper(GroupInviteUserSearchResult userSearchResult) {
             GroupInviteUserSearchResultWrapper userSearchResultWrapper = new GroupInviteUserSearchResultWrapper();
             userSearchResultWrapper.setUser(userSearchResult.getUser());
-            userSearchResult.setMember(userSearchResult.isMember());
+            userSearchResultWrapper.setMember(userSearchResult.isMember());
+            userSearchResultWrapper.setInvited(userSearchResult.isInvited());
             return userSearchResultWrapper;
     }
 
@@ -301,13 +306,35 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_item) {
             Log.d(TAG, "Invite Clicked");
-            //TODO Implement Invite logic
-            for (GroupInviteUserSearchResultWrapper userSearchResultWrapper:mUserSearchResultsWrappers){
-                Log.d(TAG, "User Selected:"+userSearchResultWrapper.getUser().getFirstName()+"-"+userSearchResultWrapper.isSelected());
-            }
+            sendInvite();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void sendInvite() {
+        ArrayList<Integer> userIds = new ArrayList<>();
+        for (GroupInviteUserSearchResultWrapper userSearchResultWrapper:mUserSearchResultsWrappers){
+            Log.d(TAG, "User Selected:"+userSearchResultWrapper.getUser().getFirstName()+"-"+userSearchResultWrapper.isSelected());
+            if (userSearchResultWrapper.isSelected()){
+                Log.d(TAG, "Adding to the invite list");
+                userIds.add(userSearchResultWrapper.getUser().getId());
+            }
+        }
+        if (userIds.size() > 0){
+            String URL = APIUrl.INVITE_USER.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                    .replace(APIUrl.GROUP_ID_KEY,Integer.toString(mGroupDetail.getId()));
+            RESTClient.post(getActivity(), URL, userIds, new RSJsonHttpResponseHandler(mCommonUtil){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    Toast.makeText(getActivity(), "Invite succesfully sent", Toast.LENGTH_SHORT).show();
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), "No User Selected", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

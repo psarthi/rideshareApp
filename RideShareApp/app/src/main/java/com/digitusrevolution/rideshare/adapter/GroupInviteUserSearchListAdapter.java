@@ -12,6 +12,7 @@ import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.app.GroupInviteUserSearchResultWrapper;
+import com.digitusrevolution.rideshare.model.app.MembershipStatusType;
 import com.digitusrevolution.rideshare.model.user.domain.MemberRole;
 import com.digitusrevolution.rideshare.model.user.dto.GroupInviteUserSearchResult;
 import com.digitusrevolution.rideshare.model.user.dto.GroupMember;
@@ -53,17 +54,24 @@ public class GroupInviteUserSearchListAdapter extends RecyclerView.Adapter<Group
         TextView membershipStatus = view.findViewById(R.id.membership_status);
         CheckBox inviteCheckBox = view.findViewById(R.id.invite_checkbox);
         if (getItem(position).isMember()){
-            membershipStatus.setText(MemberRole.Member.toString());
+            membershipStatus.setVisibility(View.VISIBLE);
+            membershipStatus.setText(MembershipStatusType.Member.toString());
             inviteCheckBox.setVisibility(View.GONE);
         } else {
-            membershipStatus.setVisibility(View.GONE);
-            inviteCheckBox.setVisibility(View.VISIBLE);
-            inviteCheckBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getItem(position).setSelected(!getItem(position).isSelected());
-                }
-            });
+            if (getItem(position).isInvited()){
+                membershipStatus.setVisibility(View.VISIBLE);
+                membershipStatus.setText(MembershipStatusType.Invited.toString());
+                inviteCheckBox.setVisibility(View.GONE);
+            } else {
+                membershipStatus.setVisibility(View.GONE);
+                inviteCheckBox.setVisibility(View.VISIBLE);
+                inviteCheckBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getItem(position).setSelected(!getItem(position).isSelected());
+                    }
+                });
+            }
         }
     }
 

@@ -4,6 +4,7 @@ public class GroupInviteUserSearchResult {
 	
 	private BasicUser user;
 	private boolean member;
+	private boolean invited;
 	
 	public BasicUser getUser() {
 		return user;
@@ -17,6 +18,10 @@ public class GroupInviteUserSearchResult {
 	public void setMember(boolean member) {
 		this.member = member;
 	}
-	
-	
+	public boolean isInvited() {
+		return invited;
+	}
+	public void setInvited(boolean invited) {
+		this.invited = invited;
+	}
 }
