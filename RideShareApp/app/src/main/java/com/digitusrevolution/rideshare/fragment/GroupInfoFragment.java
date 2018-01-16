@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +14,10 @@ import android.widget.ImageView;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.GroupInfoViewPager;
+import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.component.GroupComp;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.model.app.SearchType;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
 
@@ -77,11 +78,20 @@ public class GroupInfoFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_info, container, false);
         TabLayout tabLayout = view.findViewById(R.id.group_tab);
-        ImageView imageView = view.findViewById(R.id.group_photo_image_view);
+        ImageView groupImageView = view.findViewById(R.id.group_photo_image_view);
+        ImageView inviteUserImageView = view.findViewById(R.id.group_invite_user);
         CommonUtil commonUtil = new CommonUtil(this);
 
         GroupComp groupComp = new GroupComp(this, mGroup);
         groupComp.setGroupBasicInfo(view);
+        inviteUserImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentLoader fragmentLoader = new FragmentLoader(GroupInfoFragment.this);
+                fragmentLoader.loadGroupInviteUserSearchFragment(new Gson().toJson(mGroup));
+            }
+        });
+
         final ViewPager viewPager = view.findViewById(R.id.group_viewPager);
 
         int pageCount = 3;

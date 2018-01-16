@@ -44,6 +44,15 @@ public class UserComp {
         mCommonUtil = new CommonUtil(fragment);
     }
 
+    public void setUserNamePhoto(View view){
+        View layout = view.findViewById(R.id.user_photo_name_layout);
+        ImageView userProfileImageView = layout.findViewById(R.id.user_image);
+        Picasso.with(mBaseFragment.getActivity()).load(mUser.getPhoto().getImageLocation()).into(userProfileImageView);
+        TextView userNameTextView = layout.findViewById(R.id.user_name_text);
+        String userName = mUser.getFirstName() + " " + mUser.getLastName();
+        userNameTextView.setText(userName);
+    }
+
     public void setUserProfileSingleRow(View view){
 
         View user_profile_layout = view.findViewById(R.id.user_profile_single_row_layout);
@@ -55,11 +64,7 @@ public class UserComp {
         user_profile_layout.findViewById(R.id.membership_form_image).setVisibility(View.GONE);
 
         //Below are the view's on which we will actually operate
-        ImageView userProfileImageView = user_profile_layout.findViewById(R.id.user_image);
-        Picasso.with(mBaseFragment.getActivity()).load(mUser.getPhoto().getImageLocation()).into(userProfileImageView);
-        TextView userNameTextView = user_profile_layout.findViewById(R.id.user_name_text);
-        String userName = mUser.getFirstName() + " " + mUser.getLastName();
-        userNameTextView.setText(userName);
+        setUserNamePhoto(view);
         TextView userRatingTextView = user_profile_layout.findViewById(R.id.user_rating_text);
         String profileRating = mCommonUtil.getDecimalFormattedString(mUser.getProfileRating());
         userRatingTextView.setText(profileRating);

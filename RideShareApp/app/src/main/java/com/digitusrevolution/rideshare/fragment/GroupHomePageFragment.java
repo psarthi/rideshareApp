@@ -77,7 +77,7 @@ public class GroupHomePageFragment extends BaseFragment {
         mGroupHomePageViewPagerAdapter = new GroupHomePageViewPagerAdapter(getChildFragmentManager());
         //This will append items option menu by invoking fragment onCreateOptionMenu
         //So that you can have customer option menu for each fragment
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
         mFragmentLoader = new FragmentLoader(this);
     }
 
@@ -191,7 +191,6 @@ public class GroupHomePageFragment extends BaseFragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_item) {
             Log.d(TAG, "Search Clicked");
-            mFragmentLoader.loadSearchFragment();
             return true;
         }
         return super.onOptionsItemSelected(item);

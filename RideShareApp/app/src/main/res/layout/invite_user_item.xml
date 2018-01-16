@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- IMP We need to set Id at layout level so that even we pass the layout from inflator
+and then in UserComp, it tries to find the layout by id, it should be able to find else it will throw NPE-->
+<LinearLayout
+    android:id="@+id/user_profile_single_row_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/default_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- IMP - Weight here is very important to align checkbox to the right, don't add weight to checkBox-->
+        <include layout="@layout/user_photo_name_layout" android:id="@+id/user_photo_name_layout"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/membership_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Member"
+            android:textColor="@color/colorPrimary"
+            android:textAllCaps="true"/>
+
+        <CheckBox
+            android:id="@+id/invite_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:background="@color/colorGrayLight"
+        android:layout_marginTop="@dimen/default_margin"/>
+
+</LinearLayout>

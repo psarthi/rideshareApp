@@ -21,6 +21,7 @@ import com.digitusrevolution.rideshare.fragment.BillFragment;
 import com.digitusrevolution.rideshare.fragment.CreateGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
+import com.digitusrevolution.rideshare.fragment.GroupInviteUserSearchFragment;
 import com.digitusrevolution.rideshare.fragment.GroupListFragment;
 import com.digitusrevolution.rideshare.fragment.GroupMemberFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
@@ -32,7 +33,6 @@ import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
-import com.digitusrevolution.rideshare.fragment.SearchFragment;
 import com.digitusrevolution.rideshare.fragment.TopUpFragment;
 import com.digitusrevolution.rideshare.fragment.TransactionFragment;
 import com.digitusrevolution.rideshare.fragment.UserListFragment;
@@ -66,7 +66,7 @@ public class HomePageActivity extends BaseActivity
         RedeemFragment.OnFragmentInteractionListener,
         GroupHomePageFragment.OnFragmentInteractionListener,
         GroupListFragment.OnFragmentInteractionListener,
-        SearchFragment.OnFragmentInteractionListener,
+        GroupInviteUserSearchFragment.OnFragmentInteractionListener,
         CreateGroupFragment.OnFragmentInteractionListener,
         CreateMembershipFormFragment.OnFragmentInteractionListener,
         GroupInfoFragment.OnFragmentInteractionListener,

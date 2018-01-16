@@ -14,16 +14,17 @@ import com.digitusrevolution.rideshare.fragment.CreateMembershipFormFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
+import com.digitusrevolution.rideshare.fragment.GroupInviteUserSearchFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
-import com.digitusrevolution.rideshare.fragment.SearchFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.fragment.WalletFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.app.FetchType;
+import com.digitusrevolution.rideshare.model.app.SearchType;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 
 /**
@@ -160,11 +161,11 @@ public class FragmentLoader {
         fragmentTransaction.commit();
     }
 
-    public void loadSearchFragment() {
+    public void loadGroupInviteUserSearchFragment(String group) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        SearchFragment searchFragment = SearchFragment.newInstance(null, null);
-        fragmentTransaction.replace(R.id.home_page_container, searchFragment, SearchFragment.TAG);
-        fragmentTransaction.addToBackStack(SearchFragment.TAG);
+        GroupInviteUserSearchFragment groupInviteUserSearchFragment = GroupInviteUserSearchFragment.newInstance(group);
+        fragmentTransaction.replace(R.id.home_page_container, groupInviteUserSearchFragment, GroupInviteUserSearchFragment.TAG);
+        fragmentTransaction.addToBackStack(GroupInviteUserSearchFragment.TAG);
         fragmentTransaction.commit();
     }
 
