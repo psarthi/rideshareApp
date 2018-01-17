@@ -19,7 +19,7 @@
         android:src="@drawable/ic_minus_circle"/>
 
     <EditText
-        android:id="@+id/question_text"
+        android:id="@+id/question"
         android:layout_width="0dp"
         android:layout_weight="0.9"
         android:layout_height="wrap_content"

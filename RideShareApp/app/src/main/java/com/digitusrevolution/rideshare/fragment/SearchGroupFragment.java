@@ -148,6 +148,7 @@ public class SearchGroupFragment extends BaseFragment {
 
     private void loadInitialSearchResult() {
         String URL = SEARCH_URL_WITH_QUERY.replace(APIUrl.PAGE_KEY, Integer.toString(0));
+        //Intentionally not showing progress dialog as user can search multiple items and dialog would be bit annoying
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {

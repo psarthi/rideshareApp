@@ -22,6 +22,7 @@ import com.digitusrevolution.rideshare.fragment.CreateGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
 import com.digitusrevolution.rideshare.fragment.GroupMembershipRequestListFragment;
+import com.digitusrevolution.rideshare.fragment.MembershipRequestFragment;
 import com.digitusrevolution.rideshare.fragment.SearchGroupFragment;
 import com.digitusrevolution.rideshare.fragment.SearchUserForGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupListFragment;
@@ -76,7 +77,8 @@ public class HomePageActivity extends BaseActivity
         AboutGroupFragment.OnFragmentInteractionListener,
         GroupMemberFragment.OnFragmentInteractionListener,
         SearchGroupFragment.OnFragmentInteractionListener,
-        UserMembershipRequestListFragment.OnFragmentInteractionListener{
+        UserMembershipRequestListFragment.OnFragmentInteractionListener,
+        MembershipRequestFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -452,5 +454,13 @@ public class HomePageActivity extends BaseActivity
     @Override
     public void onUserMembershipRequestListFragmentInteraction(String data) {
         
+    }
+
+    @Override
+    public void onMembershipRequestFragmentInteraction(String data) {
+        GroupInfoFragment fragment = (GroupInfoFragment) getSupportFragmentManager().findFragmentByTag(GroupInfoFragment.TAG);
+        fragment.refreshAdapter();
+        getSupportFragmentManager().popBackStack();
+
     }
 }

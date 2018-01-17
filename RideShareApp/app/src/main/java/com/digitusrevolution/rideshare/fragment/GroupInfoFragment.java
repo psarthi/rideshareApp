@@ -42,6 +42,7 @@ public class GroupInfoFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
     private GroupDetail mGroup;
+    private GroupInfoViewPager mGroupInfoViewPager;
 
     public GroupInfoFragment() {
         // Required empty public constructor
@@ -109,8 +110,8 @@ public class GroupInfoFragment extends BaseFragment {
         //This is very important else you will have issue in syncing tab selection with view pager content
         //i.e. view pager may show request ride but tab selection would show offer ride
         tabLayout.setupWithViewPager(viewPager);
-        GroupInfoViewPager groupInfoViewPager = new GroupInfoViewPager(getChildFragmentManager(), pageCount, mGroup);
-        viewPager.setAdapter(groupInfoViewPager);
+        mGroupInfoViewPager = new GroupInfoViewPager(getChildFragmentManager(), pageCount, mGroup);
+        viewPager.setAdapter(mGroupInfoViewPager);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -171,5 +172,9 @@ public class GroupInfoFragment extends BaseFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onGroupInfoFragmentInteraction(String data);
+    }
+
+    public void refreshAdapter(){
+        mGroupInfoViewPager.notifyDataSetChanged();
     }
 }

@@ -8,12 +8,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.user.dto.BasicMembershipRequest;
-import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.app.UserListType;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -54,7 +54,8 @@ public class GroupMembershipRequestListAdapter extends RecyclerView.Adapter<Grou
         formImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mBaseFragment.getActivity(), "Membership From", Toast.LENGTH_SHORT).show();
+                FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                fragmentLoader.loadMembershipRequestFragment(new Gson().toJson(request), true, false);
             }
         });
     }

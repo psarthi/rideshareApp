@@ -35,6 +35,7 @@ public class APIUrl {
     public static final String USER_LIST_TYPE_KEY = "{UserListType}";
     public static final String GROUP_LIST_TYPE_KEY = "{GroupListType}";
     public static final String SEARCH_NAME_KEY = "{name}";
+    public static final String REQUESTER_USER_ID_KEY = "{requesterUserId}";
 
     public static final String SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/signin";
     public static final String GOOGLE_SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/googlesignin";
@@ -79,6 +80,10 @@ public class APIUrl {
     public static final String SEARCH_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/search?name={name}&page={page}";
     public static final String GET_USER_MEMBERSHIP_REQUESTS = BASE_URL_USER_SYSTEM + "/users/{userId}/membershiprequests?page={page}";
     public static final String GET_GROUP_MEMBERSHIP_REQUESTS = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/membershiprequests?page={page}";
+    public static final String GET_SPECIFIC_MEMBERSHIP_REQUEST = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/request";
+    public static final String SUBMIT_MEMBERSHIP_REQUEST = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/request";
+    public static final String APPROVE_MEMBERSHIP_REQUEST = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/approverequest/{requesterUserId}";
+    public static final String REJECT_MEMBERSHIP_REQUEST = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/rejectrequest/{requesterUserId}";
 
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +

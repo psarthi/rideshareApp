@@ -6,9 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -24,13 +21,10 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
-import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
 import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.google.android.gms.common.api.Api;
 import com.google.gson.Gson;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
@@ -151,7 +145,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
             return false;
         } else {
             for (int i = 0; i < mQuestionsLayout.getChildCount(); i++){
-                String question = ((EditText)mQuestionsLayout.getChildAt(i).findViewById(R.id.question_text)).getText().toString();
+                String question = ((EditText)mQuestionsLayout.getChildAt(i).findViewById(R.id.question)).getText().toString();
                 question = question.trim();
                 if (question.equals("")){
                     Toast.makeText(getActivity(), "Question can't be blank", Toast.LENGTH_SHORT).show();
@@ -164,7 +158,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
 
     private void setupGroup(){
         for (int i = 0; i < mQuestionsLayout.getChildCount(); i++){
-            String question = ((EditText)mQuestionsLayout.getChildAt(i).findViewById(R.id.question_text)).getText().toString();
+            String question = ((EditText)mQuestionsLayout.getChildAt(i).findViewById(R.id.question)).getText().toString();
             Log.d(TAG, "Question No "+i+":"+question);
             mMembershipForm.getQuestions().add(question);
         }

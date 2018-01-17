@@ -14,6 +14,7 @@ import com.digitusrevolution.rideshare.fragment.CreateMembershipFormFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
+import com.digitusrevolution.rideshare.fragment.MembershipRequestFragment;
 import com.digitusrevolution.rideshare.fragment.SearchGroupFragment;
 import com.digitusrevolution.rideshare.fragment.SearchUserForGroupFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
@@ -199,6 +200,15 @@ public class FragmentLoader {
         GroupInfoFragment groupInfoFragment = GroupInfoFragment.newInstance(group);
         fragmentTransaction.replace(R.id.home_page_container, groupInfoFragment, GroupInfoFragment.TAG);
         fragmentTransaction.addToBackStack(GroupInfoFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadMembershipRequestFragment(String membershipRequest, boolean adminRole, boolean newRequest) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        MembershipRequestFragment membershipRequestFragment = MembershipRequestFragment.
+                newInstance(membershipRequest, adminRole, newRequest);
+        fragmentTransaction.replace(R.id.home_page_container, membershipRequestFragment, MembershipRequestFragment.TAG);
+        fragmentTransaction.addToBackStack(CreateMembershipFormFragment.TAG);
         fragmentTransaction.commit();
     }
 

@@ -17,7 +17,6 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
-import com.digitusrevolution.rideshare.model.app.UserListType;
 import com.digitusrevolution.rideshare.model.user.dto.BasicMembershipRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;

@@ -1,7 +1,6 @@
 package com.digitusrevolution.rideshare.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,8 +10,24 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
+import com.digitusrevolution.rideshare.model.user.domain.ApprovalStatus;
+import com.digitusrevolution.rideshare.model.user.dto.BasicMembershipRequest;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
+
+import org.json.JSONObject;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,7 +37,7 @@ import com.google.gson.Gson;
  * Use the {@link AboutGroupFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AboutGroupFragment extends Fragment {
+public class AboutGroupFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_GROUP = "group";
@@ -32,6 +47,9 @@ public class AboutGroupFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private GroupDetail mGroup;
+    private CommonUtil mCommonUtil;
+    private BasicUser mUser;
+    private FragmentLoader mFragmentLoader;
 
 
     public AboutGroupFragment() {
@@ -61,6 +79,9 @@ public class AboutGroupFragment extends Fragment {
             mGroupData = getArguments().getString(ARG_GROUP);
         }
         mGroup = new Gson().fromJson(mGroupData, GroupDetail.class);
+        mCommonUtil = new CommonUtil(this);
+        mUser = mCommonUtil.getUser();
+        mFragmentLoader = new FragmentLoader(this);
     }
 
     @Override
@@ -72,25 +93,64 @@ public class AboutGroupFragment extends Fragment {
         Button leaveButton = view.findViewById(R.id.leave_group_button);
         Button joinButton = view.findViewById(R.id.group_join_button);
         Button memberShipFormButton = view.findViewById(R.id.membership_form_button);
-        Button membershipRequestButton = view.findViewById(R.id.group_membership_request_button);
+        Button membershipRequestStatusButton = view.findViewById(R.id.group_membership_request_status_button);
 
         if (mGroup.getMembershipStatus().isMember()){
             joinButton.setVisibility(View.GONE);
-            membershipRequestButton.setVisibility(View.GONE);
+            membershipRequestStatusButton.setVisibility(View.GONE);
             if (!mGroup.getMembershipStatus().isAdmin()){
                 memberShipFormButton.setVisibility(View.GONE);
             }
         } else {
-            if (mGroup.getMembershipStatus().isRequestSubmitted()){
-                membershipRequestButton.setText(mGroup.getMembershipStatus().getApprovalStatus().toString());
-                joinButton.setVisibility(View.GONE);
-            } else {
-                membershipRequestButton.setVisibility(View.GONE);
-            }
             //This is appliacable for both cases
             leaveButton.setVisibility(View.GONE);
             memberShipFormButton.setVisibility(View.GONE);
+            if (mGroup.getMembershipStatus().isRequestSubmitted()){
+                joinButton.setVisibility(View.GONE);
+                String status = mGroup.getMembershipStatus().getApprovalStatus().toString();
+                membershipRequestStatusButton.setText(status);
+                if (mGroup.getMembershipStatus().getApprovalStatus().equals(ApprovalStatus.Rejected)){
+                    //This will overwrite the status
+                    status = status + " (View Details)";
+                    membershipRequestStatusButton.setText(status);
+                    membershipRequestStatusButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String url = APIUrl.GET_SPECIFIC_MEMBERSHIP_REQUEST.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                                    .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroup.getId()));
+                            mCommonUtil.showProgressDialog();
+                            RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    mCommonUtil.dismissProgressDialog();
+                                    BasicMembershipRequest request = new Gson().fromJson(response.toString(), BasicMembershipRequest.class);
+                                    mFragmentLoader.loadMembershipRequestFragment(new Gson().toJson(request),false, false);
+                                }
+                            });
+                        }
+                    });
+                }
+            } else {
+                membershipRequestStatusButton.setVisibility(View.GONE);
+            }
         }
+
+        joinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BasicMembershipRequest request = new BasicMembershipRequest();
+                request.setGroup(mGroup);
+                Map<String, String> questionAnswers = new HashMap<>();
+
+                Collection<String> questions = mGroup.getMembershipForm().getQuestions();
+                for (String question: questions){
+                    questionAnswers.put(question, "");
+                }
+                request.setQuestionAnswers(questionAnswers);
+                mFragmentLoader.loadMembershipRequestFragment(new Gson().toJson(request),false, true);
+            }
+        });
 
         return view;
     }
