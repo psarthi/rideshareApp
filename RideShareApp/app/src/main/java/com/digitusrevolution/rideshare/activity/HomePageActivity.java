@@ -193,8 +193,6 @@ public class HomePageActivity extends BaseActivity
             if (id == R.id.nav_rides) {
                 Log.d(TAG, "Rides Clicked");
                 mFragmentLoader.loadRidesListFragment();
-            } else if (id == R.id.nav_friends) {
-                Log.d(TAG, "Friends Clicked");
             } else if (id == R.id.nav_groups) {
                 mFragmentLoader.loadGroupHomePageFragment();
                 Log.d(TAG, "Groups Clicked");
