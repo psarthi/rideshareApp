@@ -19,9 +19,9 @@
              android:layout_gravity="center_horizontal"
              android:layout_height="wrap_content"
              android:layout_width="match_parent"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginBottom="@dimen/default_margin"/>
+             android:layout_marginStart="@dimen/default_margin"
+             android:layout_marginEnd="@dimen/default_margin"
+             android:layout_marginBottom="@dimen/default_margin"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                   android:drawablePadding="@dimen/default_padding"
                   android:gravity="center_vertical"
                   android:textStyle="bold|italic"
-            android:textColor="@android:color/white"/>
+                  android:textColor="@android:color/white"/>
 
         <TextView android:id="@+id/ride_taken_text"
                   android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
     somehow its having some weird behavior with Recycler view and some time
     name is showing up and sometimes its missing -->
 
-
+    <!-- Disabling friends functionality
     <TextView android:id="@+id/mutual_friends_count_text"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -83,6 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_seperator_thickness"
         android:background="@color/colorGrayLight"/>
+        -->
 
     <TextView android:id="@+id/common_groups_count_text"
               android:paddingTop="@dimen/default_margin"
@@ -95,6 +96,11 @@
               android:drawablePadding="@dimen/default_padding"
               android:textStyle="bold|italic"
               android:layout_gravity="start"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:background="@color/colorGrayLight"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/common_groups_list"

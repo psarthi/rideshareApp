@@ -27,13 +27,14 @@ and then in UserComp, it tries to find the layout by id, it should be able to fi
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
+        <!-- Disabling friends functionality
         <ImageView android:id="@+id/friend_image"
-                   android:layout_width="0dp"
-                   android:layout_height="wrap_content"
-                   android:layout_weight="1"
-                   android:visibility="visible"
-                   android:scaleType="fitCenter"
-                   android:src="@drawable/ic_friend_standard"/>
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:visibility="visible"
+           android:scaleType="fitCenter"
+           android:src="@drawable/ic_friend_standard"/>
 
         <ImageView
             android:id="@+id/add_friend_image"
@@ -44,6 +45,7 @@ and then in UserComp, it tries to find the layout by id, it should be able to fi
             android:scaleType="fitCenter"
             android:src="@drawable/ic_add_friend_large"
             android:background="@android:color/transparent"/>
+        -->
 
         <ImageView
             android:id="@+id/user_mobile_image"

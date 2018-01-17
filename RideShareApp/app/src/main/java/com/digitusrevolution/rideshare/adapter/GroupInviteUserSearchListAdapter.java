@@ -13,9 +13,6 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.app.GroupInviteUserSearchResultWrapper;
 import com.digitusrevolution.rideshare.model.app.MembershipStatusType;
-import com.digitusrevolution.rideshare.model.user.domain.MemberRole;
-import com.digitusrevolution.rideshare.model.user.dto.GroupInviteUserSearchResult;
-import com.digitusrevolution.rideshare.model.user.dto.GroupMember;
 
 import java.util.List;
 

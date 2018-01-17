@@ -59,6 +59,7 @@
 
     </LinearLayout>
 
+    <!-- Disabling friends functionality
     <LinearLayout
         android:id="@+id/trust_category_friends_layout"
         android:layout_width="wrap_content"
@@ -84,5 +85,6 @@
             android:text="Friends"/>
 
     </LinearLayout>
+    -->
 
 </LinearLayout>

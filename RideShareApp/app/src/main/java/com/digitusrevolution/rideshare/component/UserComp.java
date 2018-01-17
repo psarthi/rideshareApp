@@ -58,8 +58,6 @@ public class UserComp {
         View user_profile_layout = view.findViewById(R.id.user_profile_single_row_layout);
 
         //Marking all extra elements invisible and let this be set by calling functions as per their requirement
-        user_profile_layout.findViewById(R.id.add_friend_image).setVisibility(View.GONE);
-        user_profile_layout.findViewById(R.id.friend_image).setVisibility(View.GONE);
         user_profile_layout.findViewById(R.id.more_options_image).setVisibility(View.GONE);
         user_profile_layout.findViewById(R.id.membership_form_image).setVisibility(View.GONE);
 

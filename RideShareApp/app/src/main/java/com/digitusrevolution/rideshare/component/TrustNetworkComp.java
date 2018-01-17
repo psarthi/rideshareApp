@@ -25,13 +25,10 @@ public class TrustNetworkComp {
 
     private boolean mAllSelected;
     private boolean mGroupsSelected;
-    private boolean mFriendsSelected;
     private ImageView mAllImageView;
     private ImageView mGroupsImageView;
-    private ImageView mFriendsImageView;
     private TextView mAllTextView;
     private TextView mGroupsTextView;
-    private TextView mFriendsTextView;
     private int mSelectedColor;
     private int mDefaultTextColor;
     private ColorFilter mDefaultImageTint;
@@ -49,8 +46,6 @@ public class TrustNetworkComp {
         mAllTextView = view.findViewById(R.id.trust_category_all_text);
         mGroupsImageView = view.findViewById(R.id.trust_category_groups_image);
         mGroupsTextView = view.findViewById(R.id.trust_category_groups_text);
-        mFriendsImageView = view.findViewById(R.id.trust_category_friends_image);
-        mFriendsTextView = view.findViewById(R.id.trust_category_friends_text);
 
         mSelectedColor = ContextCompat.getColor(mBaseFragment.getActivity(), R.color.colorAccent);
         mDefaultTextColor = mAllTextView.getTextColors().getDefaultColor();
@@ -67,12 +62,8 @@ public class TrustNetworkComp {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"Clicked on the All Image View: Selected Status:" + mAllSelected);
-                if (mFriendsSelected || mGroupsSelected){
-                    mAllSelected = !mAllSelected;
-                }
-                //If all is selected then by default Groups and Friends is already included, so no need to select them individually
-                if (mAllSelected){
-                    mFriendsSelected = false;
+                if (!mAllSelected){
+                    mAllSelected = true;
                     mGroupsSelected = false;
                 }
                 updateTrustCategoryItemsColor();
@@ -82,23 +73,8 @@ public class TrustNetworkComp {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"Clicked on the Groups Image View: Selected Status:" + mGroupsSelected);
-                if (mFriendsSelected || mAllSelected){
-                    mGroupsSelected = !mGroupsSelected;
-                }
-                if (mGroupsSelected){
-                    mAllSelected = false;
-                }
-                updateTrustCategoryItemsColor();
-            }
-        });
-        mFriendsImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Clicked on the Friends Image View: Selected Status:" + mFriendsImageView);
-                if (mGroupsSelected || mAllSelected){
-                    mFriendsSelected = !mFriendsSelected;
-                }
-                if (mFriendsSelected){
+                if (!mGroupsSelected){
+                    mGroupsSelected = true;
                     mAllSelected = false;
                 }
                 updateTrustCategoryItemsColor();
@@ -123,13 +99,6 @@ public class TrustNetworkComp {
             mGroupsImageView.setColorFilter(mDefaultImageTint);
             mGroupsTextView.setTextColor(mDefaultTextColor);
         }
-        if (mFriendsSelected){
-            mFriendsImageView.setColorFilter(mSelectedColor);
-            mFriendsTextView.setTextColor(mSelectedColor);
-        } else {
-            mFriendsImageView.setColorFilter(mDefaultImageTint);
-            mFriendsTextView.setTextColor(mDefaultTextColor);
-        }
     }
 
     public TrustNetwork getTrustNetworkFromView() {
@@ -142,11 +111,6 @@ public class TrustNetworkComp {
         if (mGroupsSelected) {
             TrustCategory trustCategory = new TrustCategory();
             trustCategory.setName(TrustCategoryName.Groups);
-            trustNetwork.getTrustCategories().add(trustCategory);
-        }
-        if (mFriendsSelected) {
-            TrustCategory trustCategory = new TrustCategory();
-            trustCategory.setName(TrustCategoryName.Friends);
             trustNetwork.getTrustCategories().add(trustCategory);
         }
         return trustNetwork;

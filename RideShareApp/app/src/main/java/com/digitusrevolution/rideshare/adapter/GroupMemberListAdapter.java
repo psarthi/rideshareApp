@@ -10,7 +10,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.model.user.domain.MemberRole;
+import com.digitusrevolution.rideshare.model.app.MemberRole;
 import com.digitusrevolution.rideshare.model.user.dto.GroupMember;
 
 import java.util.List;

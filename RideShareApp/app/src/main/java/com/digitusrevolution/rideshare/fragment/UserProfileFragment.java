@@ -108,9 +108,6 @@ public class UserProfileFragment extends BaseFragment {
         //This will make small user image invisible
         user_profile_layout.findViewById(R.id.user_image).setVisibility(View.GONE);
 
-        //TODO This should be set according to backend implementation to see if its a friend or not
-        user_profile_layout.findViewById(R.id.add_friend_image).setVisibility(View.VISIBLE);
-
         String offeredRideText = getResources().getString(R.string.rides_offered_text) + mUserProfile.getOfferedRides();
         String ridesTakenText = getResources().getString(R.string.rides_taken_text) + mUserProfile.getRidesTaken();
 
@@ -126,10 +123,8 @@ public class UserProfileFragment extends BaseFragment {
             commonGroupsSize = mUserProfile.getCommonGroups().size();
         }
 
-        String mutualFriendsText = getResources().getString(R.string.mutual_friends_text) + mutualFriendsSize;
         String commonGroupsText = getResources().getString(R.string.common_groups_text) + commonGroupsSize;
 
-        ((TextView) view.findViewById(R.id.mutual_friends_count_text)).setText(mutualFriendsText);
         ((TextView) view.findViewById(R.id.common_groups_count_text)).setText(commonGroupsText);
 
         //TODO load additional view's once we get fulluser from backend properly. Below recycler view is for dummy
