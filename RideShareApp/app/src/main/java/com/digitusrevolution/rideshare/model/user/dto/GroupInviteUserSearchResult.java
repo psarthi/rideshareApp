@@ -5,6 +5,7 @@ public class GroupInviteUserSearchResult {
 	private BasicUser user;
 	private boolean member;
 	private boolean invited;
+	private boolean requestSubmitted;
 	
 	public BasicUser getUser() {
 		return user;
@@ -23,5 +24,13 @@ public class GroupInviteUserSearchResult {
 	}
 	public void setInvited(boolean invited) {
 		this.invited = invited;
+	}
+
+	public boolean isRequestSubmitted() {
+		return requestSubmitted;
+	}
+
+	public void setRequestSubmitted(boolean requestSubmitted) {
+		this.requestSubmitted = requestSubmitted;
 	}
 }

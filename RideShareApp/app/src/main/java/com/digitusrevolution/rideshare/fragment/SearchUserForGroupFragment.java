@@ -26,7 +26,6 @@ import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.GroupInviteUserSearchResultWrapper;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
-import com.digitusrevolution.rideshare.model.user.dto.GroupInviteUserSearchResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -169,25 +168,12 @@ public class SearchUserForGroupFragment extends BaseFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                Type listType = new TypeToken<ArrayList<GroupInviteUserSearchResult>>() {}.getType();
-                List<GroupInviteUserSearchResult> userSearchResults = new Gson().fromJson(response.toString(), listType);
-                //IMP - This will ensure we get clean linkedList whenever a search is performed, else it will keep adding to the main list on subsequent search
-                mUserSearchResultsWrappers = new LinkedList<>();
-                for (GroupInviteUserSearchResult userSearchResult: userSearchResults) {
-                    mUserSearchResultsWrappers.add(getWrapper(userSearchResult));
-                }
+                Type listType = new TypeToken<ArrayList<GroupInviteUserSearchResultWrapper>>() {}.getType();
+                mUserSearchResultsWrappers = new Gson().fromJson(response.toString(), listType);
                 mAdapter = new GroupInviteUserSearchListAdapter(mUserSearchResultsWrappers, SearchUserForGroupFragment.this);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });
-    }
-
-    private GroupInviteUserSearchResultWrapper getWrapper(GroupInviteUserSearchResult userSearchResult) {
-            GroupInviteUserSearchResultWrapper userSearchResultWrapper = new GroupInviteUserSearchResultWrapper();
-            userSearchResultWrapper.setUser(userSearchResult.getUser());
-            userSearchResultWrapper.setMember(userSearchResult.isMember());
-            userSearchResultWrapper.setInvited(userSearchResult.isInvited());
-            return userSearchResultWrapper;
     }
 
     // Append the next page of data into the adapter
@@ -208,13 +194,10 @@ public class SearchUserForGroupFragment extends BaseFragment {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 if (offset != 1) mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<GroupInviteUserSearchResult>>(){}.getType();
-                List<GroupInviteUserSearchResult> newSearchResults = new Gson().fromJson(response.toString(), listType);
+                Type listType = new TypeToken<ArrayList<GroupInviteUserSearchResultWrapper>>(){}.getType();
+                List<GroupInviteUserSearchResultWrapper> newSearchResults = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
-                //mUserSearchResults.addAll(newSearchResults);
-                for (GroupInviteUserSearchResult userSearchResult: newSearchResults) {
-                    mUserSearchResultsWrappers.add(getWrapper(userSearchResult));
-                }
+                mUserSearchResultsWrappers.addAll(newSearchResults);
                 Log.d(TAG, "User Size changed. Current Size is:"+mUserSearchResultsWrappers.size());
                 mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mUserSearchResultsWrappers.size()-1);
             }

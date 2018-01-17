@@ -13,6 +13,7 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.app.GroupInviteUserSearchResultWrapper;
 import com.digitusrevolution.rideshare.model.app.MembershipStatusType;
+import com.digitusrevolution.rideshare.model.user.dto.GroupInviteUserSearchResult;
 
 import java.util.List;
 
@@ -45,29 +46,36 @@ public class GroupInviteUserSearchListAdapter extends RecyclerView.Adapter<Group
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         View view = holder.itemView;
+        GroupInviteUserSearchResult userSearchResult = getItem(position);
         //We can set groupMember as its also an extension of BasicUser
-        UserComp userComp = new UserComp(mBaseFragment, getItem(position).getUser());
+        UserComp userComp = new UserComp(mBaseFragment, userSearchResult.getUser());
         userComp.setUserNamePhoto(view);
         TextView membershipStatus = view.findViewById(R.id.membership_status);
         CheckBox inviteCheckBox = view.findViewById(R.id.invite_checkbox);
-        if (getItem(position).isMember()){
+        if (userSearchResult.isMember()){
+            inviteCheckBox.setVisibility(View.GONE);
             membershipStatus.setVisibility(View.VISIBLE);
             membershipStatus.setText(MembershipStatusType.Member.toString());
-            inviteCheckBox.setVisibility(View.GONE);
         } else {
-            if (getItem(position).isInvited()){
+            if (userSearchResult.isInvited()){
+                inviteCheckBox.setVisibility(View.GONE);
                 membershipStatus.setVisibility(View.VISIBLE);
                 membershipStatus.setText(MembershipStatusType.Invited.toString());
-                inviteCheckBox.setVisibility(View.GONE);
             } else {
-                membershipStatus.setVisibility(View.GONE);
-                inviteCheckBox.setVisibility(View.VISIBLE);
-                inviteCheckBox.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getItem(position).setSelected(!getItem(position).isSelected());
-                    }
-                });
+                if (userSearchResult.isRequestSubmitted()){
+                    inviteCheckBox.setVisibility(View.GONE);
+                    membershipStatus.setVisibility(View.VISIBLE);
+                    membershipStatus.setText(MembershipStatusType.Submitted.toString());
+                } else {
+                    membershipStatus.setVisibility(View.GONE);
+                    inviteCheckBox.setVisibility(View.VISIBLE);
+                    inviteCheckBox.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getItem(position).setSelected(!getItem(position).isSelected());
+                        }
+                    });
+                }
             }
         }
     }

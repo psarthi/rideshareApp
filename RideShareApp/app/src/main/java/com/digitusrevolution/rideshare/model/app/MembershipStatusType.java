@@ -5,5 +5,5 @@ package com.digitusrevolution.rideshare.model.app;
  */
 
 public enum MembershipStatusType {
-    Invited, Member
+    Invited, Member, Submitted
 }
