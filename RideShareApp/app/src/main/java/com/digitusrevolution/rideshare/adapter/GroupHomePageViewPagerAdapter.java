@@ -15,9 +15,11 @@ import com.digitusrevolution.rideshare.model.user.dto.GroupListType;
 public class GroupHomePageViewPagerAdapter extends FragmentStatePagerAdapter{
 
     public static final String TAG = GroupHomePageViewPagerAdapter.class.getName();
+    private int mPageCount;
 
-    public GroupHomePageViewPagerAdapter(FragmentManager fm) {
+    public GroupHomePageViewPagerAdapter(FragmentManager fm, int pageCount) {
         super(fm);
+        mPageCount = pageCount;
     }
 
     @Override
@@ -31,13 +33,17 @@ public class GroupHomePageViewPagerAdapter extends FragmentStatePagerAdapter{
             Log.d(TAG, "Getting Group Invitation List Fragment");
             fragment = GroupListFragment.newInstance(GroupListType.Invite, null);
         }
+        if (position == 2){
+            Log.d(TAG, "Getting Group Membership Request List Fragment");
+            fragment = GroupListFragment.newInstance(GroupListType.All, null);
+        }
         return fragment;
 
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return mPageCount;
     }
 
     @Override
@@ -47,6 +53,8 @@ public class GroupHomePageViewPagerAdapter extends FragmentStatePagerAdapter{
                 return "My Groups";
             case 1:
                 return "Invites";
+            case 2:
+                return "Requests";
             default:
                 return "My Groups";
         }

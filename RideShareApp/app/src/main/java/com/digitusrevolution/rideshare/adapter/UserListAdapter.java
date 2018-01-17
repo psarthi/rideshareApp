@@ -12,7 +12,7 @@ import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.user.dto.UserListType;
+import com.digitusrevolution.rideshare.model.app.UserListType;
 
 import java.util.List;
 

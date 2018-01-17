@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.digitusrevolution.rideshare.fragment.AboutGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupMemberFragment;
 import com.digitusrevolution.rideshare.fragment.UserListFragment;
-import com.digitusrevolution.rideshare.model.user.dto.UserListType;
+import com.digitusrevolution.rideshare.model.app.UserListType;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
 

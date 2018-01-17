@@ -76,6 +76,9 @@ public class APIUrl {
     public static final String GET_USER_GROUPS = BASE_URL_USER_SYSTEM + "/users/{userId}/groups?listType={GroupListType}&page={page}";
     public static final String SEARCH_USER_FOR_GROUP_INVITE = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/searchuser?name={name}&page={page}";
     public static final String INVITE_USER = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/invite";
+    public static final String SEARCH_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/search?name={name}&page={page}";
+    public static final String GET_USER_MEMBERSHIP_REQUESTS = BASE_URL_USER_SYSTEM + "/users/{userId}/membershiprequests?page={page}";
+    public static final String GET_GROUP_MEMBERSHIP_REQUESTS = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/membershiprequests?page={page}";
 
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +

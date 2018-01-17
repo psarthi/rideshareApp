@@ -1,11 +1,9 @@
 package com.digitusrevolution.rideshare.component;
 
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
@@ -14,12 +12,7 @@ import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
-import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.user.dto.FullUser;
-import com.digitusrevolution.rideshare.model.user.dto.UserListType;
-import com.google.gson.Gson;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;

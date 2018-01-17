@@ -19,7 +19,6 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
 import com.digitusrevolution.rideshare.adapter.GroupInviteUserSearchListAdapter;
-import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
@@ -44,14 +43,14 @@ import cz.msebera.android.httpclient.Header;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link GroupInviteUserSearchFragment.OnFragmentInteractionListener} interface
+ * {@link SearchUserForGroupFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link GroupInviteUserSearchFragment#newInstance} factory method to
+ * Use the {@link SearchUserForGroupFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupInviteUserSearchFragment extends BaseFragment {
+public class SearchUserForGroupFragment extends BaseFragment {
 
-    public static final String TAG = GroupInviteUserSearchFragment.class.getName();
+    public static final String TAG = SearchUserForGroupFragment.class.getName();
     public static final String TITLE = "Search User";
 
     // TODO: Rename parameter arguments, choose names that match
@@ -72,7 +71,7 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
     private GroupDetail mGroupDetail;
 
 
-    public GroupInviteUserSearchFragment() {
+    public SearchUserForGroupFragment() {
         // Required empty public constructor
     }
 
@@ -81,11 +80,11 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
      * this fragment using the provided parameters.
      *
      * @param groupDetail GroupDetail in Json format
-     * @return A new instance of fragment GroupInviteUserSearchFragment.
+     * @return A new instance of fragment SearchUserForGroupFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroupInviteUserSearchFragment newInstance(String groupDetail) {
-        GroupInviteUserSearchFragment fragment = new GroupInviteUserSearchFragment();
+    public static SearchUserForGroupFragment newInstance(String groupDetail) {
+        SearchUserForGroupFragment fragment = new SearchUserForGroupFragment();
         Bundle args = new Bundle();
         args.putString(ARG_GROUP_DETAIL, groupDetail);
         fragment.setArguments(args);
@@ -177,7 +176,7 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
                 for (GroupInviteUserSearchResult userSearchResult: userSearchResults) {
                     mUserSearchResultsWrappers.add(getWrapper(userSearchResult));
                 }
-                mAdapter = new GroupInviteUserSearchListAdapter(mUserSearchResultsWrappers, GroupInviteUserSearchFragment.this);
+                mAdapter = new GroupInviteUserSearchListAdapter(mUserSearchResultsWrappers, SearchUserForGroupFragment.this);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });
@@ -222,13 +221,6 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
         });
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(String data) {
-        if (mListener != null) {
-            mListener.onSearchFragmentInteraction(data);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -265,7 +257,7 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onSearchFragmentInteraction(String data);
+        void onSearchUserForGroupFragmentInteraction(String data);
     }
 
     @Override
@@ -314,11 +306,15 @@ public class GroupInviteUserSearchFragment extends BaseFragment {
 
     private void sendInvite() {
         ArrayList<Integer> userIds = new ArrayList<>();
-        for (GroupInviteUserSearchResultWrapper userSearchResultWrapper:mUserSearchResultsWrappers){
-            Log.d(TAG, "User Selected:"+userSearchResultWrapper.getUser().getFirstName()+"-"+userSearchResultWrapper.isSelected());
-            if (userSearchResultWrapper.isSelected()){
-                Log.d(TAG, "Adding to the invite list");
-                userIds.add(userSearchResultWrapper.getUser().getId());
+        //There is possibility user may click on Join even before any search, which will prevent from NPE
+        //as Wrapper will only get initialized on first result set
+        if (mUserSearchResultsWrappers!=null){
+            for (GroupInviteUserSearchResultWrapper userSearchResultWrapper:mUserSearchResultsWrappers){
+                Log.d(TAG, "User Selected:"+userSearchResultWrapper.getUser().getFirstName()+"-"+userSearchResultWrapper.isSelected());
+                if (userSearchResultWrapper.isSelected()){
+                    Log.d(TAG, "Adding to the invite list");
+                    userIds.add(userSearchResultWrapper.getUser().getId());
+                }
             }
         }
         if (userIds.size() > 0){

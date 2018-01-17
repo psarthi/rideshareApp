@@ -74,10 +74,11 @@ public class GroupHomePageFragment extends BaseFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        mGroupHomePageViewPagerAdapter = new GroupHomePageViewPagerAdapter(getChildFragmentManager());
+        int pageCount = 3;
+        mGroupHomePageViewPagerAdapter = new GroupHomePageViewPagerAdapter(getChildFragmentManager(), pageCount);
         //This will append items option menu by invoking fragment onCreateOptionMenu
         //So that you can have customer option menu for each fragment
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
         mFragmentLoader = new FragmentLoader(this);
     }
 
@@ -191,6 +192,7 @@ public class GroupHomePageFragment extends BaseFragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_item) {
             Log.d(TAG, "Search Clicked");
+            mFragmentLoader.loadSearchGroupFragment();
             return true;
         }
         return super.onOptionsItemSelected(item);

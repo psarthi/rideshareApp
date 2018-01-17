@@ -14,7 +14,8 @@ import com.digitusrevolution.rideshare.fragment.CreateMembershipFormFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
-import com.digitusrevolution.rideshare.fragment.GroupInviteUserSearchFragment;
+import com.digitusrevolution.rideshare.fragment.SearchGroupFragment;
+import com.digitusrevolution.rideshare.fragment.SearchUserForGroupFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
@@ -160,13 +161,22 @@ public class FragmentLoader {
         fragmentTransaction.commit();
     }
 
-    public void loadGroupInviteUserSearchFragment(String group) {
+    public void loadSearchUserForGroupFragment(String group) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        GroupInviteUserSearchFragment groupInviteUserSearchFragment = GroupInviteUserSearchFragment.newInstance(group);
-        fragmentTransaction.replace(R.id.home_page_container, groupInviteUserSearchFragment, GroupInviteUserSearchFragment.TAG);
-        fragmentTransaction.addToBackStack(GroupInviteUserSearchFragment.TAG);
+        SearchUserForGroupFragment searchUserForGroupFragment = SearchUserForGroupFragment.newInstance(group);
+        fragmentTransaction.replace(R.id.home_page_container, searchUserForGroupFragment, SearchUserForGroupFragment.TAG);
+        fragmentTransaction.addToBackStack(SearchUserForGroupFragment.TAG);
         fragmentTransaction.commit();
     }
+
+    public void loadSearchGroupFragment() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        SearchGroupFragment searchGroupFragment = SearchGroupFragment.newInstance();
+        fragmentTransaction.replace(R.id.home_page_container, searchGroupFragment, SearchGroupFragment.TAG);
+        fragmentTransaction.addToBackStack(SearchUserForGroupFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
 
     public void loadCreateGroupFragment() {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

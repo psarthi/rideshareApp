@@ -88,7 +88,7 @@ public class GroupInfoFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 FragmentLoader fragmentLoader = new FragmentLoader(GroupInfoFragment.this);
-                fragmentLoader.loadGroupInviteUserSearchFragment(new Gson().toJson(mGroup));
+                fragmentLoader.loadSearchUserForGroupFragment(new Gson().toJson(mGroup));
             }
         });
 

@@ -21,7 +21,8 @@ import com.digitusrevolution.rideshare.fragment.BillFragment;
 import com.digitusrevolution.rideshare.fragment.CreateGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
-import com.digitusrevolution.rideshare.fragment.GroupInviteUserSearchFragment;
+import com.digitusrevolution.rideshare.fragment.SearchGroupFragment;
+import com.digitusrevolution.rideshare.fragment.SearchUserForGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupListFragment;
 import com.digitusrevolution.rideshare.fragment.GroupMemberFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
@@ -66,13 +67,14 @@ public class HomePageActivity extends BaseActivity
         RedeemFragment.OnFragmentInteractionListener,
         GroupHomePageFragment.OnFragmentInteractionListener,
         GroupListFragment.OnFragmentInteractionListener,
-        GroupInviteUserSearchFragment.OnFragmentInteractionListener,
+        SearchUserForGroupFragment.OnFragmentInteractionListener,
         CreateGroupFragment.OnFragmentInteractionListener,
         CreateMembershipFormFragment.OnFragmentInteractionListener,
         GroupInfoFragment.OnFragmentInteractionListener,
         UserListFragment.OnFragmentInteractionListener,
         AboutGroupFragment.OnFragmentInteractionListener,
-        GroupMemberFragment.OnFragmentInteractionListener{
+        GroupMemberFragment.OnFragmentInteractionListener,
+        SearchGroupFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -406,11 +408,6 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onSearchFragmentInteraction(String data) {
-
-    }
-
-    @Override
     public void onCreateGroupFragmentInteraction(String data) {
 
     }
@@ -432,6 +429,16 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onAboutGroupFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onSearchGroupFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onSearchUserForGroupFragmentInteraction(String data) {
 
     }
 

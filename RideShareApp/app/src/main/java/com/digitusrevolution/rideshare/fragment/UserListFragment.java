@@ -12,14 +12,12 @@ import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
-import com.digitusrevolution.rideshare.adapter.GroupMemberListAdapter;
 import com.digitusrevolution.rideshare.adapter.UserListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
-import com.digitusrevolution.rideshare.model.user.dto.GroupMember;
-import com.digitusrevolution.rideshare.model.user.dto.UserListType;
+import com.digitusrevolution.rideshare.model.app.UserListType;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
