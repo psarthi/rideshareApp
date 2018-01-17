@@ -12,12 +12,13 @@ import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
-import com.digitusrevolution.rideshare.adapter.UserListAdapter;
+import com.digitusrevolution.rideshare.adapter.GroupMembershipRequestListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.UserListType;
+import com.digitusrevolution.rideshare.model.user.dto.BasicMembershipRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
@@ -34,19 +35,15 @@ import cz.msebera.android.httpclient.Header;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link UserListFragment.OnFragmentInteractionListener} interface
+ * {@link GroupMembershipRequestListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link UserListFragment#newInstance} factory method to
+ * Use the {@link GroupMembershipRequestListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserListFragment extends BaseFragment {
-    // TODO: Rename parameter arguments, choose names that match
+public class GroupMembershipRequestListFragment extends BaseFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_USER_LIST_TYPE = "userListType";
     private static final String ARG_GROUP_DETAIL = "groupDetail";
 
-    // TODO: Rename and change types of parameters
-    private UserListType mUserListType;
     private String mGroupDetailData;
 
     private OnFragmentInteractionListener mListener;
@@ -56,12 +53,12 @@ public class UserListFragment extends BaseFragment {
     private EndlessRecyclerViewScrollListener mScrollListener;
     private boolean mInitialDataLoaded;
     private CommonUtil mCommonUtil;
-    private List<BasicUser> mUsers = new ArrayList<>();
-    private String GET_GROUP_MEMBERS_URL;
+    private List<BasicMembershipRequest> mRequests = new ArrayList<>();
+    private String GET_GROUP_MEMBERSHIP_REQUEST_URL;
     private BasicUser mUser;
 
 
-    public UserListFragment() {
+    public GroupMembershipRequestListFragment() {
         // Required empty public constructor
     }
 
@@ -69,15 +66,13 @@ public class UserListFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param userListType User List Type (e.g. Member, Membership_Request etc)
      * @param groupDetail GroupDetail in Json format
-     * @return A new instance of fragment UserListFragment.
+     * @return A new instance of fragment GroupMembershipRequestListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static UserListFragment newInstance(UserListType userListType, String groupDetail) {
-        UserListFragment fragment = new UserListFragment();
+    public static GroupMembershipRequestListFragment newInstance(String groupDetail) {
+        GroupMembershipRequestListFragment fragment = new GroupMembershipRequestListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_USER_LIST_TYPE, userListType.toString());
         args.putString(ARG_GROUP_DETAIL, groupDetail);
         fragment.setArguments(args);
         return fragment;
@@ -87,13 +82,12 @@ public class UserListFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mUserListType = UserListType.valueOf(getArguments().getString(ARG_USER_LIST_TYPE));
             mGroupDetailData = getArguments().getString(ARG_GROUP_DETAIL);
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
         GroupDetail groupDetail = new Gson().fromJson(mGroupDetailData, GroupDetail.class);
-        GET_GROUP_MEMBERS_URL = APIUrl.GET_GROUP_MEMBERS.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+        GET_GROUP_MEMBERSHIP_REQUEST_URL = APIUrl.GET_GROUP_MEMBERSHIP_REQUESTS.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
                 .replace(APIUrl.GROUP_ID_KEY,Integer.toString(groupDetail.getId()));
         loadInitialData();
     }
@@ -132,7 +126,7 @@ public class UserListFragment extends BaseFragment {
     private void loadInitialData() {
         //Initial Data loading
         //Its important to use local variable else you will get updated string
-        String URL = GET_GROUP_MEMBERS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
+        String URL = GET_GROUP_MEMBERSHIP_REQUEST_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
 
         mCommonUtil.showProgressDialog();
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
@@ -140,8 +134,8 @@ public class UserListFragment extends BaseFragment {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<BasicUser>>(){}.getType();
-                mUsers = new Gson().fromJson(response.toString(), listType);
+                Type listType = new TypeToken<ArrayList<BasicMembershipRequest>>(){}.getType();
+                mRequests = new Gson().fromJson(response.toString(), listType);
                 mInitialDataLoaded = true;
                 //This will load adapter only when data is loaded
                 setAdapter();
@@ -151,7 +145,7 @@ public class UserListFragment extends BaseFragment {
     }
 
     private void setAdapter() {
-        mAdapter = new UserListAdapter(mUserListType, mUsers, this);
+        mAdapter = new GroupMembershipRequestListAdapter(mRequests, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -164,7 +158,7 @@ public class UserListFragment extends BaseFragment {
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
         //Its important to use local variable else you will get updated string
-        String URL = GET_GROUP_MEMBERS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+        String URL = GET_GROUP_MEMBERSHIP_REQUEST_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
         //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
         //and unnecssarily we will show multiple dialog which creates flicker on the screen
         if (offset != 1) mCommonUtil.showProgressDialog();
@@ -173,12 +167,12 @@ public class UserListFragment extends BaseFragment {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 if (offset != 1) mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<BasicUser>>(){}.getType();
-                List<BasicUser> newUsers = new Gson().fromJson(response.toString(), listType);
+                Type listType = new TypeToken<ArrayList<BasicMembershipRequest>>(){}.getType();
+                List<BasicMembershipRequest> newRequests = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
-                mUsers.addAll(newUsers);
-                Log.d(TAG, "User Size changed. Current Size is:"+mUsers.size());
-                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mUsers.size()-1);
+                mRequests.addAll(newRequests);
+                Log.d(TAG, "Membership Request Size changed. Current Size is:"+mRequests.size());
+                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRequests.size()-1);
             }
         });
     }
@@ -213,6 +207,6 @@ public class UserListFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onUserListFragmentInteraction(String data);
+        void onGroupMembershipRequestListFragmentInteraction(String data);
     }
 }

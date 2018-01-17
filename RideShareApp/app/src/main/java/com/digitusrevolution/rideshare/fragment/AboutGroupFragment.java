@@ -32,9 +32,6 @@ public class AboutGroupFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private GroupDetail mGroup;
-    private Button mLeaveButton;
-    private Button mMemberShipFormButton;
-    private Button mJoinButton;
 
 
     public AboutGroupFragment() {
@@ -72,18 +69,27 @@ public class AboutGroupFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_about_group, container, false);
         ((TextView) view.findViewById(R.id.group_description)).setText(mGroup.getInformation());
-        mLeaveButton = view.findViewById(R.id.leave_group_button);
-        mJoinButton = view.findViewById(R.id.group_join_button);
-        mMemberShipFormButton = view.findViewById(R.id.membership_form_button);
+        Button leaveButton = view.findViewById(R.id.leave_group_button);
+        Button joinButton = view.findViewById(R.id.group_join_button);
+        Button memberShipFormButton = view.findViewById(R.id.membership_form_button);
+        Button membershipRequestButton = view.findViewById(R.id.group_membership_request_button);
 
         if (mGroup.getMembershipStatus().isMember()){
-            mJoinButton.setVisibility(View.GONE);
+            joinButton.setVisibility(View.GONE);
+            membershipRequestButton.setVisibility(View.GONE);
             if (!mGroup.getMembershipStatus().isAdmin()){
-                mMemberShipFormButton.setVisibility(View.GONE);
+                memberShipFormButton.setVisibility(View.GONE);
             }
         } else {
-            mLeaveButton.setVisibility(View.GONE);
-            mMemberShipFormButton.setVisibility(View.GONE);
+            if (mGroup.getMembershipStatus().isRequestSubmitted()){
+                membershipRequestButton.setText(mGroup.getMembershipStatus().getApprovalStatus().toString());
+                joinButton.setVisibility(View.GONE);
+            } else {
+                membershipRequestButton.setVisibility(View.GONE);
+            }
+            //This is appliacable for both cases
+            leaveButton.setVisibility(View.GONE);
+            memberShipFormButton.setVisibility(View.GONE);
         }
 
         return view;

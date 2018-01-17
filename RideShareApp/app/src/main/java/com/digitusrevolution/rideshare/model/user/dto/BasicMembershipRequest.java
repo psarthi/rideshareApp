@@ -10,7 +10,7 @@ public class BasicMembershipRequest {
 
 	private int id;
 	private BasicUser user;
-	private BasicGroup group; 
+	private GroupDetail group;
 	//This would be visible to all group members e.g. employee id, flat number etc
 	private String userUniqueIdentifier;
 	private Map<String, String> questionAnswers = new HashMap<String, String>();
@@ -93,12 +93,6 @@ public class BasicMembershipRequest {
 	public void setUser(BasicUser user) {
 		this.user = user;
 	}
-	public BasicGroup getGroup() {
-		return group;
-	}
-	public void setGroup(BasicGroup group) {
-		this.group = group;
-	}
 
 	public Date getCreatedDateTime() {
 		return createdDateTime;
@@ -106,5 +100,13 @@ public class BasicMembershipRequest {
 
 	public void setCreatedDateTime(Date createdDateTime) {
 		this.createdDateTime = createdDateTime;
+	}
+
+	public GroupDetail getGroup() {
+		return group;
+	}
+
+	public void setGroup(GroupDetail group) {
+		this.group = group;
 	}
 }

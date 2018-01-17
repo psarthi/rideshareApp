@@ -11,6 +11,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.model.user.dto.BasicMembershipRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.app.UserListType;
 
@@ -20,17 +21,15 @@ import java.util.List;
  * Created by psarthi on 1/13/18.
  */
 
-public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder> {
+public class GroupMembershipRequestListAdapter extends RecyclerView.Adapter<GroupMembershipRequestListAdapter.ViewHolder> {
 
     private static final String TAG = RideListAdapter.class.getName();
-    private List<BasicUser> mUsers;
+    private List<BasicMembershipRequest> mRequests;
     private BaseFragment mBaseFragment;
     private CommonUtil mCommonUtil;
-    private UserListType mUserListType;
 
-    public UserListAdapter(UserListType userListType, List<BasicUser> users, BaseFragment fragment) {
-        mUserListType = userListType;
-        mUsers = users;
+    public GroupMembershipRequestListAdapter(List<BasicMembershipRequest> requests, BaseFragment fragment) {
+        mRequests = requests;
         mBaseFragment = fragment;
         mCommonUtil = new CommonUtil(fragment);
     }
@@ -40,35 +39,33 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.user_layout, parent, false);
-        UserListAdapter.ViewHolder vh = new UserListAdapter.ViewHolder(v);
+        GroupMembershipRequestListAdapter.ViewHolder vh = new GroupMembershipRequestListAdapter.ViewHolder(v);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final BasicUser user = getItem(position);
+        final BasicMembershipRequest request = getItem(position);
         View view = holder.view;
-        UserComp userComp = new UserComp(mBaseFragment, user);
+        UserComp userComp = new UserComp(mBaseFragment, request.getUser());
         userComp.setUserProfileSingleRow(view);
         ImageView formImageView = view.findViewById(R.id.membership_form_image);
-        if (mUserListType.equals(UserListType.Membership_Request)){
-            formImageView.setVisibility(View.VISIBLE);
-            formImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mBaseFragment.getActivity(), "Membership From", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+        formImageView.setVisibility(View.VISIBLE);
+        formImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mBaseFragment.getActivity(), "Membership From", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public BasicUser getItem(int position){
-        return mUsers.get(position);
+    public BasicMembershipRequest getItem(int position){
+        return mRequests.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return mUsers.size();
+        return mRequests.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

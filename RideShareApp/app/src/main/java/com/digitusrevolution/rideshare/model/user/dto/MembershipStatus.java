@@ -1,9 +1,14 @@
 package com.digitusrevolution.rideshare.model.user.dto;
 
+import com.digitusrevolution.rideshare.model.user.domain.ApprovalStatus;
+
 public class MembershipStatus {
 	private boolean member;
 	private boolean admin;
 	private boolean invited;
+	private boolean requestSubmitted;
+	private ApprovalStatus approvalStatus;
+
 
 	public boolean isMember() {
 		return member;
@@ -24,5 +29,21 @@ public class MembershipStatus {
 
 	public void setInvited(boolean invited) {
 		this.invited = invited;
+	}
+
+	public boolean isRequestSubmitted() {
+		return requestSubmitted;
+	}
+
+	public void setRequestSubmitted(boolean requestSubmitted) {
+		this.requestSubmitted = requestSubmitted;
+	}
+
+	public ApprovalStatus getApprovalStatus() {
+		return approvalStatus;
+	}
+
+	public void setApprovalStatus(ApprovalStatus approvalStatus) {
+		this.approvalStatus = approvalStatus;
 	}
 }

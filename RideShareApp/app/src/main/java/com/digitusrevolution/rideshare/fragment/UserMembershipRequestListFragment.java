@@ -12,14 +12,15 @@ import android.view.ViewGroup;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
-import com.digitusrevolution.rideshare.adapter.GroupMemberListAdapter;
+import com.digitusrevolution.rideshare.adapter.GroupMembershipRequestListAdapter;
+import com.digitusrevolution.rideshare.adapter.UserMembershipRequestListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
+import com.digitusrevolution.rideshare.model.user.dto.BasicMembershipRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
-import com.digitusrevolution.rideshare.model.user.dto.GroupMember;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -34,18 +35,12 @@ import cz.msebera.android.httpclient.Header;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link GroupMemberFragment.OnFragmentInteractionListener} interface
+ * {@link UserMembershipRequestListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link GroupMemberFragment#newInstance} factory method to
+ * Use the {@link UserMembershipRequestListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupMemberFragment extends BaseFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_GROUP_DETAIL = "groupDetail";
-
-    // TODO: Rename and change types of parameters
-    private String mGroupDetailData;
+public class UserMembershipRequestListFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
@@ -54,13 +49,12 @@ public class GroupMemberFragment extends BaseFragment {
     private EndlessRecyclerViewScrollListener mScrollListener;
     private boolean mInitialDataLoaded;
     private CommonUtil mCommonUtil;
-    private List<GroupMember> mGroupMembers = new ArrayList<>();
-    private GroupDetail mGroupDetail;
-    private String GET_GROUP_MEMBERS_URL;
+    private List<BasicMembershipRequest> mRequests = new ArrayList<>();
+    private String GET_USER_MEMBERSHIP_REQUEST_URL;
     private BasicUser mUser;
 
 
-    public GroupMemberFragment() {
+    public UserMembershipRequestListFragment() {
         // Required empty public constructor
     }
 
@@ -68,29 +62,20 @@ public class GroupMemberFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param groupDetail GroupDetail in Json format
      * @return A new instance of fragment GroupMembershipRequestListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroupMemberFragment newInstance(String groupDetail) {
-        GroupMemberFragment fragment = new GroupMemberFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_GROUP_DETAIL, groupDetail);
-        fragment.setArguments(args);
+    public static UserMembershipRequestListFragment newInstance() {
+        UserMembershipRequestListFragment fragment = new UserMembershipRequestListFragment();
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mGroupDetailData = getArguments().getString(ARG_GROUP_DETAIL);
-        }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        mGroupDetail = new Gson().fromJson(mGroupDetailData, GroupDetail.class);
-        GET_GROUP_MEMBERS_URL = APIUrl.GET_GROUP_MEMBERS.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                .replace(APIUrl.GROUP_ID_KEY,Integer.toString(mGroupDetail.getId()));
+        GET_USER_MEMBERSHIP_REQUEST_URL = APIUrl.GET_USER_MEMBERSHIP_REQUESTS.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
         loadInitialData();
     }
 
@@ -128,7 +113,7 @@ public class GroupMemberFragment extends BaseFragment {
     private void loadInitialData() {
         //Initial Data loading
         //Its important to use local variable else you will get updated string
-        String URL = GET_GROUP_MEMBERS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
+        String URL = GET_USER_MEMBERSHIP_REQUEST_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
 
         mCommonUtil.showProgressDialog();
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
@@ -136,8 +121,8 @@ public class GroupMemberFragment extends BaseFragment {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<GroupMember>>(){}.getType();
-                mGroupMembers = new Gson().fromJson(response.toString(), listType);
+                Type listType = new TypeToken<ArrayList<BasicMembershipRequest>>(){}.getType();
+                mRequests = new Gson().fromJson(response.toString(), listType);
                 mInitialDataLoaded = true;
                 //This will load adapter only when data is loaded
                 setAdapter();
@@ -147,7 +132,7 @@ public class GroupMemberFragment extends BaseFragment {
     }
 
     private void setAdapter() {
-        mAdapter = new GroupMemberListAdapter(mGroupMembers, this);
+        mAdapter = new UserMembershipRequestListAdapter(mRequests, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -160,7 +145,7 @@ public class GroupMemberFragment extends BaseFragment {
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
         //Its important to use local variable else you will get updated string
-        String URL = GET_GROUP_MEMBERS_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
+        String URL = GET_USER_MEMBERSHIP_REQUEST_URL.replace(APIUrl.PAGE_KEY, Integer.toString(offset));
         //This will ensure we don't show progress dialog on first page load as its called on the initial load itself
         //and unnecssarily we will show multiple dialog which creates flicker on the screen
         if (offset != 1) mCommonUtil.showProgressDialog();
@@ -169,12 +154,12 @@ public class GroupMemberFragment extends BaseFragment {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 if (offset != 1) mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<GroupMember>>(){}.getType();
-                List<GroupMember> newGroupMembers = new Gson().fromJson(response.toString(), listType);
+                Type listType = new TypeToken<ArrayList<BasicMembershipRequest>>(){}.getType();
+                List<BasicMembershipRequest> newRequests = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
-                mGroupMembers.addAll(newGroupMembers);
-                Log.d(TAG, "Group Member Size changed. Current Size is:"+mGroupMembers.size());
-                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mGroupMembers.size()-1);
+                mRequests.addAll(newRequests);
+                Log.d(TAG, "Membership Request Size changed. Current Size is:"+mRequests.size());
+                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRequests.size()-1);
             }
         });
     }
@@ -209,6 +194,6 @@ public class GroupMemberFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onGroupMemberFragmentInteraction(String data);
+        void onUserMembershipRequestListFragmentInteraction(String data);
     }
 }

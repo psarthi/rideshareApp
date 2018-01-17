@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
@@ -14,6 +15,7 @@ import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.SearchGroupFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.app.MembershipStatusType;
+import com.digitusrevolution.rideshare.model.user.dto.BasicMembershipRequest;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
 
@@ -23,15 +25,15 @@ import java.util.List;
  * Created by psarthi on 1/13/18.
  */
 
-public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.ViewHolder> {
+public class UserMembershipRequestListAdapter extends RecyclerView.Adapter<UserMembershipRequestListAdapter.ViewHolder> {
 
     private static final String TAG = RideListAdapter.class.getName();
-    private List<GroupDetail> mGroups;
+    private List<BasicMembershipRequest> mRequests;
     private BaseFragment mBaseFragment;
     private CommonUtil mCommonUtil;
 
-    public GroupListAdapter(List<GroupDetail> groups, BaseFragment fragment) {
-        mGroups = groups;
+    public UserMembershipRequestListAdapter(List<BasicMembershipRequest> requests, BaseFragment fragment) {
+        mRequests = requests;
         mBaseFragment = fragment;
         mCommonUtil = new CommonUtil(fragment);
     }
@@ -41,15 +43,16 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.basic_group_layout, parent, false);
-        GroupListAdapter.ViewHolder vh = new GroupListAdapter.ViewHolder(v);
+        UserMembershipRequestListAdapter.ViewHolder vh = new UserMembershipRequestListAdapter.ViewHolder(v);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         View view = holder.itemView;
-        GroupDetail groupDetail = mGroups.get(position);
-        Log.d(TAG, "Group is:"+new Gson().toJson(mGroups.get(position)));
+        BasicMembershipRequest request = mRequests.get(position);
+        final GroupDetail groupDetail = request.getGroup();
+        Log.d(TAG, "Group is:"+new Gson().toJson(groupDetail));
         GroupComp groupComp = new GroupComp(mBaseFragment, groupDetail);
         groupComp.setGroupBasicInfo(view);
         //This will set the name of the group which has been handled differently for different view
@@ -57,35 +60,19 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         TextView groupName = view.findViewById(R.id.group_name_text);
         groupName.setText(groupDetail.getName());
         TextView statusText = view.findViewById(R.id.status_text);
-        if (mBaseFragment instanceof SearchGroupFragment){
-            if (groupDetail.getMembershipStatus().isMember()){
-                statusText.setText(MembershipStatusType.Member.toString());
-            } else {
-                if (groupDetail.getMembershipStatus().isInvited()){
-                    statusText.setText(MembershipStatusType.Invited.toString());
-                } else {
-                    if (groupDetail.getMembershipStatus().isRequestSubmitted()){
-                        statusText.setText(groupDetail.getMembershipStatus().getApprovalStatus().toString());
-                    } else {
-                        statusText.setVisibility(View.GONE);
-                    }
-                }
-            }
-        } else {
-            statusText.setVisibility(View.GONE);
-        }
+        statusText.setText(request.getStatus().toString());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                fragmentLoader.loadGroupInfoFragment(new Gson().toJson(mGroups.get(position)));
+                fragmentLoader.loadGroupInfoFragment(new Gson().toJson(groupDetail));
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mGroups.size();
+        return mRequests.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

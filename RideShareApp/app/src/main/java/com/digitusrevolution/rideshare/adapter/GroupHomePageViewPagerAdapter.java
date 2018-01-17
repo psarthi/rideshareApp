@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.digitusrevolution.rideshare.fragment.GroupListFragment;
+import com.digitusrevolution.rideshare.fragment.UserMembershipRequestListFragment;
 import com.digitusrevolution.rideshare.model.user.dto.GroupListType;
 
 /**
@@ -34,11 +35,10 @@ public class GroupHomePageViewPagerAdapter extends FragmentStatePagerAdapter{
             fragment = GroupListFragment.newInstance(GroupListType.Invite, null);
         }
         if (position == 2){
-            Log.d(TAG, "Getting Group Membership Request List Fragment");
-            fragment = GroupListFragment.newInstance(GroupListType.All, null);
+            Log.d(TAG, "Getting User Membership Request List Fragment");
+            fragment = UserMembershipRequestListFragment.newInstance();
         }
         return fragment;
-
     }
 
     @Override

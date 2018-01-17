@@ -21,6 +21,7 @@ import com.digitusrevolution.rideshare.fragment.BillFragment;
 import com.digitusrevolution.rideshare.fragment.CreateGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
+import com.digitusrevolution.rideshare.fragment.GroupMembershipRequestListFragment;
 import com.digitusrevolution.rideshare.fragment.SearchGroupFragment;
 import com.digitusrevolution.rideshare.fragment.SearchUserForGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupListFragment;
@@ -36,7 +37,7 @@ import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.fragment.TopUpFragment;
 import com.digitusrevolution.rideshare.fragment.TransactionFragment;
-import com.digitusrevolution.rideshare.fragment.UserListFragment;
+import com.digitusrevolution.rideshare.fragment.UserMembershipRequestListFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.fragment.WalletFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
@@ -71,10 +72,11 @@ public class HomePageActivity extends BaseActivity
         CreateGroupFragment.OnFragmentInteractionListener,
         CreateMembershipFormFragment.OnFragmentInteractionListener,
         GroupInfoFragment.OnFragmentInteractionListener,
-        UserListFragment.OnFragmentInteractionListener,
+        GroupMembershipRequestListFragment.OnFragmentInteractionListener,
         AboutGroupFragment.OnFragmentInteractionListener,
         GroupMemberFragment.OnFragmentInteractionListener,
-        SearchGroupFragment.OnFragmentInteractionListener{
+        SearchGroupFragment.OnFragmentInteractionListener,
+        UserMembershipRequestListFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -423,11 +425,6 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onUserListFragmentInteraction(String data) {
-
-    }
-
-    @Override
     public void onAboutGroupFragmentInteraction(String data) {
 
     }
@@ -445,5 +442,15 @@ public class HomePageActivity extends BaseActivity
     @Override
     public void onGroupMemberFragmentInteraction(String data) {
 
+    }
+
+    @Override
+    public void onGroupMembershipRequestListFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onUserMembershipRequestListFragmentInteraction(String data) {
+        
     }
 }

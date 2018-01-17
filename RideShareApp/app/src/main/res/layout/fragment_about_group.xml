@@ -74,6 +74,16 @@
             android:textAllCaps="true"
             android:layout_marginBottom="@dimen/default_margin"/>
 
+        <Button
+            android:id="@+id/group_membership_request_button"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pending"
+            android:textAllCaps="true"
+            android:layout_marginBottom="@dimen/default_margin"/>
+
+
     </LinearLayout>
 
 </ScrollView>

@@ -27,7 +27,7 @@ and then in UserComp, it tries to find the layout by id, it should be able to fi
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Member"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorAccent"
             android:textAllCaps="true"/>
 
         <CheckBox
