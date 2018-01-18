@@ -3,6 +3,7 @@ package com.digitusrevolution.rideshare.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -63,7 +64,6 @@ public class RidesListFragment extends BaseFragment{
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private boolean mInitialDataLoaded;
     private String GET_USER_RIDES_URL;
     private String GET_USER_RIDE_REQUESTS_URL;
 
@@ -102,7 +102,6 @@ public class RidesListFragment extends BaseFragment{
         mUser = mCommonUtil.getUser();
         GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()));
         GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()));
-        loadInitialData();
     }
 
     @Override
@@ -118,10 +117,9 @@ public class RidesListFragment extends BaseFragment{
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        //VERY IMP - This will get called only when fragment is reloaded and without this it will show up blank screen as adapter is not set
-        if (mInitialDataLoaded) {
-            setAdapter();
-        }
+        //VERY IMP - Ensure you load the data from the server whenever we create the view, so that we always have updated set of data
+        //Don't set the adapter directly otherwise you will end up with old data set
+        loadInitialData();
 
         mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -152,8 +150,8 @@ public class RidesListFragment extends BaseFragment{
                     mCommonUtil.dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<BasicRide>>(){}.getType();
                     mRides = new Gson().fromJson(response.toString(), listType);
-                    mInitialDataLoaded = true;
                     //This will load adapter only when data is loaded
+                    Log.d(TAG, "Size of initial set of data is: "+mRides.size());
                     setAdapter();
                 }
             });
@@ -171,8 +169,8 @@ public class RidesListFragment extends BaseFragment{
                     //dismissProgressDialog();
                     Type listType = new TypeToken<ArrayList<BasicRideRequest>>(){}.getType();
                     mRideRequests = new Gson().fromJson(response.toString(), listType);
-                    mInitialDataLoaded = true;
                     //This will load adapter only when data is loaded
+                    Log.d(TAG, "Size of initial set of data is: "+mRideRequests.size());
                     setAdapter();
                 }
             });
@@ -215,7 +213,7 @@ public class RidesListFragment extends BaseFragment{
                     List<FullRide> newRides = new Gson().fromJson(response.toString(), listType);
                     //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
                     mRides.addAll(newRides);
-                    Log.d(TAG, "Ride Size changed. Current Size is:"+mRides.size());
+                    Log.d(TAG, "Size of new set of data is: "+newRides.size()+" :Updated count is:"+mRides.size());
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRides.size()-1);
                 }
             });
@@ -232,7 +230,7 @@ public class RidesListFragment extends BaseFragment{
                     Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
                     List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
                     mRideRequests.addAll(rideRequests);
-                    Log.d(TAG, "Ride Request Size changed. Current Size is:"+mRideRequests.size());
+                    Log.d(TAG, "Size of new set of data is: "+rideRequests.size()+" :Updated count is:"+mRideRequests.size());
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRideRequests.size()-1);
                 }
             });
@@ -251,6 +249,7 @@ public class RidesListFragment extends BaseFragment{
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            mActivity = (FragmentActivity) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

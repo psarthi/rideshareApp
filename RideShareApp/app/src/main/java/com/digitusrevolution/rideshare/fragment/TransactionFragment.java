@@ -1,8 +1,10 @@
 package com.digitusrevolution.rideshare.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -91,7 +93,7 @@ public class TransactionFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate Called");
+        Log.d(TAG, "onCreate Called of instance:"+this.hashCode());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -105,7 +107,7 @@ public class TransactionFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView Called");
+        Log.d(TAG, "onCreateView Called of instance:"+this.hashCode());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_transaction, container, false);
         mRecyclerView = view.findViewById(R.id.transaction_list);
@@ -134,11 +136,11 @@ public class TransactionFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"Inside OnResume");
+        Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
     }
 
     private void loadInitialData() {
-        Log.d(TAG, "loadInitialData Called");
+        Log.d(TAG, "loadInitialData Called of instance:"+this.hashCode());
         //Initial Data loading
 
         String URL = GET_USER_WALLET_TRANSACTION_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
@@ -158,7 +160,7 @@ public class TransactionFragment extends BaseFragment {
     }
 
     private void setAdapter() {
-        Log.d(TAG, "Setting Adapter of Transaction");
+        Log.d(TAG, "Setting Adapter of Transaction instance:"+this.hashCode());
         mAdapter = new TransactionAdapter(mTransactions, this);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -166,7 +168,7 @@ public class TransactionFragment extends BaseFragment {
     // Append the next page of data into the adapter
     // This method probably sends out a network request and appends new data items to your adapter.
     public void loadNextDataFromApi(int offset) {
-        Log.d(TAG, "loadNextDataFromApi Called");
+        Log.d(TAG, "loadNextDataFromApi Called of instance:"+this.hashCode());
         // Send an API request to retrieve appropriate paginated data
         //  --> Send the request including an offset value (i.e `page`) as a query parameter.
         //  --> Deserialize and construct new model objects from the API response
@@ -188,11 +190,21 @@ public class TransactionFragment extends BaseFragment {
             }
         });
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            //VERY IMP - Reason for storing as member variable instead as there are situations
+            //when fragment is partially loaded and then immediately detached which in turn would
+            //return null when you call mBaseFragment.getActivity .e.g in CommonUtil getSharedPreference function
+            //So if we store as member variable, then we can reference al activity related resource even though
+            //fragment is not visible
+            //Scenario where it was failing - Wallet Fragment was loaded, then detached immediately as it was not visible
+            //and in the same flow setAdapater was called which in turn try to get mUser which calls mBaseFragment.getActivity
+            //it was throwing NPE
+            mActivity = (FragmentActivity) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -203,13 +215,13 @@ public class TransactionFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        Log.d(TAG, "onDetach Called");
+        Log.d(TAG, "onDetach Called of instance:"+this.hashCode());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "onDestroyView Called");
+        Log.d(TAG, "Inside Destroy View of instance:"+this.hashCode());
     }
 
     /**

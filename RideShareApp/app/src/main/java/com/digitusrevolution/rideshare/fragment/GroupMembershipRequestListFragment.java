@@ -3,6 +3,7 @@ package com.digitusrevolution.rideshare.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,6 +41,7 @@ import cz.msebera.android.httpclient.Header;
  * create an instance of this fragment.
  */
 public class GroupMembershipRequestListFragment extends BaseFragment {
+    public static final String TAG = GroupMembershipRequestListFragment.class.getName();
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_GROUP_DETAIL = "groupDetail";
 
@@ -50,7 +52,6 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
     private RecyclerView.Adapter mAdapter;
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener mScrollListener;
-    private boolean mInitialDataLoaded;
     private CommonUtil mCommonUtil;
     private List<BasicMembershipRequest> mRequests = new ArrayList<>();
     private String GET_GROUP_MEMBERSHIP_REQUEST_URL;
@@ -70,6 +71,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
      */
     // TODO: Rename and change types and number of parameters
     public static GroupMembershipRequestListFragment newInstance(String groupDetail) {
+        Log.d(TAG, "newInstance Called");
         GroupMembershipRequestListFragment fragment = new GroupMembershipRequestListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_GROUP_DETAIL, groupDetail);
@@ -79,6 +81,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate Called of instance:"+this.hashCode());
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mGroupDetailData = getArguments().getString(ARG_GROUP_DETAIL);
@@ -88,12 +91,12 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
         GroupDetail groupDetail = new Gson().fromJson(mGroupDetailData, GroupDetail.class);
         GET_GROUP_MEMBERSHIP_REQUEST_URL = APIUrl.GET_GROUP_MEMBERSHIP_REQUESTS.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
                 .replace(APIUrl.GROUP_ID_KEY,Integer.toString(groupDetail.getId()));
-        loadInitialData();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView Called of instance:"+this.hashCode());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_list, container, false);
         mRecyclerView = view.findViewById(R.id.user_list);
@@ -103,10 +106,9 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        //VERY IMP - This will get called only when fragment is reloaded and without this it will show up blank screen as adapter is not set
-        if (mInitialDataLoaded) {
-            setAdapter();
-        }
+        //VERY IMP - Ensure you load the data from the server whenever we create the view, so that we always have updated set of data
+        //Don't set the adapter directly otherwise you will end up with old data set
+        loadInitialData();
 
         mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -123,6 +125,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
     }
 
     private void loadInitialData() {
+        Log.d(TAG, "loadInitialData Called of instance:"+this.hashCode());
         //Initial Data loading
         //Its important to use local variable else you will get updated string
         String URL = GET_GROUP_MEMBERSHIP_REQUEST_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
@@ -135,7 +138,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
                 mCommonUtil.dismissProgressDialog();
                 Type listType = new TypeToken<ArrayList<BasicMembershipRequest>>(){}.getType();
                 mRequests = new Gson().fromJson(response.toString(), listType);
-                mInitialDataLoaded = true;
+                Log.d(TAG, "Size of initial set of data is: "+mRequests.size());
                 //This will load adapter only when data is loaded
                 setAdapter();
             }
@@ -144,6 +147,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
     }
 
     private void setAdapter() {
+        Log.d(TAG, "setAdapter Called of instance:"+this.hashCode());
         mAdapter = new GroupMembershipRequestListAdapter(mRequests, this);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -151,6 +155,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
     // Append the next page of data into the adapter
     // This method probably sends out a network request and appends new data items to your adapter.
     public void loadNextDataFromApi(final int offset) {
+        Log.d(TAG, "loadNextDataFromApi Called of instance:"+this.hashCode());
         // Send an API request to retrieve appropriate paginated data
         //  --> Send the request including an offset value (i.e `page`) as a query parameter.
         //  --> Deserialize and construct new model objects from the API response
@@ -170,18 +175,24 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
                 List<BasicMembershipRequest> newRequests = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
                 mRequests.addAll(newRequests);
-                Log.d(TAG, "Membership Request Size changed. Current Size is:"+mRequests.size());
+                Log.d(TAG, "Size of new set of data is: "+newRequests.size()+" :Updated count is:"+mRequests.size());
                 mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRequests.size()-1);
             }
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            mActivity = (FragmentActivity) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +15,7 @@ import android.widget.LinearLayout;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
-import com.digitusrevolution.rideshare.adapter.GroupInfoViewPager;
+import com.digitusrevolution.rideshare.adapter.GroupInfoViewPagerAdapter;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.component.GroupComp;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
@@ -42,7 +43,7 @@ public class GroupInfoFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
     private GroupDetail mGroup;
-    private GroupInfoViewPager mGroupInfoViewPager;
+    private GroupInfoViewPagerAdapter mGroupInfoViewPagerAdapter;
 
     public GroupInfoFragment() {
         // Required empty public constructor
@@ -57,6 +58,7 @@ public class GroupInfoFragment extends BaseFragment {
      */
     // TODO: Rename and change types and number of parameters
     public static GroupInfoFragment newInstance(String group) {
+        Log.d(TAG, "newInstance Called");
         GroupInfoFragment fragment = new GroupInfoFragment();
         Bundle args = new Bundle();
         args.putString(ARG_GROUP, group);
@@ -66,6 +68,7 @@ public class GroupInfoFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate Called of instance:"+this.hashCode());
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mGroupData = getArguments().getString(ARG_GROUP);
@@ -76,6 +79,7 @@ public class GroupInfoFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView Called of instance:"+this.hashCode());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_info, container, false);
         TabLayout tabLayout = view.findViewById(R.id.group_tab);
@@ -110,8 +114,8 @@ public class GroupInfoFragment extends BaseFragment {
         //This is very important else you will have issue in syncing tab selection with view pager content
         //i.e. view pager may show request ride but tab selection would show offer ride
         tabLayout.setupWithViewPager(viewPager);
-        mGroupInfoViewPager = new GroupInfoViewPager(getChildFragmentManager(), pageCount, mGroup);
-        viewPager.setAdapter(mGroupInfoViewPager);
+        mGroupInfoViewPagerAdapter = new GroupInfoViewPagerAdapter(getChildFragmentManager(), pageCount, mGroup);
+        viewPager.setAdapter(mGroupInfoViewPagerAdapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -129,13 +133,12 @@ public class GroupInfoFragment extends BaseFragment {
                 Log.d(TAG, "Tab Reselected:"+tab.getText());
             }
         });
-
         return view;
     }
 
     @Override
     public void onResume() {
-        Log.d(TAG,"onResume");
+        Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(false);
         //This will set the title as group name
@@ -147,6 +150,7 @@ public class GroupInfoFragment extends BaseFragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            mActivity = (FragmentActivity) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -174,7 +178,8 @@ public class GroupInfoFragment extends BaseFragment {
         void onGroupInfoFragmentInteraction(String data);
     }
 
-    public void refreshAdapter(){
-        mGroupInfoViewPager.notifyDataSetChanged();
+    public void refresh(){
+        Log.d(TAG,"refresh called");
+        mGroupInfoViewPagerAdapter.notifyDataSetChanged();
     }
 }

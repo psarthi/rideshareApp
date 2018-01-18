@@ -60,4 +60,10 @@ public class GroupHomePageViewPagerAdapter extends FragmentStatePagerAdapter{
         }
     }
 
+    //IMP - This will take care of all fragments reload when notifyDataSetChanged called on viewPagerAdapter
+    @Override
+    public int getItemPosition(Object object) {
+        Log.d(TAG,"getItemPosition Called "+object.toString());
+        return POSITION_NONE;
+    }
 }

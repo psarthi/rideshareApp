@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,7 +91,6 @@ public class WalletFragment extends BaseFragment {
         //i.e. view pager may show request ride but tab selection would show offer ride
         tabLayout.setupWithViewPager(mViewPager);
         mViewPager.setAdapter(mWalletViewPagerAdapter);
-
         //This is very important else Tab heading would be blank and don't set this upfront while adding tab, as that doesn't come into effect
         /* Commenting this as we have added the page title in viewpager adapter itself
         tabLayout.getTabAt(0).setText("Top Up");
@@ -119,7 +119,6 @@ public class WalletFragment extends BaseFragment {
             }
         });
 
-
         return view;
     }
 
@@ -140,6 +139,7 @@ public class WalletFragment extends BaseFragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            mActivity = (FragmentActivity) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -165,5 +165,10 @@ public class WalletFragment extends BaseFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onWalletFragmentInteraction(String data);
+    }
+
+    public void refresh(){
+        Log.d(TAG,"refresh called");
+        mWalletViewPagerAdapter.notifyDataSetChanged();
     }
 }

@@ -3,6 +3,7 @@ package com.digitusrevolution.rideshare.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import com.digitusrevolution.rideshare.fragment.AboutGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupMemberFragment;
@@ -14,13 +15,13 @@ import com.google.gson.Gson;
  * Created by psarthi on 1/10/18.
  */
 
-public class GroupInfoViewPager extends FragmentStatePagerAdapter {
+public class GroupInfoViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    public static final String TAG = GroupInfoViewPager.class.getName();
+    public static final String TAG = GroupInfoViewPagerAdapter.class.getName();
     private int mPageCount;
     private GroupDetail mGroupDetail;
 
-    public GroupInfoViewPager(FragmentManager fm, int pageCount, GroupDetail groupDetail) {
+    public GroupInfoViewPagerAdapter(FragmentManager fm, int pageCount, GroupDetail groupDetail) {
         super(fm);
         mPageCount = pageCount;
         mGroupDetail = groupDetail;
@@ -62,4 +63,10 @@ public class GroupInfoViewPager extends FragmentStatePagerAdapter {
         }
     }
 
+    //IMP - This will take care of all fragments reload when notifyDataSetChanged called on viewPagerAdapter
+    @Override
+    public int getItemPosition(Object object) {
+        Log.d(TAG,"getItemPosition Called "+object.toString());
+        return POSITION_NONE;
+    }
 }

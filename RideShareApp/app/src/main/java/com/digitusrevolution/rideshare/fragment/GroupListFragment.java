@@ -3,6 +3,7 @@ package com.digitusrevolution.rideshare.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -54,7 +55,6 @@ public class GroupListFragment extends BaseFragment {
     private RecyclerView.Adapter mAdapter;
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener mScrollListener;
-    private boolean mInitialDataLoaded;
     private BasicUser mUser;
     private CommonUtil mCommonUtil;
     private List<GroupDetail> mGroups = new ArrayList<>();
@@ -94,7 +94,6 @@ public class GroupListFragment extends BaseFragment {
         GET_USER_GROUPS_URL = APIUrl.GET_USER_GROUPS.replace(APIUrl.USER_ID_KEY,Integer.toString(mUser.getId()))
                 .replace(APIUrl.GROUP_ID_KEY,Integer.toString(mUser.getId()))
                 .replace(APIUrl.GROUP_LIST_TYPE_KEY,mGroupListType.toString());
-        loadInitialData();
     }
 
     @Override
@@ -110,10 +109,9 @@ public class GroupListFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        //VERY IMP - This will get called only when fragment is reloaded and without this it will show up blank screen as adapter is not set
-        if (mInitialDataLoaded) {
-            setAdapter();
-        }
+        //VERY IMP - Ensure you load the data from the server whenever we create the view, so that we always have updated set of data
+        //Don't set the adapter directly otherwise you will end up with old data set
+        loadInitialData();
 
         mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -146,8 +144,7 @@ public class GroupListFragment extends BaseFragment {
                 for (GroupDetail groupDetail:mGroups){
                     Log.d(TAG,"Original Groups:"+new Gson().toJson(groupDetail));
                 }
-
-                mInitialDataLoaded = true;
+                Log.d(TAG, "Size of initial set of data is: "+mGroups.size());
                 //This will load adapter only when data is loaded
                 setAdapter();
             }
@@ -181,7 +178,7 @@ public class GroupListFragment extends BaseFragment {
                 List<GroupDetail> newGroups = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
                 mGroups.addAll(newGroups);
-                Log.d(TAG, "Group Size changed. Current Size is:"+mGroups.size());
+                Log.d(TAG, "Size of new set of data is: "+newGroups.size()+" :Updated count is:"+mGroups.size());
                 mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mGroups.size()-1);
             }
         });
@@ -200,6 +197,7 @@ public class GroupListFragment extends BaseFragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            mActivity = (FragmentActivity) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

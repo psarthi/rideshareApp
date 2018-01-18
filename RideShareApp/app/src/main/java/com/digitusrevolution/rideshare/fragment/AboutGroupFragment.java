@@ -3,6 +3,8 @@ package com.digitusrevolution.rideshare.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,8 @@ import cz.msebera.android.httpclient.Header;
  * create an instance of this fragment.
  */
 public class AboutGroupFragment extends BaseFragment {
+
+    private static final String TAG = AboutGroupFragment.class.getName();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_GROUP = "group";
@@ -65,6 +69,7 @@ public class AboutGroupFragment extends BaseFragment {
      */
     // TODO: Rename and change types and number of parameters
     public static AboutGroupFragment newInstance(String group) {
+        Log.d(TAG, "newInstance Called");
         AboutGroupFragment fragment = new AboutGroupFragment();
         Bundle args = new Bundle();
         args.putString(ARG_GROUP, group);
@@ -74,6 +79,7 @@ public class AboutGroupFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate Called of instance:"+this.hashCode());
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mGroupData = getArguments().getString(ARG_GROUP);
@@ -87,6 +93,7 @@ public class AboutGroupFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView Called of instance:"+this.hashCode());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_about_group, container, false);
         ((TextView) view.findViewById(R.id.group_description)).setText(mGroup.getInformation());
@@ -156,10 +163,17 @@ public class AboutGroupFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            mActivity = (FragmentActivity) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

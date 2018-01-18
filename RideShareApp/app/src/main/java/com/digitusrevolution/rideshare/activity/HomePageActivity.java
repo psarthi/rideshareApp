@@ -382,13 +382,18 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onTopUpFragmentInteraction(String data) {
-
+    public void onTopUpFragmentRefresh() {
+        refreshWalletFragment();
     }
 
     @Override
-    public void onRedeemFragmentInteraction(String data) {
+    public void onRedeemFragmentRefresh() {
+        refreshWalletFragment();
+    }
 
+    private void refreshWalletFragment(){
+        WalletFragment fragment = (WalletFragment) getSupportFragmentManager().findFragmentByTag(WalletFragment.TAG);
+        fragment.refresh();
     }
 
     @Override
@@ -457,10 +462,18 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onMembershipRequestFragmentInteraction(String data) {
-        GroupInfoFragment fragment = (GroupInfoFragment) getSupportFragmentManager().findFragmentByTag(GroupInfoFragment.TAG);
-        fragment.refreshAdapter();
+    public void onMembershipRequestFragmentRefresh() {
         getSupportFragmentManager().popBackStack();
+    }
+
+    private void refreshGroupInfoFragment(){
+        GroupInfoFragment fragment = (GroupInfoFragment) getSupportFragmentManager().findFragmentByTag(GroupInfoFragment.TAG);
+        fragment.refresh();
+    }
+
+    private void refreshGroupHomePageFragment(){
+        GroupHomePageFragment fragment = (GroupHomePageFragment) getSupportFragmentManager().findFragmentByTag(GroupHomePageFragment.TAG);
+        fragment.refresh();
 
     }
 }

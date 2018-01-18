@@ -3,6 +3,7 @@ package com.digitusrevolution.rideshare.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -166,6 +167,8 @@ public class TopUpFragment extends BaseFragment {
                             mCommonUtil.updateAccount(mAccount);
                             //This will refresh the wallet balance
                             setWalletBalance(mAccount.getBalance());
+                            //This will refresh the fragment and transaction list as well
+                            mListener.onTopUpFragmentRefresh();
                             if (mRequiredBalanceVisiblity) {
                                 //This will go back to the create rides page
                                 hideSoftKeyBoard();
@@ -292,6 +295,7 @@ public class TopUpFragment extends BaseFragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            mActivity = (FragmentActivity) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -315,7 +319,6 @@ public class TopUpFragment extends BaseFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onTopUpFragmentInteraction(String data);
+        void onTopUpFragmentRefresh();
     }
 }

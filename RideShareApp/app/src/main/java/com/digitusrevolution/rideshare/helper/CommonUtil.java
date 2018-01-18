@@ -54,8 +54,11 @@ public class CommonUtil {
     //as getPackageName would work differently in Activity and Fragment
     private SharedPreferences getSharedPreferences() {
         if (mBaseFragment!=null){
-            return mBaseFragment.getActivity().getSharedPreferences(
-                    mBaseFragment.getActivity().getPackageName() + Constant.SHARED_PREFS_KEY_FILE, Context.MODE_PRIVATE);
+            //IMP - We are using mActivity instead of getActivity here,
+            // so that we can take care of NPE if fragment in not visible
+            // but doing some work which needs activity reference
+            return mBaseFragment.mActivity.getSharedPreferences(
+                    mBaseFragment.mActivity.getPackageName() + Constant.SHARED_PREFS_KEY_FILE, Context.MODE_PRIVATE);
         } else {
             return mBaseActivity.getSharedPreferences(mBaseActivity.getPackageName() + Constant.SHARED_PREFS_KEY_FILE, Context.MODE_PRIVATE);
         }
@@ -63,7 +66,10 @@ public class CommonUtil {
 
     public Activity getActivity(){
         if (mBaseFragment!=null){
-            return mBaseFragment.getActivity();
+            //IMP - We are using mActivity instead of getActivity here,
+            // so that we can take care of NPE if fragment in not visible
+            // but doing some work which needs activity reference
+            return mBaseFragment.mActivity;
         } else {
             return mBaseActivity;
         }

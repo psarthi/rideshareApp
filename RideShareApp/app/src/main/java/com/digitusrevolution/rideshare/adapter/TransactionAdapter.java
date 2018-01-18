@@ -110,5 +110,4 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public int getItemCount() {
         return mTransactions.size();
     }
-
 }
