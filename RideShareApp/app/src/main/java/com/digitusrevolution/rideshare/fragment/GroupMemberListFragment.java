@@ -35,13 +35,13 @@ import cz.msebera.android.httpclient.Header;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link GroupMemberFragment.OnFragmentInteractionListener} interface
+ * {@link GroupMemberListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link GroupMemberFragment#newInstance} factory method to
+ * Use the {@link GroupMemberListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GroupMemberFragment extends BaseFragment {
-    public static final String TAG = GroupMemberFragment.class.getName();
+public class GroupMemberListFragment extends BaseFragment {
+    public static final String TAG = GroupMemberListFragment.class.getName();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_GROUP_DETAIL = "groupDetail";
@@ -61,7 +61,7 @@ public class GroupMemberFragment extends BaseFragment {
     private BasicUser mUser;
 
 
-    public GroupMemberFragment() {
+    public GroupMemberListFragment() {
         // Required empty public constructor
     }
 
@@ -73,9 +73,9 @@ public class GroupMemberFragment extends BaseFragment {
      * @return A new instance of fragment GroupMembershipRequestListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroupMemberFragment newInstance(String groupDetail) {
+    public static GroupMemberListFragment newInstance(String groupDetail) {
         Log.d(TAG, "newInstance Called");
-        GroupMemberFragment fragment = new GroupMemberFragment();
+        GroupMemberListFragment fragment = new GroupMemberListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_GROUP_DETAIL, groupDetail);
         fragment.setArguments(args);

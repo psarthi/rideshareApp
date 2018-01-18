@@ -24,6 +24,7 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.dto.BasicMembershipRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -172,8 +173,9 @@ public class MembershipRequestFragment extends BaseFragment {
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
                             mCommonUtil.dismissProgressDialog();
-                            Toast.makeText(getActivity(), "Request Submitted Successfully", Toast.LENGTH_SHORT).show();
-                            mListener.onMembershipRequestFragmentRefresh();
+                            GroupDetail updatedGroupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
+                            //Toast.makeText(getActivity(), "Request Submitted Successfully", Toast.LENGTH_SHORT).show();
+                            mListener.onMembershipRequestFragmentRefreshGroupInfo(updatedGroupDetail);
                         }
                     });
                 }
@@ -194,8 +196,9 @@ public class MembershipRequestFragment extends BaseFragment {
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
                             mCommonUtil.dismissProgressDialog();
+                            GroupDetail updatedGroupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
                             Toast.makeText(getActivity(), "Request Approved", Toast.LENGTH_SHORT).show();
-                            mListener.onMembershipRequestFragmentRefresh();
+                            mListener.onMembershipRequestFragmentRefreshBasicGroupInfo(updatedGroupDetail);
                         }
                     });
                 }
@@ -220,8 +223,9 @@ public class MembershipRequestFragment extends BaseFragment {
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);
                                 mCommonUtil.dismissProgressDialog();
+                                GroupDetail updatedGroupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
                                 Toast.makeText(getActivity(), "Request Rejected", Toast.LENGTH_SHORT).show();
-                                mListener.onMembershipRequestFragmentRefresh();
+                                mListener.onMembershipRequestFragmentRefreshBasicGroupInfo(updatedGroupDetail);
                             }
                         });
                     }
@@ -295,6 +299,7 @@ public class MembershipRequestFragment extends BaseFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onMembershipRequestFragmentRefresh();
+        void onMembershipRequestFragmentRefreshGroupInfo(GroupDetail groupDetail);
+        void onMembershipRequestFragmentRefreshBasicGroupInfo(GroupDetail groupDetail);
     }
 }

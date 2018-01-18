@@ -18,9 +18,17 @@ import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.GroupInfoViewPagerAdapter;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.component.GroupComp;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +52,8 @@ public class GroupInfoFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     private GroupDetail mGroup;
     private GroupInfoViewPagerAdapter mGroupInfoViewPagerAdapter;
+    private CommonUtil mCommonUtil;
+    private BasicUser mUser;
 
     public GroupInfoFragment() {
         // Required empty public constructor
@@ -74,6 +84,8 @@ public class GroupInfoFragment extends BaseFragment {
             mGroupData = getArguments().getString(ARG_GROUP);
         }
         mGroup = new Gson().fromJson(mGroupData, GroupDetail.class);
+        mCommonUtil = new CommonUtil(this);
+        mUser = mCommonUtil.getUser();
     }
 
     @Override
@@ -178,8 +190,26 @@ public class GroupInfoFragment extends BaseFragment {
         void onGroupInfoFragmentInteraction(String data);
     }
 
-    public void refresh(){
-        Log.d(TAG,"refresh called");
-        mGroupInfoViewPagerAdapter.notifyDataSetChanged();
+    // Don't use this function till we sort the issue of refreshing AboutFragment
+    /*
+    public void refresh(GroupDetail groupDetail){
+        Log.d(TAG,"refresh called with updated group:"+new Gson().toJson(groupDetail));
+        //This will update the latest groupDetail
+        //This will not work as internally we need to ensure AboutFragment gets updated Group which is not possible from here
+        //mGroup = groupDetail;
+        //Needs to validate if this works or not as what i have observed, that this will only work when view pager
+        // is already loaded with all fragments else you will get exception that fragment doesn't exist
+        //This requires that your fragment should be alive and when you load fragment via ViewPager and move to another fragment
+        //fragment may get killed as we don't put it into backstack. That's just my theory, need to validate
+        //mGroupInfoViewPagerAdapter.notifyDataSetChanged();
+    }*/
+
+    /*
+     * This will take care of refreshing basic information of group which is in heading section
+     * e.g. nmember count, vote up, down
+     */
+    public void refreshBasicInfo(GroupDetail groupDetail){
+        Log.d(TAG,"Basic refresh called with updated group:"+new Gson().toJson(groupDetail));
+        mGroup = groupDetail;
     }
 }

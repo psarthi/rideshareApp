@@ -169,6 +169,8 @@ public class WalletFragment extends BaseFragment {
 
     public void refresh(){
         Log.d(TAG,"refresh called");
+        //IMP - This takes care of updating the dataset of transaction
+        //else createView doesn't even get called for Transaction Fragment
         mWalletViewPagerAdapter.notifyDataSetChanged();
     }
 }

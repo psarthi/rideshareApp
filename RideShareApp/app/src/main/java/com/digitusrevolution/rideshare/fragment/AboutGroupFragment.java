@@ -41,7 +41,7 @@ import cz.msebera.android.httpclient.Header;
  */
 public class AboutGroupFragment extends BaseFragment {
 
-    private static final String TAG = AboutGroupFragment.class.getName();
+    public static final String TAG = AboutGroupFragment.class.getName();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_GROUP = "group";
@@ -199,5 +199,10 @@ public class AboutGroupFragment extends BaseFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onAboutGroupFragmentInteraction(String data);
+    }
+
+    public void refresh(GroupDetail groupDetail){
+        Log.d(TAG,"refresh called with updated group:"+new Gson().toJson(groupDetail));
+        mGroup = groupDetail;
     }
 }

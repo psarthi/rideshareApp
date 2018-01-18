@@ -192,7 +192,9 @@ public class RidesListHomePageFragment extends BaseFragment {
 
     public void refresh(){
         Log.d(TAG,"refresh called");
-        mRidesListViewPagerAdapter.notifyDataSetChanged();
+        //Needs to validate if this works or not as what i have observed, that this will only work when view pager
+        // is already loaded with all fragments else you will get exception that fragment doesn't exist
+        //mRidesListViewPagerAdapter.notifyDataSetChanged();
     }
 
 }

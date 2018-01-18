@@ -26,7 +26,7 @@ import com.digitusrevolution.rideshare.fragment.MembershipRequestFragment;
 import com.digitusrevolution.rideshare.fragment.SearchGroupFragment;
 import com.digitusrevolution.rideshare.fragment.SearchUserForGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupListFragment;
-import com.digitusrevolution.rideshare.fragment.GroupMemberFragment;
+import com.digitusrevolution.rideshare.fragment.GroupMemberListFragment;
 import com.digitusrevolution.rideshare.fragment.HomePageWithCurrentRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.CreateMembershipFormFragment;
@@ -48,6 +48,7 @@ import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -75,7 +76,7 @@ public class HomePageActivity extends BaseActivity
         GroupInfoFragment.OnFragmentInteractionListener,
         GroupMembershipRequestListFragment.OnFragmentInteractionListener,
         AboutGroupFragment.OnFragmentInteractionListener,
-        GroupMemberFragment.OnFragmentInteractionListener,
+        GroupMemberListFragment.OnFragmentInteractionListener,
         SearchGroupFragment.OnFragmentInteractionListener,
         UserMembershipRequestListFragment.OnFragmentInteractionListener,
         MembershipRequestFragment.OnFragmentInteractionListener{
@@ -462,18 +463,17 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onMembershipRequestFragmentRefresh() {
-        getSupportFragmentManager().popBackStack();
+    public void onMembershipRequestFragmentRefreshGroupInfo(GroupDetail groupDetail) {
+        //IMP - We are removing all fragments from transaction till GroupInfo
+        //so that we don't go back to membership request form by pressing back
+        getSupportFragmentManager().popBackStack(GroupInfoFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        mFragmentLoader.loadGroupInfoFragment(new Gson().toJson(groupDetail));
     }
 
-    private void refreshGroupInfoFragment(){
+    @Override
+    public void onMembershipRequestFragmentRefreshBasicGroupInfo(GroupDetail groupDetail) {
         GroupInfoFragment fragment = (GroupInfoFragment) getSupportFragmentManager().findFragmentByTag(GroupInfoFragment.TAG);
-        fragment.refresh();
-    }
-
-    private void refreshGroupHomePageFragment(){
-        GroupHomePageFragment fragment = (GroupHomePageFragment) getSupportFragmentManager().findFragmentByTag(GroupHomePageFragment.TAG);
-        fragment.refresh();
-
+        fragment.refreshBasicInfo(groupDetail);
+        getSupportFragmentManager().popBackStack();
     }
 }

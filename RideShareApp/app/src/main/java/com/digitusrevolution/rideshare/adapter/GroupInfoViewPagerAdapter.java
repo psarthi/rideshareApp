@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.digitusrevolution.rideshare.fragment.AboutGroupFragment;
-import com.digitusrevolution.rideshare.fragment.GroupMemberFragment;
+import com.digitusrevolution.rideshare.fragment.GroupMemberListFragment;
 import com.digitusrevolution.rideshare.fragment.GroupMembershipRequestListFragment;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
@@ -32,16 +32,19 @@ public class GroupInfoViewPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
         String mGroupDetailJson = new Gson().toJson(mGroupDetail);
         if (position==0){
+            Log.d(TAG, "Creating new instance of AboutGroupFragment");
             fragment = AboutGroupFragment.newInstance(mGroupDetailJson);
+            Log.d(TAG, "Tag of AboutGroupFragment:"+fragment.getTag());
         }
         if (position==1){
-            fragment = GroupMemberFragment.newInstance(mGroupDetailJson);
+            Log.d(TAG, "Creating new instance of GroupMemberListFragment");
+            fragment = GroupMemberListFragment.newInstance(mGroupDetailJson);
         }
         if (position == 2){
+            Log.d(TAG, "Creating new instance of GroupMembershipRequestListFragment");
             fragment = GroupMembershipRequestListFragment.newInstance(mGroupDetailJson);
         }
         return fragment;
-
     }
 
     @Override
