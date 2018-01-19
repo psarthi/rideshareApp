@@ -29,12 +29,15 @@ public class UserComp {
     BaseFragment mBaseFragment;
     //Note - You will not get FullUser as its a very heavy object, so we will use only BasicUser
     private BasicUser mUser;
+    private BasicUser mSignedInUser;
     private CommonUtil mCommonUtil;
 
     public UserComp(BaseFragment fragment, BasicUser user){
         mBaseFragment = fragment;
         mUser = user;
         mCommonUtil = new CommonUtil(fragment);
+        //IMP - Its important to differentiate between user and signedInUser as we need to use both of them while calling backend service
+        mSignedInUser = mCommonUtil.getUser();
     }
 
     public void setUserNamePhoto(View view){
@@ -77,7 +80,8 @@ public class UserComp {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+                    String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.SIGNEDIN_USER_ID_KEY, Integer.toString(mSignedInUser.getId()))
+                            .replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
                     mCommonUtil.showProgressDialog();
                     RESTClient.get(GET_USER_PROFILE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
+import com.digitusrevolution.rideshare.adapter.GroupListAdapter;
 import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
 import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
@@ -115,10 +116,6 @@ public class UserProfileFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.rides_offered_text)).setText(offeredRideText);
         ((TextView) view.findViewById(R.id.ride_taken_text)).setText(ridesTakenText);
 
-        int mutualFriendsSize = 0;
-        if (mUserProfile.getMutualFriends()!=null){
-            mutualFriendsSize = mUserProfile.getMutualFriends().size();
-        }
         int commonGroupsSize = 0;
         if (mUserProfile.getCommonGroups()!=null){
             commonGroupsSize = mUserProfile.getCommonGroups().size();
@@ -128,16 +125,14 @@ public class UserProfileFragment extends BaseFragment {
 
         ((TextView) view.findViewById(R.id.common_groups_count_text)).setText(commonGroupsText);
 
-        //TODO load additional view's once we get fulluser from backend properly. Below recycler view is for dummy
-        /* For reference purpose
-        RecyclerView friendRecyclerView = view.findViewById(R.id.mutual_friends_list);
-        RecyclerView groupsRecyclerView = view.findViewById(R.id.common_groups_list);
-        RecyclerView.Adapter adapter = new ThumbnailCoTravellerAdapter(this,
-                (List<FullRideRequest>) mCurrentRide.getAcceptedRideRequests());
+        RecyclerView mRecyclerView = view.findViewById(R.id.common_groups_list);
 
-        setRecyclerView(friendRecyclerView, adapter, LinearLayoutManager.HORIZONTAL);
-        setRecyclerView(groupsRecyclerView, adapter, LinearLayoutManager.HORIZONTAL);
-        */
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        layoutManager.setAutoMeasureEnabled(true);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        RecyclerView.Adapter mAdapter = new GroupListAdapter(mUserProfile.getCommonGroups(), this);
+        mRecyclerView.setAdapter(mAdapter);
 
         return view;
     }

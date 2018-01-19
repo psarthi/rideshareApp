@@ -12,6 +12,7 @@ public class APIUrl {
 
     public static final String USER_EMAIL_KEY = "{userEmail}";
     public static final String USER_ID_KEY = "{userId}";
+    public static final String SIGNEDIN_USER_ID_KEY = "{signedInUserId}";
     public static final String GROUP_ID_KEY = "{groupId}";
     public static final String ID_KEY = "{id}";
     public static final String RIDE_ID_KEY = "{rideId}";
@@ -67,7 +68,7 @@ public class APIUrl {
     public static final String ADD_MONEY = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/addmoney/{amount}";
     public static final String REDEEM_MONEY = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/redeem/{amount}";
     public static final String USER_FEEDBACK = BASE_URL_USER_SYSTEM + "/users/{userId}/feedback?rideType={rideType}";
-    public static final String GET_USER_PROFILE = BASE_URL_USER_SYSTEM + "/users/{userId}/profile";
+    public static final String GET_USER_PROFILE = BASE_URL_USER_SYSTEM + "/users/{signedInUserId}/profile/{userId}";
     public static final String GET_USER_WALLET_TRANSACTION = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/transactions?page={page}";
     public static final String GET_PENDING_BILLS = BASE_URL_BILLING_SYSTEM + "/billing/pending";
     public static final String GET_PRE_BOOKING_RIDE_REQUEST_INFO = BASE_URL_RIDE_SYSTEM + "/riderequests/prebookinginfo";
