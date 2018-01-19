@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 
 import com.digitusrevolution.rideshare.activity.BaseActivity;
@@ -261,5 +264,27 @@ public class CommonUtil {
             Log.d(TAG, "Progress Dialog is not visible, so not dismissing");
         }
     }
+
+    //IMP - We are doing all this as we need to support tint at API 19 and standard tint is not supported below API 21
+    public void setDrawableTint(Drawable drawable, int color) {
+        if (drawable != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                drawable.setTint(color);
+            } else {
+                DrawableCompat.setTint(DrawableCompat.wrap(drawable), color);
+            }
+        }
+    }
+
+    public void removeDrawableTint(Drawable drawable) {
+        if (drawable != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                drawable.setTintList(null);
+            } else {
+                DrawableCompat.setTintList(DrawableCompat.wrap(drawable), null);
+            }
+        }
+    }
+
 
 }

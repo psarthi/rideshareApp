@@ -84,6 +84,7 @@ public class APIUrl {
     public static final String SUBMIT_MEMBERSHIP_REQUEST = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/request";
     public static final String APPROVE_MEMBERSHIP_REQUEST = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/approverequest/{requesterUserId}";
     public static final String REJECT_MEMBERSHIP_REQUEST = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/rejectrequest/{requesterUserId}";
+    public static final String GROUP_FEEDBACK = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/feedback";
 
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +

@@ -95,19 +95,10 @@ public class GroupInfoFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_info, container, false);
         TabLayout tabLayout = view.findViewById(R.id.group_tab);
-        ImageView groupImageView = view.findViewById(R.id.group_photo_image_view);
-        LinearLayout groupInviteLayout = view.findViewById(R.id.group_invite_layout);
         CommonUtil commonUtil = new CommonUtil(this);
 
         GroupComp groupComp = new GroupComp(this, mGroup);
-        groupComp.setGroupBasicInfo(view);
-        groupInviteLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentLoader fragmentLoader = new FragmentLoader(GroupInfoFragment.this);
-                fragmentLoader.loadSearchUserForGroupFragment(new Gson().toJson(mGroup));
-            }
-        });
+        groupComp.setFullGroupInfo(view);
 
         final ViewPager viewPager = view.findViewById(R.id.group_viewPager);
         int pageCount;
@@ -119,7 +110,6 @@ public class GroupInfoFragment extends BaseFragment {
                 pageCount = 2;
             } else {
                 pageCount = 1;
-                groupInviteLayout.setVisibility(View.GONE);
             }
         }
 
