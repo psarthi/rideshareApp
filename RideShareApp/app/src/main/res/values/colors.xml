@@ -7,4 +7,5 @@
     <color name="colorGray">#808080</color>
     <color name="colorPrimaryLight_shade1">#8C9EFF</color>
     <color name="colorPrimaryLight_shade2">#536DFE</color>
+    <color name="transparent">#00000000</color>
 </resources>

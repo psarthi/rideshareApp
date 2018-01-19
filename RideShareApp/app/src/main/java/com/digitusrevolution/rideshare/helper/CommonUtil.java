@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 
+import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.BaseActivity;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
@@ -253,7 +256,10 @@ public class CommonUtil {
 
     public void showProgressDialog(){
         Log.d(TAG, "Showing Progress Dialog");
-        mProgressDialog = ProgressDialog.show(getActivity(), "", Constant.LOADING_MSG, true, true);
+        mProgressDialog = new ProgressDialog(getActivity(), R.style.MyTheme);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+        mProgressDialog.show();
     }
 
     public void dismissProgressDialog(){

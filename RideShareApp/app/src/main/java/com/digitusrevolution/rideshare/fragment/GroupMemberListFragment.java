@@ -7,9 +7,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
@@ -151,8 +156,9 @@ public class GroupMemberListFragment extends BaseFragment {
 
     private void setAdapter() {
         Log.d(TAG, "setAdapter Called of instance:"+this.hashCode());
-        mAdapter = new GroupMemberListAdapter(mGroupMembers, this);
+        mAdapter = new GroupMemberListAdapter(mGroupDetail, mGroupMembers, this);
         mRecyclerView.setAdapter(mAdapter);
+        registerForContextMenu(mRecyclerView);
     }
 
     // Append the next page of data into the adapter
