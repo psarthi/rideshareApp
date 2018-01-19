@@ -82,15 +82,33 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/create_group_submit_button"
-            style="@style/Widget.AppCompat.Button.Colored"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
             android:layout_marginTop="@dimen/small_margin"
-            android:layout_below="@id/membership_form_question_layout"
-            android:text="Submit"/>
+            android:layout_below="@id/membership_form_question_layout">
+
+            <Button
+                android:id="@+id/group_form_update_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:layout_margin="@dimen/default_margin"
+                android:text="Update"/>
+
+            <Button
+                android:id="@+id/create_group_submit_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:layout_margin="@dimen/default_margin"
+                android:text="Submit"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

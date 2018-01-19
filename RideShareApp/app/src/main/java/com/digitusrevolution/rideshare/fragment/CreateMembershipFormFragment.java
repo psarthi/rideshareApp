@@ -25,6 +25,7 @@ import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
 import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
+import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -42,7 +43,8 @@ import cz.msebera.android.httpclient.Header;
 public class CreateMembershipFormFragment extends BaseFragment {
 
     public static final String TAG = CreateMembershipFormFragment.class.getName();
-    public static final String TITLE = "Create Membership Form";
+    public static final String CREATE_TITLE = "Create Membership Form";
+    public static final String UPDATE_TITLE = "Update Membership Form";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,6 +59,9 @@ public class CreateMembershipFormFragment extends BaseFragment {
     private MembershipForm mMembershipForm;
     private CommonUtil mCommonUtil;
     private BasicUser mUser;
+    private FloatingActionButton mAddQuestionButton;
+    private Button mCreateGroupButton;
+    private Button mUpdateButton;
 
     public CreateMembershipFormFragment() {
         // Required empty public constructor
@@ -95,27 +100,59 @@ public class CreateMembershipFormFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_membership_form, container, false);
-        FloatingActionButton addQuestionButton = view.findViewById(R.id.add_question_button);
+        mAddQuestionButton = view.findViewById(R.id.add_question_button);
         mQuestionsLayout = view.findViewById(R.id.membership_form_question_layout);
+        mCreateGroupButton = view.findViewById(R.id.create_group_submit_button);
+        mUpdateButton = view.findViewById(R.id.group_form_update_button);
 
-        addQuestionButton.setOnClickListener(new View.OnClickListener() {
+        if (mGroup.getId()!=0){
+            Log.d(TAG, "Its a existing group membership form");
+            mCreateGroupButton.setVisibility(View.GONE);
+
+            for (String question:mGroup.getMembershipForm().getQuestions()){
+                addQuestion(question);
+            }
+
+        } else {
+            Log.d(TAG, "Its a new group membeship form");
+            mUpdateButton.setVisibility(View.GONE);
+        }
+
+        setActionListeners();
+
+        return view;
+    }
+
+    private void addQuestion(String question) {
+        final View questionView = getLayoutInflater().inflate(R.layout.membership_form_question, null, false);
+        EditText questionEditText = questionView.findViewById(R.id.question);
+        //This will take care of setting question for existing form
+        questionEditText.setText(question);
+
+        //This will add question to the layout
+        mQuestionsLayout.addView(questionView);
+
+        ImageView questionRemoveImageView = questionView.findViewById(R.id.question_delete_button);
+        questionRemoveImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final View questionView = inflater.inflate(R.layout.membership_form_question, container, false);
-                mQuestionsLayout.addView(questionView);
+                //This will remove question to the layout
+                mQuestionsLayout.removeView(questionView);
+            }
+        });
+    }
 
-                ImageView questionRemoveImageView = questionView.findViewById(R.id.question_delete_button);
-                questionRemoveImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mQuestionsLayout.removeView(questionView);
-                    }
-                });
+    private void setActionListeners(){
+
+        mAddQuestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Add Question with blank question
+                addQuestion("");
             }
         });
 
-        Button submitButton = view.findViewById(R.id.create_group_submit_button);
-        submitButton.setOnClickListener(new View.OnClickListener() {
+        mCreateGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (validateInput()){
@@ -126,18 +163,40 @@ public class CreateMembershipFormFragment extends BaseFragment {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
-                            Log.d(TAG, "Group Created:"+response.toString());
                             mCommonUtil.dismissProgressDialog();
+                            Log.d(TAG, "Group Created:"+response.toString());
+                            GroupDetail groupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
                             hideSoftKeyBoard();
-                            FragmentLoader fragmentLoader = new FragmentLoader(CreateMembershipFormFragment.this);
-                            //Response is Group Detail
-                            fragmentLoader.loadGroupInfoFragment(response.toString());
+                            mListener.onMembershipFormFragmentLoadGroup(groupDetail);
                         }
                     });
                 }
             }
         });
-        return view;
+
+        mUpdateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (validateInput()){
+                    setupGroup();
+                    String URL = APIUrl.GROUP_UPDATE_MEMBERSHIP_FORM.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                            .replace(APIUrl.GROUP_ID_KEY,Integer.toString(mGroup.getId()));
+                    mCommonUtil.showProgressDialog();
+                    RESTClient.post(getActivity(), URL, mGroup.getMembershipForm(), new RSJsonHttpResponseHandler(mCommonUtil){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            Log.d(TAG, "Form updated:"+response.toString());
+                            GroupDetail groupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
+                            mListener.onMembershipFormFragmentLoadGroup(groupDetail);
+                        }
+                    });
+                }
+            }
+        });
+
+
     }
 
     private boolean validateInput(){
@@ -171,7 +230,11 @@ public class CreateMembershipFormFragment extends BaseFragment {
         Log.d(TAG,"onResume");
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(true);
-        getActivity().setTitle(TITLE);
+        if (mGroup.getId()==0){
+            getActivity().setTitle(CREATE_TITLE);
+        } else {
+            getActivity().setTitle(UPDATE_TITLE);
+        }
     }
 
     @Override
@@ -203,7 +266,6 @@ public class CreateMembershipFormFragment extends BaseFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onMembershipFormFragmentInteraction(String data);
+        void onMembershipFormFragmentLoadGroup(GroupDetail groupDetail);
     }
 }

@@ -67,6 +67,14 @@ public class GroupComp {
         mGroupUpVoteCount = group_info_single_row_layout.findViewById(R.id.group_up_vote_count);
         mGroupDownVoteCount = group_info_single_row_layout.findViewById(R.id.group_down_vote_count);
 
+        //This will ensure we start on clean slate of drawables else previous tint of another group may still be there
+        //Due to viewholder reusing views
+        mCommonUtil.removeDrawableTint(mGroupUpVoteCount.getCompoundDrawables()[0]);
+        mCommonUtil.removeDrawableTint(mGroupDownVoteCount.getCompoundDrawables()[0]);
+
+        //IMP - Don't set voting tint here as somehow its behaving wrongly
+        //and its messsed up within different view's of view holder
+
         if (mGroup.getPhoto()!=null){
             String imageUrl = mGroup.getPhoto().getImageLocation();
             Picasso.with(mBaseFragment.getActivity()).load(imageUrl).into(groupImageView);
@@ -75,22 +83,6 @@ public class GroupComp {
         mGroupMemberCount.setText(Integer.toString(mGroup.getMemberCount()));
         mGroupUpVoteCount.setText(Integer.toString(mGroup.getGenuineVotes()));
         mGroupDownVoteCount.setText(Integer.toString(mGroup.getFakeVotes()));
-
-        //This will ensure view holder doesn't use old tint from previous data
-        mCommonUtil.removeDrawableTint(mGroupUpVoteCount.getCompoundDrawables()[0]);
-        mCommonUtil.removeDrawableTint(mGroupDownVoteCount.getCompoundDrawables()[0]);
-
-        if (mGroup.getMembershipStatus().getVote()!=null){
-            int color = mBaseFragment.getResources().getColor(R.color.colorAccent);
-            if (mGroup.getMembershipStatus().getVote().equals(Vote.Genuine)){
-                Drawable drawable = mGroupUpVoteCount.getCompoundDrawables()[0];
-                mCommonUtil.setDrawableTint(drawable, color);
-            }
-            if (mGroup.getMembershipStatus().getVote().equals(Vote.Fake)){
-                Drawable drawable = mGroupDownVoteCount.getCompoundDrawables()[0];
-                mCommonUtil.setDrawableTint(drawable, color);
-            }
-        }
     }
 
     public void setFullGroupInfo(View view){
@@ -100,6 +92,17 @@ public class GroupComp {
         LinearLayout groupInviteLayout = group_info_single_row_layout.findViewById(R.id.group_invite_layout);
 
         if (mGroup.getMembershipStatus().isMember()){
+            if (mGroup.getMembershipStatus().getVote()!=null){
+                int color = mBaseFragment.getResources().getColor(R.color.colorAccent);
+                if (mGroup.getMembershipStatus().getVote().equals(Vote.Genuine)){
+                    Drawable drawable = mGroupUpVoteCount.getCompoundDrawables()[0];
+                    mCommonUtil.setDrawableTint(drawable, color);
+                }
+                if (mGroup.getMembershipStatus().getVote().equals(Vote.Fake)){
+                    Drawable drawable = mGroupDownVoteCount.getCompoundDrawables()[0];
+                    mCommonUtil.setDrawableTint(drawable, color);
+                }
+            }
             //Voting functionality not required in basic view, so setting lisneters here only
             setupListeners();
         } else {

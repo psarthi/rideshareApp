@@ -423,8 +423,8 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onMembershipFormFragmentInteraction(String data) {
-
+    public void onMembershipFormFragmentLoadGroup(GroupDetail groupDetail) {
+        loadGroupInfoByRemovingBackStacks(groupDetail);
     }
 
     @Override

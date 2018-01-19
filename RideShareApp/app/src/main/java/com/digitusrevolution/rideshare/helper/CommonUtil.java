@@ -268,6 +268,7 @@ public class CommonUtil {
     //IMP - We are doing all this as we need to support tint at API 19 and standard tint is not supported below API 21
     public void setDrawableTint(Drawable drawable, int color) {
         if (drawable != null) {
+            Log.d(TAG, "Applying Tint");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable.setTint(color);
             } else {
@@ -278,6 +279,7 @@ public class CommonUtil {
 
     public void removeDrawableTint(Drawable drawable) {
         if (drawable != null) {
+            Log.d(TAG, "Removing Tint");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable.setTintList(null);
             } else {
