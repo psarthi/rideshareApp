@@ -433,8 +433,8 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onAboutGroupFragmentInteraction(String data) {
-
+    public void onAboutGroupFragmentRefresh(GroupDetail groupDetail) {
+        loadGroupInfoByRemovingBackStacks(groupDetail);
     }
 
     @Override
@@ -464,6 +464,10 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onMembershipRequestFragmentRefreshGroupInfo(GroupDetail groupDetail) {
+        loadGroupInfoByRemovingBackStacks(groupDetail);
+    }
+
+    private void loadGroupInfoByRemovingBackStacks(GroupDetail groupDetail) {
         //IMP - We are removing all fragments from transaction till GroupInfo
         //so that we don't go back to membership request form by pressing back
         getSupportFragmentManager().popBackStack(GroupInfoFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
@@ -54,6 +55,11 @@ public class AboutGroupFragment extends BaseFragment {
     private CommonUtil mCommonUtil;
     private BasicUser mUser;
     private FragmentLoader mFragmentLoader;
+    private Button mLeaveButton;
+    private Button mJoinButton;
+    private Button mMemberShipFormButton;
+    private Button mMembershipRequestStatusButton;
+
 
 
     public AboutGroupFragment() {
@@ -97,53 +103,57 @@ public class AboutGroupFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_about_group, container, false);
         ((TextView) view.findViewById(R.id.group_description)).setText(mGroup.getInformation());
-        Button leaveButton = view.findViewById(R.id.leave_group_button);
-        Button joinButton = view.findViewById(R.id.group_join_button);
-        Button memberShipFormButton = view.findViewById(R.id.membership_form_button);
-        Button membershipRequestStatusButton = view.findViewById(R.id.group_membership_request_status_button);
+        mLeaveButton = view.findViewById(R.id.leave_group_button);
+        mJoinButton = view.findViewById(R.id.group_join_button);
+        mMemberShipFormButton = view.findViewById(R.id.membership_form_button);
+        mMembershipRequestStatusButton = view.findViewById(R.id.group_membership_request_status_button);
 
+        //If user is a member
         if (mGroup.getMembershipStatus().isMember()){
-            joinButton.setVisibility(View.GONE);
-            membershipRequestStatusButton.setVisibility(View.GONE);
+            //Member don't see Join/Request Status button
+            mJoinButton.setVisibility(View.GONE);
+            mMembershipRequestStatusButton.setVisibility(View.GONE);
+
             if (!mGroup.getMembershipStatus().isAdmin()){
-                memberShipFormButton.setVisibility(View.GONE);
+                //Only admin can see the membership form
+                mMemberShipFormButton.setVisibility(View.GONE);
             }
-        } else {
-            //This is appliacable for both cases
-            leaveButton.setVisibility(View.GONE);
-            memberShipFormButton.setVisibility(View.GONE);
+            if (mGroup.getOwner().getId()==mUser.getId()){
+                //Owners's can't leave the group
+                mLeaveButton.setVisibility(View.GONE);
+            }
+        }
+        //If user is not member
+        else {
+            //Non member don't see Leave/Membership Form button
+            mLeaveButton.setVisibility(View.GONE);
+            mMemberShipFormButton.setVisibility(View.GONE);
+
+            //This is the case, when request has been submitted
             if (mGroup.getMembershipStatus().isRequestSubmitted()){
-                joinButton.setVisibility(View.GONE);
+                mJoinButton.setVisibility(View.GONE);
                 String status = mGroup.getMembershipStatus().getApprovalStatus().toString();
-                membershipRequestStatusButton.setText(status);
+                mMembershipRequestStatusButton.setText(status);
                 if (mGroup.getMembershipStatus().getApprovalStatus().equals(ApprovalStatus.Rejected)){
                     //This will overwrite the status
                     status = status + " (View Details)";
-                    membershipRequestStatusButton.setText(status);
-                    membershipRequestStatusButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String url = APIUrl.GET_SPECIFIC_MEMBERSHIP_REQUEST.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                                    .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroup.getId()));
-                            mCommonUtil.showProgressDialog();
-                            RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
-                                @Override
-                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                    super.onSuccess(statusCode, headers, response);
-                                    mCommonUtil.dismissProgressDialog();
-                                    BasicMembershipRequest request = new Gson().fromJson(response.toString(), BasicMembershipRequest.class);
-                                    mFragmentLoader.loadMembershipRequestFragment(new Gson().toJson(request),false, false);
-                                }
-                            });
-                        }
-                    });
+                    mMembershipRequestStatusButton.setText(status);
                 }
-            } else {
-                membershipRequestStatusButton.setVisibility(View.GONE);
+            }
+            //When request has not been submitted
+            else {
+                mMembershipRequestStatusButton.setVisibility(View.GONE);
             }
         }
 
-        joinButton.setOnClickListener(new View.OnClickListener() {
+        setActionListeners();
+
+        return view;
+    }
+
+    private void setActionListeners(){
+
+        mJoinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 BasicMembershipRequest request = new BasicMembershipRequest();
@@ -159,7 +169,42 @@ public class AboutGroupFragment extends BaseFragment {
             }
         });
 
-        return view;
+
+        mMembershipRequestStatusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = APIUrl.GET_SPECIFIC_MEMBERSHIP_REQUEST.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                        .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroup.getId()));
+                mCommonUtil.showProgressDialog();
+                RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
+                        BasicMembershipRequest request = new Gson().fromJson(response.toString(), BasicMembershipRequest.class);
+                        mFragmentLoader.loadMembershipRequestFragment(new Gson().toJson(request),false, false);
+                    }
+                });
+            }
+        });
+
+        mLeaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = APIUrl.LEAVE_GROUP.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                        .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroup.getId()));
+                RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        mGroup = new Gson().fromJson(response.toString(), GroupDetail.class);
+                        //Toast.makeText(getActivity(), "Successfully left the group", Toast.LENGTH_SHORT).show();
+                        mListener.onAboutGroupFragmentRefresh(mGroup);
+                    }
+                });
+            }
+        });
+
     }
 
     @Override
@@ -197,12 +242,6 @@ public class AboutGroupFragment extends BaseFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onAboutGroupFragmentInteraction(String data);
-    }
-
-    public void refresh(GroupDetail groupDetail){
-        Log.d(TAG,"refresh called with updated group:"+new Gson().toJson(groupDetail));
-        mGroup = groupDetail;
+        void onAboutGroupFragmentRefresh(GroupDetail groupDetail);
     }
 }
