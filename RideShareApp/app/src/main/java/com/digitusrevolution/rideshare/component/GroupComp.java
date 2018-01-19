@@ -45,6 +45,7 @@ public class GroupComp {
     private AppCompatTextView mGroupMemberCount;
     private AppCompatTextView mGroupUpVoteCount;
     private AppCompatTextView mGroupDownVoteCount;
+    private ImageView mGroupInvite;
 
 
     public GroupComp(BaseFragment fragment, GroupDetail group){
@@ -75,26 +76,36 @@ public class GroupComp {
         mGroupUpVoteCount.setText(Integer.toString(mGroup.getGenuineVotes()));
         mGroupDownVoteCount.setText(Integer.toString(mGroup.getFakeVotes()));
 
-        //Removing all tints so that we start from fresh else old tint would be used for new view holders
+        //This will ensure view holder doesn't use old tint from previous data
         mCommonUtil.removeDrawableTint(mGroupUpVoteCount.getCompoundDrawables()[0]);
         mCommonUtil.removeDrawableTint(mGroupDownVoteCount.getCompoundDrawables()[0]);
 
-        if (mGroup.getMembershipStatus().isMember()){
-            if (mGroup.getMembershipStatus().getVote()!=null){
-                int color = mBaseFragment.getResources().getColor(R.color.colorAccent);
-                if (mGroup.getMembershipStatus().getVote().equals(Vote.Genuine)){
-                    Drawable drawable = mGroupUpVoteCount.getCompoundDrawables()[0];
-                    mCommonUtil.setDrawableTint(drawable, color);
-                }
-                if (mGroup.getMembershipStatus().getVote().equals(Vote.Fake)){
-                    Drawable drawable = mGroupDownVoteCount.getCompoundDrawables()[0];
-                    mCommonUtil.setDrawableTint(drawable, color);
-                }
+        if (mGroup.getMembershipStatus().getVote()!=null){
+            int color = mBaseFragment.getResources().getColor(R.color.colorAccent);
+            if (mGroup.getMembershipStatus().getVote().equals(Vote.Genuine)){
+                Drawable drawable = mGroupUpVoteCount.getCompoundDrawables()[0];
+                mCommonUtil.setDrawableTint(drawable, color);
             }
-            setupListeners();
+            if (mGroup.getMembershipStatus().getVote().equals(Vote.Fake)){
+                Drawable drawable = mGroupDownVoteCount.getCompoundDrawables()[0];
+                mCommonUtil.setDrawableTint(drawable, color);
+            }
         }
     }
 
+    public void setFullGroupInfo(View view){
+        setGroupBasicInfo(view);
+        LinearLayout group_info_single_row_layout = view.findViewById(R.id.group_info_single_row_layout);
+        mGroupInvite = group_info_single_row_layout.findViewById(R.id.group_invite_user);
+        LinearLayout groupInviteLayout = group_info_single_row_layout.findViewById(R.id.group_invite_layout);
+
+        if (mGroup.getMembershipStatus().isMember()){
+            //Voting functionality not required in basic view, so setting lisneters here only
+            setupListeners();
+        } else {
+            groupInviteLayout.setVisibility(View.GONE);
+        }
+    }
 
     private void setupListeners() {
         FEEDBACK_URL = APIUrl.GROUP_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
@@ -113,6 +124,15 @@ public class GroupComp {
                 postFeedback(Vote.Fake);
             }
         });
+
+        mGroupInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                fragmentLoader.loadSearchUserForGroupFragment(new Gson().toJson(mGroup));
+            }
+        });
+
     }
 
     private void postFeedback(final Vote vote) {
@@ -154,23 +174,5 @@ public class GroupComp {
         feedbackInfo.setVote(vote);
         feedbackInfo.setGivenByUser(mUser);
         return feedbackInfo;
-    }
-
-    public void setFullGroupInfo(View view){
-        setGroupBasicInfo(view);
-        LinearLayout group_info_single_row_layout = view.findViewById(R.id.group_info_single_row_layout);
-        LinearLayout groupInviteLayout = group_info_single_row_layout.findViewById(R.id.group_invite_layout);
-
-        if (mGroup.getMembershipStatus().isMember()){
-            groupInviteLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                    fragmentLoader.loadSearchUserForGroupFragment(new Gson().toJson(mGroup));
-                }
-            });
-        } else {
-            groupInviteLayout.setVisibility(View.GONE);
-        }
     }
 }
