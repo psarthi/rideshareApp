@@ -1,10 +1,17 @@
 package com.digitusrevolution.rideshare.component;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.digitusrevolution.rideshare.Manifest;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
@@ -67,8 +74,8 @@ public class UserComp {
         mobileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Needs to be replaced with proper logic of calling user
                 Log.d(TAG, "Calling User Mobile - "+mUser.getCountry().getCode() + mUser.getMobileNumber());
+                mBaseFragment.call(mUser.getMobileNumber());
             }
         });
 
@@ -77,7 +84,7 @@ public class UserComp {
         if (fragment!=null && mUser.getId() == fragment.getUserId()){
             Log.d(TAG, "User Profile is already loaded");
         } else {
-            view.setOnClickListener(new View.OnClickListener() {
+            user_profile_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.SIGNEDIN_USER_ID_KEY, Integer.toString(mSignedInUser.getId()))
@@ -95,5 +102,9 @@ public class UserComp {
                 }
             });
         }
+    }
+
+    public interface OnUserCompListener{
+        public void call(String number);
     }
 }

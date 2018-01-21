@@ -72,7 +72,13 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                 }
             }
         } else {
-            statusText.setVisibility(View.GONE);
+            if (groupDetail.getPendingRequestCount()!=0){
+                statusText.setVisibility(View.VISIBLE);
+                String pendingRequest = "(" +Integer.toString(groupDetail.getPendingRequestCount()) +")";
+                statusText.setText(pendingRequest);
+            } else {
+                statusText.setVisibility(View.GONE);
+            }
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

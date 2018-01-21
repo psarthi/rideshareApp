@@ -1,10 +1,17 @@
 package com.digitusrevolution.rideshare.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +22,7 @@ import android.widget.Spinner;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.GroupListAdapter;
+import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
@@ -36,11 +44,12 @@ import cz.msebera.android.httpclient.Header;
  * Created by psarthi on 11/21/17.
  */
 
-public class BaseFragment extends Fragment{
+public class BaseFragment extends Fragment implements UserComp.OnUserCompListener{
 
     public static final String TAG = BaseFragment.class.getName();
     private ProgressDialog mProgressDialog;
     public FragmentActivity mActivity;
+    private String mUserMobileNumber;
 
     public void showBackStackDetails(){
 
@@ -95,6 +104,33 @@ public class BaseFragment extends Fragment{
         if (view != null) {
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public void call(String number) {
+        mUserMobileNumber = number;
+        int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, 1);
+        } else {
+            startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:"+mUserMobileNumber)));
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    call(mUserMobileNumber);
+                } else {
+                    Log.d("TAG", "Call Permission Not Granted");
+                }
+                break;
+            default:
+                break;
         }
     }
 }

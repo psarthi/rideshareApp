@@ -1,5 +1,6 @@
 package com.digitusrevolution.rideshare.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.AboutGroupFragment;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BillFragment;
@@ -43,6 +45,8 @@ import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.fragment.WalletFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.FetchType;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
@@ -51,6 +55,10 @@ import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class HomePageActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -133,6 +141,25 @@ public class HomePageActivity extends BaseActivity
         mProfilePhotoImageView = headerView.findViewById(R.id.thumbnail_image);
         Picasso.with(this).load(mUser.getPhoto().getImageLocation()).into(mProfilePhotoImageView);
 
+        mProfilePhotoImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.SIGNEDIN_USER_ID_KEY, Integer.toString(mUser.getId()))
+                        .replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+                mCommonUtil.showProgressDialog();
+                RESTClient.get(GET_USER_PROFILE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
+                        FragmentLoader fragmentLoader = new FragmentLoader(HomePageActivity.this);
+                        fragmentLoader.loadUserProfileFragment(response.toString(), null);
+                    }
+                });
+
+            }
+        });
+
         mUserNameTextView = headerView.findViewById(R.id.thumbnail_name_text);
         mUserNameTextView.setText(mUser.getFirstName()+" "
                 +mUser.getLastName());
@@ -211,6 +238,10 @@ public class HomePageActivity extends BaseActivity
                 Log.d(TAG, "Wallet Clicked");
                 mFragmentLoader.loadWalletFragment(false, 0);
             }
+            else if (id == R.id.nav_share) {
+                Log.d(TAG, "Share Clicked");
+                share();
+            }
             else if (id == R.id.nav_signout) {
                 Log.d(TAG, "Signout Clicked");
                 signOut();
@@ -220,6 +251,15 @@ public class HomePageActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void share() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT,
+                "Rideshare by RadShift Technologies https://play.google.com/store/apps/details?id=com.google.android.apps.plus");
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 
     private void removeAllBackStacks() {

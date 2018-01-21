@@ -25,6 +25,10 @@
             android:icon="@drawable/ic_wallet_card_medium"
             android:title="Wallet"/>
         <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_share_medium"
+            android:title="Share"/>
+        <item
             android:id="@+id/nav_signout"
             android:icon="@drawable/ic_sign_out_medium"
             android:title="SignOut"/>
