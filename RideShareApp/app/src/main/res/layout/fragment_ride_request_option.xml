@@ -145,10 +145,17 @@
              android:layout_height="wrap_content"
              android:layout_below="@+id/ride_request_time_distance_variation_layout"/>
 
-    <include layout="@layout/trust_category_layout" android:id="@+id/trust_category_layout"
-             android:layout_above="@id/button_layout"
-             android:layout_height="wrap_content"
-             android:layout_width="match_parent"/>
+    <Switch
+        android:drawableStart="@drawable/ic_settings"
+        android:id="@+id/save_preference"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:text="Save Preference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/ride_mode_layout"/>
 
     <include layout="@layout/rides_option_button_layout" android:id="@+id/button_layout"
              android:layout_alignParentBottom="true"

@@ -92,6 +92,7 @@ public class APIUrl {
     public static final String GROUP_UPDATE_MEMBERSHIP_FORM = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/updatemembershipform";
     public static final String ADD_ADMIN_TO_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/addadmin/{memberUserId}";
     public static final String REMOVE_MEMBER_FROM_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/removemember/{memberUserId}";
+    public static final String UPDATE_USER_PREFERENCE = BASE_URL_USER_SYSTEM + "/users/{userId}/preference";
 
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +

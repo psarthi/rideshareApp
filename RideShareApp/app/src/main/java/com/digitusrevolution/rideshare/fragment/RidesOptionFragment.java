@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,9 +21,12 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.ThumbnailVehicleAdapter;
 import com.digitusrevolution.rideshare.component.CommonComp;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
@@ -32,8 +36,12 @@ import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,6 +91,7 @@ public class RidesOptionFragment extends BaseFragment
     private ThumbnailVehicleAdapter mVehicleAdapter;
     private int mSeatCount;
     private int mLuggageCount;
+    private Switch mSavePreferenceSwitch;
 
     public RidesOptionFragment() {
         // Required empty public constructor
@@ -151,9 +160,6 @@ public class RidesOptionFragment extends BaseFragment
             view = inflater.inflate(R.layout.fragment_ride_request_option, container, false);
             setRequestRideView(view);
         }
-        //This will disable trust category layout in Rides Option for this fragment
-        view.findViewById(R.id.trust_category_layout).setVisibility(View.GONE);
-
 
         //Common for both the ride Type - offer ride and request ride
         View ride_mode_layout = view.findViewById(R.id.ride_mode_layout);
@@ -362,6 +368,7 @@ public class RidesOptionFragment extends BaseFragment
 
     private void setButtonsOnClickListener(View view) {
         View buttonLayoutView = view.findViewById(R.id.button_layout);
+        mSavePreferenceSwitch = view.findViewById(R.id.save_preference);
 
         /* Commented this as we have enabled back button on toolbar
         buttonLayoutView.findViewById(R.id.rides_option_cancel_button).setOnClickListener(new View.OnClickListener() {
@@ -383,7 +390,25 @@ public class RidesOptionFragment extends BaseFragment
                 } else {
                     Log.d(TAG, "Rides Option Saved");
                     setRidesOption();
-                    if (mListener != null) mListener.onRidesOptionFragmentInteraction(mRidesOption);
+                    if (mSavePreferenceSwitch.isChecked()){
+                        mCommonUtil.showProgressDialog();
+                        String url = APIUrl.UPDATE_USER_PREFERENCE.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+                        RESTClient.post(getActivity(), url, mRidesOption, new RSJsonHttpResponseHandler(mCommonUtil){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
+                                //Preference is updated
+                                BasicUser updatedUser = new Gson().fromJson(response.toString(), BasicUser.class);
+                                mCommonUtil.updateUser(updatedUser);
+                                if (mListener != null) mListener.onRidesOptionFragmentInteraction(mRidesOption);
+                            }
+                        });
+                    }
+                    else {
+                        //Only reason for duplicating this, so that we can wait for the response before going back
+                        if (mListener != null) mListener.onRidesOptionFragmentInteraction(mRidesOption);
+                    }
                 }
             }
         });
