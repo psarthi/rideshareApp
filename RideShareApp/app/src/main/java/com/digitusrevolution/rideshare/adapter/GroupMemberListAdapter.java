@@ -2,28 +2,33 @@ package com.digitusrevolution.rideshare.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.UserComp;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.MemberRole;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.digitusrevolution.rideshare.model.user.dto.GroupMember;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by psarthi on 1/13/18.
@@ -38,7 +43,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
     private CommonUtil mCommonUtil;
     private GroupDetail mGroupDetail;
     private BasicUser mUser;
-    private int currentSelectedPosition = -1;
+    private int mCurrentSelectedPosition = -1;
 
     public GroupMemberListAdapter(GroupDetail groupDetail, List<GroupMember> groupMembers, BaseFragment fragment) {
         mGroupMembers = groupMembers;
@@ -67,17 +72,29 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         ImageView optionsMenu = view.findViewById(R.id.more_options_image);
         optionsMenu.setTag(position);
         TextView memberRole = view.findViewById(R.id.member_role_text);
-        //This will validate the status of group member and not the logged in user status
         if (groupMember.isAdmin()) {
             memberRole.setVisibility(View.VISIBLE);
-            memberRole.setText(MemberRole.Admin.toString());
+            optionsMenu.setVisibility(View.GONE);
+            if (groupMember.getId() == mGroupDetail.getOwner().getId()){
+                memberRole.setText(MemberRole.Owner.toString());
+            } else {
+                memberRole.setText(MemberRole.Admin.toString());
+            }
         } else {
             memberRole.setVisibility(View.GONE);
-        }
-        //This will validate the logged in user status and not the group member status
-        //This will ensure for self, this option doesn't exist
-        if (mGroupDetail.getMembershipStatus().isAdmin() && mUser.getId()!=groupMember.getId()){
             optionsMenu.setVisibility(View.VISIBLE);
+        }
+
+        //Exception Rules goes here
+
+        //Applicable for owner, where if he/she is logged in user, then he will see options for all irrespective of admin status
+        if (mUser.getId() == mGroupDetail.getOwner().getId()){
+            optionsMenu.setVisibility(View.VISIBLE);
+        }
+
+        //Applicable for logged in user, option menu is not visible for self
+        if (groupMember.getId() == mUser.getId()){
+            optionsMenu.setVisibility(View.GONE);
         }
 
         optionsMenu.setOnClickListener(new View.OnClickListener() {
@@ -95,16 +112,21 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         inflater.inflate(R.menu.group_member_option_menu, popup.getMenu());
         popup.show();
         popup.setOnMenuItemClickListener(this);
-        currentSelectedPosition = Integer.parseInt(v.getTag().toString());
+        mCurrentSelectedPosition = Integer.parseInt(v.getTag().toString());
+        if (mGroupMembers.get(mCurrentSelectedPosition).isAdmin()){
+            popup.getMenu().getItem(0).setVisible(false);
+        }
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        Log.e(TAG, "Selected Position: " + currentSelectedPosition);
+        Log.e(TAG, "Selected Position: " + mCurrentSelectedPosition);
         switch (item.getItemId()) {
             case R.id.menu_add_admin:
+                addAdmin();
                 return true;
             case R.id.menu_remove_user:
+                removeMember();
                 return true;
             default:
                 return false;
@@ -114,6 +136,37 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
 
     public GroupMember getItem(int position){
         return mGroupMembers.get(position);
+    }
+
+    private void addAdmin(){
+        BasicUser selectedMember = mGroupMembers.get(mCurrentSelectedPosition);
+        String url = APIUrl.ADD_ADMIN_TO_GROUP.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroupDetail.getId()))
+                .replace(APIUrl.MEMBER_USER_ID_KEY, Integer.toString(selectedMember.getId()));
+        RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                GroupMember updatedMember = new Gson().fromJson(response.toString(), GroupMember.class);
+                mGroupMembers.get(mCurrentSelectedPosition).setAdmin(updatedMember.isAdmin());
+                notifyItemChanged(mCurrentSelectedPosition);
+            }
+        });
+    }
+
+    private  void removeMember(){
+        BasicUser selectedMember = mGroupMembers.get(mCurrentSelectedPosition);
+        String url = APIUrl.REMOVE_MEMBER_FROM_GROUP.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroupDetail.getId()))
+                .replace(APIUrl.MEMBER_USER_ID_KEY, Integer.toString(selectedMember.getId()));
+        RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                mGroupMembers.remove(mCurrentSelectedPosition);
+                notifyItemRemoved(mCurrentSelectedPosition);
+            }
+        });
     }
 
     @Override

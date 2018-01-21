@@ -37,6 +37,7 @@ public class APIUrl {
     public static final String GROUP_LIST_TYPE_KEY = "{GroupListType}";
     public static final String SEARCH_NAME_KEY = "{name}";
     public static final String REQUESTER_USER_ID_KEY = "{requesterUserId}";
+    public static final String MEMBER_USER_ID_KEY = "{memberUserId}";
 
     public static final String SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/signin";
     public static final String GOOGLE_SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/googlesignin";
@@ -89,8 +90,8 @@ public class APIUrl {
     public static final String GROUP_FEEDBACK = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/feedback";
     public static final String LEAVE_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/leave";
     public static final String GROUP_UPDATE_MEMBERSHIP_FORM = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/updatemembershipform";
-    public static final String ADD_ADMIN_TO_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/addadmin";
-    public static final String REMOVE_MEMBER_FROM_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/removemember";
+    public static final String ADD_ADMIN_TO_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/addadmin/{memberUserId}";
+    public static final String REMOVE_MEMBER_FROM_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/removemember/{memberUserId}";
 
 
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +
