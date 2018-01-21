@@ -257,7 +257,7 @@ public class CommonUtil {
     public void showProgressDialog(){
         Log.d(TAG, "Showing Progress Dialog");
         mProgressDialog = new ProgressDialog(getActivity(), R.style.MyTheme);
-        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCancelable(true);
         mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
         mProgressDialog.show();
     }

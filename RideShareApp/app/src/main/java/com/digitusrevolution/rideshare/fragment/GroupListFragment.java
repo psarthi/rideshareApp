@@ -109,6 +109,7 @@ public class GroupListFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
+
         //VERY IMP - Ensure you load the data from the server whenever we create the view, so that we always have updated set of data
         //Don't set the adapter directly otherwise you will end up with old data set
         loadInitialData();

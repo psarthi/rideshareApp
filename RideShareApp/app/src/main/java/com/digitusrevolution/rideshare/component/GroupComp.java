@@ -71,6 +71,8 @@ public class GroupComp {
         //Due to viewholder reusing views
         mCommonUtil.removeDrawableTint(mGroupUpVoteCount.getCompoundDrawables()[0]);
         mCommonUtil.removeDrawableTint(mGroupDownVoteCount.getCompoundDrawables()[0]);
+        //This will ensure previous image gets cleaned up for new view
+        groupImageView.setImageResource(R.drawable.ic_profile);
 
         //IMP - Don't set voting tint here as somehow its behaving wrongly
         //and its messsed up within different view's of view holder
@@ -90,6 +92,7 @@ public class GroupComp {
         LinearLayout group_info_single_row_layout = view.findViewById(R.id.group_info_single_row_layout);
         mGroupInvite = group_info_single_row_layout.findViewById(R.id.group_invite_user);
         LinearLayout groupInviteLayout = group_info_single_row_layout.findViewById(R.id.group_invite_layout);
+        ImageView editGroup = view.findViewById(R.id.edit_group_image_view);
 
         if (mGroup.getMembershipStatus().isMember()){
             if (mGroup.getMembershipStatus().getVote()!=null){
@@ -107,6 +110,18 @@ public class GroupComp {
             setupListeners();
         } else {
             groupInviteLayout.setVisibility(View.GONE);
+        }
+
+        if (mGroup.getMembershipStatus().isAdmin()){
+            editGroup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                    fragmentLoader.loadCreateGroupFragment(false, new Gson().toJson(mGroup));
+                }
+            });
+        } else {
+            editGroup.setVisibility(View.GONE);
         }
     }
 

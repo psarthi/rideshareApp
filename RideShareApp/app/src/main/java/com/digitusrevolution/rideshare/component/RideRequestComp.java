@@ -22,16 +22,13 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.billing.domain.core.BillStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
-import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
-import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.UserFeedback;
 import com.digitusrevolution.rideshare.model.user.dto.UserFeedbackInfo;
 import com.google.gson.Gson;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
@@ -164,7 +161,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             public void onClick(View v) {
 
                 String message = mBaseFragment.getString(R.string.standard_cancellation_confirmation_message);
-                DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardAlertDialogListener() {
+                DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardListAlertDialogListener() {
                     @Override
                     public void onPositiveStandardAlertDialog() {
                         String CANCEL_RIDE_REQUEST = APIUrl.CANCEL_RIDE_REQUEST.replace(APIUrl.ID_KEY, Integer.toString(mBasicRideRequest.getId()));

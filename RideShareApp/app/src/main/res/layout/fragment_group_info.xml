@@ -12,60 +12,75 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white">
 
-    <android.support.design.widget.CollapsingToolbarLayout
-        android:layout_width="match_parent"
-        android:layout_height="256dp"
-        app:contentScrim="@color/colorPrimary"
-        app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-        app:titleEnabled="false">
-
-        <LinearLayout
+        <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:layout_collapseMode="parallax"
-            android:orientation="vertical">
+            android:layout_height="256dp"
+            app:contentScrim="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:titleEnabled="false">
 
-            <!-- This is group image view-->
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/group_photo_image_view"
-                android:layout_width="@dimen/large_image_size"
-                android:layout_height="@dimen/large_image_size"
-                android:src="@drawable/ic_profile"
-                android:padding="@dimen/default_padding"
-                android:layout_gravity="center"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layout_collapseMode="parallax"
+                android:orientation="vertical">
 
-            <include layout="@layout/group_info_single_row_layout" android:id="@+id/group_info_single_row_layout"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/large_image_size">
 
-        </LinearLayout>
+                    <!-- This is group image view-->
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/group_photo_image_view"
+                        android:layout_width="@dimen/large_image_size"
+                        android:layout_height="@dimen/large_image_size"
+                        android:src="@drawable/ic_profile"
+                        android:padding="@dimen/default_padding"
+                        android:layout_centerHorizontal="true"/>
+
+                    <ImageView
+                        android:id="@+id/edit_group_image_view"
+                        android:layout_margin="@dimen/default_padding"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_edit"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"/>
+
+                </RelativeLayout>
+
+                <include layout="@layout/group_info_single_row_layout" android:id="@+id/group_info_single_row_layout"/>
+
+            </LinearLayout>
 
 
-        <!-- This will add a blackish layer on the photo so that tab layout text is visible
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.3"
-            android:background="@android:color/black"/> -->
+            <!-- This will add a blackish layer on the photo so that tab layout text is visible
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.3"
+                android:background="@android:color/black"/> -->
 
-        <!-- This is toolbar which stops the scrolling and in this toolbar tab would get displayed on scrolling up
-        so layout height is very important here as that's the one which doesn't scroll up-->
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/group_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="top"
-            app:layout_collapseMode="pin"/>
+            <!-- This is toolbar which stops the scrolling and in this toolbar tab would get displayed on scrolling up
+            so layout height is very important here as that's the one which doesn't scroll up-->
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/group_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="top"
+                app:layout_collapseMode="pin"/>
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/group_tab"
-            android:background="@color/colorPrimary"
-            app:tabIndicatorColor="@color/colorAccent"
-            app:tabSelectedTextColor="@android:color/white"
-            app:tabTextColor="@color/colorGrayLight"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"/>
+            <android.support.design.widget.TabLayout
+                android:id="@+id/group_tab"
+                android:background="@color/colorPrimary"
+                app:tabIndicatorColor="@color/colorAccent"
+                app:tabSelectedTextColor="@android:color/white"
+                app:tabTextColor="@color/colorGrayLight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"/>
 
-    </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 

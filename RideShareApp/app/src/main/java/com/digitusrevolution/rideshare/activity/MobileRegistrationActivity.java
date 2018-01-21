@@ -88,6 +88,9 @@ public class MobileRegistrationActivity extends BaseActivity {
             }
         });
 
+        //Dismiss progress dialog when activity is loaded, else its confusing to the user
+        mCommonUtil.dismissProgressDialog();
+
         /*
         //Below is the sample snippet for dnownloading image from URL
         RESTClient.get(photoURL, null, new BinaryHttpResponseHandler() {

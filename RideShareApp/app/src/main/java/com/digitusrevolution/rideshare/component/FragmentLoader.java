@@ -27,6 +27,8 @@ import com.digitusrevolution.rideshare.fragment.WalletFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.app.FetchType;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
+import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
+import com.google.gson.Gson;
 
 /**
  * Created by psarthi on 12/6/17.
@@ -179,28 +181,35 @@ public class FragmentLoader {
     }
 
 
-    public void loadCreateGroupFragment() {
+    public void loadCreateGroupFragment(boolean newGroup, String groupDetail) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        CreateGroupFragment createGroupFragment = CreateGroupFragment.newInstance(null, null);
+        CreateGroupFragment createGroupFragment = CreateGroupFragment.newInstance(newGroup, groupDetail);
         fragmentTransaction.replace(R.id.home_page_container, createGroupFragment, CreateGroupFragment.TAG);
         fragmentTransaction.addToBackStack(CreateGroupFragment.TAG);
         fragmentTransaction.commit();
     }
 
-    public void loadMembershipFormFragment(String group) {
+    public void loadMembershipFormFragment(String group, byte[] rawImage) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        CreateMembershipFormFragment createMembershipFormFragment = CreateMembershipFormFragment.newInstance(group);
+        CreateMembershipFormFragment createMembershipFormFragment = CreateMembershipFormFragment.newInstance(group, rawImage);
         fragmentTransaction.replace(R.id.home_page_container, createMembershipFormFragment, CreateMembershipFormFragment.TAG);
         fragmentTransaction.addToBackStack(CreateMembershipFormFragment.TAG);
         fragmentTransaction.commit();
     }
 
-    public void loadGroupInfoFragment(String group) {
+    public void loadGroupInfoFragment(String groupDetail) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        GroupInfoFragment groupInfoFragment = GroupInfoFragment.newInstance(group);
+        GroupInfoFragment groupInfoFragment = GroupInfoFragment.newInstance(groupDetail);
         fragmentTransaction.replace(R.id.home_page_container, groupInfoFragment, GroupInfoFragment.TAG);
         fragmentTransaction.addToBackStack(GroupInfoFragment.TAG);
         fragmentTransaction.commit();
+    }
+
+    public void loadGroupInfoByRemovingBackStacks(GroupDetail groupDetail) {
+        //IMP - We are removing all fragments from transaction till GroupInfo
+        //so that we don't go back to membership request form by pressing back
+        getFragmentManager().popBackStack(GroupInfoFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        loadGroupInfoFragment(new Gson().toJson(groupDetail));
     }
 
     public void loadMembershipRequestFragment(String membershipRequest, boolean adminRole, boolean newRequest) {

@@ -24,6 +24,7 @@ import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
 import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
+import com.digitusrevolution.rideshare.model.user.dto.BasicGroupInfo;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
@@ -49,9 +50,11 @@ public class CreateMembershipFormFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_GROUP = "group";
+    private static final String ARG_RAW_IMAGE = "rawImage";
 
     // TODO: Rename and change types of parameters
     private String mGroupData;
+    private byte[] mRawImage;
 
     private OnFragmentInteractionListener mListener;
     private BasicGroup mGroup;
@@ -62,6 +65,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
     private FloatingActionButton mAddQuestionButton;
     private Button mCreateGroupButton;
     private Button mUpdateButton;
+
 
     public CreateMembershipFormFragment() {
         // Required empty public constructor
@@ -75,10 +79,11 @@ public class CreateMembershipFormFragment extends BaseFragment {
      * @return A new instance of fragment CreateMembershipFormFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CreateMembershipFormFragment newInstance(String group) {
+    public static CreateMembershipFormFragment newInstance(String group, byte[] rawImage) {
         CreateMembershipFormFragment fragment = new CreateMembershipFormFragment();
         Bundle args = new Bundle();
         args.putString(ARG_GROUP, group);
+        args.putByteArray(ARG_RAW_IMAGE, rawImage);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,6 +93,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mGroupData = getArguments().getString(ARG_GROUP);
+            mRawImage = getArguments().getByteArray(ARG_RAW_IMAGE);
         }
         mGroup = new Gson().fromJson(mGroupData, BasicGroup.class);
         mMembershipForm = new MembershipForm();
@@ -157,9 +163,12 @@ public class CreateMembershipFormFragment extends BaseFragment {
             public void onClick(View v) {
                 if (validateInput()){
                     setupGroup();
+                    //Its important to use Gson to convert BasicGroup to BasicGroupInfo as its not compatible as standard java casting would not work
+                    BasicGroupInfo basicGroupInfo = new Gson().fromJson(mGroupData, BasicGroupInfo.class);
+                    basicGroupInfo.setRawImage(mRawImage);
                     String CREATE_GROUP = APIUrl.CREATE_GROUP.replace(APIUrl.USER_ID_KEY,Integer.toString(mUser.getId()));
                     mCommonUtil.showProgressDialog();
-                    RESTClient.post(getActivity(), CREATE_GROUP, mGroup, new RSJsonHttpResponseHandler(mCommonUtil){
+                    RESTClient.post(getActivity(), CREATE_GROUP, basicGroupInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);

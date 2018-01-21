@@ -171,9 +171,11 @@ public class TopUpFragment extends BaseFragment {
                             mListener.onTopUpFragmentRefresh();
                             if (mRequiredBalanceVisiblity) {
                                 //This will go back to the create rides page
-                                hideSoftKeyBoard();
-                                Toast.makeText(getActivity(), "New Wallet Balance:" + mCurrencySymbol + mAccount.getBalance(), Toast.LENGTH_LONG).show();
-                                getActivity().getSupportFragmentManager().popBackStack();
+                                //Don't have this here as are refreshing the view and it will kill the fragment view above
+                                //hideSoftKeyBoard();
+                                //Toast.makeText(getActivity(), "New Wallet Balance:" + mCurrencySymbol + mAccount.getBalance(), Toast.LENGTH_LONG).show();
+                                //TODO Fix this bug as its causing Crash
+                                //getActivity().getSupportFragmentManager().popBackStack();
                             }
                         }
                     });

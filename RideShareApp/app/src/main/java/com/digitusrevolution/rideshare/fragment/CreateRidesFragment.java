@@ -793,6 +793,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         if (mRideRequest.getRideMode().equals(RideMode.Free)) {
             //This will give 100% discount
             setFare(0);
+            //This will ensure dialog is dismissed as we are not calling backend and dialog has been shown
+            mCommonUtil.dismissProgressDialog();
         }
         else {
             //No need to show progress dialog as this would be called

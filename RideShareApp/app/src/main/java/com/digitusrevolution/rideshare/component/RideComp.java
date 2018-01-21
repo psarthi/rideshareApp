@@ -1,8 +1,6 @@
 package com.digitusrevolution.rideshare.component;
 
 import android.app.Dialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,22 +24,17 @@ import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
-import com.digitusrevolution.rideshare.model.common.ErrorMessage;
-import com.digitusrevolution.rideshare.model.ride.domain.Point;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.ride.domain.core.PassengerStatus;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
-import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequest;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.UserFeedbackInfo;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
@@ -160,7 +153,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             @Override
             public void onClick(View v) {
                 String message = mBaseFragment.getString(R.string.standard_cancellation_confirmation_message);
-                DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardAlertDialogListener() {
+                DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardListAlertDialogListener() {
                     @Override
                     public void onPositiveStandardAlertDialog() {
                         //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
@@ -218,7 +211,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
                 if (mBasicRide.getEndTime().after(Calendar.getInstance().getTime())) {
                     String message = mBaseFragment.getString(R.string.ride_end_confirmation_message);
-                    DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardAlertDialogListener() {
+                    DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardListAlertDialogListener() {
                         @Override
                         public void onPositiveStandardAlertDialog() {
                             endRide();

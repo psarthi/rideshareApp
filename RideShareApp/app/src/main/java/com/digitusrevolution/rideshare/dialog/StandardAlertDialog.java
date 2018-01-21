@@ -4,12 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
-
-import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
-import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 
 /**
  * Created by psarthi on 12/19/17.
@@ -18,12 +14,12 @@ import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 public class StandardAlertDialog extends DialogFragment {
 
     public static final String TAG = StandardAlertDialog.class.getName();
-    private StandardAlertDialogListener mListener;
+    private StandardListAlertDialogListener mListener;
     private String mMessage;
 
     public StandardAlertDialog() {}
 
-    public StandardAlertDialog newInstance(String message, StandardAlertDialogListener listener){
+    public static StandardAlertDialog newInstance(String message, StandardListAlertDialogListener listener){
         StandardAlertDialog standardAlertDialog = new StandardAlertDialog();
         standardAlertDialog.mListener = listener;
         standardAlertDialog.mMessage = message;
@@ -53,7 +49,7 @@ public class StandardAlertDialog extends DialogFragment {
         return builder.create();
     }
 
-    public interface StandardAlertDialogListener {
+    public interface StandardListAlertDialogListener {
         public void onPositiveStandardAlertDialog();
         public void onNegativeStandardAlertDialog();
     }

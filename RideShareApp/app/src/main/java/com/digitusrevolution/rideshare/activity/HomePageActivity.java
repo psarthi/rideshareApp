@@ -119,6 +119,9 @@ public class HomePageActivity extends BaseActivity
 
         setNavHeader(navigationView);
         mFragmentLoader.loadHomePageWithCurrentRidesFragment(FetchType.Local, null);
+
+        //Dismiss progress dialog when activity is loaded, else its confusing to the user
+        mCommonUtil.dismissProgressDialog();
     }
 
     private void setNavHeader(NavigationView navigationView) {
@@ -424,7 +427,7 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onMembershipFormFragmentLoadGroup(GroupDetail groupDetail) {
-        loadGroupInfoByRemovingBackStacks(groupDetail);
+        mFragmentLoader.loadGroupInfoByRemovingBackStacks(groupDetail);
     }
 
     @Override
@@ -434,7 +437,7 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onAboutGroupFragmentRefresh(GroupDetail groupDetail) {
-        loadGroupInfoByRemovingBackStacks(groupDetail);
+        mFragmentLoader.loadGroupInfoByRemovingBackStacks(groupDetail);
     }
 
     @Override
@@ -464,14 +467,7 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onMembershipRequestFragmentRefreshGroupInfo(GroupDetail groupDetail) {
-        loadGroupInfoByRemovingBackStacks(groupDetail);
-    }
-
-    private void loadGroupInfoByRemovingBackStacks(GroupDetail groupDetail) {
-        //IMP - We are removing all fragments from transaction till GroupInfo
-        //so that we don't go back to membership request form by pressing back
-        getSupportFragmentManager().popBackStack(GroupInfoFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        mFragmentLoader.loadGroupInfoFragment(new Gson().toJson(groupDetail));
+        mFragmentLoader.loadGroupInfoByRemovingBackStacks(groupDetail);
     }
 
     @Override

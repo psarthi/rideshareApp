@@ -131,17 +131,19 @@ public class LandingPageActivity extends BaseActivity{
                                     @Override
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                         super.onSuccess(statusCode, headers, response);
+                                        //Dismiss progress dialog when activity is loaded, else its confusing to the user
+                                        //mCommonUtil.dismissProgressDialog();
                                         UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                                         mCommonUtil.saveUserSignInResult(userSignInResult);
                                         startHomePageActivity(userSignInResult);
-                                        mCommonUtil.dismissProgressDialog();
                                     }
                                 });
                     }
                     else {
                         Log.d(TAG,"User doesn't exist:" + account.getEmail());
+                        //Dismiss progress dialog when activity is loaded, else its confusing to the user
+                        //mCommonUtil.dismissProgressDialog();
                         mobileRegistration(account);
-                        mCommonUtil.dismissProgressDialog();
                     }
                 }
             });

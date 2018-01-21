@@ -29,7 +29,8 @@ import java.util.List;
  * Created by psarthi on 1/13/18.
  */
 
-public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberListAdapter.ViewHolder> {
+public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberListAdapter.ViewHolder>
+        implements PopupMenu.OnMenuItemClickListener {
 
     private static final String TAG = RideListAdapter.class.getName();
     private List<GroupMember> mGroupMembers;
@@ -37,6 +38,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
     private CommonUtil mCommonUtil;
     private GroupDetail mGroupDetail;
     private BasicUser mUser;
+    private int currentSelectedPosition = -1;
 
     public GroupMemberListAdapter(GroupDetail groupDetail, List<GroupMember> groupMembers, BaseFragment fragment) {
         mGroupMembers = groupMembers;
@@ -63,6 +65,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         UserComp userComp = new UserComp(mBaseFragment, groupMember);
         userComp.setUserProfileSingleRow(view);
         ImageView optionsMenu = view.findViewById(R.id.more_options_image);
+        optionsMenu.setTag(position);
         TextView memberRole = view.findViewById(R.id.member_role_text);
         //This will validate the status of group member and not the logged in user status
         if (groupMember.isAdmin()) {
@@ -76,7 +79,38 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         if (mGroupDetail.getMembershipStatus().isAdmin() && mUser.getId()!=groupMember.getId()){
             optionsMenu.setVisibility(View.VISIBLE);
         }
+
+        optionsMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG,"View Tag is: " + v.getTag());
+                showPopup(v);
+            }
+        });
     }
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(mBaseFragment.getActivity(), v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.group_member_option_menu, popup.getMenu());
+        popup.show();
+        popup.setOnMenuItemClickListener(this);
+        currentSelectedPosition = Integer.parseInt(v.getTag().toString());
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        Log.e(TAG, "Selected Position: " + currentSelectedPosition);
+        switch (item.getItemId()) {
+            case R.id.menu_add_admin:
+                return true;
+            case R.id.menu_remove_user:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 
     public GroupMember getItem(int position){
         return mGroupMembers.get(position);

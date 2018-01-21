@@ -208,7 +208,7 @@ public class AboutGroupFragment extends BaseFragment {
         mMemberShipFormButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentLoader.loadMembershipFormFragment(new Gson().toJson(mGroup));
+                mFragmentLoader.loadMembershipFormFragment(new Gson().toJson(mGroup), null);
             }
         });
 

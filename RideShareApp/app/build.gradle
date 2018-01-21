@@ -51,6 +51,7 @@ dependencies {
     //Google Maps Android Util
     compile 'com.google.maps.android:android-maps-utils:0.5'
     compile files('lib/PGSDK_V2.1.jar')
+    compile 'com.google.firebase:firebase-messaging:11.6.0'
 }
 
 //This has to be below the dependencies block otherwise you will get conflict with firebase (firebase comes with google services)
