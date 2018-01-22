@@ -107,6 +107,13 @@ public class CommonUtil {
         Log.d(TAG, "Updated Key/Value - " + key+":"+savedValue);
     }
 
+    public void removeSharedPref(){
+        Log.d(TAG, "Removing shared preference all keys");
+        SharedPreferences sharedPref = getSharedPreferences();
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear().commit();
+    }
+
     public String getAccessToken() {
         return getSharedPreferences().getString(Constant.SHARED_PREFS_TOKEN_KEY,null);
     }

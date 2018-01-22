@@ -101,7 +101,7 @@ public class FragmentLoader {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         HomePageWithCurrentRidesFragment homePageWithCurrentRidesFragment = HomePageWithCurrentRidesFragment.
                     newInstance(fetchType, data);
-        //Don't drawable.add to backstack else it will display blank container on back press which is the initial stage of activity
+        //Don't add to backstack else it will display blank container on back press which is the initial stage of activity
         fragmentTransaction.replace(R.id.home_page_container, homePageWithCurrentRidesFragment, HomePageWithCurrentRidesFragment.TAG);
         fragmentTransaction.commit();
     }

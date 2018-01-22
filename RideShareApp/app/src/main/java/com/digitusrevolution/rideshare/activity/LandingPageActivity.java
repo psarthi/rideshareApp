@@ -47,10 +47,6 @@ import cz.msebera.android.httpclient.HttpStatus;
 public class LandingPageActivity extends BaseActivity{
 
     private static final String TAG = LandingPageActivity.class.getName();
-    private static final int RC_SIGN_IN = 9001;
-    private GoogleSignInClient mGoogleSignInClient;
-    private SignInButton mGoogleSignInButton;
-    private CommonUtil mCommonUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,133 +54,21 @@ public class LandingPageActivity extends BaseActivity{
         setContentView(R.layout.activity_landing_page);
         getSupportActionBar().hide();
 
-        mCommonUtil = new CommonUtil(this);
-        mGoogleSignInButton = findViewById(R.id.google_sign_in_button);
+        SignInButton googleSignInButton = findViewById(R.id.google_sign_in_button);
 
         //Change the text of google sign in button
-        for (int i=0;i<mGoogleSignInButton.getChildCount();i++){
-            View view = mGoogleSignInButton.getChildAt(i);
+        for (int i=0;i<googleSignInButton.getChildCount();i++){
+            View view = googleSignInButton.getChildAt(i);
             if (view instanceof TextView){
                 ((TextView) view).setText(R.string.google_sign_in);
             }
         }
 
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken(getString(R.string.server_client_id))
-                .build();
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
-
-        mGoogleSignInButton.setOnClickListener(new View.OnClickListener() {
+        googleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 googleSignIn();
             }
         });
-    }
-
-    private void googleSignIn() {
-        Log.d(TAG,"Google Sign In Button Clicked");
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        mCommonUtil.showProgressDialog();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
-        }
-    }
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
-            Log.d(TAG,"Sign in success");
-
-            String CHECK_USER_EXIST_URL = APIUrl.CHECK_USER_EXIST_URL;
-            CHECK_USER_EXIST_URL = CHECK_USER_EXIST_URL.replace(APIUrl.USER_EMAIL_KEY, account.getEmail());
-
-            RESTClient.get(CHECK_USER_EXIST_URL,null,new RSJsonHttpResponseHandler(mCommonUtil){
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    super.onSuccess(statusCode, headers, response);
-                    Log.d(TAG,"CHECK_USER_EXIST_URL Response Success (JsonObject): "+response);
-                    UserStatus status = new Gson().fromJson(response.toString(), UserStatus.class);
-                    if (status.isUserExist()){
-                        Log.d(TAG,"Redirect to Home Page as User exist");
-                        //Toast.makeText(LandingPageActivity.this,"User Exist, Redirecting to Home Page",Toast.LENGTH_SHORT).show();
-
-                        GoogleSignInInfo googleSignInInfo = new GoogleSignInInfo();
-                        googleSignInInfo.setEmail(account.getEmail());
-                        RESTClient.post(LandingPageActivity.this,APIUrl.GOOGLE_SIGN_IN_URL,
-                                googleSignInInfo,new RSJsonHttpResponseHandler(mCommonUtil){
-                                    @Override
-                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                        super.onSuccess(statusCode, headers, response);
-                                        //Dismiss progress dialog when activity is loaded, else its confusing to the user
-                                        //mCommonUtil.dismissProgressDialog();
-                                        UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
-                                        mCommonUtil.saveUserSignInResult(userSignInResult);
-                                        startHomePageActivity(userSignInResult);
-                                    }
-                                });
-                    }
-                    else {
-                        Log.d(TAG,"User doesn't exist:" + account.getEmail());
-                        //Dismiss progress dialog when activity is loaded, else its confusing to the user
-                        //mCommonUtil.dismissProgressDialog();
-                        mobileRegistration(account);
-                    }
-                }
-            });
-
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            mCommonUtil.dismissProgressDialog();
-            Toast.makeText(LandingPageActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-            // updateUI(null);
-        }
-    }
-
-    private void mobileRegistration(GoogleSignInAccount account){
-
-        //TokenId is only useful if you want to revalidate signIn from backend server again
-        Log.d(TAG,"DisplayName:"+account.getDisplayName()
-                +"\nEmail:"+account.getEmail()
-                +"\nFirst Name:"+account.getGivenName()
-                +"\nLast Name:"+account.getFamilyName()
-                +"\nTokenId:"+account.getIdToken()
-                +"\nPhotoURL:"+account.getPhotoUrl());
-
-        String data = getExtraData(account);
-
-        Intent mobileRegistrationIntent = new Intent(this,MobileRegistrationActivity.class);
-        mobileRegistrationIntent.putExtra(getExtraDataKey(),data);
-        startActivity(mobileRegistrationIntent);
-    }
-
-    @NonNull
-    private String getExtraData(GoogleSignInAccount account) {
-        UserRegistration userRegistration = new UserRegistration();
-        userRegistration.setFirstName(account.getGivenName());
-        userRegistration.setLastName(account.getFamilyName());
-        userRegistration.setEmail(account.getEmail());
-        Photo photo = new Photo();
-        photo.setImageLocation(account.getPhotoUrl().toString());
-        userRegistration.setPhoto(photo);
-        userRegistration.setRegistrationType(RegistrationType.Google);
-        return new Gson().toJson(userRegistration);
     }
 }
