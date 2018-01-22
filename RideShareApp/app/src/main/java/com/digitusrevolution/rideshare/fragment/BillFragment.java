@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
@@ -152,13 +153,6 @@ public class BillFragment extends BaseFragment {
 
     private void setButtonsOnClickListener(View view) {
 
-        view.findViewById(R.id.bill_cancel_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onBillFragmentInteraction(mRideType, new Gson().toJson(mBill));
-            }
-        });
-
         view.findViewById(R.id.bill_pay_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,6 +181,7 @@ public class BillFragment extends BaseFragment {
         getActivity().setTitle(TITLE);
         Log.d(TAG,"Inside OnResume");
         showBackStackDetails();
+        ((HomePageActivity)getActivity()).showBackButton(true);
     }
 
     @Override

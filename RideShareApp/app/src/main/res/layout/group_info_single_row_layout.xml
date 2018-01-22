@@ -18,7 +18,7 @@
             android:id="@+id/group_member_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_group_large"
+            android:drawableLeft="@drawable/ic_person_medium"
             android:drawablePadding="@dimen/default_padding"
             android:text="100"
             android:gravity="center_vertical"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Members"
             android:textStyle="italic"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/colorPrimaryDark"/>
 
     </LinearLayout>
 
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:text="Up"
             android:textStyle="italic"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/colorPrimaryDark"/>
 
     </LinearLayout>
 
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:text="Down"
             android:textStyle="italic"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/colorPrimaryDark"/>
 
     </LinearLayout>
 
@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:text="Invite"
             android:textStyle="italic"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/colorPrimaryDark"/>
 
     </LinearLayout>
 

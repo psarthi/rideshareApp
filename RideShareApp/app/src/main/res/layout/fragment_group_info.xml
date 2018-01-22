@@ -73,7 +73,7 @@
             <android.support.design.widget.TabLayout
                 android:id="@+id/group_tab"
                 android:background="@color/colorPrimary"
-                app:tabIndicatorColor="@color/colorAccent"
+                app:tabIndicatorColor="@android:color/white"
                 app:tabSelectedTextColor="@android:color/white"
                 app:tabTextColor="@color/colorGrayLight"
                 android:layout_width="match_parent"

@@ -89,13 +89,14 @@
               android:paddingTop="@dimen/default_margin"
               android:paddingBottom="@dimen/default_margin"
               android:paddingStart="@dimen/default_margin"
-              android:layout_width="wrap_content"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:text="@string/common_groups_text"
               android:drawableStart="@drawable/ic_group"
               android:drawablePadding="@dimen/default_padding"
-              android:textStyle="bold|italic"
-              android:layout_gravity="center"/>
+              android:textStyle="italic|bold"
+              android:layout_gravity="center"
+              android:textColor="@android:color/black"/>
 
     <View
         android:layout_width="match_parent"

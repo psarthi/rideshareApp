@@ -57,6 +57,7 @@ public class UserProfileFragment extends BaseFragment {
     private FullRide mCurrentRide;
     private CommonUtil mCommonUtil;
     private FragmentLoader mFragmentLoader;
+    private BasicUser mUser;
 
     public UserProfileFragment() {
         // Required empty public constructor
@@ -92,6 +93,7 @@ public class UserProfileFragment extends BaseFragment {
         mCommonUtil = new CommonUtil(this);
         mFragmentLoader = new FragmentLoader(this);
         mCurrentRide = mCommonUtil.getCurrentRide();
+        mUser = mCommonUtil.getUser();
     }
 
     @Override
@@ -121,7 +123,12 @@ public class UserProfileFragment extends BaseFragment {
             commonGroupsSize = mUserProfile.getCommonGroups().size();
         }
 
-        String commonGroupsText = getResources().getString(R.string.common_groups_text) + commonGroupsSize;
+        String commonGroupLabel = getResources().getString(R.string.common_groups_text);
+        if (mUser.getId() == mUserProfile.getUser().getId()){
+            commonGroupLabel = getResources().getString(R.string.my_groups_text);
+        }
+
+        String commonGroupsText = commonGroupLabel + commonGroupsSize;
 
         ((TextView) view.findViewById(R.id.common_groups_count_text)).setText(commonGroupsText);
 
