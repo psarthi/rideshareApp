@@ -19,7 +19,12 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/search_result"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
     </android.support.v7.widget.RecyclerView>
+
+    <include layout="@layout/empty_list_layout" android:id="@+id/empty_list_layout"
+        android:layout_marginStart="@dimen/large_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

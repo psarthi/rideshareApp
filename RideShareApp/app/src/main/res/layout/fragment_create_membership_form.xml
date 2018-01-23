@@ -11,65 +11,120 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/add_question_label"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/form_purpose_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/small_margin"
-            android:text="Add Questions"
-            android:textAllCaps="true"
-            android:textSize="@dimen/heading1_text_size"/>
+            android:orientation="vertical">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/add_question_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            app:fabSize="mini"
-            android:layout_toRightOf="@id/add_question_label"
-            android:src="@drawable/ic_add_white_custom"/>
+            <TextView
+                android:id="@+id/form_purpose_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:text="@string/form_purpose_label"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/heading3_text_size"/>
+
+            <TextView
+                android:id="@+id/form_purpose_explaination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/form_purpose_explaination"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:textStyle="italic"
+                android:textSize="@dimen/heading3_text_size"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/sample_questions_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/add_question_label"
+            android:layout_below="@id/form_purpose_layout"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/sample_questions_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/add_question_label"
                 android:text="Sample Questions"
-                android:layout_marginBottom="@dimen/default_margin"
-                android:textStyle="bold"/>
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginBottom="@dimen/default_margin"/>
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/add_question_label"
                 android:text="What's your employee Id ?"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/add_question_label"
-                android:text="What's your official email Id ?"/>
+                android:text="What's your flat number ?"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/form_benefit_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sample_questions_layout"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/form_benefit_label"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/add_question_label"
-                android:text="What's your flat Number ?"/>
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:text="@string/form_benefit_label"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/heading3_text_size"/>
 
             <TextView
+                android:id="@+id/form_benefit_explaination"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/add_question_label"
-                android:text="What's your flat owner name ?"/>
+                android:text="@string/form_benefit_explaination"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:textStyle="italic"
+                android:textSize="@dimen/heading3_text_size"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_question_layout"
+            android:layout_below="@id/form_benefit_layout"
+            android:gravity="center|start">
+
+            <TextView
+                android:id="@+id/add_question_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:text="Add Questions"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/heading3_text_size"/>
+
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/add_question_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                app:fabSize="mini"
+                android:src="@drawable/ic_add_white_custom"/>
 
         </LinearLayout>
 
@@ -78,7 +133,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/sample_questions_layout">
+            android:layout_below="@id/add_question_layout">
 
         </LinearLayout>
 

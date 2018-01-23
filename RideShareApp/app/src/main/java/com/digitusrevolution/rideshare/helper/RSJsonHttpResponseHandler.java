@@ -12,6 +12,7 @@ import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -35,13 +36,16 @@ public class RSJsonHttpResponseHandler extends JsonHttpResponseHandler {
         mCommonUtil.dismissProgressDialog();
         if (errorResponse!=null) {
             ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-            Log.d(TAG, "Inside onFailure(JsonObject) - Proper ErrorMessage:"+ errorMessage.getErrorMessage());
-            Toast.makeText(mCommonUtil.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+            if (!errorMessage.getErrorCause().equals("NA")){
+                Log.d(TAG, "Request Failed with Proper ErrorMessage:"+ errorMessage.getErrorMessage());
+                Toast.makeText(mCommonUtil.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+            } else {
+                showSystemErrorMsg(errorMessage.getErrorMessage());
+            }
         }
         //This would be the case, where we got Json response but errorResponse is not our custom ErrorMessage
         else {
-            Log.d(TAG, "Inside onFailure(JsonObject) - Request Failed with error:"+ throwable.getMessage());
-            Toast.makeText(mCommonUtil.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+            showSystemErrorMsg(throwable.getMessage());
         }
     }
 
@@ -50,7 +54,11 @@ public class RSJsonHttpResponseHandler extends JsonHttpResponseHandler {
     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
         super.onFailure(statusCode, headers, responseString, throwable);
         mCommonUtil.dismissProgressDialog();
-        Log.d(TAG, "Inside onFailure(responseString) - Request Failed with error:"+ throwable.getMessage());
+        showSystemErrorMsg(throwable.getMessage());
+    }
+
+    private void showSystemErrorMsg(String msg){
+        Log.d(TAG, "Request Failed with system error:"+ msg);
         Toast.makeText(mCommonUtil.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
     }
 }

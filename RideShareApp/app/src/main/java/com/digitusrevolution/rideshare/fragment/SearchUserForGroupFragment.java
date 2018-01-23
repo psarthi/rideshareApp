@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
@@ -67,6 +68,7 @@ public class SearchUserForGroupFragment extends BaseFragment {
     private String SEARCH_URL_WITH_QUERY;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private TextView mEmptyTextView;
     private List<GroupInviteUserSearchResultWrapper> mUserSearchResultsWrappers;
     private GroupDetail mGroupDetail;
 
@@ -116,6 +118,7 @@ public class SearchUserForGroupFragment extends BaseFragment {
         layoutManager.setAutoMeasureEnabled(true);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+        mEmptyTextView = view.findViewById(R.id.empty_result_text);
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -131,16 +134,24 @@ public class SearchUserForGroupFragment extends BaseFragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                //NOTE - No need to implement this as we have already implemented search on key press
                 //IMP - Its important not to overwrite the original search url else you will loose the key in the url
                 //and any subsequent replacement of query would not work as key has been overwritten
-                SEARCH_URL_WITH_QUERY = SEARCH_URL.replace(APIUrl.SEARCH_NAME_KEY, query);
-                loadInitialSearchResult();
+                //SEARCH_URL_WITH_QUERY = SEARCH_URL.replace(APIUrl.SEARCH_NAME_KEY, query);
+                //loadInitialSearchResult();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //Don't keep calling the adaper, as it will fire too many queries
+                //IMP - Its important not to overwrite the original search url else you will loose the key in the url
+                //and any subsequent replacement of query would not work as key has been overwritten
+                if (!newText.trim().equals("")){
+                    SEARCH_URL_WITH_QUERY = SEARCH_URL.replace(APIUrl.SEARCH_NAME_KEY, newText.trim());
+                    loadInitialSearchResult();
+                } else {
+                    clearSearchResult();
+                }
                 return false;
             }
         });
@@ -155,12 +166,17 @@ public class SearchUserForGroupFragment extends BaseFragment {
                 //This will reset the query
                 searchView.setQuery("",false);
                 Log.d(TAG, "Search View - Clicked on close");
-                if (mUserSearchResultsWrappers!=null) mUserSearchResultsWrappers.clear();
-                if (mAdapter!=null) mAdapter.notifyDataSetChanged();
+                clearSearchResult();
             }
         });
 
         return view;
+    }
+
+    private void clearSearchResult() {
+        if (mUserSearchResultsWrappers!=null) mUserSearchResultsWrappers.clear();
+        if (mAdapter!=null) mAdapter.notifyDataSetChanged();
+        mEmptyTextView.setVisibility(View.GONE);
     }
 
     private void loadInitialSearchResult() {
@@ -174,6 +190,12 @@ public class SearchUserForGroupFragment extends BaseFragment {
                 mUserSearchResultsWrappers = new Gson().fromJson(response.toString(), listType);
                 mAdapter = new GroupInviteUserSearchListAdapter(mUserSearchResultsWrappers, SearchUserForGroupFragment.this);
                 mRecyclerView.setAdapter(mAdapter);
+                Log.d(TAG, "Search Result size is:"+mUserSearchResultsWrappers.size());
+                if (mUserSearchResultsWrappers.size()==0) {
+                    mEmptyTextView.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyTextView.setVisibility(View.GONE);
+                }
             }
         });
     }

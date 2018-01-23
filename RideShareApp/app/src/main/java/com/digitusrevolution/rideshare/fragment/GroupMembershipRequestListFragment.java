@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener;
@@ -50,6 +51,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private TextView mEmptyTextView;
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener mScrollListener;
     private CommonUtil mCommonUtil;
@@ -100,6 +102,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_list, container, false);
         mRecyclerView = view.findViewById(R.id.user_list);
+        mEmptyTextView = view.findViewById(R.id.empty_result_text);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         layoutManager.setAutoMeasureEnabled(true);
@@ -150,6 +153,11 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
         Log.d(TAG, "setAdapter Called of instance:"+this.hashCode());
         mAdapter = new GroupMembershipRequestListAdapter(mRequests, this);
         mRecyclerView.setAdapter(mAdapter);
+        if (mRequests.size()==0) {
+            mEmptyTextView.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyTextView.setVisibility(View.GONE);
+        }
     }
 
     // Append the next page of data into the adapter

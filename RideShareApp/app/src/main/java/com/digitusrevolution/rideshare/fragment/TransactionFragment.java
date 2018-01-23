@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
@@ -58,6 +59,7 @@ public class TransactionFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private TextView mEmptyTextView;
     private CommonUtil mCommonUtil;
     private List<Transaction> mTransactions = new ArrayList<>();
     private Account mAccount;
@@ -101,7 +103,6 @@ public class TransactionFragment extends BaseFragment {
         mCommonUtil = new CommonUtil(this);
         mAccount = mCommonUtil.getAccount();
         GET_USER_WALLET_TRANSACTION_URL = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()));
-        loadInitialData();
     }
 
     @Override
@@ -115,11 +116,11 @@ public class TransactionFragment extends BaseFragment {
         layoutManager.setAutoMeasureEnabled(true);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+        mEmptyTextView = view.findViewById(R.id.empty_result_text);
 
-        //VERY IMP - This will get called only when fragment is reloaded and without this it will show up blank screen as adapter is not set
-        if (mInitialDataLoaded) {
-            setAdapter();
-        }
+        //VERY IMP - Ensure you load the data from the server whenever we create the view, so that we always have updated set of data
+        //Don't set the adapter directly otherwise you will end up with old data set
+        loadInitialData();
 
         mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -163,6 +164,11 @@ public class TransactionFragment extends BaseFragment {
         Log.d(TAG, "Setting Adapter of Transaction instance:"+this.hashCode());
         mAdapter = new TransactionAdapter(mTransactions, this);
         mRecyclerView.setAdapter(mAdapter);
+        if (mTransactions.size()==0) {
+            mEmptyTextView.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyTextView.setVisibility(View.GONE);
+        }
 
     }
     // Append the next page of data into the adapter

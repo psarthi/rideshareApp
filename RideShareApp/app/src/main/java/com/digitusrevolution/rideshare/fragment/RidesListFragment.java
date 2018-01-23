@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
@@ -64,6 +65,7 @@ public class RidesListFragment extends BaseFragment{
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private TextView mEmptyTextView;
     private String GET_USER_RIDES_URL;
     private String GET_USER_RIDE_REQUESTS_URL;
 
@@ -116,6 +118,7 @@ public class RidesListFragment extends BaseFragment{
         layoutManager.setAutoMeasureEnabled(true);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
+        mEmptyTextView = view.findViewById(R.id.empty_result_text);
 
         //VERY IMP - Ensure you load the data from the server whenever we create the view, so that we always have updated set of data
         //Don't set the adapter directly otherwise you will end up with old data set
@@ -181,9 +184,19 @@ public class RidesListFragment extends BaseFragment{
         if (mRideType.equals(RideType.OfferRide)){
             Log.d(TAG, "Setting Adapter for Offer Ride. Size:" + mRides.size());
             mAdapter = new RideListAdapter(mRides, this);
+            if (mRides.size()==0) {
+                mEmptyTextView.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyTextView.setVisibility(View.GONE);
+            }
         } else {
             Log.d(TAG, "Setting Adapter for Requested Ride. Size:" + mRideRequests.size());
             mAdapter = new RideRequestListAdapter(mRideRequests, this);
+            if (mRideRequests.size()==0) {
+                mEmptyTextView.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyTextView.setVisibility(View.GONE);
+            }
         }
         mRecyclerView.setAdapter(mAdapter);
         //Don't use this method as we need to instantitate LinearLayout manager before in this case but below method instantiate locally

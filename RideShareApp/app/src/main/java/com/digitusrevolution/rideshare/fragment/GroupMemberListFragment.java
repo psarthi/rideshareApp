@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
@@ -57,6 +58,7 @@ public class GroupMemberListFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private TextView mEmptyTextView;
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener mScrollListener;
     private CommonUtil mCommonUtil;
@@ -108,6 +110,7 @@ public class GroupMemberListFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_list, container, false);
         mRecyclerView = view.findViewById(R.id.user_list);
+        mEmptyTextView = view.findViewById(R.id.empty_result_text);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         layoutManager.setAutoMeasureEnabled(true);
@@ -158,7 +161,11 @@ public class GroupMemberListFragment extends BaseFragment {
         Log.d(TAG, "setAdapter Called of instance:"+this.hashCode());
         mAdapter = new GroupMemberListAdapter(mGroupDetail, mGroupMembers, this);
         mRecyclerView.setAdapter(mAdapter);
-        registerForContextMenu(mRecyclerView);
+        if (mGroupMembers.size()==0) {
+            mEmptyTextView.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyTextView.setVisibility(View.GONE);
+        }
     }
 
     // Append the next page of data into the adapter
