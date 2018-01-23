@@ -276,10 +276,15 @@ public class CreateGroupFragment extends BaseFragment{
     private void setGroup(){
         String groupName = ((EditText) getView().findViewById(R.id.group_name_text)).getText().toString();
         String groupDesription = ((EditText) getView().findViewById(R.id.group_description)).getText().toString();
+        String trimmedGroupDescription = groupDesription.trim().replaceAll(" +"," ")
+                .replaceAll("\n"," ");
+        Log.d(TAG, "Original Information -"+groupDesription);
+        Log.d(TAG, "Post Trimming Information -"+trimmedGroupDescription);
+
         CommonUtil commonUtil = new CommonUtil(this);
         BasicUser user = commonUtil.getUser();
         mGroup.setName(groupName);
-        mGroup.setInformation(groupDesription);
+        mGroup.setInformation(trimmedGroupDescription);
         mGroup.setOwner(user);
     }
 

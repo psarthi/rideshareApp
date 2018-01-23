@@ -88,9 +88,9 @@
      -->
     <string name="default_notification_channel_name" translatable="true">Ride Notifications</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
-    <string name="form_purpose_explaination">To become member of this group, user needs to answer the list of questions of your choice</string>
-    <string name="form_purpose_label">Form Purpose</string>
-    <string name="form_benefit_explaination">Helps you to verify the identify of the person for approving their membership request</string>
-    <string name="form_benefit_label">Benefit</string>
+    <string name="form_purpose_label">Purpose</string>
+    <string name="form_purpose_explaination">Helps you to verify the identity of the person requesting membership to your group</string>
+    <string name="form_how_label">How</string>
+    <string name="form_how_explaination">Ask right set of questions, which only genuine users would know and it can be verified by you</string>
 
 </resources>

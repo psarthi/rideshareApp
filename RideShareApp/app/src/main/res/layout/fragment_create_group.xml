@@ -1,72 +1,79 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             android:layout_margin="@dimen/default_margin"
-             tools:context="com.digitusrevolution.rideshare.fragment.CreateGroupFragment">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/default_margin"
+            android:fillViewport="true"
+            tools:context="com.digitusrevolution.rideshare.fragment.CreateGroupFragment">
 
     <LinearLayout
-        android:id="@+id/photo_name_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginBottom="@dimen/default_margin">
+        android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/group_photo_image_view"
-            android:layout_width="@dimen/medium_image_size"
-            android:layout_height="@dimen/medium_image_size"
-            android:src="@drawable/ic_photo"/>
-
-        <EditText
-            android:id="@+id/group_name_text"
+        <LinearLayout
+            android:id="@+id/photo_name_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Group Name"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/default_margin">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/group_photo_image_view"
+                android:layout_width="@dimen/medium_image_size"
+                android:layout_height="@dimen/medium_image_size"
+                android:src="@drawable/ic_photo"/>
+
+            <EditText
+                android:id="@+id/group_name_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Group Name"
+                android:padding="@dimen/default_padding"
+                android:inputType="textNoSuggestions"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/group_description"
+            android:layout_below="@id/photo_name_layout"
             android:padding="@dimen/default_padding"
-            android:inputType="textNoSuggestions"/>
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/medium_block_height"
+            android:background="@drawable/border"
+            android:hint="Brief Description (Max 200 characters)"
+            android:maxLength="200"
+            android:textStyle="italic"
+            android:gravity="start"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_below="@id/membership_form_question_layout">
+
+            <Button
+                android:id="@+id/group_update_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:layout_margin="@dimen/default_margin"
+                android:text="Update"/>
+
+            <Button
+                android:id="@+id/create_group_next_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:layout_below="@id/group_description"
+                android:layout_margin="@dimen/default_margin"
+                android:text="Next"/>
+
+        </LinearLayout>
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/group_description"
-        android:layout_below="@id/photo_name_layout"
-        android:padding="@dimen/default_padding"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/medium_block_height"
-        android:background="@drawable/border"
-        android:hint="Brief Description"
-        android:textStyle="italic"
-        android:gravity="start"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_margin"
-        android:layout_below="@id/membership_form_question_layout">
-
-    <Button
-        android:id="@+id/group_update_button"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@color/colorPrimary"
-        android:layout_margin="@dimen/default_margin"
-        android:text="Update"/>
-
-    <Button
-        android:id="@+id/create_group_next_button"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@color/colorPrimary"
-        android:layout_below="@id/group_description"
-        android:layout_margin="@dimen/default_margin"
-        android:text="Next"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

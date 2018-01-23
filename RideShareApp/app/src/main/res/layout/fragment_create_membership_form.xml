@@ -69,29 +69,29 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/form_benefit_layout"
+            android:id="@+id/form_how_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/sample_questions_layout"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/form_benefit_label"
+                android:id="@+id/form_how_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin"
                 android:layout_marginBottom="@dimen/default_margin"
-                android:text="@string/form_benefit_label"
+                android:text="@string/form_how_label"
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/heading3_text_size"/>
 
             <TextView
-                android:id="@+id/form_benefit_explaination"
+                android:id="@+id/form_how_explaination"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/form_benefit_explaination"
+                android:text="@string/form_how_explaination"
                 android:layout_marginBottom="@dimen/default_margin"
                 android:textStyle="italic"
                 android:textSize="@dimen/heading3_text_size"/>
@@ -102,7 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/add_question_layout"
-            android:layout_below="@id/form_benefit_layout"
+            android:layout_below="@id/form_how_layout"
             android:gravity="center|start">
 
             <TextView
