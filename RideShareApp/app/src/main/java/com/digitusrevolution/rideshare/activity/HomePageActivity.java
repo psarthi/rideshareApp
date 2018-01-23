@@ -50,6 +50,7 @@ import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.FetchType;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
@@ -117,13 +118,16 @@ public class HomePageActivity extends BaseActivity
         mDrawer.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-        //This will set up listener on Navigation items
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         mCommonUtil = new CommonUtil(this);
         mFragmentLoader = new FragmentLoader(this);
         mUser = mCommonUtil.getUser();
+
+        //This will set up listener on Navigation items
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (mUser.getCountry().getRideMode().equals(RideMode.Free)){
+            navigationView.getMenu().findItem(R.id.nav_wallet).setVisible(false);
+        }
+        navigationView.setNavigationItemSelectedListener(this);
 
         setNavHeader(navigationView);
         //No need to fetch from server again as while signing in, we refresh the current rides

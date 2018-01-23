@@ -15,8 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 
 /**
  * Created by psarthi on 12/4/17.
@@ -31,13 +33,15 @@ public class DropCoTravellerFragment extends DialogFragment{
     private RadioButton mFreeRideRadioButton;
     private RadioButton mPaidRideRadioButton;
     private TextView mPaymentTextView;
+    private BasicUser mDriver;
 
     public DropCoTravellerFragment(){}
 
-    public static DropCoTravellerFragment newInstance(DropCoTravellerFragmentListener listener, BasicRideRequest rideRequest){
+    public static DropCoTravellerFragment newInstance(DropCoTravellerFragmentListener listener, BasicRideRequest rideRequest, BasicUser driver){
         DropCoTravellerFragment fragment = new DropCoTravellerFragment();
         fragment.mListener = listener;
         fragment.mRideRequest = rideRequest;
+        fragment.mDriver = driver;
         return fragment;
     }
 
@@ -70,6 +74,11 @@ public class DropCoTravellerFragment extends DialogFragment{
             mPaymentTextView.setEnabled(true);
         }
 
+        if (mDriver.getCountry().getRideMode().equals(RideMode.Free)){
+            //This will take care all view's inside it - ride mode buttons, payment code text
+            view.findViewById(R.id.ride_mode_payment_code_layout).setVisibility(View.GONE);
+        }
+
         //This will enable/disable payment code text according to the selection of radio button
         mFreeRideRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -85,7 +94,7 @@ public class DropCoTravellerFragment extends DialogFragment{
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)
-                .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //No action required here as we are overwriting the onClick in onStart method

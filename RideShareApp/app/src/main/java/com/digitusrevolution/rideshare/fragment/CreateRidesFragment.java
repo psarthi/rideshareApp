@@ -209,6 +209,13 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         //IMP - This will ensure on fragment reload, user data is upto date e.g. in case of vehicle addition
         //new vehicle would reflect and role would also show up else it will again ask for adding vehicle
         mUser = mCommonUtil.getUser();
+        if (mUser.getCountry().getRideMode().equals(RideMode.Free)){
+            //This will overwrite user preference if country mode is Free mode
+            //Its also useful if we decide to change the mode from Paid to Free at later point of time
+            //and user has already set the preference to Paid mode
+            //This will also overwrite the preference if user saves the preference from rides option screen
+            mUser.getPreference().setRideMode(RideMode.Free);
+        }
         //Reason for putting it here so that we can get latest balance on refresh
         mAccount = mCommonUtil.getAccount();
         Log.d(TAG,"User Name is:"+mUser.getFirstName());

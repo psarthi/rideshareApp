@@ -51,10 +51,10 @@ public class CancelCoTravellerFragment extends DialogFragment{
         String coTravellerName;
         if (mListener instanceof RideComp){
             Log.d(TAG, "Ride Comp. Instance");
-            coTravellerName = mRideRequest.getAcceptedRide().getDriver().getFirstName() +" "+mRideRequest.getAcceptedRide().getDriver().getLastName();
+            coTravellerName = mRideRequest.getPassenger().getFirstName() +" "+mRideRequest.getPassenger().getLastName();
         } else {
             Log.d(TAG, "Ride Request Comp. Instance");
-            coTravellerName = mRideRequest.getPassenger().getFirstName() +" "+mRideRequest.getPassenger().getLastName();
+            coTravellerName = mRideRequest.getAcceptedRide().getDriver().getFirstName() +" "+mRideRequest.getAcceptedRide().getDriver().getLastName();
         }
         titleTextView.setText(getString(R.string.cancel_cotraveller_text)+coTravellerName);
 

@@ -166,6 +166,10 @@ public class RidesOptionFragment extends BaseFragment
         mPaidRideRadioButton = ride_mode_layout.findViewById(R.id.paid_ride_radio_button);
         mFreeRideRadioButton = ride_mode_layout.findViewById(R.id.free_ride_radio_button);
 
+        if (mUser.getCountry().getRideMode().equals(RideMode.Free)){
+            ride_mode_layout.setVisibility(View.GONE);
+        }
+
         setButtonsOnClickListener(view);
         setInitialValue();
 

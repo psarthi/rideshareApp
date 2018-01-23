@@ -33,6 +33,7 @@ import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserFeedbackInfo;
 import com.google.gson.Gson;
 
@@ -65,6 +66,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
     private CommonUtil mCommonUtil;
     private RideCompListener mListener;
     private boolean mEndRideConfirmation;
+    private BasicUser mUser;
 
     public RideComp(BaseFragment fragment, FullRide ride) {
         mBaseFragment = fragment;
@@ -73,6 +75,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         //No need to type case it will be taken care itself
         mBasicRide = ride;
         mCommonUtil = new CommonUtil(fragment);
+        mUser = mCommonUtil.getUser();
         //Its important to check instance of fragment as some fragment may not be required to implement Listener
         //And in those cases, it will throw ClassCasteException
         if (fragment instanceof RideCompListener) mListener = (RideCompListener) fragment;
@@ -353,7 +356,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         dropButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dialogFragment = DropCoTravellerFragment.newInstance(RideComp.this, rideRequest);
+                DialogFragment dialogFragment = DropCoTravellerFragment.newInstance(RideComp.this, rideRequest, mUser);
                 dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), DropCoTravellerFragment.TAG);
             }
         });
