@@ -8,6 +8,7 @@
     tools:showIn="@layout/fragment_group_info">
 
     <LinearLayout
+        android:id="@+id/group_member_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -35,6 +36,7 @@
 
 
     <LinearLayout
+        android:id="@+id/group_up_vote_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -63,6 +65,7 @@
 
 
     <LinearLayout
+        android:id="@+id/group_down_vote_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

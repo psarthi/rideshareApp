@@ -126,6 +126,7 @@ public class HomePageActivity extends BaseActivity
         mUser = mCommonUtil.getUser();
 
         setNavHeader(navigationView);
+        //No need to fetch from server again as while signing in, we refresh the current rides
         mFragmentLoader.loadHomePageWithCurrentRidesFragment(FetchType.Local, null);
 
         //Dismiss progress dialog when activity is loaded, else its confusing to the user
@@ -295,14 +296,22 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onCreateRideFragmentInteraction(String data) {
+    public void onCreateRideFragmentInteraction(RideType rideType, String data) {
         Log.d(TAG, "Recieved callback post Create Rides Fragment");
         //This will clean up all back stacks and start from fresh
         //Reason for not doing popback as map was not getting reloaded properly and viewtreeobserver was not getting callback
         //which was causing old map to show up with previous markers/lines
+        /* Commenting this as don't see any reason for loadingHomePage which will be default get loaded on pressing backstack
         removeAllBackStacks();
         FragmentLoader fragmentLoader = new FragmentLoader(this);
         fragmentLoader.loadHomePageWithCurrentRidesFragment(FetchType.Server, null);
+        */
+        removeAllBackStacks();
+        if (rideType.equals(RideType.OfferRide)){
+            mFragmentLoader.loadRideInfoFragment(data);
+        } else {
+            mFragmentLoader.loadRideRequestInfoFragment(data);
+        }
     }
 
     public void showBackButton(boolean show) {

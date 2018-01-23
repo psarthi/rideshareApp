@@ -2,6 +2,7 @@ package com.digitusrevolution.rideshare.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.dialog.StandardAlertDialog;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
@@ -191,17 +193,29 @@ public class AboutGroupFragment extends BaseFragment {
         mLeaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = APIUrl.LEAVE_GROUP.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                        .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroup.getId()));
-                RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
+                String message = getActivity().getString(R.string.standard_cancellation_confirmation_message);
+                DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardListAlertDialogListener() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mGroup = new Gson().fromJson(response.toString(), GroupDetail.class);
-                        //Toast.makeText(getActivity(), "Successfully left the group", Toast.LENGTH_SHORT).show();
-                        mListener.onAboutGroupFragmentRefresh(mGroup);
+                    public void onPositiveStandardAlertDialog() {
+                        String url = APIUrl.LEAVE_GROUP.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                                .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroup.getId()));
+                        RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                mGroup = new Gson().fromJson(response.toString(), GroupDetail.class);
+                                //Toast.makeText(getActivity(), "Successfully left the group", Toast.LENGTH_SHORT).show();
+                                mListener.onAboutGroupFragmentRefresh(mGroup);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onNegativeStandardAlertDialog() {
+                        Log.d(TAG, "Negative Button clicked on standard dialog");
                     }
                 });
+                dialogFragment.show(getActivity().getSupportFragmentManager(), StandardAlertDialog.TAG);
             }
         });
 

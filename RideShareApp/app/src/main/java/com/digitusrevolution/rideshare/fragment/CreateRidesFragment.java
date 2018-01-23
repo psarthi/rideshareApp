@@ -372,7 +372,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                         mCommonUtil.updateCurrentRide(rideOfferResult.getRide());
                                         Log.d(TAG, "Updated Current Ride");
                                     }
-                                    mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
+                                    mListener.onCreateRideFragmentInteraction(mRideType, new Gson().toJson(rideOfferResult.getRide()));
+                                    //mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
                                     /*
                                     //Blocked this for the time being as it was causing issue in loading proper page
                                     //e.g. even if its current ride but home should have current ride request, then current ride request
@@ -443,7 +444,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
                     Log.d(TAG, "Updated Current Ride Request");
                 }
-                mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
+                mListener.onCreateRideFragmentInteraction(mRideType, new Gson().toJson(rideRequestResult.getRideRequest()));
+                //mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
                                 /*
                                     //Blocked this for the time being as it was causing issue in loading proper page
                                     //e.g. even if its current ride but home should have current ride request, then current ride request
@@ -934,7 +936,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onCreateRideFragmentInteraction(String data);
+        void onCreateRideFragmentInteraction(RideType rideType, String data);
     }
 
     public void updateRidesOption(Preference ridesOption){

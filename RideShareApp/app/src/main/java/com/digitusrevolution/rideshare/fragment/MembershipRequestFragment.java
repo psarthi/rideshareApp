@@ -132,6 +132,9 @@ public class MembershipRequestFragment extends BaseFragment {
 
             questionTextView.setText(question);
             answerEditText.setText(answer);
+            if (mQuestionAnswerLayout.getChildCount()==0){
+                answerEditText.requestFocus();
+            }
 
             if (mAdminRole){
                 answerEditText.setEnabled(false);

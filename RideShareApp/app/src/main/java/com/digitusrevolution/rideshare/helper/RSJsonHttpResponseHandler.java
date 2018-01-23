@@ -36,7 +36,7 @@ public class RSJsonHttpResponseHandler extends JsonHttpResponseHandler {
         mCommonUtil.dismissProgressDialog();
         if (errorResponse!=null) {
             ErrorMessage errorMessage = new Gson().fromJson(errorResponse.toString(), ErrorMessage.class);
-            if (!errorMessage.getErrorCause().equals("NA")){
+            if (errorMessage.getErrorCause().equals("NA")){
                 Log.d(TAG, "Request Failed with Proper ErrorMessage:"+ errorMessage.getErrorMessage());
                 Toast.makeText(mCommonUtil.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
             } else {

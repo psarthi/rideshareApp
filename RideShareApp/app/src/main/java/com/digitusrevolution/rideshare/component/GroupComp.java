@@ -46,6 +46,9 @@ public class GroupComp {
     private AppCompatTextView mGroupUpVoteCount;
     private AppCompatTextView mGroupDownVoteCount;
     private ImageView mGroupInvite;
+    private LinearLayout mGroupUpVoteLayout;
+    private LinearLayout mGroupDownVoteLayout;
+    private LinearLayout mGroupInviteLayout;
 
 
     public GroupComp(BaseFragment fragment, GroupDetail group){
@@ -66,6 +69,8 @@ public class GroupComp {
         mGroupMemberCount = group_info_single_row_layout.findViewById(R.id.group_member_count);
         mGroupUpVoteCount = group_info_single_row_layout.findViewById(R.id.group_up_vote_count);
         mGroupDownVoteCount = group_info_single_row_layout.findViewById(R.id.group_down_vote_count);
+        mGroupUpVoteLayout = group_info_single_row_layout.findViewById(R.id.group_up_vote_layout);
+        mGroupDownVoteLayout = group_info_single_row_layout.findViewById(R.id.group_down_vote_layout);
 
         //This will ensure we start on clean slate of drawables else previous tint of another group may still be there
         //Due to viewholder reusing views
@@ -91,7 +96,7 @@ public class GroupComp {
         setGroupBasicInfo(view);
         LinearLayout group_info_single_row_layout = view.findViewById(R.id.group_info_single_row_layout);
         mGroupInvite = group_info_single_row_layout.findViewById(R.id.group_invite_user);
-        LinearLayout groupInviteLayout = group_info_single_row_layout.findViewById(R.id.group_invite_layout);
+        mGroupInviteLayout = group_info_single_row_layout.findViewById(R.id.group_invite_layout);
         ImageView editGroup = view.findViewById(R.id.edit_group_image_view);
 
         if (mGroup.getMembershipStatus().isMember()){
@@ -109,7 +114,7 @@ public class GroupComp {
             //Voting functionality not required in basic view, so setting lisneters here only
             setupListeners();
         } else {
-            groupInviteLayout.setVisibility(View.GONE);
+            mGroupInviteLayout.setVisibility(View.GONE);
         }
 
         if (mGroup.getMembershipStatus().isAdmin()){
@@ -129,21 +134,21 @@ public class GroupComp {
         FEEDBACK_URL = APIUrl.GROUP_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
                 .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroup.getId()));
 
-        mGroupUpVoteCount.setOnClickListener(new View.OnClickListener() {
+        mGroupUpVoteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 postFeedback(Vote.Genuine);
             }
         });
 
-        mGroupDownVoteCount.setOnClickListener(new View.OnClickListener() {
+        mGroupDownVoteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 postFeedback(Vote.Fake);
             }
         });
 
-        mGroupInvite.setOnClickListener(new View.OnClickListener() {
+        mGroupInviteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);

@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
@@ -32,6 +33,8 @@ public class TrustNetworkComp {
     private int mSelectedColor;
     private int mDefaultTextColor;
     private ColorFilter mDefaultImageTint;
+    private LinearLayout mAllLayout;
+    private LinearLayout mGroupLayout;
 
 
     public TrustNetworkComp(BaseFragment fragment, TrustNetwork trustNetwork){
@@ -46,6 +49,8 @@ public class TrustNetworkComp {
         mAllTextView = view.findViewById(R.id.trust_category_all_text);
         mGroupsImageView = view.findViewById(R.id.trust_category_groups_image);
         mGroupsTextView = view.findViewById(R.id.trust_category_groups_text);
+        mAllLayout = view.findViewById(R.id.trust_category_all_layout);
+        mGroupLayout = view.findViewById(R.id.trust_category_groups_layout);
 
         mSelectedColor = ContextCompat.getColor(mBaseFragment.getActivity(), R.color.colorAccent);
         mDefaultTextColor = mAllTextView.getTextColors().getDefaultColor();
@@ -58,7 +63,7 @@ public class TrustNetworkComp {
     }
 
     private void setTrustCategoryOnClickListener(View view) {
-        mAllImageView.setOnClickListener(new View.OnClickListener() {
+        mAllLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"Clicked on the All Image View: Selected Status:" + mAllSelected);
@@ -69,7 +74,7 @@ public class TrustNetworkComp {
                 updateTrustCategoryItemsColor();
             }
         });
-        mGroupsImageView.setOnClickListener(new View.OnClickListener() {
+        mGroupLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"Clicked on the Groups Image View: Selected Status:" + mGroupsSelected);

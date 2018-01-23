@@ -3,6 +3,7 @@ package com.digitusrevolution.rideshare.component;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.BaseActivity;
@@ -206,9 +207,14 @@ public class FragmentLoader {
     }
 
     public void loadGroupInfoByRemovingBackStacks(GroupDetail groupDetail) {
-        //IMP - We are removing all fragments from transaction till GroupInfo
+        Log.d(TAG, "Removing all backstacks till GroupInfoFragment");
+        //IMP - We are removing all fragments from transaction till Group Home Page
         //so that we don't go back to membership request form by pressing back
-        getFragmentManager().popBackStack(GroupInfoFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        //This will ensure Group Home page fragment doesn't get popped by setting
+        //the flag as o instead of POP_BACK_STACK_INCLUSIVE
+        //Note - If we pop only till Group Info then creation of group scenarion would not not
+        //get popped as its before Group Info fragment and group info was never loaded
+        getFragmentManager().popBackStack(GroupHomePageFragment.TAG, 0);
         loadGroupInfoFragment(new Gson().toJson(groupDetail));
     }
 

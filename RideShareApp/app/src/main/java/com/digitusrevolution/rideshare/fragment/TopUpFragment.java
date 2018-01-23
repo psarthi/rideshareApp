@@ -58,6 +58,7 @@ public class TopUpFragment extends BaseFragment {
     private TextView mTopUpAmountTextView;
     private String mCurrencySymbol;
     private int mMinTopUpAmount;
+    private TextView mRequiredBalanceTextView;
 
     public TopUpFragment() {
         // Required empty public constructor
@@ -104,11 +105,12 @@ public class TopUpFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_top_up, container, false);
         mWalletBalanceTextView = view.findViewById(R.id.wallet_balance_amount);
         mTopUpAmountTextView = view.findViewById(R.id.topup_amount);
+        mRequiredBalanceTextView = view.findViewById(R.id.required_wallet_balance);
 
         if (mRequiredBalanceVisiblity){
             String reqdAmount = getResources().getString(R.string.required_wallet_balance_label) +
                     mCurrencySymbol + mCommonUtil.getDecimalFormattedString(mRequiredBalanceAmount);
-            ((TextView) view.findViewById(R.id.required_wallet_balance)).setText(reqdAmount);
+            mRequiredBalanceTextView.setText(reqdAmount);
             Log.d(TAG, "Required Min Balance:"+mRequiredBalanceAmount);
             //Reason for adding 1 is to just take care of decimals
             mMinTopUpAmount = (int) (mRequiredBalanceAmount - mAccount.getBalance() + 1);
@@ -124,7 +126,7 @@ public class TopUpFragment extends BaseFragment {
             */
 
         } else {
-            view.findViewById(R.id.required_wallet_balance).setVisibility(View.GONE);
+            mRequiredBalanceTextView.setVisibility(View.GONE);
             //view.findViewById(R.id.top_up_cancel_button).setVisibility(View.GONE);
         }
 
@@ -167,9 +169,10 @@ public class TopUpFragment extends BaseFragment {
                             mCommonUtil.updateAccount(mAccount);
                             //This will refresh the wallet balance
                             setWalletBalance(mAccount.getBalance());
-                            //This will refresh the fragment and transaction list as well
-                            mListener.onTopUpFragmentRefresh();
+                            // No need to go back to create ride automatically, let user press back to do that
+                            //they can see their updated balance properly before moving back
                             if (mRequiredBalanceVisiblity) {
+                                resetRequiredBalanceViews();
                                 //This will go back to the create rides page
                                 //Don't have this here as are refreshing the view and it will kill the fragment view above
                                 //hideSoftKeyBoard();
@@ -177,11 +180,24 @@ public class TopUpFragment extends BaseFragment {
                                 //TODO Fix this bug as its causing Crash
                                 //getActivity().getSupportFragmentManager().popBackStack();
                             }
+                            //VERY IMP - This has to be the last line else you will NPE on fragment
+                            //as it would get killed post this line
+                            //This will refresh the fragment and transaction list as well
+                            mListener.onTopUpFragmentRefresh();
                         }
                     });
                 }
             }
         });
+    }
+
+    private void resetRequiredBalanceViews(){
+        //Below commented line will not come into effect as fragment would get reloaded
+        // and it will again get visiblility so that's fine for now.
+        //mRequiredBalanceTextView.setVisibility(View.GONE);
+        String hint = getResources().getString(R.string.amount_hint)+" ("+mCurrencySymbol+")";
+        mTopUpAmountTextView.setHint(hint);
+        mTopUpAmountTextView.setText("");
     }
 
     private boolean validateInput(String topUpAmountString){

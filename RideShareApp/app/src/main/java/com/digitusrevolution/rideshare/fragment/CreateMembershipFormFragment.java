@@ -164,7 +164,8 @@ public class CreateMembershipFormFragment extends BaseFragment {
                 if (validateInput()){
                     setupGroup();
                     //Its important to use Gson to convert BasicGroup to BasicGroupInfo as its not compatible as standard java casting would not work
-                    BasicGroupInfo basicGroupInfo = new Gson().fromJson(mGroupData, BasicGroupInfo.class);
+                    String basicGroupJson = new Gson().toJson(mGroup);
+                    BasicGroupInfo basicGroupInfo = new Gson().fromJson(basicGroupJson, BasicGroupInfo.class);
                     basicGroupInfo.setRawImage(mRawImage);
                     String CREATE_GROUP = APIUrl.CREATE_GROUP.replace(APIUrl.USER_ID_KEY,Integer.toString(mUser.getId()));
                     mCommonUtil.showProgressDialog();

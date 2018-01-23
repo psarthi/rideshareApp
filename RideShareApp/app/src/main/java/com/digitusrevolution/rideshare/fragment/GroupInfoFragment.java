@@ -145,6 +145,7 @@ public class GroupInfoFragment extends BaseFragment {
         ((HomePageActivity)getActivity()).showBackButton(false);
         //This will set the title as group name
         getActivity().setTitle(mGroup.getName());
+        showBackStackDetails();
     }
 
     @Override
