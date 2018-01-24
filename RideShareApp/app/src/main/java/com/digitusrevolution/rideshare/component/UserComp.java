@@ -98,8 +98,8 @@ public class UserComp {
         user_profile_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.SIGNEDIN_USER_ID_KEY, Integer.toString(mSignedInUser.getId()))
-                        .replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+                String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.SIGNEDIN_USER_ID_KEY, Long.toString(mSignedInUser.getId()))
+                        .replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
                 mCommonUtil.showProgressDialog();
                 RESTClient.get(GET_USER_PROFILE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                     @Override

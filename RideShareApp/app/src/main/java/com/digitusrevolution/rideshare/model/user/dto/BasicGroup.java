@@ -1,19 +1,14 @@
 package com.digitusrevolution.rideshare.model.user.dto;
 
-import java.time.ZonedDateTime;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
 
 import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
-import com.digitusrevolution.rideshare.model.user.domain.GroupFeedback;
-import com.digitusrevolution.rideshare.model.user.domain.MembershipRequest;
 
+//Reason behind this jsonignore so that it doesn't throw error while converting from Domain Model to DTO which has less fields
 public class BasicGroup {
 
-	private int id;
+	private long id;
 	private String name;
 	private Photo photo;
 	
@@ -25,11 +20,11 @@ public class BasicGroup {
 	private int genuineVotes;
 	private int fakeVotes;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -57,40 +52,20 @@ public class BasicGroup {
 		this.owner = owner;
 	}
 
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof BasicGroup)) {
-			return false;
-		}
-		BasicGroup other = (BasicGroup) obj;
-		if (id != other.id) {
-			return false;
-		}
-		return true;
-	}
-
-
 	public MembershipForm getMembershipForm() {
 		return membershipForm;
 	}
 
 	public void setMembershipForm(MembershipForm membershipForm) {
 		this.membershipForm = membershipForm;
+	}
+
+	public Date getCreatedDateTime() {
+		return createdDateTime;
+	}
+
+	public void setCreatedDateTime(Date createdDateTime) {
+		this.createdDateTime = createdDateTime;
 	}
 
 	public String getUrl() {
@@ -125,13 +100,32 @@ public class BasicGroup {
 		this.fakeVotes = fakeVotes;
 	}
 
-	public Date getCreatedDateTime() {
-		return createdDateTime;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
 	}
 
-	public void setCreatedDateTime(Date createdDateTime) {
-		this.createdDateTime = createdDateTime;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof BasicGroup)) {
+			return false;
+		}
+		BasicGroup other = (BasicGroup) obj;
+		if (id != other.id) {
+			return false;
+		}
+		return true;
 	}
+	
 }
 
 

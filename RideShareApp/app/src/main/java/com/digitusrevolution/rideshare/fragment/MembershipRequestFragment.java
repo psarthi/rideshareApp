@@ -166,8 +166,8 @@ public class MembershipRequestFragment extends BaseFragment {
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = APIUrl.SUBMIT_MEMBERSHIP_REQUEST.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                        .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mRequest.getGroup().getId()));
+                String url = APIUrl.SUBMIT_MEMBERSHIP_REQUEST.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                        .replace(APIUrl.GROUP_ID_KEY, Long.toString(mRequest.getGroup().getId()));
                 if (validateInput()){
                     setupMembershipRequest();
                     mCommonUtil.showProgressDialog();
@@ -188,9 +188,9 @@ public class MembershipRequestFragment extends BaseFragment {
         mApproveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = APIUrl.APPROVE_MEMBERSHIP_REQUEST.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                        .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mRequest.getGroup().getId()))
-                        .replace(APIUrl.REQUESTER_USER_ID_KEY, Integer.toString(mRequest.getUser().getId()));
+                String url = APIUrl.APPROVE_MEMBERSHIP_REQUEST.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                        .replace(APIUrl.GROUP_ID_KEY, Long.toString(mRequest.getGroup().getId()))
+                        .replace(APIUrl.REQUESTER_USER_ID_KEY, Long.toString(mRequest.getUser().getId()));
                 if (validateInput()) {
                     setupMembershipRequest();
                     mCommonUtil.showProgressDialog();
@@ -211,9 +211,9 @@ public class MembershipRequestFragment extends BaseFragment {
         mRejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = APIUrl.REJECT_MEMBERSHIP_REQUEST.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                        .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mRequest.getGroup().getId()))
-                        .replace(APIUrl.REQUESTER_USER_ID_KEY, Integer.toString(mRequest.getUser().getId()));
+                String url = APIUrl.REJECT_MEMBERSHIP_REQUEST.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                        .replace(APIUrl.GROUP_ID_KEY, Long.toString(mRequest.getGroup().getId()))
+                        .replace(APIUrl.REQUESTER_USER_ID_KEY, Long.toString(mRequest.getUser().getId()));
                 String adminRemark = mAdminRemarkText.getText().toString();
                 if (validateInput()) {
                     if (adminRemark.trim().equals("")){

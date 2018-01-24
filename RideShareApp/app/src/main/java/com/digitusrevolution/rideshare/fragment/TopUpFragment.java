@@ -157,7 +157,7 @@ public class TopUpFragment extends BaseFragment {
                 String topUpAmountString = ((TextView) view.findViewById(R.id.topup_amount)).getText().toString();
                 Log.d(TAG, "Top Up Amount:"+topUpAmountString);
                 if (validateInput(topUpAmountString)){
-                    String ADD_MONEY = APIUrl.ADD_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
+                    String ADD_MONEY = APIUrl.ADD_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY, Long.toString(mAccount.getNumber()))
                             .replace(APIUrl.AMOUNT_KEY, topUpAmountString);
                     mCommonUtil.showProgressDialog();
                     RESTClient.get(ADD_MONEY, null, new RSJsonHttpResponseHandler(mCommonUtil) {

@@ -11,4 +11,5 @@ public class BasicGroupInfo extends BasicGroup{
 	public void setRawImage(byte[] rawImage) {
 		this.rawImage = rawImage;
 	}
+
 }

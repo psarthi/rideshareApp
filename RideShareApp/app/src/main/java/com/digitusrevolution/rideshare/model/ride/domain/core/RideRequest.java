@@ -1,7 +1,5 @@
 package com.digitusrevolution.rideshare.model.ride.domain.core;
 
-import android.support.annotation.NonNull;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -17,9 +15,11 @@ import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
 import com.digitusrevolution.rideshare.model.user.domain.core.User;
 
+//This can help in getting just id instead of object but its causing issue while deserialization, so for now lets park it.
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class RideRequest implements Comparable<RideRequest>{
 
-	private int id;
+	private long id;
 	private RideRequestPoint pickupPoint = new RideRequestPoint();
 	private RideRequestPoint dropPoint = new RideRequestPoint();
 	private String pickupPointAddress;
@@ -35,6 +35,7 @@ public class RideRequest implements Comparable<RideRequest>{
 	private int pickupPointVariation;
 	private int dropPointVariation;
 	private RideRequestStatus status;
+	//@JsonIdentityReference(alwaysAsId=true)
 	private User passenger;
 	private PassengerStatus passengerStatus;
 	private boolean ridePreference;
@@ -54,10 +55,10 @@ public class RideRequest implements Comparable<RideRequest>{
 	private String confirmationCode;
 	private Collection<UserFeedback> feedbacks = new HashSet<UserFeedback>();
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public RideRequestPoint getPickupPoint() {
@@ -186,15 +187,93 @@ public class RideRequest implements Comparable<RideRequest>{
 	public void setTravelDistance(int travelDistance) {
 		this.travelDistance = travelDistance;
 	}
+	public Collection<Ride> getCancelledRides() {
+		return cancelledRides;
+	}
+	public void setCancelledRides(Collection<Ride> cancelledRides) {
+		this.cancelledRides = cancelledRides;
+	}
+	public RideMode getRideMode() {
+		return rideMode;
+	}
+	public void setRideMode(RideMode rideMode) {
+		this.rideMode = rideMode;
+	}
+	public String getPickupPointAddress() {
+		return pickupPointAddress;
+	}
+	public void setPickupPointAddress(String pickupPointAddress) {
+		this.pickupPointAddress = pickupPointAddress;
+	}
+	public String getDropPointAddress() {
+		return dropPointAddress;
+	}
+	public void setDropPointAddress(String dropPointAddress) {
+		this.dropPointAddress = dropPointAddress;
+	}
+	public String getRidePickupPointAddress() {
+		return ridePickupPointAddress;
+	}
+	public void setRidePickupPointAddress(String ridePickupPointAddress) {
+		this.ridePickupPointAddress = ridePickupPointAddress;
+	}
+	public String getRideDropPointAddress() {
+		return rideDropPointAddress;
+	}
+	public void setRideDropPointAddress(String rideDropPointAddress) {
+		this.rideDropPointAddress = rideDropPointAddress;
+	}
+	public Bill getBill() {
+		return bill;
+	}
+	public void setBill(Bill bill) {
+		this.bill = bill;
+	}
+	public PassengerStatus getPassengerStatus() {
+		return passengerStatus;
+	}
+	public void setPassengerStatus(PassengerStatus passengerStatus) {
+		this.passengerStatus = passengerStatus;
+	}
+	public double getRidePickupPointDistance() {
+		return ridePickupPointDistance;
+	}
+	public void setRidePickupPointDistance(double ridePickupPointDistance) {
+		this.ridePickupPointDistance = ridePickupPointDistance;
+	}
+	public double getRideDropPointDistance() {
+		return rideDropPointDistance;
+	}
+	public void setRideDropPointDistance(double rideDropPointDistance) {
+		this.rideDropPointDistance = rideDropPointDistance;
+	}
+	@Override
+	public int compareTo(RideRequest rideRequest) {
+		//ascending order
+		//return this.id - rideRequest.id;
 
+		//descending order
+		return Long.compare(rideRequest.id, this.id);
+	}
+	public String getConfirmationCode() {
+		return confirmationCode;
+	}
+	public void setConfirmationCode(String confirmationCode) {
+		this.confirmationCode = confirmationCode;
+	}
+	public Collection<UserFeedback> getFeedbacks() {
+		return feedbacks;
+	}
+	public void setFeedbacks(Collection<UserFeedback> feedbacks) {
+		this.feedbacks = feedbacks;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -212,104 +291,5 @@ public class RideRequest implements Comparable<RideRequest>{
 		}
 		return true;
 	}
-	public Collection<Ride> getCancelledRides() {
-		return cancelledRides;
-	}
-	public void setCancelledRides(Collection<Ride> cancelledRides) {
-		this.cancelledRides = cancelledRides;
-	}
-
-	public RideMode getRideMode() {
-		return rideMode;
-	}
-
-	public void setRideMode(RideMode rideMode) {
-		this.rideMode = rideMode;
-	}
-
-	public String getPickupPointAddress() {
-		return pickupPointAddress;
-	}
-
-	public void setPickupPointAddress(String pickupPointAddress) {
-		this.pickupPointAddress = pickupPointAddress;
-	}
-
-	public String getDropPointAddress() {
-		return dropPointAddress;
-	}
-
-	public void setDropPointAddress(String dropPointAddress) {
-		this.dropPointAddress = dropPointAddress;
-	}
-
-	public String getRidePickupPointAddress() {
-		return ridePickupPointAddress;
-	}
-
-	public void setRidePickupPointAddress(String ridePickupPointAddress) {
-		this.ridePickupPointAddress = ridePickupPointAddress;
-	}
-
-	public String getRideDropPointAddress() {
-		return rideDropPointAddress;
-	}
-
-	public void setRideDropPointAddress(String rideDropPointAddress) {
-		this.rideDropPointAddress = rideDropPointAddress;
-	}
-
-	public Bill getBill() {
-		return bill;
-	}
-
-	public void setBill(Bill bill) {
-		this.bill = bill;
-	}
-
-	public PassengerStatus getPassengerStatus() {
-		return passengerStatus;
-	}
-
-	public void setPassengerStatus(PassengerStatus passengerStatus) {
-		this.passengerStatus = passengerStatus;
-	}
-	public double getRidePickupPointDistance() {
-		return ridePickupPointDistance;
-	}
-	public void setRidePickupPointDistance(double ridePickupPointDistance) {
-		this.ridePickupPointDistance = ridePickupPointDistance;
-	}
-
-	public double getRideDropPointDistance() {
-		return rideDropPointDistance;
-	}
-
-	public void setRideDropPointDistance(double rideDropPointDistance) {
-		this.rideDropPointDistance = rideDropPointDistance;
-	}
-
-	@Override
-	public int compareTo(RideRequest rideRequest) {
-		//ascending order
-		//return this.id - rideRequest.id;
-
-		//descending order
-		return rideRequest.id - this.id;
-	}
-	public String getConfirmationCode() {
-		return confirmationCode;
-	}
-
-	public void setConfirmationCode(String confirmationCode) {
-		this.confirmationCode = confirmationCode;
-	}
-
-	public Collection<UserFeedback> getFeedbacks() {
-		return feedbacks;
-	}
-
-	public void setFeedbacks(Collection<UserFeedback> feedbacks) {
-		this.feedbacks = feedbacks;
-	}
+	
 }

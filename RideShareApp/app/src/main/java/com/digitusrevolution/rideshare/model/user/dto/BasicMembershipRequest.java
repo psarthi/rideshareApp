@@ -6,11 +6,12 @@ import java.util.Map;
 
 import com.digitusrevolution.rideshare.model.user.domain.ApprovalStatus;
 
+//Reason behind this jsonignore so that it doesn't throw error while converting from Domain Model to DTO which has less fields
 public class BasicMembershipRequest {
 
-	private int id;
+	private long id;
 	private BasicUser user;
-	private GroupDetail group;
+	private GroupDetail group; 
 	//This would be visible to all group members e.g. employee id, flat number etc
 	private String userUniqueIdentifier;
 	private Map<String, String> questionAnswers = new HashMap<String, String>();
@@ -19,17 +20,23 @@ public class BasicMembershipRequest {
 	private String adminRemark;
 	private String userRemark;
 	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public ApprovalStatus getStatus() {
 		return status;
 	}
 	public void setStatus(ApprovalStatus status) {
 		this.status = status;
 	}
-	public int getId() {
-		return id;
+	public Date getCreatedDateTime() {
+		return createdDateTime;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setCreatedDateTime(Date createdDateTime) {
+		this.createdDateTime = createdDateTime;
 	}
 	public String getUserUniqueIdentifier() {
 		return userUniqueIdentifier;
@@ -53,8 +60,7 @@ public class BasicMembershipRequest {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
 	@Override
@@ -72,13 +78,6 @@ public class BasicMembershipRequest {
 		if (id != other.id) {
 			return false;
 		}
-		if (user == null) {
-			if (other.user != null) {
-				return false;
-			}
-		} else if (!user.equals(other.user)) {
-			return false;
-		}
 		return true;
 	}
 	public String getAdminRemark() {
@@ -93,20 +92,11 @@ public class BasicMembershipRequest {
 	public void setUser(BasicUser user) {
 		this.user = user;
 	}
-
-	public Date getCreatedDateTime() {
-		return createdDateTime;
-	}
-
-	public void setCreatedDateTime(Date createdDateTime) {
-		this.createdDateTime = createdDateTime;
-	}
-
 	public GroupDetail getGroup() {
 		return group;
 	}
-
 	public void setGroup(GroupDetail group) {
 		this.group = group;
 	}
+
 }

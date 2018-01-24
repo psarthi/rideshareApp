@@ -64,7 +64,7 @@ implements RideRequestComp.RideRequestCompListener{
             @Override
             public void onClick(View v) {
 
-                String rideRequestId = Integer.toString(mRideRequests.get(position).getId());
+                String rideRequestId = Long.toString(mRideRequests.get(position).getId());
                 String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.ID_KEY,rideRequestId);
                 mCommonUtil.showProgressDialog();
                 RESTClient.get(GET_RIDE_REQUEST_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){

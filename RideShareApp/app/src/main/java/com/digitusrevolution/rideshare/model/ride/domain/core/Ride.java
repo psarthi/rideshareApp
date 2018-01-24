@@ -1,23 +1,23 @@
 package com.digitusrevolution.rideshare.model.ride.domain.core;
 
-import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
-import com.digitusrevolution.rideshare.model.ride.domain.RecurringDetail;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
+import com.digitusrevolution.rideshare.model.ride.domain.RecurringDetail;
 import com.digitusrevolution.rideshare.model.ride.domain.Route;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
 import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.core.User;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 
-import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-
+//This can help in getting just id instead of object but its causing issue while deserialization, so for now lets park it.
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Ride implements Comparable<Ride>{
 
 	//id data type needs to be finalized later, whether to use int, long, string
-	private int id;
+	private long id;
 	private Date startTime;
 	private Date endTime;
 	private RidePoint startPoint = new RidePoint();
@@ -34,6 +34,7 @@ public class Ride implements Comparable<Ride>{
 	private RideStatus status;
 	private RideSeatStatus seatStatus;
 	private Vehicle vehicle;
+	//@JsonIdentityReference(alwaysAsId=true)
 	private User driver;
 	private Collection<RidePassenger> ridePassengers = new HashSet<RidePassenger>();
 	private Collection<RideRequest> acceptedRideRequests = new HashSet<RideRequest>();
@@ -42,10 +43,10 @@ public class Ride implements Comparable<Ride>{
 	private int travelDistance;
 	private RideMode rideMode;
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public Date getStartTime() {
@@ -155,7 +156,7 @@ public class Ride implements Comparable<Ride>{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
 
@@ -188,7 +189,7 @@ public class Ride implements Comparable<Ride>{
 	public void setSeatStatus(RideSeatStatus seatStatus) {
 		this.seatStatus = seatStatus;
 	}
-	public RideRequest getRideRequestOfPassenger(int passengerId){
+	public RideRequest getRideRequestOfPassenger(long passengerId){
 		Collection<RideRequest> acceptedRideRequests = getAcceptedRideRequests();
 		for (RideRequest rideRequest : acceptedRideRequests) {
 			if (rideRequest.getPassenger().getId() == passengerId){
@@ -197,7 +198,7 @@ public class Ride implements Comparable<Ride>{
 		}
 		throw new RuntimeException("Ride Request not found for passenger id:"+passengerId);
 	}
-	public RidePassenger getRidePassenger(int passengerId){
+	public RidePassenger getRidePassenger(long passengerId){
 		Collection<RidePassenger> passengers = getRidePassengers();
 		for (RidePassenger ridePassenger : passengers) {
 			if (ridePassenger.getPassenger().getId() == passengerId){
@@ -206,47 +207,39 @@ public class Ride implements Comparable<Ride>{
 		}
 		throw new RuntimeException("No passenger found with id:"+passengerId);
 	}
-
-
 	public Date getEndTime() {
 		return endTime;
 	}
-
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
-
 	public RideMode getRideMode() {
 		return rideMode;
 	}
-
 	public void setRideMode(RideMode rideMode) {
 		this.rideMode = rideMode;
 	}
-
 	public String getStartPointAddress() {
 		return startPointAddress;
 	}
-
 	public void setStartPointAddress(String startPointAddress) {
 		this.startPointAddress = startPointAddress;
 	}
-
 	public String getEndPointAddress() {
 		return endPointAddress;
 	}
-
 	public void setEndPointAddress(String endPointAddress) {
 		this.endPointAddress = endPointAddress;
 	}
-
 	@Override
 	public int compareTo(Ride ride) {
+		//Negative number is desc order, positive is asc order
 		//ascending order
 		//return this.id - ride.id;
 
 		//descending order
-		return ride.id - this.id;
+		return Long.compare(ride.id, this.id);
 	}
 
+	
 }

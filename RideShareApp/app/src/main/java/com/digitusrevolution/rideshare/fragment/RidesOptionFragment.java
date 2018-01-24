@@ -396,7 +396,7 @@ public class RidesOptionFragment extends BaseFragment
                     setRidesOption();
                     if (mSavePreferenceSwitch.isChecked()){
                         mCommonUtil.showProgressDialog();
-                        String url = APIUrl.UPDATE_USER_PREFERENCE.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+                        String url = APIUrl.UPDATE_USER_PREFERENCE.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
                         RESTClient.post(getActivity(), url, mRidesOption, new RSJsonHttpResponseHandler(mCommonUtil){
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

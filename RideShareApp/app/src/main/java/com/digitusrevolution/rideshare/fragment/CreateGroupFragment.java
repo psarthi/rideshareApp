@@ -191,7 +191,7 @@ public class CreateGroupFragment extends BaseFragment{
                     BasicGroupInfo basicGroupInfo = new Gson().fromJson(basicGroupJson, BasicGroupInfo.class);
                     basicGroupInfo.setRawImage(mRawImage);
 
-                    String url = APIUrl.UPDATE_GROUP.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+                    String url = APIUrl.UPDATE_GROUP.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
                     mCommonUtil.showProgressDialog();
                     RESTClient.post(getActivity(), url, basicGroupInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
@@ -212,7 +212,7 @@ public class CreateGroupFragment extends BaseFragment{
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus){
-                    String url = APIUrl.CHECK_GROUP_NAME_EXIST.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                    String url = APIUrl.CHECK_GROUP_NAME_EXIST.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
                             .replace(APIUrl.SEARCH_NAME_KEY, mGroupNameEditText.getText().toString());
 
                     RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){

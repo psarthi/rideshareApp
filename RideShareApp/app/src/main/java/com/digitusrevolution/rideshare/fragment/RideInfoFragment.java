@@ -259,7 +259,7 @@ public class RideInfoFragment extends BaseFragment implements
         setRideInfoView(getView());
     }
 
-    public int getRideId(){
+    public long getRideId(){
         return mRide.getId();
     }
 

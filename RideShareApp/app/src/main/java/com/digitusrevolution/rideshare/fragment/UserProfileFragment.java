@@ -184,7 +184,7 @@ public class UserProfileFragment extends BaseFragment {
         void onUserProfileFragmentInteraction(String data);
     }
 
-    public int getUserId(){
+    public long getUserId(){
         return mUserProfile.getUser().getId();
     }
 }

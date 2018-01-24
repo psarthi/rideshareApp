@@ -22,7 +22,7 @@ public class RidePointInfo {
 
 /*	@Override
 	public String toString() {
-		JSONUtil<RidePointInfo> jsonUtil = new JSONUtil<>(RidePointInfo.class);
+		JSONUtil<RidePointDTO> jsonUtil = new JSONUtil<>(RidePointDTO.class);
 		return jsonUtil.getJson(this);
 	}
 */	@Override

@@ -102,8 +102,8 @@ public class SearchUserForGroupFragment extends BaseFragment {
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
         mGroupDetail = new Gson().fromJson(mGroupDetailData, GroupDetail.class);
-        SEARCH_URL = APIUrl.SEARCH_USER_FOR_GROUP_INVITE.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                .replace(APIUrl.GROUP_ID_KEY,Integer.toString(mGroupDetail.getId()));
+        SEARCH_URL = APIUrl.SEARCH_USER_FOR_GROUP_INVITE.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                .replace(APIUrl.GROUP_ID_KEY,Long.toString(mGroupDetail.getId()));
         setHasOptionsMenu(true);
     }
 
@@ -313,7 +313,7 @@ public class SearchUserForGroupFragment extends BaseFragment {
     }
 
     private void sendInvite() {
-        ArrayList<Integer> userIds = new ArrayList<>();
+        ArrayList<Long> userIds = new ArrayList<>();
         //There is possibility user may click on Join even before any search, which will prevent from NPE
         //as Wrapper will only get initialized on first result set
         if (mUserSearchResultsWrappers!=null){
@@ -326,8 +326,8 @@ public class SearchUserForGroupFragment extends BaseFragment {
             }
         }
         if (userIds.size() > 0){
-            String URL = APIUrl.INVITE_USER.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                    .replace(APIUrl.GROUP_ID_KEY,Integer.toString(mGroupDetail.getId()));
+            String URL = APIUrl.INVITE_USER.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                    .replace(APIUrl.GROUP_ID_KEY,Long.toString(mGroupDetail.getId()));
             RESTClient.post(getActivity(), URL, userIds, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

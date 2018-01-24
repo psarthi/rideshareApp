@@ -4,32 +4,40 @@ import com.digitusrevolution.rideshare.model.user.domain.core.User;
 
 /*
  * Purpose of this class is to break ManyToMany relationship between Ride and User to OneToMany from both sides,
- * so that we can drawable.add extra fields of passenger such as Passenger Status
+ * so that we can add extra fields of passenger such as Passenger Status
  * 
  */
 public class RidePassenger {
 	
-	private int id;
+	private long id;
 	private Ride ride;
 	private User passenger;
 	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public User getPassenger() {
 		return passenger;
 	}
 	public void setPassenger(User passenger) {
 		this.passenger = passenger;
 	}
-	public int getId() {
-		return id;
+
+	public Ride getRide() {
+		return ride;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setRide(Ride ride) {
+		this.ride = ride;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((passenger == null) ? 0 : passenger.hashCode());
 		result = prime * result + ((ride == null) ? 0 : ride.hashCode());
 		return result;
@@ -65,11 +73,4 @@ public class RidePassenger {
 		}
 		return true;
 	}
-	public Ride getRide() {
-		return ride;
-	}
-	public void setRide(Ride ride) {
-		this.ride = ride;
-	}
-
 }

@@ -217,7 +217,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
 
     }
 
-    public int getRideRequestId(){
+    public long getRideRequestId(){
         return mRideRequest.getId();
     }
 

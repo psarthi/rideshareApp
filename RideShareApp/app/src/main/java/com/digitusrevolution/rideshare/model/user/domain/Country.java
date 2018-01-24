@@ -1,9 +1,9 @@
 package com.digitusrevolution.rideshare.model.user.domain;
 
-import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
-
 import java.util.Collection;
 import java.util.HashSet;
+
+import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 
 public class Country {
 
@@ -75,12 +75,11 @@ public class Country {
 	public void setCode(String code) {
 		this.code = code;
 	}
-
 	public RideMode getRideMode() {
 		return rideMode;
 	}
-
 	public void setRideMode(RideMode rideMode) {
 		this.rideMode = rideMode;
 	}
+
 }

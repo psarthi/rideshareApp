@@ -13,9 +13,10 @@ import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.State;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 
+//Reason behind this jsonignore so that it doesn't throw error while converting from Domain Model to DTO which has less fields
 public class BasicUser {
 	
-	private int id;
+	private long id;
 	private String firstName;
 	private String lastName;
 	private Sex sex;
@@ -32,10 +33,10 @@ public class BasicUser {
 	private Collection<Account> accounts = new HashSet<Account>();
 	private Preference preference;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getFirstName() {
@@ -128,7 +129,7 @@ public class BasicUser {
 	public void setPreference(Preference preference) {
 		this.preference = preference;
 	}
-
+	
 }
 
 

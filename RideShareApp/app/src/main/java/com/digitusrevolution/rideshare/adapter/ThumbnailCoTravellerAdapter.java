@@ -83,8 +83,8 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
             @Override
             public void onClick(View v) {
 
-                String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.SIGNEDIN_USER_ID_KEY, Integer.toString(mUser.getId()))
-                        .replace(APIUrl.USER_ID_KEY, Integer.toString(rideRequest.getPassenger().getId()));
+                String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.SIGNEDIN_USER_ID_KEY, Long.toString(mUser.getId()))
+                        .replace(APIUrl.USER_ID_KEY, Long.toString(rideRequest.getPassenger().getId()));
                 mCommonUtil.showProgressDialog();
                 RESTClient.get(GET_USER_PROFILE, null, new RSJsonHttpResponseHandler(mCommonUtil){
 

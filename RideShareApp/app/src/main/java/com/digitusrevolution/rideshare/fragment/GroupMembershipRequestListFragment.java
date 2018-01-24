@@ -91,8 +91,8 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
         GroupDetail groupDetail = new Gson().fromJson(mGroupDetailData, GroupDetail.class);
-        GET_GROUP_MEMBERSHIP_REQUEST_URL = APIUrl.GET_GROUP_MEMBERSHIP_REQUESTS.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                .replace(APIUrl.GROUP_ID_KEY,Integer.toString(groupDetail.getId()));
+        GET_GROUP_MEMBERSHIP_REQUEST_URL = APIUrl.GET_GROUP_MEMBERSHIP_REQUESTS.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                .replace(APIUrl.GROUP_ID_KEY,Long.toString(groupDetail.getId()));
     }
 
     @Override

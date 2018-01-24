@@ -102,7 +102,7 @@ public class TransactionFragment extends BaseFragment {
         }
         mCommonUtil = new CommonUtil(this);
         mAccount = mCommonUtil.getAccount();
-        GET_USER_WALLET_TRANSACTION_URL = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()));
+        GET_USER_WALLET_TRANSACTION_URL = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Long.toString(mAccount.getNumber()));
     }
 
     @Override

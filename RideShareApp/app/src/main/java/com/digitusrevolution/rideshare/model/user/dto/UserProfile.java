@@ -2,8 +2,6 @@ package com.digitusrevolution.rideshare.model.user.dto;
 
 import java.util.List;
 
-import com.digitusrevolution.rideshare.model.user.domain.core.Group;
-
 public class UserProfile {
 	
 	private BasicUser user;
@@ -29,12 +27,11 @@ public class UserProfile {
 	public void setOfferedRides(int offeredRides) {
 		this.offeredRides = offeredRides;
 	}
-
 	public List<GroupDetail> getCommonGroups() {
 		return commonGroups;
 	}
-
 	public void setCommonGroups(List<GroupDetail> commonGroups) {
 		this.commonGroups = commonGroups;
 	}
+	
 }

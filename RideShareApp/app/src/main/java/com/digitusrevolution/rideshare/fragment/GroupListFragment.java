@@ -93,8 +93,8 @@ public class GroupListFragment extends BaseFragment {
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        GET_USER_GROUPS_URL = APIUrl.GET_USER_GROUPS.replace(APIUrl.USER_ID_KEY,Integer.toString(mUser.getId()))
-                .replace(APIUrl.GROUP_ID_KEY,Integer.toString(mUser.getId()))
+        GET_USER_GROUPS_URL = APIUrl.GET_USER_GROUPS.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                .replace(APIUrl.GROUP_ID_KEY,Long.toString(mUser.getId()))
                 .replace(APIUrl.GROUP_LIST_TYPE_KEY,mGroupListType.toString());
     }
 

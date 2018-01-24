@@ -186,7 +186,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     }
 
     public void fetchRidesFromServer(final View view) {
-        String GET_USER_CURRENT_RIDES = APIUrl.GET_USER_CURRENT_RIDES.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+        String GET_USER_CURRENT_RIDES = APIUrl.GET_USER_CURRENT_RIDES.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
         mCommonUtil.showProgressDialog();
         RESTClient.get(GET_USER_CURRENT_RIDES, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override

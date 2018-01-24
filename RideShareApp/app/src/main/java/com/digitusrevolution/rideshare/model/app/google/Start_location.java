@@ -1,10 +1,10 @@
 
-package com.digitusrevolution.rideshare.model.dto.google;
+package com.digitusrevolution.rideshare.model.app.google;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class End_location {
+public class Start_location {
 
     @SerializedName("lat")
     @Expose

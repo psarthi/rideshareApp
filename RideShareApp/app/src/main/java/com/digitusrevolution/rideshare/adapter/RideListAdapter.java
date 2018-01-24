@@ -64,7 +64,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.ViewHo
             @Override
             public void onClick(View v) {
 
-                String rideId = Integer.toString(mRides.get(position).getId());
+                String rideId = Long.toString(mRides.get(position).getId());
                 String GET_RIDE_URL = APIUrl.GET_RIDE_URL.replace(APIUrl.ID_KEY,rideId);
                 mCommonUtil.showProgressDialog();
                 RESTClient.get(GET_RIDE_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){

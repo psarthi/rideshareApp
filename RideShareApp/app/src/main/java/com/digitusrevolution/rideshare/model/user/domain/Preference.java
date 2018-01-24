@@ -1,12 +1,13 @@
 package com.digitusrevolution.rideshare.model.user.domain;
 
+
 import com.digitusrevolution.rideshare.model.ride.domain.TrustCategory;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 
 public class Preference {
 
-	private int id;
+	private long id;
 	//Ride Request Preference
 	private VehicleCategory vehicleCategory;
 	private VehicleSubCategory vehicleSubCategory;
@@ -25,6 +26,12 @@ public class Preference {
 	private float minProfileRating;
 	private RideMode rideMode;
 	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public VehicleCategory getVehicleCategory() {
 		return vehicleCategory;
 	}
@@ -67,6 +74,12 @@ public class Preference {
 	public void setLuggageCapacityRequired(int luggageCapacityRequired) {
 		this.luggageCapacityRequired = luggageCapacityRequired;
 	}
+	public TrustCategory getTrustCategory() {
+		return trustCategory;
+	}
+	public void setTrustCategory(TrustCategory trustCategory) {
+		this.trustCategory = trustCategory;
+	}
 	public Sex getSexPreference() {
 		return sexPreference;
 	}
@@ -79,31 +92,17 @@ public class Preference {
 	public void setMinProfileRating(float minProfileRating) {
 		this.minProfileRating = minProfileRating;
 	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public TrustCategory getTrustCategory() {
-		return trustCategory;
-	}
-	public void setTrustCategory(TrustCategory trustCategory) {
-		this.trustCategory = trustCategory;
-	}
-
 	public Vehicle getDefaultVehicle() {
 		return defaultVehicle;
 	}
 	public void setDefaultVehicle(Vehicle defaultVehicle) {
 		this.defaultVehicle = defaultVehicle;
 	}
-
 	public RideMode getRideMode() {
 		return rideMode;
 	}
-
 	public void setRideMode(RideMode rideMode) {
 		this.rideMode = rideMode;
 	}
+
 }

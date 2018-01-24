@@ -88,7 +88,7 @@ public class SearchGroupFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        SEARCH_URL = APIUrl.SEARCH_GROUP.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+        SEARCH_URL = APIUrl.SEARCH_GROUP.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
     }
 
     @Override

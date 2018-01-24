@@ -1,9 +1,11 @@
 package com.digitusrevolution.rideshare.model.user.dto;
 
-//Imp - Keep this as seperate class so that we maintain the basic concept intact of Basic and Full
+
+//Imp - Keep this as seperate class so that we maintain the basic concept intact of Basic and Full 
 //and we can user standard convertor for converting DO to DTO's and if we mix this along with BasicGroup
 //then we would not know whether memberCount is 0 or not there
 
+//Reason behind this jsonignore so that it doesn't throw error while converting from Domain Model to DTO which has less fields
 public class GroupDetail extends BasicGroup{
 
 	//This is an additional property than DO reason for having this 
@@ -35,4 +37,5 @@ public class GroupDetail extends BasicGroup{
 	public void setPendingRequestCount(int pendingRequestCount) {
 		this.pendingRequestCount = pendingRequestCount;
 	}
+
 }

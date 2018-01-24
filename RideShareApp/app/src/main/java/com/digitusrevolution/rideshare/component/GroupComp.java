@@ -131,8 +131,8 @@ public class GroupComp {
     }
 
     private void setupListeners() {
-        FEEDBACK_URL = APIUrl.GROUP_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroup.getId()));
+        FEEDBACK_URL = APIUrl.GROUP_FEEDBACK.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                .replace(APIUrl.GROUP_ID_KEY, Long.toString(mGroup.getId()));
 
         mGroupUpVoteLayout.setOnClickListener(new View.OnClickListener() {
             @Override

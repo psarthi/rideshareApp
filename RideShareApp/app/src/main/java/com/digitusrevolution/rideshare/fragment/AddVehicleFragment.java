@@ -147,7 +147,7 @@ CommonComp.onSeatLuggageSelectionListener{
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String ADD_VEHICLE_URL = APIUrl.ADD_VEHICLE_URL.replace(APIUrl.ID_KEY,Integer.toString(mUser.getId()));
+                String ADD_VEHICLE_URL = APIUrl.ADD_VEHICLE_URL.replace(APIUrl.ID_KEY,Long.toString(mUser.getId()));
                 if (validateInput()){
                     setVehicle();
                     mCommonUtil.showProgressDialog();

@@ -175,8 +175,8 @@ public class AboutGroupFragment extends BaseFragment {
         mMembershipRequestStatusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = APIUrl.GET_SPECIFIC_MEMBERSHIP_REQUEST.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                        .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroup.getId()));
+                String url = APIUrl.GET_SPECIFIC_MEMBERSHIP_REQUEST.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                        .replace(APIUrl.GROUP_ID_KEY, Long.toString(mGroup.getId()));
                 mCommonUtil.showProgressDialog();
                 RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
                     @Override
@@ -197,8 +197,8 @@ public class AboutGroupFragment extends BaseFragment {
                 DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardListAlertDialogListener() {
                     @Override
                     public void onPositiveStandardAlertDialog() {
-                        String url = APIUrl.LEAVE_GROUP.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                                .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroup.getId()));
+                        String url = APIUrl.LEAVE_GROUP.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                                .replace(APIUrl.GROUP_ID_KEY, Long.toString(mGroup.getId()));
                         RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

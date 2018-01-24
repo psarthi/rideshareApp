@@ -140,9 +140,9 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
 
     private void addAdmin(){
         BasicUser selectedMember = mGroupMembers.get(mCurrentSelectedPosition);
-        String url = APIUrl.ADD_ADMIN_TO_GROUP.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroupDetail.getId()))
-                .replace(APIUrl.MEMBER_USER_ID_KEY, Integer.toString(selectedMember.getId()));
+        String url = APIUrl.ADD_ADMIN_TO_GROUP.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                .replace(APIUrl.GROUP_ID_KEY, Long.toString(mGroupDetail.getId()))
+                .replace(APIUrl.MEMBER_USER_ID_KEY, Long.toString(selectedMember.getId()));
         RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -156,9 +156,9 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
 
     private  void removeMember(){
         BasicUser selectedMember = mGroupMembers.get(mCurrentSelectedPosition);
-        String url = APIUrl.REMOVE_MEMBER_FROM_GROUP.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                .replace(APIUrl.GROUP_ID_KEY, Integer.toString(mGroupDetail.getId()))
-                .replace(APIUrl.MEMBER_USER_ID_KEY, Integer.toString(selectedMember.getId()));
+        String url = APIUrl.REMOVE_MEMBER_FROM_GROUP.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                .replace(APIUrl.GROUP_ID_KEY, Long.toString(mGroupDetail.getId()))
+                .replace(APIUrl.MEMBER_USER_ID_KEY, Long.toString(selectedMember.getId()));
         RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

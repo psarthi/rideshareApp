@@ -167,7 +167,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
                     String basicGroupJson = new Gson().toJson(mGroup);
                     BasicGroupInfo basicGroupInfo = new Gson().fromJson(basicGroupJson, BasicGroupInfo.class);
                     basicGroupInfo.setRawImage(mRawImage);
-                    String CREATE_GROUP = APIUrl.CREATE_GROUP.replace(APIUrl.USER_ID_KEY,Integer.toString(mUser.getId()));
+                    String CREATE_GROUP = APIUrl.CREATE_GROUP.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()));
                     mCommonUtil.showProgressDialog();
                     RESTClient.post(getActivity(), CREATE_GROUP, basicGroupInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
@@ -189,8 +189,8 @@ public class CreateMembershipFormFragment extends BaseFragment {
             public void onClick(View v) {
                 if (validateInput()){
                     setupGroup();
-                    String URL = APIUrl.GROUP_UPDATE_MEMBERSHIP_FORM.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
-                            .replace(APIUrl.GROUP_ID_KEY,Integer.toString(mGroup.getId()));
+                    String URL = APIUrl.GROUP_UPDATE_MEMBERSHIP_FORM.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                            .replace(APIUrl.GROUP_ID_KEY,Long.toString(mGroup.getId()));
                     mCommonUtil.showProgressDialog();
                     RESTClient.post(getActivity(), URL, mGroup.getMembershipForm(), new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override

@@ -121,7 +121,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 @Override
                 public void onClick(View v) {
 
-                    String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.ID_KEY, Integer.toString(mBasicRideRequest.getId()));
+                    String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.ID_KEY, Long.toString(mBasicRideRequest.getId()));
                     mCommonUtil.showProgressDialog();
                     RESTClient.get(GET_RIDE_REQUEST_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override
@@ -164,7 +164,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardListAlertDialogListener() {
                     @Override
                     public void onPositiveStandardAlertDialog() {
-                        String CANCEL_RIDE_REQUEST = APIUrl.CANCEL_RIDE_REQUEST.replace(APIUrl.ID_KEY, Integer.toString(mBasicRideRequest.getId()));
+                        String CANCEL_RIDE_REQUEST = APIUrl.CANCEL_RIDE_REQUEST.replace(APIUrl.ID_KEY, Long.toString(mBasicRideRequest.getId()));
                         mCommonUtil.showProgressDialog();
                         RESTClient.get(CANCEL_RIDE_REQUEST, null, new RSJsonHttpResponseHandler(mCommonUtil){
                             @Override
@@ -323,7 +323,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 String USER_FEEDBACK_URL;
                 final UserFeedbackInfo feedbackInfo = new UserFeedbackInfo();
                 Log.d(TAG, "Rating is:"+rating+" Given By Passenger User Id:"+mRideRequest.getPassenger().getId());
-                USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Integer.toString(mRideRequest.getAcceptedRide().getDriver().getId()))
+                USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Long.toString(mRideRequest.getAcceptedRide().getDriver().getId()))
                         .replace(APIUrl.RIDE_TYPE_KEY, RideType.RequestRide.toString());
                 feedbackInfo.setGivenByUser(mRideRequest.getPassenger());
                 feedbackInfo.setRating(rating);
@@ -426,8 +426,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         RatingBar ratingBar = dialog.findViewById(R.id.rating_bar);
         Log.d(TAG, "Rating value:"+ratingBar.getRating());
 
-        String CANCEL_DRIVER = APIUrl.CANCEL_DRIVER.replace(APIUrl.RIDE_REQUEST_ID_KEY, Integer.toString(rideRequest.getId()))
-                .replace(APIUrl.RIDE_ID_KEY, Integer.toString(rideRequest.getAcceptedRide().getId()))
+        String CANCEL_DRIVER = APIUrl.CANCEL_DRIVER.replace(APIUrl.RIDE_REQUEST_ID_KEY, Long.toString(rideRequest.getId()))
+                .replace(APIUrl.RIDE_ID_KEY, Long.toString(rideRequest.getAcceptedRide().getId()))
                 .replace(APIUrl.RATING_KEY, Float.toString(ratingBar.getRating()));
         mCommonUtil.showProgressDialog();
         RESTClient.get(CANCEL_DRIVER, null, new RSJsonHttpResponseHandler(mCommonUtil){

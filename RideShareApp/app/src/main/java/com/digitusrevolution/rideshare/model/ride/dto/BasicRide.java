@@ -13,10 +13,11 @@ import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.core.Vehicle;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 
+//Reason behind this jsonignore so that it doesn't throw error while converting from Domain Model to DTO which has less fields
 public class BasicRide {
 
 	//id data type needs to be finalized later, whether to use int, long, string
-	private int id;
+	private long id;
 	private Date startTime;
 	private Date endTime;
 	private RidePoint startPoint = new RidePoint();
@@ -34,10 +35,10 @@ public class BasicRide {
 	private int travelDistance;
 	private RideMode rideMode;
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public Date getStartTime() {
@@ -112,38 +113,28 @@ public class BasicRide {
 	public void setSeatStatus(RideSeatStatus seatStatus) {
 		this.seatStatus = seatStatus;
 	}
-
 	public Date getEndTime() {
 		return endTime;
 	}
-
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
-
 	public RideMode getRideMode() {
 		return rideMode;
 	}
-
 	public void setRideMode(RideMode rideMode) {
 		this.rideMode = rideMode;
 	}
-
 	public String getStartPointAddress() {
 		return startPointAddress;
 	}
-
 	public void setStartPointAddress(String startPointAddress) {
 		this.startPointAddress = startPointAddress;
 	}
-
 	public String getEndPointAddress() {
 		return endPointAddress;
 	}
-
 	public void setEndPointAddress(String endPointAddress) {
 		this.endPointAddress = endPointAddress;
-	}
-
-
+	}	
 }

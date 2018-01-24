@@ -1,15 +1,16 @@
 package com.digitusrevolution.rideshare.model.ride.domain;
 
+
 import java.util.Date;
 
 public class RidePointProperty {
-	private int id;
+	private long id;
 	private Date dateTime;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public Date getDateTime() {
@@ -28,7 +29,7 @@ public class RidePointProperty {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((dateTime == null) ? 0 : dateTime.hashCode());
-		result = prime * result + id;
+		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
 	@Override

@@ -2,8 +2,8 @@ package com.digitusrevolution.rideshare.model.ride.dto;
 
 import java.util.List;
 
+import com.digitusrevolution.rideshare.model.app.google.GoogleDistance;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
-import com.digitusrevolution.rideshare.model.dto.google.GoogleDistance;
 
 public class PreBookingRideRequestResult {
 	

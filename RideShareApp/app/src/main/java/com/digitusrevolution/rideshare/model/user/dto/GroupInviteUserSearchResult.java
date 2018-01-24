@@ -25,12 +25,12 @@ public class GroupInviteUserSearchResult {
 	public void setInvited(boolean invited) {
 		this.invited = invited;
 	}
-
 	public boolean isRequestSubmitted() {
 		return requestSubmitted;
 	}
-
 	public void setRequestSubmitted(boolean requestSubmitted) {
 		this.requestSubmitted = requestSubmitted;
 	}
+	
+	
 }

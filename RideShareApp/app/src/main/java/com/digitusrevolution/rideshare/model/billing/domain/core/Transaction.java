@@ -2,14 +2,20 @@ package com.digitusrevolution.rideshare.model.billing.domain.core;
 
 import java.util.Date;
 
-public class Transaction {
+public class Transaction implements Comparable<Transaction>{
 	
-	private int id;
+	private long id;
 	private Date dateTime;
 	private TransactionType type;
 	private float amount;
 	private Remark remark;
 	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public Date getDateTime() {
 		return dateTime;
 	}
@@ -28,30 +34,17 @@ public class Transaction {
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public Remark getRemark() {
 		return remark;
 	}
-
 	public void setRemark(Remark remark) {
 		this.remark = remark;
 	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Float.floatToIntBits(amount);
-		result = prime * result + ((dateTime == null) ? 0 : dateTime.hashCode());
-		result = prime * result + id;
-		result = prime * result + ((remark == null) ? 0 : remark.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
 	@Override
@@ -66,30 +59,17 @@ public class Transaction {
 			return false;
 		}
 		Transaction other = (Transaction) obj;
-		if (Float.floatToIntBits(amount) != Float.floatToIntBits(other.amount)) {
-			return false;
-		}
-		if (dateTime == null) {
-			if (other.dateTime != null) {
-				return false;
-			}
-		} else if (!dateTime.equals(other.dateTime)) {
-			return false;
-		}
 		if (id != other.id) {
 			return false;
 		}
-		if (remark == null) {
-			if (other.remark != null) {
-				return false;
-			}
-		} else if (!remark.equals(other.remark)) {
-			return false;
-		}
-		if (type != other.type) {
-			return false;
-		}
 		return true;
+	}
+	@Override
+	public int compareTo(Transaction transaction) {
+		//Negative number is desc order, positive is asc order
+		//return transaction.getDateTime().getNano() - this.getDateTime().getNano();
+		//Unable to compare with date somehow so comparing based on Id which should be changed to datetime
+		return Long.compare(transaction.getId(),this.getId());
 	}
 
 }

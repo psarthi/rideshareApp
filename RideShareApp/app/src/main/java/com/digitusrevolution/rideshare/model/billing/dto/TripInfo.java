@@ -21,13 +21,13 @@ public class TripInfo {
 	public void setRideRequest(RideRequest rideRequest) {
 		this.rideRequest = rideRequest;
 	}
-
-
 	public float getDiscountPercentage() {
 		return discountPercentage;
 	}
-
 	public void setDiscountPercentage(float discountPercentage) {
 		this.discountPercentage = discountPercentage;
 	}
+	
+	
+
 }

@@ -1,10 +1,9 @@
 package com.digitusrevolution.rideshare.model.ride.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class RidePoint implements Comparable<RidePoint>{
 	
@@ -77,11 +76,12 @@ public class RidePoint implements Comparable<RidePoint>{
 		}
 		return true;
 	}
-
 	@Override
 	public int compareTo(RidePoint ridePoint) {
 		//Negative number is desc order, positive is asc order
 		return this.sequence - ridePoint.sequence;
 	}
-
+	
+	
+	
 }

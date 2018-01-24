@@ -79,7 +79,7 @@ public class UserMembershipRequestListFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        GET_USER_MEMBERSHIP_REQUEST_URL = APIUrl.GET_USER_MEMBERSHIP_REQUESTS.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+        GET_USER_MEMBERSHIP_REQUEST_URL = APIUrl.GET_USER_MEMBERSHIP_REQUESTS.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
     }
 
     @Override

@@ -21,9 +21,13 @@ import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.State;
 import com.digitusrevolution.rideshare.model.user.domain.UserFeedback;
 
+//This can help in getting just id instead of object but its causing issue while deserialization, so for now lets park it.
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
+//This would enable deserialization from DTO to Domain model e.g. UserDTO contain otp field which is not here, so it would be ignored
+//we don't want use jsonignore for otp field in userDTO else deserialization of userRegistration would remove otp and you would get null value for that
 public class User implements Comparable<User>{
 	
-	private int id;
+	private long id;
 	private String firstName;
 	private String lastName;
 	private Sex sex;
@@ -39,6 +43,7 @@ public class User implements Comparable<User>{
 	private Collection<User> friends = new HashSet<User>();
 	private Collection<Role> roles = new HashSet<Role>();
 	private Collection<Account> accounts = new HashSet<Account>();
+	//@JsonIdentityReference(alwaysAsId=true)
 	private Collection<Ride> ridesOffered = new HashSet<Ride>();
 	private Collection<Ride> ridesTaken = new HashSet<Ride>();
 	private Collection<RideRequest> rideRequests = new HashSet<RideRequest>();
@@ -53,14 +58,13 @@ public class User implements Comparable<User>{
 	private Collection<MembershipRequest> membershipRequests = new HashSet<MembershipRequest>();
 	private RegistrationType registrationType;
 	
-	public int getId() {
+	
+	public long getId() {
 		return id;
 	}
-	
-	public void setId(int id) {
-		this.id = id;		
+	public void setId(long id) {
+		this.id = id;
 	}
-	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -220,11 +224,7 @@ public class User implements Comparable<User>{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
-		result = prime * result + id;
-		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-		result = prime * result + ((mobileNumber == null) ? 0 : mobileNumber.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
 
@@ -240,35 +240,7 @@ public class User implements Comparable<User>{
 			return false;
 		}
 		User other = (User) obj;
-		if (email == null) {
-			if (other.email != null) {
-				return false;
-			}
-		} else if (!email.equals(other.email)) {
-			return false;
-		}
-		if (firstName == null) {
-			if (other.firstName != null) {
-				return false;
-			}
-		} else if (!firstName.equals(other.firstName)) {
-			return false;
-		}
 		if (id != other.id) {
-			return false;
-		}
-		if (lastName == null) {
-			if (other.lastName != null) {
-				return false;
-			}
-		} else if (!lastName.equals(other.lastName)) {
-			return false;
-		}
-		if (mobileNumber == null) {
-			if (other.mobileNumber != null) {
-				return false;
-			}
-		} else if (!mobileNumber.equals(other.mobileNumber)) {
 			return false;
 		}
 		return true;
@@ -298,7 +270,7 @@ public class User implements Comparable<User>{
 		this.friendRequests = friendRequests;
 	}
 	
-	public FriendRequest getFriendRequest(int friendUserId){
+	public FriendRequest getFriendRequest(long friendUserId){
 		Collection<FriendRequest> friendRequests = getFriendRequests();
 		for (FriendRequest friendRequest : friendRequests) {
 			if (friendRequest.getFriend().getId() == friendUserId){
@@ -329,7 +301,8 @@ public class User implements Comparable<User>{
 	public int compareTo(User user) {
 		//Negative number is desc order, positive is asc order
 		//This will return in assending order
-		return this.firstName.compareTo(user.firstName);
+		//Changing it to upper case so that we are comparing the user name properly by ignoring the case
+		return this.firstName.toUpperCase().compareTo(user.firstName.toUpperCase());
 	}
 
 	public Collection<MembershipRequest> getMembershipRequests() {
@@ -339,6 +312,7 @@ public class User implements Comparable<User>{
 	public void setMembershipRequests(Collection<MembershipRequest> membershipRequests) {
 		this.membershipRequests = membershipRequests;
 	}
+
 }
 
 

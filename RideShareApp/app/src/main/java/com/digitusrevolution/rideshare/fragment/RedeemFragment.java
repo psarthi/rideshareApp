@@ -117,7 +117,7 @@ public class RedeemFragment extends BaseFragment {
             public void onClick(View v) {
                 String redeemAmount = ((TextView) view.findViewById(R.id.redeem_amount)).getText().toString();
                 if (validateInput(redeemAmount)){
-                    String REDEEM_MONEY = APIUrl.REDEEM_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY, Integer.toString(mAccount.getNumber()))
+                    String REDEEM_MONEY = APIUrl.REDEEM_MONEY.replace(APIUrl.ACCOUNT_NUMBER_KEY, Long.toString(mAccount.getNumber()))
                             .replace(APIUrl.AMOUNT_KEY, redeemAmount);
                     mCommonUtil.showProgressDialog();
                     RESTClient.get(REDEEM_MONEY, null, new RSJsonHttpResponseHandler(mCommonUtil) {

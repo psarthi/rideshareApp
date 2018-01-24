@@ -1,7 +1,7 @@
 package com.digitusrevolution.rideshare.model.common;
 
 public class ResponseMessage {
-
+ 
 	private String result;
 	private Code status;
 
@@ -12,7 +12,7 @@ public class ResponseMessage {
 	public void setResult(String result) {
 		this.result = result;
 	}
-
+	
 	public Code getStatus() {
 		return status;
 	}

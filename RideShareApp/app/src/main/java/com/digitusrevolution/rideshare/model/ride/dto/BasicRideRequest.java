@@ -14,9 +14,10 @@ import com.digitusrevolution.rideshare.model.user.domain.VehicleCategory;
 import com.digitusrevolution.rideshare.model.user.domain.VehicleSubCategory;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 
+//Reason behind this jsonignore so that it doesn't throw error while converting from Domain Model to DTO which has less fields
 public class BasicRideRequest {
 
-	private int id;
+	private long id;
 	private RideRequestPoint pickupPoint = new RideRequestPoint();
 	private RideRequestPoint dropPoint = new RideRequestPoint();
 	private String pickupPointAddress;
@@ -45,11 +46,11 @@ public class BasicRideRequest {
 	private int travelDistance;
 	private RideMode rideMode;
 	private String confirmationCode;
-
-	public int getId() {
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public RideRequestPoint getPickupPoint() {
@@ -169,70 +170,54 @@ public class BasicRideRequest {
 	public RideMode getRideMode() {
 		return rideMode;
 	}
-
 	public void setRideMode(RideMode rideMode) {
 		this.rideMode = rideMode;
 	}
-
 	public String getPickupPointAddress() {
 		return pickupPointAddress;
 	}
-
 	public void setPickupPointAddress(String pickupPointAddress) {
 		this.pickupPointAddress = pickupPointAddress;
 	}
-
 	public String getDropPointAddress() {
 		return dropPointAddress;
 	}
-
 	public void setDropPointAddress(String dropPointAddress) {
 		this.dropPointAddress = dropPointAddress;
 	}
-
 	public String getRidePickupPointAddress() {
 		return ridePickupPointAddress;
 	}
-
 	public void setRidePickupPointAddress(String ridePickupPointAddress) {
 		this.ridePickupPointAddress = ridePickupPointAddress;
 	}
-
 	public String getRideDropPointAddress() {
 		return rideDropPointAddress;
 	}
-
 	public void setRideDropPointAddress(String rideDropPointAddress) {
 		this.rideDropPointAddress = rideDropPointAddress;
 	}
-
 	public PassengerStatus getPassengerStatus() {
 		return passengerStatus;
 	}
-
 	public void setPassengerStatus(PassengerStatus passengerStatus) {
 		this.passengerStatus = passengerStatus;
 	}
-
 	public double getRidePickupPointDistance() {
 		return ridePickupPointDistance;
 	}
-
 	public void setRidePickupPointDistance(double ridePickupPointDistance) {
 		this.ridePickupPointDistance = ridePickupPointDistance;
 	}
-
 	public double getRideDropPointDistance() {
 		return rideDropPointDistance;
 	}
-
 	public void setRideDropPointDistance(double rideDropPointDistance) {
 		this.rideDropPointDistance = rideDropPointDistance;
-	}
+	}	
 	public String getConfirmationCode() {
 		return confirmationCode;
 	}
-
 	public void setConfirmationCode(String confirmationCode) {
 		this.confirmationCode = confirmationCode;
 	}

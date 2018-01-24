@@ -12,7 +12,7 @@ public class FullRide extends BasicRide{
 	private Route route;
 	private boolean recur;
 	private RecurringDetail recurringDetail;
-
+	
 	private Collection<BasicRidePassenger> ridePassengers = new HashSet<BasicRidePassenger>();
 	private Collection<FullRideRequest> acceptedRideRequests = new HashSet<FullRideRequest>();
 	private Collection<FullRideRequest> rejectedRideRequests = new HashSet<FullRideRequest>();
@@ -43,27 +43,21 @@ public class FullRide extends BasicRide{
 	public void setRidePassengers(Collection<BasicRidePassenger> ridePassengers) {
 		this.ridePassengers = ridePassengers;
 	}
-
 	public Collection<FullRideRequest> getAcceptedRideRequests() {
 		return acceptedRideRequests;
 	}
-
 	public void setAcceptedRideRequests(Collection<FullRideRequest> acceptedRideRequests) {
 		this.acceptedRideRequests = acceptedRideRequests;
 	}
-
 	public Collection<FullRideRequest> getRejectedRideRequests() {
 		return rejectedRideRequests;
 	}
-
 	public void setRejectedRideRequests(Collection<FullRideRequest> rejectedRideRequests) {
 		this.rejectedRideRequests = rejectedRideRequests;
 	}
-
 	public Collection<FullRideRequest> getCancelledRideRequests() {
 		return cancelledRideRequests;
 	}
-
 	public void setCancelledRideRequests(Collection<FullRideRequest> cancelledRideRequests) {
 		this.cancelledRideRequests = cancelledRideRequests;
 	}

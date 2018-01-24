@@ -1,10 +1,10 @@
 
-package com.digitusrevolution.rideshare.model.dto.google;
+package com.digitusrevolution.rideshare.model.app.google;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Overview_polyline {
+public class Polyline {
 
     @SerializedName("points")
     @Expose

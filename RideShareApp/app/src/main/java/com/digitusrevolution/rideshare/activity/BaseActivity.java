@@ -158,6 +158,18 @@ public class BaseActivity extends AppCompatActivity {
                         mCommonUtil.saveUserSignInResult(userSignInResult);
                         startHomePageActivity(userSignInResult);
                     }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        //No need to call up super so that we don't show the Toast of user doesn't exist
+                        //super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Log.d(TAG, "User doesn't exist, so removing shared pref");
+                        mCommonUtil.removeSharedPref();
+                        if (BaseActivity.this instanceof SplashScreenActivity){
+                            Log.d(TAG, "Getting called from Splashscreen");
+                            startLandingPageActivity();
+                        }
+                    }
                 });
     }
 
