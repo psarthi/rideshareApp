@@ -79,29 +79,39 @@ public class UserComp {
             }
         });
 
+        setUserProfileLayoutOnClickListener(user_profile_layout);
+
+        /* Disabled this as its causing issue in getting the right state of UserProfile,
+        //as this can be loaded from multiple places e.g. group memebers, request etc.
+        //So let this be standard and from anywhere user can open the user profile
+        //and this would support for self profile as well
         UserProfileFragment fragment = (UserProfileFragment) mBaseFragment.getActivity().getSupportFragmentManager()
                 .findFragmentByTag(UserProfileFragment.TAG);
         if (fragment!=null && mUser.getId() == fragment.getUserId()){
             Log.d(TAG, "User Profile is already loaded");
         } else {
-            user_profile_layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.SIGNEDIN_USER_ID_KEY, Integer.toString(mSignedInUser.getId()))
-                            .replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
-                    mCommonUtil.showProgressDialog();
-                    RESTClient.get(GET_USER_PROFILE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            mCommonUtil.dismissProgressDialog();
-                            FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                            fragmentLoader.loadUserProfileFragment(response.toString(), null);
-                        }
-                    });
-                }
-            });
-        }
+            setUserProfileLayoutOnClickListener(user_profile_layout);
+        }*/
+    }
+
+    private void setUserProfileLayoutOnClickListener(View user_profile_layout) {
+        user_profile_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.SIGNEDIN_USER_ID_KEY, Integer.toString(mSignedInUser.getId()))
+                        .replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()));
+                mCommonUtil.showProgressDialog();
+                RESTClient.get(GET_USER_PROFILE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
+                        FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                        fragmentLoader.loadUserProfileFragment(response.toString(), null);
+                    }
+                });
+            }
+        });
     }
 
     public interface OnUserCompListener{

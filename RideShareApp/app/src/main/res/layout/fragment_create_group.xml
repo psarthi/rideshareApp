@@ -15,8 +15,7 @@
             android:id="@+id/photo_name_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginBottom="@dimen/default_margin">
+            android:gravity="center">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/group_photo_image_view"
@@ -34,9 +33,17 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/group_exist_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:layout_marginStart="@dimen/medium_image_size"
+            android:textColor="@android:color/holo_red_dark"
+            android:text="Group with same name already exist"/>
+
         <EditText
             android:id="@+id/group_description"
-            android:layout_below="@id/photo_name_layout"
             android:padding="@dimen/default_padding"
             android:layout_width="match_parent"
             android:layout_height="@dimen/large_block_height"
@@ -49,8 +56,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_below="@id/membership_form_question_layout">
+            android:layout_marginTop="@dimen/small_margin">
 
             <Button
                 android:id="@+id/group_update_button"
@@ -69,7 +75,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/colorPrimary"
-                android:layout_below="@id/group_description"
                 android:layout_margin="@dimen/default_margin"
                 android:text="Next"/>
 

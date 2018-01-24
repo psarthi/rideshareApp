@@ -28,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -131,7 +132,11 @@ public class BaseActivity extends AppCompatActivity {
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             mCommonUtil.dismissProgressDialog();
-            Toast.makeText(BaseActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+            if (e.getStatusCode() == GoogleSignInStatusCodes.SIGN_IN_CANCELLED){
+                Log.d(TAG, "Sign in Cancelled");
+            } else {
+                Toast.makeText(BaseActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
+            }
             // updateUI(null);
         }
     }

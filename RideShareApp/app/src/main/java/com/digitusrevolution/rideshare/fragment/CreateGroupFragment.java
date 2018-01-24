@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
@@ -27,6 +30,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
+import com.digitusrevolution.rideshare.model.common.ResponseMessage;
 import com.digitusrevolution.rideshare.model.user.dto.BasicGroup;
 import com.digitusrevolution.rideshare.model.user.dto.BasicGroupInfo;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -78,6 +82,8 @@ public class CreateGroupFragment extends BaseFragment{
     private EditText mGroupDesriptionEditText;
     private BasicUser mUser;
     private CommonUtil mCommonUtil;
+    private boolean mGroupNameExist;
+    private TextView mGroupNameExistMsgTextView;
 
     public CreateGroupFragment() {
         // Required empty public constructor
@@ -128,12 +134,19 @@ public class CreateGroupFragment extends BaseFragment{
         mGroupPhotoImageView = view.findViewById(R.id.group_photo_image_view);
         mGroupNameEditText = view.findViewById(R.id.group_name_text);
         mGroupDesriptionEditText = view.findViewById(R.id.group_description);
+        mGroupNameExistMsgTextView = view.findViewById(R.id.group_exist_message);
+
+        //Make it invisible at the start
+        mGroupNameExistMsgTextView.setVisibility(View.INVISIBLE);
 
         if (mNewGroup){
             mUpdateButton.setVisibility(View.GONE);
         } else {
             mNextButton.setVisibility(View.GONE);
             mGroupNameEditText.setText(mGroup.getName());
+            //Group name can't be changed else it will unnessarily complicate the system
+            //as we can't have duplicate names
+            mGroupNameEditText.setEnabled(false);
             mGroupDesriptionEditText.setText(mGroup.getInformation());
             if (mGroup.getPhoto()!=null){
                 String imageUrl = mGroup.getPhoto().getImageLocation();
@@ -194,6 +207,33 @@ public class CreateGroupFragment extends BaseFragment{
                 }
             }
         });
+
+        mGroupNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus){
+                    String url = APIUrl.CHECK_GROUP_NAME_EXIST.replace(APIUrl.USER_ID_KEY, Integer.toString(mUser.getId()))
+                            .replace(APIUrl.SEARCH_NAME_KEY, mGroupNameEditText.getText().toString());
+
+                    RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            super.onSuccess(statusCode, headers, response);
+                            ResponseMessage responseMessage = new Gson().fromJson(response.toString(), ResponseMessage.class);
+                            boolean status = Boolean.valueOf(responseMessage.getResult());
+                            if (status){
+                                mGroupNameExist = true;
+                                mGroupNameExistMsgTextView.setVisibility(View.VISIBLE);
+                            } else {
+                                mGroupNameExist = false;
+                                mGroupNameExistMsgTextView.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
     }
 
     private void showPhotoMenuDialog()
@@ -268,6 +308,10 @@ public class CreateGroupFragment extends BaseFragment{
         }
         if (desciption.equals("")){
             Toast.makeText(getActivity(), "Description can't be empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (mGroupNameExist){
+            Toast.makeText(getActivity(), "Group name already exist", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
