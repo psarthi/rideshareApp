@@ -41,6 +41,8 @@ public class RESTClient {
         //This will overwrite default value of 10 seconds so that we are able to get response properly
         client.setTimeout(TIMEOUT_VALUE);
         Log.d(TAG,"GET URL:"+url);
+        String token = ((RSJsonHttpResponseHandler) responseHandler).getCommonUtil().getAccessToken();
+        client.addHeader("Authorization","Bearer "+token);
         client.get(url, params, responseHandler);
     }
 
@@ -63,19 +65,24 @@ public class RESTClient {
         StringEntity entity = new StringEntity(json, "UTF-8");
         Log.d(TAG,"POST URL:"+url);
         Log.d(TAG, "POST Message:"+json);
-
+        String token = ((RSJsonHttpResponseHandler) responseHandler).getCommonUtil().getAccessToken();
+        client.addHeader("Authorization","Bearer "+token);
         client.post(context, url, entity, "application/json", responseHandler);
     }
 
     public static void put(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         //This will overwrite default value of 10 seconds so that we are able to get response properly
         client.setTimeout(TIMEOUT_VALUE);
+        String token = ((RSJsonHttpResponseHandler) responseHandler).getCommonUtil().getAccessToken();
+        client.addHeader("Authorization","Bearer "+token);
         client.put(url, params, responseHandler);
     }
 
     public static void delete(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         //This will overwrite default value of 10 seconds so that we are able to get response properly
         client.setTimeout(TIMEOUT_VALUE);
+        String token = ((RSJsonHttpResponseHandler) responseHandler).getCommonUtil().getAccessToken();
+        client.addHeader("Authorization","Bearer "+token);
         client.delete(url, params, responseHandler);
     }
 

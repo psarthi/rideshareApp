@@ -102,8 +102,8 @@ public class RidesListFragment extends BaseFragment{
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.ID_KEY,Long.toString(mUser.getId()));
-        GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.ID_KEY,Long.toString(mUser.getId()));
+        GET_USER_RIDES_URL = APIUrl.GET_USER_RIDES_URL.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()));
+        GET_USER_RIDE_REQUESTS_URL = APIUrl.GET_USER_RIDE_REQUESTS_URL.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()));
     }
 
     @Override

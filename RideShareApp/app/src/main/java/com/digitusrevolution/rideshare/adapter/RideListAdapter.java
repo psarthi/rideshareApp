@@ -19,6 +19,7 @@ import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -39,11 +40,13 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.ViewHo
     private List<BasicRide> mRides;
     private BaseFragment mBaseFragment;
     private CommonUtil mCommonUtil;
+    private BasicUser mUser;
 
     public RideListAdapter(List<BasicRide> rides, BaseFragment fragment) {
         mRides = rides;
         mBaseFragment = fragment;
         mCommonUtil = new CommonUtil(fragment);
+        mUser = mCommonUtil.getUser();
     }
 
     @Override
@@ -65,7 +68,8 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.ViewHo
             public void onClick(View v) {
 
                 String rideId = Long.toString(mRides.get(position).getId());
-                String GET_RIDE_URL = APIUrl.GET_RIDE_URL.replace(APIUrl.ID_KEY,rideId);
+                String GET_RIDE_URL = APIUrl.GET_RIDE_URL.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                        .replace(APIUrl.ID_KEY,rideId);
                 mCommonUtil.showProgressDialog();
                 RESTClient.get(GET_RIDE_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                     @Override

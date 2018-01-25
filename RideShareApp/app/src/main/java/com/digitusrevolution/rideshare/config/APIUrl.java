@@ -6,9 +6,9 @@ package com.digitusrevolution.rideshare.config;
 
 public class APIUrl {
 
-    public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.7:8080/RSRideSystem/api";
     public static final String BASE_URL_USER_SYSTEM = "http://10.0.0.7:8080/RSUserSystem/api";
-    public static final String BASE_URL_BILLING_SYSTEM = "http://10.0.0.7:8080/RSBillingSystem/api";
+    public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.7:8080/RSRideSystem/api/users/{userId}";
+    public static final String BASE_URL_BILLING_SYSTEM = "http://10.0.0.7:8080/RSBillingSystem/api/users/{userId}";
 
     public static final String USER_EMAIL_KEY = "{userEmail}";
     public static final String USER_ID_KEY = "{userId}";
@@ -39,40 +39,20 @@ public class APIUrl {
     public static final String REQUESTER_USER_ID_KEY = "{requesterUserId}";
     public static final String MEMBER_USER_ID_KEY = "{memberUserId}";
 
+    //User System URL's
     public static final String SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/signin";
     public static final String GOOGLE_SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/googlesignin";
     public static final String SIGN_IN_WITH_TOKEN_URL = BASE_URL_USER_SYSTEM + "/users/signinwithtoken";
     public static final String CHECK_USER_EXIST_URL = BASE_URL_USER_SYSTEM + "/users/checkuserexist/{userEmail}";
     public static final String GET_COUNTRIES_URL = BASE_URL_USER_SYSTEM + "/usersystem/countries";
-    public static final String GET_VEHICLE_CATEGORIES_URL = BASE_URL_USER_SYSTEM + "/usersystem/vehiclecategores";
+    public static final String GET_VEHICLE_CATEGORIES_URL = BASE_URL_USER_SYSTEM + "/usersystem/vehiclecategories";
     public static final String GET_OTP_URL = BASE_URL_USER_SYSTEM + "/users/getotp/{mobileNumber}";
     public static final String VALIDATE_OTP_URL = BASE_URL_USER_SYSTEM + "/users/validateotp/{mobileNumber}/{otp}";
     public static final String USER_REGISTRATION_URL = BASE_URL_USER_SYSTEM + "/users";
     public static final String ADD_VEHICLE_URL = BASE_URL_USER_SYSTEM + "/users/{id}/vehicles";
     public static final String GET_USER_ALL_DATA_URL = BASE_URL_USER_SYSTEM + "/users/{id}?fetchChild={fetchChildValue}";
-    public static final String GET_USER_RIDES_URL = BASE_URL_RIDE_SYSTEM + "/rides/user/{id}?page={page}";
-    public static final String GET_USER_RIDE_REQUESTS_URL = BASE_URL_RIDE_SYSTEM + "/riderequests/user/{id}?page={page}";
-    public static final String GET_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/rides/{id}";
-    public static final String GET_RIDE_REQUEST_URL = BASE_URL_RIDE_SYSTEM + "/riderequests/{id}";
-    public static final String GET_CURRENT_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/current/{userId}";
-    public static final String GET_CURRENT_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/current/{userId}";
-    public static final String GET_USER_CURRENT_RIDES = BASE_URL_RIDE_SYSTEM + "/ridesystem/current/rides/{userId}";
-    public static final String START_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/start/{id}";
-    public static final String END_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/end/{id}";
-    public static final String CANCEL_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/cancel/{id}";
-    public static final String PICKUP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/pickup/{rideRequestId}";
-    public static final String DROP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/drop/{rideRequestId}?ridemode={rideMode}&paymentcode={paymentCode}";
-    public static final String CANCEL_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/cancelpassenger/{rideRequestId}?rating={rating}";
-    public static final String CANCEL_DRIVER = BASE_URL_RIDE_SYSTEM + "/riderequests/{rideRequestId}/canceldriver/{rideId}?rating={rating}";
-    public static final String CANCEL_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/cancel/{id}";
-    public static final String PAY_BILL = BASE_URL_BILLING_SYSTEM + "/billing/pay";
-    public static final String ADD_MONEY = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/addmoney/{amount}";
-    public static final String REDEEM_MONEY = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/redeem/{amount}";
     public static final String USER_FEEDBACK = BASE_URL_USER_SYSTEM + "/users/{userId}/feedback?rideType={rideType}";
     public static final String GET_USER_PROFILE = BASE_URL_USER_SYSTEM + "/users/{signedInUserId}/profile/{userId}";
-    public static final String GET_USER_WALLET_TRANSACTION = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/transactions?page={page}";
-    public static final String GET_PENDING_BILLS = BASE_URL_BILLING_SYSTEM + "/billing/pending";
-    public static final String GET_PRE_BOOKING_RIDE_REQUEST_INFO = BASE_URL_RIDE_SYSTEM + "/riderequests/prebookinginfo";
     public static final String CREATE_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups";
     public static final String UPDATE_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/update";
     public static final String GET_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}";
@@ -96,6 +76,37 @@ public class APIUrl {
     public static final String CHECK_GROUP_NAME_EXIST = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/checkgroupexist/{name}";
 
 
+
+    //Ride System URL's
+    public static final String OFFER_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/rides";
+    public static final String REQUEST_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/riderequests";
+    public static final String GET_USER_RIDES_URL = BASE_URL_RIDE_SYSTEM + "/rides?page={page}";
+    public static final String GET_USER_RIDE_REQUESTS_URL = BASE_URL_RIDE_SYSTEM + "/riderequests?page={page}";
+    public static final String GET_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/rides/{id}";
+    public static final String GET_RIDE_REQUEST_URL = BASE_URL_RIDE_SYSTEM + "/riderequests/{id}";
+    public static final String GET_CURRENT_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/current";
+    public static final String GET_CURRENT_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/current";
+    public static final String GET_USER_CURRENT_RIDES = BASE_URL_RIDE_SYSTEM + "/ridesystem/currentrides";
+    public static final String START_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/start/{id}";
+    public static final String END_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/end/{id}";
+    public static final String CANCEL_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/cancel/{id}";
+    public static final String PICKUP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/pickup/{rideRequestId}";
+    public static final String DROP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/drop/{rideRequestId}?ridemode={rideMode}&paymentcode={paymentCode}";
+    public static final String CANCEL_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/cancelpassenger/{rideRequestId}?rating={rating}";
+    public static final String CANCEL_DRIVER = BASE_URL_RIDE_SYSTEM + "/riderequests/{rideRequestId}/canceldriver/{rideId}?rating={rating}";
+    public static final String CANCEL_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/cancel/{id}";
+    public static final String GET_PRE_BOOKING_RIDE_REQUEST_INFO = BASE_URL_RIDE_SYSTEM + "/riderequests/prebookinginfo";
+
+
+
+    //Billing System URL's
+    public static final String PAY_BILL = BASE_URL_BILLING_SYSTEM + "/billing/pay";
+    public static final String ADD_MONEY = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/addmoney/{amount}";
+    public static final String REDEEM_MONEY = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/redeem/{amount}";
+    public static final String GET_USER_WALLET_TRANSACTION = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/transactions?page={page}";
+    public static final String GET_PENDING_BILLS = BASE_URL_BILLING_SYSTEM + "/billing/pending";
+
+
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +
             "&destination={destinationLat},{destinationLng}&departure_time={departureEpochSecond}&key={key}";
     //Note - Departure time is not required here as this is used only for fare calculation and in the backend we will include departure time for duration caluclation
@@ -104,7 +115,5 @@ public class APIUrl {
     public static final String GET_GOOGLE_REVERSE_GEOCODE_URL="https://maps.googleapis.com/maps/api/geocode/json?latlng={originLat},{originLng}" +
             "&result_type=street_address%7Cpoint_of_interest%7Croute%7Csublocality&key={key}";
 
-    public static final String OFFER_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/rides";
-    public static final String REQUEST_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/riderequests";
 
 }

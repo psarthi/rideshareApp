@@ -133,7 +133,8 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             basic_ride_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String GET_RIDE_URL = APIUrl.GET_RIDE_URL.replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
+                    String GET_RIDE_URL = APIUrl.GET_RIDE_URL.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                            .replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
                     mCommonUtil.showProgressDialog();
                     RESTClient.get(GET_RIDE_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override
@@ -160,7 +161,8 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     @Override
                     public void onPositiveStandardAlertDialog() {
                         //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
-                        String CANCEL_RIDE = APIUrl.CANCEL_RIDE.replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
+                        String CANCEL_RIDE = APIUrl.CANCEL_RIDE.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                                .replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
                         mCommonUtil.showProgressDialog();
                         RESTClient.get(CANCEL_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                             @Override
@@ -190,7 +192,8 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             @Override
             public void onClick(View v) {
                 //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
-                String START_RIDE = APIUrl.START_RIDE.replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
+                String START_RIDE = APIUrl.START_RIDE.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                        .replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
                 mCommonUtil.showProgressDialog();
                 RESTClient.get(START_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                     @Override
@@ -233,7 +236,8 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             }
 
             private void endRide() {
-                String END_RIDE = APIUrl.END_RIDE.replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
+                String END_RIDE = APIUrl.END_RIDE.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                        .replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
                 mCommonUtil.showProgressDialog();
                 RESTClient.get(END_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                     @Override
@@ -333,7 +337,8 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             @Override
             public void onClick(View v) {
                 //Input is fine as Full Ride as caller set the fullride in constructor
-                String PICKUP_PASSENGER = APIUrl.PICKUP_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Long.toString(mRide.getId()))
+                String PICKUP_PASSENGER = APIUrl.PICKUP_PASSENGER.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                        .replace(APIUrl.RIDE_ID_KEY, Long.toString(mRide.getId()))
                         .replace(APIUrl.RIDE_REQUEST_ID_KEY, Long.toString(rideRequest.getId()));
                 mCommonUtil.showProgressDialog();
                 RESTClient.get(PICKUP_PASSENGER, null, new RSJsonHttpResponseHandler(mCommonUtil) {
@@ -438,7 +443,8 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         }
         Log.d(TAG, "Ride Mode is:" + rideMode.toString());
         //Input is fine as Full Ride as caller set the fullride in constructor
-        String DROP_PASSENGER = APIUrl.DROP_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Long.toString(mRide.getId()))
+        String DROP_PASSENGER = APIUrl.DROP_PASSENGER.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                .replace(APIUrl.RIDE_ID_KEY, Long.toString(mRide.getId()))
                 .replace(APIUrl.RIDE_REQUEST_ID_KEY, Long.toString(rideRequest.getId()))
                 .replace(APIUrl.RIDE_MODE_KEY, rideMode.toString())
                 .replace(APIUrl.PAYMENT_CODE_KEY, code);
@@ -473,7 +479,8 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         Log.d(TAG, "Rating value:" + ratingBar.getRating());
 
         //Input is fine as Full Ride as caller set the fullride in constructor
-        String CANCEL_PASSENGER = APIUrl.CANCEL_PASSENGER.replace(APIUrl.RIDE_ID_KEY, Long.toString(mRide.getId()))
+        String CANCEL_PASSENGER = APIUrl.CANCEL_PASSENGER.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                .replace(APIUrl.RIDE_ID_KEY, Long.toString(mRide.getId()))
                 .replace(APIUrl.RIDE_REQUEST_ID_KEY, Long.toString(rideRequest.getId()))
                 .replace(APIUrl.RATING_KEY, Float.toString(ratingBar.getRating()));
         mCommonUtil.showProgressDialog();

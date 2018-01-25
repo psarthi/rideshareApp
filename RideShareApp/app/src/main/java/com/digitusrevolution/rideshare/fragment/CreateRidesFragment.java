@@ -378,7 +378,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         if (validateInput()){
                             setRideOffer();
                             mCommonUtil.showProgressDialog();
-                            RESTClient.post(getActivity(), APIUrl.OFFER_RIDE_URL, mRideOfferInfo, new RSJsonHttpResponseHandler(mCommonUtil){
+                            String url = APIUrl.OFFER_RIDE_URL.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
+                            RESTClient.post(getActivity(),url, mRideOfferInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     super.onSuccess(statusCode, headers, response);
@@ -450,7 +451,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     private void createRideRequest(){
         mCommonUtil.showProgressDialog();
-        RESTClient.post(getActivity(), APIUrl.REQUEST_RIDE_URL, mRideRequest, new RSJsonHttpResponseHandler(mCommonUtil){
+        String url = APIUrl.REQUEST_RIDE_URL.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
+        RESTClient.post(getActivity(),url, mRideRequest, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
@@ -824,7 +826,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         else {
             //No need to show progress dialog as this would be called
             //post getting direction and we are already showing progress dialog there
-            RESTClient.post(getActivity(),APIUrl.GET_PRE_BOOKING_RIDE_REQUEST_INFO, mRideRequest, new RSJsonHttpResponseHandler(mCommonUtil){
+            String url = APIUrl.GET_PRE_BOOKING_RIDE_REQUEST_INFO.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()));
+            RESTClient.post(getActivity(),url, mRideRequest, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);

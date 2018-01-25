@@ -19,6 +19,7 @@ import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -39,11 +40,13 @@ implements RideRequestComp.RideRequestCompListener{
     private List<BasicRideRequest> mRideRequests;
     private BaseFragment mBaseFragment;
     private CommonUtil mCommonUtil;
+    private BasicUser mUser;
 
     public RideRequestListAdapter(List<BasicRideRequest> rideRequests, BaseFragment fragment) {
         mRideRequests = rideRequests;
         mBaseFragment = fragment;
         mCommonUtil = new CommonUtil(fragment);
+        mUser = mCommonUtil.getUser();
     }
 
     @Override
@@ -65,7 +68,8 @@ implements RideRequestComp.RideRequestCompListener{
             public void onClick(View v) {
 
                 String rideRequestId = Long.toString(mRideRequests.get(position).getId());
-                String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.ID_KEY,rideRequestId);
+                String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                        .replace(APIUrl.ID_KEY,rideRequestId);
                 mCommonUtil.showProgressDialog();
                 RESTClient.get(GET_RIDE_REQUEST_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                     @Override

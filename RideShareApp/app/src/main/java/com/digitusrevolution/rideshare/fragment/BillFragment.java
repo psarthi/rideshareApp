@@ -160,7 +160,8 @@ public class BillFragment extends BaseFragment {
                 BillInfo billInfo = new BillInfo();
                 billInfo.setBillNumber(mBill.getNumber());
                 mCommonUtil.showProgressDialog();
-                RESTClient.post(getActivity(), APIUrl.PAY_BILL,billInfo, new RSJsonHttpResponseHandler(mCommonUtil){
+                String url = APIUrl.PAY_BILL.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()));
+                RESTClient.post(getActivity(),url,billInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);

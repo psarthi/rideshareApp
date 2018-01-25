@@ -24,6 +24,7 @@ import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Transaction;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -64,6 +65,7 @@ public class TransactionFragment extends BaseFragment {
     private List<Transaction> mTransactions = new ArrayList<>();
     private Account mAccount;
     private boolean mInitialDataLoaded;
+    private BasicUser mUser;
 
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener mScrollListener;
@@ -101,8 +103,10 @@ public class TransactionFragment extends BaseFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         mCommonUtil = new CommonUtil(this);
+        mUser = mCommonUtil.getUser();
         mAccount = mCommonUtil.getAccount();
-        GET_USER_WALLET_TRANSACTION_URL = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.ACCOUNT_NUMBER_KEY, Long.toString(mAccount.getNumber()));
+        GET_USER_WALLET_TRANSACTION_URL = APIUrl.GET_USER_WALLET_TRANSACTION.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                .replace(APIUrl.ACCOUNT_NUMBER_KEY, Long.toString(mAccount.getNumber()));
     }
 
     @Override

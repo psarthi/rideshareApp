@@ -152,7 +152,7 @@ public class HomePageActivity extends BaseActivity
                 String GET_USER_PROFILE = APIUrl.GET_USER_PROFILE.replace(APIUrl.SIGNEDIN_USER_ID_KEY, Long.toString(mUser.getId()))
                         .replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
                 mCommonUtil.showProgressDialog();
-                RESTClient.get(GET_USER_PROFILE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
+                RESTClient.get(GET_USER_PROFILE,null, new RSJsonHttpResponseHandler(mCommonUtil) {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);

@@ -27,6 +27,7 @@ import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.UserFeedback;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserFeedbackInfo;
 import com.google.gson.Gson;
 
@@ -57,6 +58,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     private LinearLayout mRideOwnerButtonsLayout;
     private RideRequestCompListener mListener;
     private RatingBar mRatingBar;
+    private BasicUser mUser;
 
     public RideRequestComp(BaseFragment fragment, FullRideRequest rideRequest){
         mBaseFragment = fragment;
@@ -64,6 +66,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         //This will ensure that basic ride request layout would work perfectly fine for Full Ride Request as well
         mBasicRideRequest = rideRequest;
         mCommonUtil = new CommonUtil(fragment);
+        mUser = mCommonUtil.getUser();
         if (fragment instanceof RideRequestCompListener) mListener = (RideRequestCompListener) fragment;
     }
 
@@ -121,7 +124,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 @Override
                 public void onClick(View v) {
 
-                    String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.ID_KEY, Long.toString(mBasicRideRequest.getId()));
+                    String GET_RIDE_REQUEST_URL = APIUrl.GET_RIDE_REQUEST_URL.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                            .replace(APIUrl.ID_KEY, Long.toString(mBasicRideRequest.getId()));
                     mCommonUtil.showProgressDialog();
                     RESTClient.get(GET_RIDE_REQUEST_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override
@@ -164,7 +168,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardListAlertDialogListener() {
                     @Override
                     public void onPositiveStandardAlertDialog() {
-                        String CANCEL_RIDE_REQUEST = APIUrl.CANCEL_RIDE_REQUEST.replace(APIUrl.ID_KEY, Long.toString(mBasicRideRequest.getId()));
+                        String CANCEL_RIDE_REQUEST = APIUrl.CANCEL_RIDE_REQUEST.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                                .replace(APIUrl.ID_KEY, Long.toString(mBasicRideRequest.getId()));
                         mCommonUtil.showProgressDialog();
                         RESTClient.get(CANCEL_RIDE_REQUEST, null, new RSJsonHttpResponseHandler(mCommonUtil){
                             @Override
@@ -426,7 +431,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         RatingBar ratingBar = dialog.findViewById(R.id.rating_bar);
         Log.d(TAG, "Rating value:"+ratingBar.getRating());
 
-        String CANCEL_DRIVER = APIUrl.CANCEL_DRIVER.replace(APIUrl.RIDE_REQUEST_ID_KEY, Long.toString(rideRequest.getId()))
+        String CANCEL_DRIVER = APIUrl.CANCEL_DRIVER.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                .replace(APIUrl.RIDE_REQUEST_ID_KEY, Long.toString(rideRequest.getId()))
                 .replace(APIUrl.RIDE_ID_KEY, Long.toString(rideRequest.getAcceptedRide().getId()))
                 .replace(APIUrl.RATING_KEY, Float.toString(ratingBar.getRating()));
         mCommonUtil.showProgressDialog();
