@@ -101,6 +101,8 @@ public class APIUrl {
     //Note - Departure time is not required here as this is used only for fare calculation and in the backend we will include departure time for duration caluclation
     public static final String GET_GOOGLE_DISTANCE_URL="https://maps.googleapis.com/maps/api/distancematrix/json?origins={originLat},{originLng}" +
             "&destinations={destinationLat},{destinationLng}&key={key}";
+    public static final String GET_GOOGLE_REVERSE_GEOCODE_URL="https://maps.googleapis.com/maps/api/geocode/json?latlng={originLat},{originLng}" +
+            "&result_type=street_address%7Cpoint_of_interest%7Croute%7Csublocality&key={key}";
 
     public static final String OFFER_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/rides";
     public static final String REQUEST_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/riderequests";
