@@ -229,7 +229,7 @@ public class OtpVerificationActivity extends BaseActivity {
                 Log.d(TAG,"Access Token:"+userSignInResult.getToken());
                 CommonUtil commonUtil = new CommonUtil(OtpVerificationActivity.this);
                 commonUtil.saveUserSignInResult(userSignInResult);
-                startHomePageActivity(userSignInResult);
+                startHomePageActivity();
             }
         });
     }

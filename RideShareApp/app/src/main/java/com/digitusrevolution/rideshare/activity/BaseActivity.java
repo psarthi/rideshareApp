@@ -54,7 +54,7 @@ public class BaseActivity extends AppCompatActivity {
         return getPackageName() + Constant.INTENT_EXTRA_DATA_KEY;
     }
 
-    public void startHomePageActivity(UserSignInResult userSignInResult){
+    public void startHomePageActivity(){
         Intent intent = new Intent(this, HomePageActivity.class);
         //This will clear all activity from the stack so that when user clicks on back it will not take you to home page
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -147,6 +147,8 @@ public class BaseActivity extends AppCompatActivity {
 
         GoogleSignInInfo googleSignInInfo = new GoogleSignInInfo();
         googleSignInInfo.setEmail(email);
+        //Show progress dialog as this can be called directly from splash screen when user exist in shared prefs
+        mCommonUtil.showProgressDialog();
         RESTClient.post(this, APIUrl.GOOGLE_SIGN_IN_URL,
                 googleSignInInfo,new RSJsonHttpResponseHandler(mCommonUtil){
                     @Override
@@ -156,19 +158,7 @@ public class BaseActivity extends AppCompatActivity {
                         //mCommonUtil.dismissProgressDialog();
                         UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                         mCommonUtil.saveUserSignInResult(userSignInResult);
-                        startHomePageActivity(userSignInResult);
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        //No need to call up super so that we don't show the Toast of user doesn't exist
-                        //super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Log.d(TAG, "User doesn't exist, so removing shared pref");
-                        mCommonUtil.removeSharedPref();
-                        if (BaseActivity.this instanceof SplashScreenActivity){
-                            Log.d(TAG, "Getting called from Splashscreen");
-                            startLandingPageActivity();
-                        }
+                        startHomePageActivity();
                     }
                 });
     }

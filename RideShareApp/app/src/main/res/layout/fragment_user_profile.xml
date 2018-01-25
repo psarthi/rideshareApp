@@ -41,11 +41,11 @@
                   android:textStyle="bold|italic"
                   android:textColor="@android:color/white"/>
 
-        <TextView android:id="@+id/ride_taken_text"
+        <TextView android:id="@+id/rides_requested_text"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_weight="1"
-                  android:text="@string/rides_taken_text"
+                  android:text="@string/rides_requested_text"
                   android:drawableStart="@drawable/ic_seat_white"
                   android:drawablePadding="@dimen/default_padding"
                   android:gravity="center_vertical"

@@ -1,7 +1,6 @@
 package com.digitusrevolution.rideshare.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,19 +16,14 @@ import android.widget.TextView;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.GroupListAdapter;
-import com.digitusrevolution.rideshare.adapter.ThumbnailCoTravellerAdapter;
 import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
-import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
-import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserProfile;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -113,10 +107,10 @@ public class UserProfileFragment extends BaseFragment {
         user_profile_layout.findViewById(R.id.user_image).setVisibility(View.GONE);
 
         String offeredRideText = getResources().getString(R.string.rides_offered_text) + mUserProfile.getOfferedRides();
-        String ridesTakenText = getResources().getString(R.string.rides_taken_text) + mUserProfile.getRidesTaken();
+        String ridesTakenText = getResources().getString(R.string.rides_requested_text) + mUserProfile.getRequestedRides();
 
         ((TextView) view.findViewById(R.id.rides_offered_text)).setText(offeredRideText);
-        ((TextView) view.findViewById(R.id.ride_taken_text)).setText(ridesTakenText);
+        ((TextView) view.findViewById(R.id.rides_requested_text)).setText(ridesTakenText);
 
         int commonGroupsSize = 0;
         if (mUserProfile.getCommonGroups()!=null){
