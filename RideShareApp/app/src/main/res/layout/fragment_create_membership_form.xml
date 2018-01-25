@@ -3,7 +3,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/default_margin"
-            android:fillViewport="true"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             tools:context="com.digitusrevolution.rideshare.fragment.CreateMembershipFormFragment">
 
@@ -15,19 +14,19 @@
             android:id="@+id/form_purpose_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginBottom="@dimen/default_margin">
 
             <TextView
                 android:id="@+id/form_purpose_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
-                android:layout_marginBottom="@dimen/default_margin"
                 android:text="@string/form_purpose_label"
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/heading3_text_size"/>
+                android:textSize="@dimen/heading3_text_size"
+                android:layout_marginBottom="@dimen/default_margin"/>
 
             <TextView
                 android:id="@+id/form_purpose_explaination"
@@ -41,59 +40,29 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/sample_questions_layout"
+            android:id="@+id/form_how_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/form_purpose_layout"
             android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/sample_questions_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sample Questions"
-                android:textColor="@color/colorPrimaryDark"
-                android:layout_marginBottom="@dimen/default_margin"/>
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="What's your employee Id ?"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="What's your flat number ?"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/form_how_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sample_questions_layout"
-            android:orientation="vertical">
+            android:layout_marginBottom="@dimen/default_margin">
 
             <TextView
                 android:id="@+id/form_how_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
-                android:layout_marginBottom="@dimen/default_margin"
                 android:text="@string/form_how_label"
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/heading3_text_size"/>
+                android:textSize="@dimen/heading3_text_size"
+                android:layout_marginBottom="@dimen/default_margin"/>
 
             <TextView
                 android:id="@+id/form_how_explaination"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/form_how_explaination"
-                android:layout_marginBottom="@dimen/default_margin"
                 android:textStyle="italic"
                 android:textSize="@dimen/heading3_text_size"/>
 
@@ -110,8 +79,6 @@
                 android:id="@+id/add_question_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
-                android:layout_marginBottom="@dimen/small_margin"
                 android:text="Add Questions"
                 android:textAllCaps="true"
                 android:textStyle="bold"
@@ -123,18 +90,43 @@
                 android:id="@+id/add_question_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fab_margin"
+                android:layout_marginStart="@dimen/fab_margin"
                 app:fabSize="mini"
                 android:src="@drawable/ic_add_white_custom"/>
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/form_help_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_question_layout"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/form_help"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Help"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:drawableStart="@drawable/ic_help"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/form_help_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/membership_form_help_content"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
             android:id="@+id/membership_form_question_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/add_question_layout">
+            android:layout_below="@id/form_help_layout">
 
         </LinearLayout>
 

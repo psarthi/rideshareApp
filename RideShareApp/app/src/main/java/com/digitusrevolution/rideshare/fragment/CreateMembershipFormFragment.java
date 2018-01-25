@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
@@ -65,6 +66,9 @@ public class CreateMembershipFormFragment extends BaseFragment {
     private FloatingActionButton mAddQuestionButton;
     private Button mCreateGroupButton;
     private Button mUpdateButton;
+    private TextView mHelpTextView;
+    private TextView mHelpContentTextView;
+    private boolean mHelpContentVisible;
 
 
     public CreateMembershipFormFragment() {
@@ -110,6 +114,11 @@ public class CreateMembershipFormFragment extends BaseFragment {
         mQuestionsLayout = view.findViewById(R.id.membership_form_question_layout);
         mCreateGroupButton = view.findViewById(R.id.create_group_submit_button);
         mUpdateButton = view.findViewById(R.id.group_form_update_button);
+        mHelpTextView = view.findViewById(R.id.form_help);
+        mHelpContentTextView = view.findViewById(R.id.form_help_content);
+
+        //Initially keep it invisible
+        mHelpContentTextView.setVisibility(View.GONE);
 
         if (mGroup.getId()!=0){
             Log.d(TAG, "Its a existing group membership form");
@@ -155,6 +164,8 @@ public class CreateMembershipFormFragment extends BaseFragment {
             public void onClick(View v) {
                 //Add Question with blank question
                 addQuestion("");
+                mHelpContentTextView.setVisibility(View.GONE);
+                mHelpContentVisible = false;
             }
         });
 
@@ -203,6 +214,18 @@ public class CreateMembershipFormFragment extends BaseFragment {
                         }
                     });
                 }
+            }
+        });
+
+        mHelpTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mHelpContentVisible){
+                    mHelpContentTextView.setVisibility(View.GONE);
+                } else {
+                    mHelpContentTextView.setVisibility(View.VISIBLE);
+                }
+                mHelpContentVisible = !mHelpContentVisible;
             }
         });
 

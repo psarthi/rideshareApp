@@ -92,5 +92,10 @@
     <string name="form_purpose_explaination">Helps you to verify the identity of the person requesting membership to this group</string>
     <string name="form_how_label">How</string>
     <string name="form_how_explaination">Ask the right questions to identify genuine users</string>
+    <string name="membership_form_help_content">You can frame any number of question of your choice for e.g.
+        \n\n1. What\'s your official email id <i>(office groups)</i>
+        \n2. What\'s your flat number <i>(apartment groups)</i>
+        \n3. What\'s your college name <i>(friend groups)</i>
+        \n\n<b>Note</b> - Membership request comes with user name and number by default\, so don\'t ask for that.</string>
 
 </resources>
