@@ -50,7 +50,7 @@ public class SplashScreenActivity extends BaseActivity {
                 // This method will be executed once the timer is over
                 // Start your app main activity
                 if (user!=null){
-                    loadHomePage(user.getEmail());
+                    loadHomePage(user.getEmail(), null);
                 } else {
                     startLandingPageActivity();
                 }

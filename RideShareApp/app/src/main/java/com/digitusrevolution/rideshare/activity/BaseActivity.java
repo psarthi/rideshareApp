@@ -116,7 +116,7 @@ public class BaseActivity extends AppCompatActivity {
                     Log.d(TAG,"CHECK_USER_EXIST_URL Response Success (JsonObject): "+response);
                     UserStatus status = new Gson().fromJson(response.toString(), UserStatus.class);
                     if (status.isUserExist()){
-                        loadHomePage(account.getEmail());
+                        loadHomePage(account.getEmail(), account.getIdToken());
                     }
                     else {
                         Log.d(TAG,"User doesn't exist:" + account.getEmail());
@@ -141,12 +141,13 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void loadHomePage(String email) {
+    public void loadHomePage(String email, String googleSignInIdToken) {
         Log.d(TAG,"Redirect to Home Page as User exist");
         //Toast.makeText(LandingPageActivity.this,"User Exist, Redirecting to Home Page",Toast.LENGTH_SHORT).show();
 
         GoogleSignInInfo googleSignInInfo = new GoogleSignInInfo();
         googleSignInInfo.setEmail(email);
+        googleSignInInfo.setSignInToken(googleSignInIdToken);
         //Show progress dialog as this can be called directly from splash screen when user exist in shared prefs
         mCommonUtil.showProgressDialog();
         RESTClient.post(this, APIUrl.GOOGLE_SIGN_IN_URL,
@@ -186,6 +187,7 @@ public class BaseActivity extends AppCompatActivity {
         userRegistration.setFirstName(account.getGivenName());
         userRegistration.setLastName(account.getFamilyName());
         userRegistration.setEmail(account.getEmail());
+        userRegistration.setSignInToken(account.getIdToken());
         Photo photo = new Photo();
         photo.setImageLocation(account.getPhotoUrl().toString());
         userRegistration.setPhoto(photo);

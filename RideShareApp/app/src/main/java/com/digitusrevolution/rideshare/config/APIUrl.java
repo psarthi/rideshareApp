@@ -40,9 +40,7 @@ public class APIUrl {
     public static final String MEMBER_USER_ID_KEY = "{memberUserId}";
 
     //User System URL's
-    public static final String SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/signin";
     public static final String GOOGLE_SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/googlesignin";
-    public static final String SIGN_IN_WITH_TOKEN_URL = BASE_URL_USER_SYSTEM + "/users/signinwithtoken";
     public static final String CHECK_USER_EXIST_URL = BASE_URL_USER_SYSTEM + "/users/checkuserexist/{userEmail}";
     public static final String GET_COUNTRIES_URL = BASE_URL_USER_SYSTEM + "/usersystem/countries";
     public static final String GET_VEHICLE_CATEGORIES_URL = BASE_URL_USER_SYSTEM + "/usersystem/vehiclecategories";
