@@ -211,25 +211,31 @@ public class CreateGroupFragment extends BaseFragment{
         mGroupNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                String groupName = mGroupNameEditText.getText().toString();
                 if (!hasFocus){
-                    String url = APIUrl.CHECK_GROUP_NAME_EXIST.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
-                            .replace(APIUrl.SEARCH_NAME_KEY, mGroupNameEditText.getText().toString());
+                    if (!groupName.trim().equals("")){
+                        String url = APIUrl.CHECK_GROUP_NAME_EXIST.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                                .replace(APIUrl.SEARCH_NAME_KEY, groupName);
 
-                    RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            ResponseMessage responseMessage = new Gson().fromJson(response.toString(), ResponseMessage.class);
-                            boolean status = Boolean.valueOf(responseMessage.getResult());
-                            if (status){
-                                mGroupNameExist = true;
-                                mGroupNameExistMsgTextView.setVisibility(View.VISIBLE);
-                            } else {
-                                mGroupNameExist = false;
-                                mGroupNameExistMsgTextView.setVisibility(View.INVISIBLE);
+                        RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                ResponseMessage responseMessage = new Gson().fromJson(response.toString(), ResponseMessage.class);
+                                boolean status = Boolean.valueOf(responseMessage.getResult());
+                                if (status){
+                                    mGroupNameExist = true;
+                                    mGroupNameExistMsgTextView.setVisibility(View.VISIBLE);
+                                } else {
+                                    mGroupNameExist = false;
+                                    mGroupNameExistMsgTextView.setVisibility(View.INVISIBLE);
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        mGroupNameExist = false;
+                        mGroupNameExistMsgTextView.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         });

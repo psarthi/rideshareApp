@@ -52,8 +52,9 @@
     <string name="pickup_time_variation">Pickup Time Flexibility (+/- min)</string>
     <string name="from_adress_hint">From</string>
     <string name="to_address_hint">To</string>
-    <string name="ride_offer_id_text">"Ride Offer No. "</string>
-    <string name="ride_request_id_text">"Ride Request No. "</string>
+    <string name="ride_offer_id_text">"Ride Offer"</string>
+    <string name="transaction_id_text">"Ref #"</string>
+    <string name="ride_request_id_text">"Ride Request"</string>
     <string name="ride_request_payment_code_text">"Payment Code "</string>
     <string name="distance_metrics">" mtrs"</string>
     <string name="drop_text_msg">"Drop "</string>
@@ -88,7 +89,7 @@
     <string name="form_purpose_explaination">Helps you to verify the identity of the person requesting membership to this group</string>
     <string name="form_how_label">How</string>
     <string name="form_how_explaination">Ask the right questions to identify genuine users</string>
-    <string name="membership_form_help_content">You can frame any number of question of your choice for e.g.
+    <string name="membership_form_help_content">You can frame your own question for e.g.
         \n\n1. What\'s your official email id <i>(office groups)</i>
         \n2. What\'s your flat number <i>(apartment groups)</i>
         \n3. What\'s your college name <i>(friend groups)</i>

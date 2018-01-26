@@ -43,18 +43,23 @@
 
     </LinearLayout>
 
-    <TextView android:id="@+id/transaction_purpose"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/default_margin"
-              android:text="Ride"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
 
-    <TextView android:id="@+id/transaction_rides_id"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/default_margin"
-              android:text="Offered Ride Id 123"/>
+        <TextView android:id="@+id/transaction_purpose"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginRight="@dimen/default_margin"
+                  android:text="Ride"/>
 
+        <TextView android:id="@+id/transaction_id"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/transaction_id_text"/>
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

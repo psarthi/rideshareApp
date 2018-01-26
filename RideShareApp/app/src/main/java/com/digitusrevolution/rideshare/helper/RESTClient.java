@@ -1,10 +1,13 @@
 package com.digitusrevolution.rideshare.helper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
 import com.digitusrevolution.rideshare.activity.LandingPageActivity;
 import com.digitusrevolution.rideshare.adapter.GsonDateAdapter;
+import com.digitusrevolution.rideshare.fragment.BaseFragment;
+import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
@@ -36,6 +39,7 @@ public class RESTClient {
     //This will avoid connection timeout issue, where we don't get response on time
     //Value is in milliseconds
     private static final int TIMEOUT_VALUE=20 * 1000;
+    private static final int EXTENDED_TIMEOUT_VALUE=60 * 1000;
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         //This will overwrite default value of 10 seconds so that we are able to get response properly
@@ -49,6 +53,11 @@ public class RESTClient {
     public static void post(Context context, String url, Object model, AsyncHttpResponseHandler responseHandler) {
         //This will overwrite default value of 10 seconds so that we are able to get response properly
         client.setTimeout(TIMEOUT_VALUE);
+        BaseFragment fragment = ((RSJsonHttpResponseHandler) responseHandler).getCommonUtil().getBaseFragment();
+        if (fragment instanceof CreateRidesFragment) {
+            client.setTimeout(EXTENDED_TIMEOUT_VALUE);
+            Log.d(TAG, "Setting extended timeout value of:"+client.getConnectTimeout());
+        }
         /*This is very important as Gson default serializer would not convert the Date into ISO format with UTC timezone
         and in the backend Jackson expects the date in ISO format with UTC timezone - yyyy-MM-dd'T'HH:mm:ss.SSS'Z' (e.g. 2017-11-10T15:30:00Z).
         So we are using custom Gson Adapter which does the Job of changing Date into ISO format and convert it to UTC timezone.

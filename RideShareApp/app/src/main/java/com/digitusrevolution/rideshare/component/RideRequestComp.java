@@ -86,7 +86,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         mDestinationNavigationButton = layout.findViewById(R.id.ride_request_navigate_to_destination_button);
         mBasicRideRequestButtonsLayout = layout.findViewById(R.id.ride_request_buttons_layout);
 
-        String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text)+ mBasicRideRequest.getId();
+        String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text);
         ((TextView) layout.findViewById(R.id.ride_request_id_text)).setText(rideRequestNumberText);
         ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(mBasicRideRequest.getStatus().toString());
         String pickupTime = mCommonUtil.getFormattedDateTimeString(mBasicRideRequest.getPickupTime());

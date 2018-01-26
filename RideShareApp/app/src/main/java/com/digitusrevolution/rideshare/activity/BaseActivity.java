@@ -120,8 +120,7 @@ public class BaseActivity extends AppCompatActivity {
                     }
                     else {
                         Log.d(TAG,"User doesn't exist:" + account.getEmail());
-                        //Dismiss progress dialog when activity is loaded, else its confusing to the user
-                        //mCommonUtil.dismissProgressDialog();
+                        mCommonUtil.dismissProgressDialog();
                         mobileRegistration(account);
                     }
                 }
@@ -155,7 +154,8 @@ public class BaseActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
-                        //Dismiss progress dialog when activity is loaded, else its confusing to the user
+                        //Dismiss progress dialog only when home page activity is loaded, else its confusing to the user
+                        //It has been dismissed inside onCreate of HomePageActivity
                         //mCommonUtil.dismissProgressDialog();
                         UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                         mCommonUtil.saveUserSignInResult(userSignInResult);

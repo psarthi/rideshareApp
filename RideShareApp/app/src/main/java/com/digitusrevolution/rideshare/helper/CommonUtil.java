@@ -43,7 +43,6 @@ import java.util.List;
 public class CommonUtil {
 
     public static final String TAG = CommonUtil.class.getName();
-
     private BaseFragment mBaseFragment;
     private BaseActivity mBaseActivity;
     private ProgressDialog mProgressDialog;
@@ -54,6 +53,15 @@ public class CommonUtil {
 
     public CommonUtil(BaseActivity activity){
         mBaseActivity = activity;
+    }
+
+
+    public BaseFragment getBaseFragment() {
+        return mBaseFragment;
+    }
+
+    public BaseActivity getBaseActivity() {
+        return mBaseActivity;
     }
 
     //This function is duplicate in BaseActivity and BaseFragment
@@ -262,13 +270,15 @@ public class CommonUtil {
     }
 
     public void showProgressDialog(){
-        Log.d(TAG, "Showing Progress Dialog");
-        if (mProgressDialog==null){
+        if (mProgressDialog==null) {
+            Log.d(TAG, "Showing Progress Dialog");
             mProgressDialog = new ProgressDialog(getActivity(), R.style.MyTheme);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+            mProgressDialog.show();
+        } else {
+            Log.d(TAG, "Progress Dialog already visible, so no need to show again");
         }
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
-        mProgressDialog.show();
     }
 
     public void dismissProgressDialog(){

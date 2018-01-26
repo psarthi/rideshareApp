@@ -41,7 +41,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mDateTextView;
         private TextView mPurposeTextView;
-        private TextView mRidesIdTextView;
+        private TextView mTransactionIdTextView;
         private TextView mAmountTextView;
         private ImageView mTransactionTypeImageView;
         private TextView mPersonTextView;
@@ -53,7 +53,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             mTransactionTypeImageView = itemView.findViewById(R.id.transaction_type);
             mAmountTextView = itemView.findViewById(R.id.transaction_amount);
             mPersonTextView = itemView.findViewById(R.id.transaction_person);
-            mRidesIdTextView = itemView.findViewById(R.id.transaction_rides_id);
+            mTransactionIdTextView = itemView.findViewById(R.id.transaction_id);
         }
     }
 
@@ -78,27 +78,15 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.mPurposeTextView.setText(transaction.getRemark().getPurpose().toString());
         String amount = mCurrencySymbol+mCommonUtil.getDecimalFormattedString(transaction.getAmount());
         holder.mAmountTextView.setText(amount);
+        String transactionId = mBaseFragment.getResources().getString(R.string.transaction_id_text) +transaction.getId();
+        holder.mTransactionIdTextView.setText(transactionId);
 
         if (transaction.getType().equals(TransactionType.Debit)){
             holder.mTransactionTypeImageView.setImageResource(R.drawable.ic_minus);
             holder.mPersonTextView.setText(transaction.getRemark().getPaidTo().split(" ")[0]);
-            if (!transaction.getRemark().getPurpose().equals(Purpose.Ride)) {
-                holder.mRidesIdTextView.setVisibility(View.GONE);
-            } else {
-                holder.mRidesIdTextView.setVisibility(View.VISIBLE);
-                String rideText = mBaseFragment.getResources().getString(R.string.ride_request_id_text) +transaction.getRemark().getRideRequestId();
-                holder.mRidesIdTextView.setText(rideText);
-            }
         } else {
             holder.mPersonTextView.setText(transaction.getRemark().getPaidBy().split(" ")[0]);
             holder.mTransactionTypeImageView.setImageResource(R.drawable.ic_add);
-            if (!transaction.getRemark().getPurpose().equals(Purpose.Ride)) {
-                holder.mRidesIdTextView.setVisibility(View.GONE);
-            } else {
-                holder.mRidesIdTextView.setVisibility(View.VISIBLE);
-                String rideText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text) +transaction.getRemark().getRideId();
-                holder.mRidesIdTextView.setText(rideText);
-            }
         }
     }
 

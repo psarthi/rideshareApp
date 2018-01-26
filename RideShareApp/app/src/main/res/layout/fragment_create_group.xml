@@ -46,10 +46,10 @@
             android:id="@+id/group_description"
             android:padding="@dimen/default_padding"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/large_block_height"
+            android:layout_height="120dp"
             android:background="@drawable/border"
-            android:hint="Brief Description (Max 200 characters)"
-            android:maxLength="200"
+            android:hint="Brief Description (Max 150 characters)"
+            android:maxLength="150"
             android:textStyle="italic"
             android:gravity="start"/>
 
