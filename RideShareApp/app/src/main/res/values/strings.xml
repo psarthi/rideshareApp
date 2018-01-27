@@ -4,6 +4,7 @@
     <string name="product_name">Ride Share</string>
     <string name="GOOGLE_API_KEY">AIzaSyDzj1_oMiGKS7Zxc8mj-_p0efPAH1d3FTs</string>
     <string name="server_client_id">715653590540-t5nknnctr11h9sakhhnmpohcnactkp6g.apps.googleusercontent.com</string>
+    <string name="otp_provider_auth_key">195347ARaornGB5a6c4a0f</string>
     <string name="sign_up">Join</string>
     <string name="sign_in">Sign In</string>
     <string name="google_sign_in">Sign in with Google</string>
@@ -16,7 +17,7 @@
     <string name="verification_code_heading">Verification Code</string>
     <string name="otp_confirm_button_text">Confirm</string>
     <string name="did_not_received_otp_code_label">Didn\'t received code?</string>
-    <string name="resend_otp_code_message">Resend</string>
+    <string name="resend_otp_code_message">Call Me</string>
     <string name="invalid_mobile_number">Please enter 10 digit mobile number</string>
     <string name="title_activity_home_page">HomePageActivity</string>
 

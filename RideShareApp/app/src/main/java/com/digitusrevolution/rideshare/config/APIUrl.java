@@ -6,9 +6,9 @@ package com.digitusrevolution.rideshare.config;
 
 public class APIUrl {
 
-    public static final String BASE_URL_USER_SYSTEM = "http://10.0.0.7:8080/RSUserSystem/api";
-    public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.7:8080/RSRideSystem/api/users/{userId}";
-    public static final String BASE_URL_BILLING_SYSTEM = "http://10.0.0.7:8080/RSBillingSystem/api/users/{userId}";
+    public static final String BASE_URL_USER_SYSTEM = "http://10.0.0.5:8080/RSUserSystem/api";
+    public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.5:8080/RSRideSystem/api/users/{userId}";
+    public static final String BASE_URL_BILLING_SYSTEM = "http://10.0.0.5:8080/RSBillingSystem/api/users/{userId}";
 
     public static final String USER_EMAIL_KEY = "{userEmail}";
     public static final String USER_ID_KEY = "{userId}";
@@ -25,6 +25,7 @@ public class APIUrl {
     public static final String destinationLng_KEY = "{destinationLng}";
     public static final String departureEpochSecond_KEY = "{departureEpochSecond}";
     public static final String GOOGLE_API_KEY = "{key}";
+    public static final String OTP_PROVIDER_AUTH_KEY = "{otpauthkey}";
     public static final String FETCH_CHILD_VALUE_KEY = "{fetchChildValue}";
     public static final String PAGE_KEY = "{page}";
     public static final String RIDE_MODE_KEY = "{rideMode}";
@@ -105,6 +106,7 @@ public class APIUrl {
     public static final String GET_PENDING_BILLS = BASE_URL_BILLING_SYSTEM + "/billing/pending";
 
 
+    //Google Service
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +
             "&destination={destinationLat},{destinationLng}&departure_time={departureEpochSecond}&key={key}";
     //Note - Departure time is not required here as this is used only for fare calculation and in the backend we will include departure time for duration caluclation
@@ -113,5 +115,7 @@ public class APIUrl {
     public static final String GET_GOOGLE_REVERSE_GEOCODE_URL="https://maps.googleapis.com/maps/api/geocode/json?latlng={originLat},{originLng}" +
             "&result_type=street_address%7Cpoint_of_interest%7Croute%7Csublocality&key={key}";
 
+    //OTP Provider Service
+    public static final String GET_OTP_ON_CALL = "http://control.msg91.com/api/retryotp.php?authkey={otpauthkey}&mobile={mobileNumber}";
 
 }

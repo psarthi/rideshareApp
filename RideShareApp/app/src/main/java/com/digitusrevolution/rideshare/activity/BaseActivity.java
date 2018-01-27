@@ -156,7 +156,8 @@ public class BaseActivity extends AppCompatActivity {
                         super.onSuccess(statusCode, headers, response);
                         //Dismiss progress dialog only when home page activity is loaded, else its confusing to the user
                         //It has been dismissed inside onCreate of HomePageActivity
-                        //mCommonUtil.dismissProgressDialog();
+                        //If we don't dismiss here, then android complains of Decorleak
+                        mCommonUtil.dismissProgressDialog();
                         UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                         mCommonUtil.saveUserSignInResult(userSignInResult);
                         startHomePageActivity();

@@ -1,4 +1,4 @@
-package com.digitusrevolution.rideshare.test;
+package com.digitusrevolution.rideshare.notification;
 
 import android.util.Log;
 
@@ -8,7 +8,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
-    private static final String TAG = "MyFirebaseIIDService";
+    public static final String TAG = MyFirebaseInstanceIDService.class.getName();
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of

@@ -64,9 +64,7 @@ public class OtpVerificationActivity extends BaseActivity {
         //Package name would always be same for the application, so key would also be the same and its independent of activity
         String data = intent.getStringExtra(getExtraDataKey());
         mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
-        Log.d(TAG,"OTP:" + mUserRegistration.getOtp());
         Log.d(TAG,"Mobile Number:" + mUserRegistration.getMobileNumber());
-        Toast.makeText(this,"OTP:"+mUserRegistration.getOtp(),Toast.LENGTH_LONG).show();
 
         addTextChangedListenerOnOTPTextField();
 
@@ -237,17 +235,16 @@ public class OtpVerificationActivity extends BaseActivity {
     private void reSendOTP() {
         try {
             String encodedQueryString = URLEncoder.encode(mUserRegistration.getMobileNumber(), "UTF-8");
-            String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString);
+            String GET_OTP_ON_CALL = APIUrl.GET_OTP_ON_CALL.replace(APIUrl.OTP_PROVIDER_AUTH_KEY, getResources().getString(R.string.otp_provider_auth_key))
+                    .replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString);
             mCommonUtil.showProgressDialog();
-            RESTClient.get(GET_OTP_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
+            //Note - Reason for calling POST as even though content is null but the accepted URL is on POST and not GET
+            RESTClient.post(OtpVerificationActivity.this, GET_OTP_ON_CALL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
                     mCommonUtil.dismissProgressDialog();
                     Log.d(TAG, "Response Success:" + response);
-                    ResponseMessage responseMessage = new Gson().fromJson(response.toString(), ResponseMessage.class);
-                    Toast.makeText(OtpVerificationActivity.this,"OTP:"+responseMessage.getResult(),Toast.LENGTH_LONG).show();
-
                 }
             });
         } catch (UnsupportedEncodingException e) {

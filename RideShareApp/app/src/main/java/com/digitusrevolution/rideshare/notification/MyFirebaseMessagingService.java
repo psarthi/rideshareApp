@@ -1,4 +1,4 @@
-package com.digitusrevolution.rideshare.test;
+package com.digitusrevolution.rideshare.notification;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -14,13 +14,14 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.activity.HomePageActivity;
+import com.digitusrevolution.rideshare.activity.SplashScreenActivity;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "MyFirebaseMsgService";
+    public static final String TAG = MyFirebaseMessagingService.class.getName();
 
     /**
      * Called when message is received.
@@ -39,6 +40,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // and data payloads are treated as notification messages. The Firebase console always sends notification
         // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
         // [END_EXCLUDE]
+
+
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "User Firebase token: " + refreshedToken);
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
@@ -78,7 +83,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     private void sendNotification(String messageBody) {
         Log.e(TAG,"Send Notification Method");
-        Intent intent = new Intent(this, HomePageActivity.class);
+        Intent intent = new Intent(this, SplashScreenActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);

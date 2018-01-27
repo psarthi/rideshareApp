@@ -1,8 +1,6 @@
 package com.digitusrevolution.rideshare.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,18 +13,14 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.CustomCountryAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
-import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
-import com.digitusrevolution.rideshare.model.common.ErrorMessage;
 import com.digitusrevolution.rideshare.model.common.ResponseMessage;
 import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.TextHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -38,7 +32,6 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.StringEntity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MobileRegistrationActivity extends BaseActivity {
@@ -48,7 +41,6 @@ public class MobileRegistrationActivity extends BaseActivity {
     private EditText mMobileNumber;
     private Button mSendOTPButton;
     private CircleImageView mPhotoImageView;
-    private String mOTP;
     private UserRegistration mUserRegistration;
     private String mSelectedCountryCode;
     private Country mSelectedCountry;
@@ -133,8 +125,6 @@ public class MobileRegistrationActivity extends BaseActivity {
                             super.onSuccess(statusCode, headers, response);
                             mCommonUtil.dismissProgressDialog();
                             Log.d(TAG, "Response Success:" + response);
-                            ResponseMessage responseMessage = new Gson().fromJson(response.toString(), ResponseMessage.class);
-                            mOTP = responseMessage.getResult();
                             String data = getExtraData();
                             Intent otpVerificationIntent = new Intent(getApplicationContext(), OtpVerificationActivity.class);
                             //Reason for storing key name as well, so that calling class don't have to know the key name
@@ -194,7 +184,6 @@ public class MobileRegistrationActivity extends BaseActivity {
     }
 
     private String getExtraData(){
-        mUserRegistration.setOtp(mOTP);
         mUserRegistration.setMobileNumber(mSelectedCountryCode + mMobileNumber.getText().toString());
         mUserRegistration.setCountry(mSelectedCountry);
         return new Gson().toJson(mUserRegistration);

@@ -270,19 +270,15 @@ public class CommonUtil {
     }
 
     public void showProgressDialog(){
-        if (mProgressDialog==null) {
-            Log.d(TAG, "Showing Progress Dialog");
-            mProgressDialog = new ProgressDialog(getActivity(), R.style.MyTheme);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
-            mProgressDialog.show();
-        } else {
-            Log.d(TAG, "Progress Dialog already visible, so no need to show again");
-        }
+        Log.d(TAG, "Showing Progress Dialog");
+        mProgressDialog = new ProgressDialog(getActivity(), R.style.MyTheme);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+        mProgressDialog.show();
     }
 
     public void dismissProgressDialog(){
-        if(mProgressDialog != null && mProgressDialog.isShowing()){
+        if(mProgressDialog.isShowing()){
             Log.d(TAG, "Dismissing Progress Dialog");
             mProgressDialog.dismiss();
         } else {

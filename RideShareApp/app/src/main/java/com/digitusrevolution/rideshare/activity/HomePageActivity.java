@@ -134,7 +134,7 @@ public class HomePageActivity extends BaseActivity
         mFragmentLoader.loadHomePageWithCurrentRidesFragment(FetchType.Local, null);
 
         //Dismiss progress dialog when activity is loaded, else its confusing to the user
-        mCommonUtil.dismissProgressDialog();
+        //mCommonUtil.dismissProgressDialog();
     }
 
     private void setNavHeader(NavigationView navigationView) {
