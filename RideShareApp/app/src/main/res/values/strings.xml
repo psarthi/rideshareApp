@@ -4,7 +4,6 @@
     <string name="product_name">Ride Share</string>
     <string name="GOOGLE_API_KEY">AIzaSyDzj1_oMiGKS7Zxc8mj-_p0efPAH1d3FTs</string>
     <string name="server_client_id">715653590540-t5nknnctr11h9sakhhnmpohcnactkp6g.apps.googleusercontent.com</string>
-    <string name="otp_provider_auth_key">195347ARaornGB5a6c4a0f</string>
     <string name="sign_up">Join</string>
     <string name="sign_in">Sign In</string>
     <string name="google_sign_in">Sign in with Google</string>

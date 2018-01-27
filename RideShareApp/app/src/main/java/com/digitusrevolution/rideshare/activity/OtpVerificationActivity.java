@@ -235,16 +235,17 @@ public class OtpVerificationActivity extends BaseActivity {
     private void reSendOTP() {
         try {
             String encodedQueryString = URLEncoder.encode(mUserRegistration.getMobileNumber(), "UTF-8");
-            String GET_OTP_ON_CALL = APIUrl.GET_OTP_ON_CALL.replace(APIUrl.OTP_PROVIDER_AUTH_KEY, getResources().getString(R.string.otp_provider_auth_key))
-                    .replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString);
+            String GET_OTP_ON_CALL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString)
+                    .replace(APIUrl.OTP_RETRY_STATUS, "true");
             mCommonUtil.showProgressDialog();
             //Note - Reason for calling POST as even though content is null but the accepted URL is on POST and not GET
-            RESTClient.post(OtpVerificationActivity.this, GET_OTP_ON_CALL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
+            RESTClient.get(GET_OTP_ON_CALL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
                     mCommonUtil.dismissProgressDialog();
                     Log.d(TAG, "Response Success:" + response);
+                    Toast.makeText(OtpVerificationActivity.this, "You will get call shortly", Toast.LENGTH_LONG).show();
                 }
             });
         } catch (UnsupportedEncodingException e) {

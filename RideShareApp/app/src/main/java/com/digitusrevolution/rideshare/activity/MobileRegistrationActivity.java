@@ -117,7 +117,8 @@ public class MobileRegistrationActivity extends BaseActivity {
                 try {
                     //Reason for doing encoding as we have to send + sign in mobile number as query parameters and without encoding that data would interpreted differently
                     String encodedQueryString = URLEncoder.encode(mSelectedCountryCode + mMobileNumber.getText().toString(), "UTF-8");
-                    String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString);
+                    String GET_OTP_URL = APIUrl.GET_OTP_URL.replace(APIUrl.MOBILE_NUMBER_KEY,encodedQueryString)
+                            .replace(APIUrl.OTP_RETRY_STATUS, "false");
                     mCommonUtil.showProgressDialog();
                     RESTClient.get(GET_OTP_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override

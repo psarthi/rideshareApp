@@ -25,7 +25,6 @@ public class APIUrl {
     public static final String destinationLng_KEY = "{destinationLng}";
     public static final String departureEpochSecond_KEY = "{departureEpochSecond}";
     public static final String GOOGLE_API_KEY = "{key}";
-    public static final String OTP_PROVIDER_AUTH_KEY = "{otpauthkey}";
     public static final String FETCH_CHILD_VALUE_KEY = "{fetchChildValue}";
     public static final String PAGE_KEY = "{page}";
     public static final String RIDE_MODE_KEY = "{rideMode}";
@@ -39,13 +38,14 @@ public class APIUrl {
     public static final String SEARCH_NAME_KEY = "{name}";
     public static final String REQUESTER_USER_ID_KEY = "{requesterUserId}";
     public static final String MEMBER_USER_ID_KEY = "{memberUserId}";
+    public static final String OTP_RETRY_STATUS = "{retryStatus}";
 
     //User System URL's
     public static final String GOOGLE_SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/googlesignin";
     public static final String CHECK_USER_EXIST_URL = BASE_URL_USER_SYSTEM + "/users/checkuserexist/{userEmail}";
     public static final String GET_COUNTRIES_URL = BASE_URL_USER_SYSTEM + "/usersystem/countries";
     public static final String GET_VEHICLE_CATEGORIES_URL = BASE_URL_USER_SYSTEM + "/usersystem/vehiclecategories";
-    public static final String GET_OTP_URL = BASE_URL_USER_SYSTEM + "/users/getotp/{mobileNumber}";
+    public static final String GET_OTP_URL = BASE_URL_USER_SYSTEM + "/users/getotp/{mobileNumber}?retry={retryStatus}";
     public static final String VALIDATE_OTP_URL = BASE_URL_USER_SYSTEM + "/users/validateotp/{mobileNumber}/{otp}";
     public static final String USER_REGISTRATION_URL = BASE_URL_USER_SYSTEM + "/users";
     public static final String ADD_VEHICLE_URL = BASE_URL_USER_SYSTEM + "/users/{id}/vehicles";
@@ -114,8 +114,5 @@ public class APIUrl {
             "&destinations={destinationLat},{destinationLng}&key={key}";
     public static final String GET_GOOGLE_REVERSE_GEOCODE_URL="https://maps.googleapis.com/maps/api/geocode/json?latlng={originLat},{originLng}" +
             "&result_type=street_address%7Cpoint_of_interest%7Croute%7Csublocality&key={key}";
-
-    //OTP Provider Service
-    public static final String GET_OTP_ON_CALL = "http://control.msg91.com/api/retryotp.php?authkey={otpauthkey}&mobile={mobileNumber}";
 
 }
