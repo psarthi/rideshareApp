@@ -19,6 +19,7 @@ import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ResponseMessage;
 import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.dto.UserRegistration;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
@@ -187,6 +188,11 @@ public class MobileRegistrationActivity extends BaseActivity {
     private String getExtraData(){
         mUserRegistration.setMobileNumber(mSelectedCountryCode + mMobileNumber.getText().toString());
         mUserRegistration.setCountry(mSelectedCountry);
+        //This will take care of updating push notification token at the time of registration
+        //as initially user would not have even existed
+        //Note - We are doing this check and update at three points - Token Refresh, User Registration and User Login
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        mUserRegistration.setPushNotificationToken(refreshedToken);
         return new Gson().toJson(mUserRegistration);
     }
 }

@@ -22,6 +22,7 @@ public class UserRegistration {
 	private String otp;
 	private RegistrationType registrationType;
 	private String signInToken;
+	private String pushNotificationToken;
 	
 	public String getFirstName() {
 		return firstName;
@@ -102,5 +103,13 @@ public class UserRegistration {
 
 	public void setSignInToken(String signInToken) {
 		this.signInToken = signInToken;
+	}
+
+	public String getPushNotificationToken() {
+		return pushNotificationToken;
+	}
+
+	public void setPushNotificationToken(String pushNotificationToken) {
+		this.pushNotificationToken = pushNotificationToken;
 	}
 }

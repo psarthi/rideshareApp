@@ -39,6 +39,7 @@ public class APIUrl {
     public static final String REQUESTER_USER_ID_KEY = "{requesterUserId}";
     public static final String MEMBER_USER_ID_KEY = "{memberUserId}";
     public static final String OTP_RETRY_STATUS = "{retryStatus}";
+    public static final String TOKEN_KEY = "{token}";
 
     //User System URL's
     public static final String GOOGLE_SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/googlesignin";
@@ -73,6 +74,7 @@ public class APIUrl {
     public static final String REMOVE_MEMBER_FROM_GROUP = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/{groupId}/removemember/{memberUserId}";
     public static final String UPDATE_USER_PREFERENCE = BASE_URL_USER_SYSTEM + "/users/{userId}/preference";
     public static final String CHECK_GROUP_NAME_EXIST = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/checkgroupexist/{name}";
+    public static final String UPDATE_PUSH_NOTIFICATION_TOKEN = BASE_URL_USER_SYSTEM + "/users/{userId}/updatepushnotificationtoken/{token}";
 
 
 

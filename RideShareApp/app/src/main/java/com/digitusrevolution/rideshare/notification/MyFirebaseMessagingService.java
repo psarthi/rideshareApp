@@ -1,6 +1,8 @@
 package com.digitusrevolution.rideshare.notification;
 
+import android.app.ActivityManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Intent;
 
 
@@ -10,14 +12,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.SplashScreenActivity;
+import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.model.app.NotificationType;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.List;
+import java.util.UUID;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -41,10 +49,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
         // [END_EXCLUDE]
 
-
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "User Firebase token: " + refreshedToken);
-
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
@@ -60,9 +64,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
+        //NOTE - If you want to customize the notification, then write your own custom notification in handleNow
+        //else Notification manager default behavior is to show up the notification with Title and Body and onClick
+        //it will launch the main activity.
+        //Default behavior of notification, is to show up notification when app is in background and
+        //no notification when its running in foreground
+        //For my requirement, default is fine
+
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        handleNow(remoteMessage.getNotification().getBody());
+        //handleNow(remoteMessage.getNotification().getBody());
     }
     // [END receive_message]
 
@@ -84,6 +95,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(String messageBody) {
         Log.e(TAG,"Send Notification Method");
         Intent intent = new Intent(this, SplashScreenActivity.class);
+        //Disabling this as we will open up standard application
+        //Otherwise this intent extra can be used to make decision which fragment to load once home page activity is loaded
+        //So by default we need to always launch the Splash activity and once home page is loaded, depending on notification type
+        //we can load different fragment
+        //intent.putExtra(getPackageName()+ Constant.INTENT_EXTRA_NOTIFICATION_TYPE_KEY, NotificationType.RideInfo);
+        //This is causing removal of extras which we are setting here, so commented it
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -102,6 +119,37 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        if (isAppIsInBackground(getApplicationContext())){
+            Log.d(TAG,"App is in Background");
+            //We can customize notification depending on the state of application
+
+        } else {
+            Log.d(TAG,"App is in Foreground");
+        }
+    }
+
+    private boolean isAppIsInBackground(Context context) {
+        boolean isInBackground = true;
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+            List<ActivityManager.RunningAppProcessInfo> runningProcesses = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
+                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    for (String activeProcess : processInfo.pkgList) {
+                        if (activeProcess.equals(context.getPackageName())) {
+                            isInBackground = false;
+                        }
+                    }
+                }
+            }
+        } else {
+            List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+            ComponentName componentInfo = taskInfo.get(0).topActivity;
+            if (componentInfo.getPackageName().equals(context.getPackageName())) {
+                isInBackground = false;
+            }
+        }
+
+        return isInBackground;
     }
 }

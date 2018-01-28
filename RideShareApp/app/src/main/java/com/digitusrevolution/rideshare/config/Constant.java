@@ -10,6 +10,7 @@ public class Constant {
 
     //This would be appended with getPackageName(), that's why it starts with .
     public static final String INTENT_EXTRA_DATA_KEY = ".data";
+    public static final String INTENT_EXTRA_NOTIFICATION_TYPE_KEY = ".notificationType";
     //This would be appended with getPackageName(), that's why it starts with .
     public static final String SHARED_PREFS_KEY_FILE = ".rideshare";
     public static final String SHARED_PREFS_TOKEN_KEY = "token";

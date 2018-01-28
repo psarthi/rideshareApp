@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.AboutGroupFragment;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BillFragment;
@@ -48,6 +49,7 @@ import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.FetchType;
+import com.digitusrevolution.rideshare.model.app.NotificationType;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;

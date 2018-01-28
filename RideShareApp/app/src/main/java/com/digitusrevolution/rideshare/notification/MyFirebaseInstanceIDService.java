@@ -2,8 +2,17 @@ package com.digitusrevolution.rideshare.notification;
 
 import android.util.Log;
 
+import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.RESTClient;
+import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
@@ -38,6 +47,8 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        // TODO: Implement this method to send token to your app server.
+        CommonUtil commonUtil = new CommonUtil(this);
+        //Note - We are doing this check and update at three points - Token Refresh, User Registration and User Login
+        commonUtil.updatePushNotificationToken();
     }
 }

@@ -11,13 +11,17 @@ import android.util.Log;
 import android.view.View;
 
 import com.digitusrevolution.rideshare.R;
+import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
+import com.digitusrevolution.rideshare.model.app.NotificationType;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.GoogleSignInInfo;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;

@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.BaseActivity;
+import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
@@ -24,8 +25,11 @@ import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.FullUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.text.DateFormat;
@@ -36,6 +40,8 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
+
 /**
  * Created by psarthi on 12/6/17.
  */
@@ -45,6 +51,7 @@ public class CommonUtil {
     public static final String TAG = CommonUtil.class.getName();
     private BaseFragment mBaseFragment;
     private BaseActivity mBaseActivity;
+    private Context mContext;
     private ProgressDialog mProgressDialog;
 
     public CommonUtil(BaseFragment fragment){
@@ -55,6 +62,9 @@ public class CommonUtil {
         mBaseActivity = activity;
     }
 
+    public CommonUtil(Context context){
+        mContext = context;
+    }
 
     public BaseFragment getBaseFragment() {
         return mBaseFragment;
@@ -73,9 +83,14 @@ public class CommonUtil {
             // but doing some work which needs activity reference
             return mBaseFragment.mActivity.getSharedPreferences(
                     mBaseFragment.mActivity.getPackageName() + Constant.SHARED_PREFS_KEY_FILE, Context.MODE_PRIVATE);
-        } else {
+        }
+        if (mBaseActivity!=null) {
             return mBaseActivity.getSharedPreferences(mBaseActivity.getPackageName() + Constant.SHARED_PREFS_KEY_FILE, Context.MODE_PRIVATE);
         }
+        if (mContext!=null){
+            return mContext.getSharedPreferences(mContext.getPackageName() + Constant.SHARED_PREFS_KEY_FILE, Context.MODE_PRIVATE);
+        }
+        return null;
     }
 
     public Activity getActivity(){
@@ -309,5 +324,30 @@ public class CommonUtil {
         }
     }
 
+    public void updatePushNotificationToken() {
+        BasicUser user = getUser();
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        //We need to cross check user is null else you will get NPE
+        if (user!=null){
+            if (!user.getPushNotificationToken().equals(refreshedToken)){
+                //Updating this from here as well just to ensure that updated token
+                //is always there at the time of login
+                //Note - We are doing this check and update at three points - Token Refresh, User Registration and User Login
+                Log.d(TAG, "Updating user push notification token as:"+refreshedToken);
+                String url = APIUrl.UPDATE_PUSH_NOTIFICATION_TOKEN.replace(APIUrl.USER_ID_KEY, Long.toString(user.getId()))
+                        .replace(APIUrl.TOKEN_KEY, refreshedToken);
+                RESTClient.get(url, null, new RSJsonHttpResponseHandler(this){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                    }
+                });
+            } else {
+                Log.d(TAG, "User push notification token is current, so no need to update");
+            }
+        } else {
+            Log.d(TAG, "User is null, so can't update push notification token");
+        }
+    }
 
 }

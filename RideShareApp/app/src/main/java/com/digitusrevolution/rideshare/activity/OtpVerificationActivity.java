@@ -2,6 +2,7 @@ package com.digitusrevolution.rideshare.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -40,6 +41,7 @@ public class OtpVerificationActivity extends BaseActivity {
     private EditText mOTPCode3rdNumber;
     private EditText mOTPCode4thNumber;
     private TextView mResendText;
+    private TextView mResendTimer;
     private Button mOTPConfirmationButton;
     private UserRegistration mUserRegistration;
     private String mOTPInput;
@@ -58,7 +60,20 @@ public class OtpVerificationActivity extends BaseActivity {
         mOTPCode3rdNumber = findViewById(R.id.otp_code_3rd_number);
         mOTPCode4thNumber = findViewById(R.id.otp_code_4th_number);
         mResendText = findViewById(R.id.resend_text);
+        mResendTimer = findViewById(R.id.resend_timer);
         mOTPConfirmationButton = findViewById(R.id.otp_confirmation_button);
+
+        mResendText.setVisibility(View.GONE);
+        new CountDownTimer(10000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                mResendTimer.setText(millisUntilFinished / 1000 + " Sec");
+            }
+
+            public void onFinish() {
+                mResendTimer.setVisibility(View.GONE);
+                mResendText.setVisibility(View.VISIBLE);
+            }
+        }.start();
 
         Intent intent = getIntent();
         //Package name would always be same for the application, so key would also be the same and its independent of activity

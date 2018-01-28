@@ -32,6 +32,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -82,7 +83,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void googleSignIn() {
-
+        //This is for debugging purpose
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "Refreshed token: " + refreshedToken);
         Log.d(TAG,"Google Sign In Button Clicked");
         Intent signInIntent = getGoogleSignInClient().getSignInIntent();
         mCommonUtil.showProgressDialog();
@@ -160,6 +163,8 @@ public class BaseActivity extends AppCompatActivity {
                         mCommonUtil.dismissProgressDialog();
                         UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
                         mCommonUtil.saveUserSignInResult(userSignInResult);
+                        //Note - We are doing this check and update at three points - Token Refresh, User Registration and User Login
+                        mCommonUtil.updatePushNotificationToken();
                         startHomePageActivity();
                     }
                 });

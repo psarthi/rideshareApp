@@ -8,6 +8,7 @@ import com.digitusrevolution.rideshare.model.user.domain.City;
 import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.domain.Photo;
 import com.digitusrevolution.rideshare.model.user.domain.Preference;
+import com.digitusrevolution.rideshare.model.user.domain.RegistrationType;
 import com.digitusrevolution.rideshare.model.user.domain.Role;
 import com.digitusrevolution.rideshare.model.user.domain.Sex;
 import com.digitusrevolution.rideshare.model.user.domain.State;
@@ -32,6 +33,8 @@ public class BasicUser {
 	private Collection<Role> roles = new HashSet<Role>();
 	private Collection<Account> accounts = new HashSet<Account>();
 	private Preference preference;
+	private RegistrationType registrationType;
+	private String pushNotificationToken;
 
 	public long getId() {
 		return id;
@@ -129,7 +132,22 @@ public class BasicUser {
 	public void setPreference(Preference preference) {
 		this.preference = preference;
 	}
-	
+
+	public RegistrationType getRegistrationType() {
+		return registrationType;
+	}
+
+	public void setRegistrationType(RegistrationType registrationType) {
+		this.registrationType = registrationType;
+	}
+
+	public String getPushNotificationToken() {
+		return pushNotificationToken;
+	}
+
+	public void setPushNotificationToken(String pushNotificationToken) {
+		this.pushNotificationToken = pushNotificationToken;
+	}
 }
 
 
