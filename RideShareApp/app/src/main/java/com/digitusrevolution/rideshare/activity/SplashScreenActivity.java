@@ -1,32 +1,11 @@
 package com.digitusrevolution.rideshare.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 
 import com.digitusrevolution.rideshare.R;
-import com.digitusrevolution.rideshare.component.FragmentLoader;
-import com.digitusrevolution.rideshare.config.APIUrl;
-import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
-import com.digitusrevolution.rideshare.helper.RESTClient;
-import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
-import com.digitusrevolution.rideshare.model.app.NotificationType;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.user.dto.GoogleSignInInfo;
-import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.Gson;
-
-import org.json.JSONObject;
-
-import cz.msebera.android.httpclient.Header;
 
 public class SplashScreenActivity extends BaseActivity {
 

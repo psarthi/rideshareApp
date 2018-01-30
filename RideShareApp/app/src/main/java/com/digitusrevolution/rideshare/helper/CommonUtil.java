@@ -293,7 +293,7 @@ public class CommonUtil {
     }
 
     public void dismissProgressDialog(){
-        if(mProgressDialog.isShowing()){
+        if(mProgressDialog!=null && mProgressDialog.isShowing()){
             Log.d(TAG, "Dismissing Progress Dialog");
             mProgressDialog.dismiss();
         } else {
@@ -329,7 +329,7 @@ public class CommonUtil {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         //We need to cross check user is null else you will get NPE
         if (user!=null){
-            if (!user.getPushNotificationToken().equals(refreshedToken)){
+            if (user.getPushNotificationToken()==null || !user.getPushNotificationToken().equals(refreshedToken)){
                 //Updating this from here as well just to ensure that updated token
                 //is always there at the time of login
                 //Note - We are doing this check and update at three points - Token Refresh, User Registration and User Login

@@ -319,7 +319,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
                 Log.d(TAG, "Google Geocode Success Response:" + response);
                 mGoogleGeocode = new Gson().fromJson(response.toString(), GoogleGeocode.class);
                 mFromAddress = GoogleUtil.getAddress(mGoogleGeocode);

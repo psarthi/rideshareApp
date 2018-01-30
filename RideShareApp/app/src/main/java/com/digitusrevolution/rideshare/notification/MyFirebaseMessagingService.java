@@ -7,9 +7,7 @@ import android.content.Intent;
 
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -18,14 +16,10 @@ import android.util.Log;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.SplashScreenActivity;
-import com.digitusrevolution.rideshare.config.Constant;
-import com.digitusrevolution.rideshare.model.app.NotificationType;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.List;
-import java.util.UUID;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
