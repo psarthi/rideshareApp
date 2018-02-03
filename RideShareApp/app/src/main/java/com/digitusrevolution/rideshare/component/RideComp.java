@@ -67,6 +67,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
     private RideCompListener mListener;
     private boolean mEndRideConfirmation;
     private BasicUser mUser;
+    private TextView mRideStatusTextView;
 
     public RideComp(BaseFragment fragment, FullRide ride) {
         mBaseFragment = fragment;
@@ -101,11 +102,12 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         mNavigationButton = basic_ride_layout.findViewById(R.id.ride_navigation_button);
         mBasicRideButtonsLayout = basic_ride_layout.findViewById(R.id.ride_buttons_layout);
 
+
         TextView rideIdTextView = basic_ride_layout.findViewById(R.id.ride_id_text);
         String rideIdText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text);
         rideIdTextView.setText(rideIdText);
-        TextView rideStatusTextView = basic_ride_layout.findViewById(R.id.ride_status_text);
-        rideStatusTextView.setText(mBasicRide.getStatus().toString());
+        mRideStatusTextView = basic_ride_layout.findViewById(R.id.ride_status_text);
+        mRideStatusTextView.setText(mBasicRide.getStatus().toString());
         TextView rideStartTimeTextView = basic_ride_layout.findViewById(R.id.ride_start_time_text);
         rideStartTimeTextView.setText(mCommonUtil.getFormattedDateTimeString(mBasicRide.getStartTime()));
         TextView rideStartPointTextView = basic_ride_layout.findViewById(R.id.ride_start_point_text);
@@ -123,6 +125,11 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             //In case of Ride List, this will ensure that Start/Continue navigation buttons
             //doesn't fail as all those action require fullride
             mBasicRideButtonsLayout.setVisibility(View.GONE);
+            //This will update the status as Expired post end time of ride and if ride has not been started
+            //This will take care of status in ride list view
+            if (mBasicRide.getStatus().equals(RideStatus.Planned) && mBasicRide.getEndTime().before(Calendar.getInstance().getTime())) {
+                mRideStatusTextView.setText(RideStatus.Expired.toString());
+            }
         }
 
         RideInfoFragment fragment = (RideInfoFragment) mBaseFragment.getActivity().getSupportFragmentManager()
@@ -300,6 +307,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             if (mBasicRide.getEndTime().before(Calendar.getInstance().getTime())) {
                 mCancelButton.setVisibility(View.GONE);
                 mStartButton.setVisibility(View.GONE);
+                mRideStatusTextView.setText(RideStatus.Expired.toString());
             }
         }
         if (mBasicRide.getStatus().equals(RideStatus.Started)) {
@@ -324,6 +332,9 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         Button pickupButton = view.findViewById(R.id.co_traveller_pickup_button);
         Button dropButton = view.findViewById(R.id.co_traveller_drop_button);
 
+        //Note - We always use Cancel word within the system but for user, we will show as Reject
+        //So logically Reject is same as cancelling confirmed ride request, don't try to change it
+        //else you will end up into mess as system is designed from the perspective of cancel and not reject
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -490,11 +501,11 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 mCommonUtil.dismissProgressDialog();
-                Log.d(TAG, "CoTraveller Cancelled");
+                Log.d(TAG, "CoTraveller Rejected");
                 //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
                 mListener.onRideRefresh(mRide);
-                Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Cancelled", Toast.LENGTH_LONG).show();
+                Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Rejected", Toast.LENGTH_LONG).show();
             }
         });
 

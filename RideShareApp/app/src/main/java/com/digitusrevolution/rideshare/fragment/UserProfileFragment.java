@@ -116,13 +116,24 @@ public class UserProfileFragment extends BaseFragment {
         if (mUserProfile.getCommonGroups()!=null){
             commonGroupsSize = mUserProfile.getCommonGroups().size();
         }
-
         String commonGroupLabel = getResources().getString(R.string.common_groups_text);
+        String commonGroupsText;
+        //This is the case where user profile is of logged in user
         if (mUser.getId() == mUserProfile.getUser().getId()){
             commonGroupLabel = getResources().getString(R.string.my_groups_text);
+            commonGroupsText = commonGroupLabel + commonGroupsSize;
         }
-
-        String commonGroupsText = commonGroupLabel + commonGroupsSize;
+        //This is the case where user profile is of someone else
+        else {
+            //This is the scenario where there is no common groups
+            if (commonGroupsSize==0){
+                commonGroupsText = getResources().getString(R.string.no_common_groups_text);
+            }
+            //This is the scenario where you have some common groups
+            else {
+                commonGroupsText = commonGroupLabel + commonGroupsSize;
+            }
+        }
 
         ((TextView) view.findViewById(R.id.common_groups_count_text)).setText(commonGroupsText);
 

@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -281,31 +283,64 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constant.ACCESS_FINE_LOCATION_REQUEST_CODE);
         } else {
             Log.d(TAG, "Location Permission already there");
+            //This will update current location based on last known location
             FusedLocationProviderClient locationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
             locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    //Reason for checking mFromPlace to consider reload scenario
-                    if (location != null && mFromPlace == null) {
-                        Log.d(TAG, "Current Location:" + location.getLatitude() + "," + location.getLongitude());
-                        // Add a marker in User Current Location, and move the camera.
-                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.addMarker(new MarkerOptions().position(latLng)
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                        mFromLatLng = latLng;
-                        mFromAddressTextView.setText(R.string.current_location_text);
-                        setCurrentLocationAddress(latLng);
-                        //This will get called whenever map is reloaded and camera needs to be moved accordingly
-                        //Otherwise what would happen on backpress, camera move would not happen for all markers on the map
-                        //as it would assume there is only one marked which is current location marker and move camera accordinlgy
-                        //as per the initial fragment load logic
-                        moveCamera();
+                    Log.d(TAG, "Updating current location based on last known location");
+                    setCurrentLocationMarker(location);
 
-                    } else {
-                        Log.d(TAG, "Location is null");
-                    }
                 }
             });
+
+            /* Commenting this as it will throw an exception if we are not on the same fragment when location update is recieved
+            //So logically either we get last known location or we don't get it, that's better than seeing NPE
+            //This will update current location based on current location
+            // Acquire a reference to the system Location Manager
+            final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+            // Define a listener that responds to location updates
+            LocationListener locationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    // Called when a new location is found by the network location provider.
+                    Log.d(TAG, "Updating current location based on current location");
+                    setCurrentLocationMarker(location);
+                    locationManager.removeUpdates(this);
+                }
+
+                public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+                public void onProviderEnabled(String provider) {}
+
+                public void onProviderDisabled(String provider) {}
+            };
+
+            // Register the listener with the Location Manager to receive location updates
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            */
+        }
+    }
+
+    private void setCurrentLocationMarker(Location location) {
+        //Reason for checking mFromPlace to consider reload scenario
+        if (location != null && mFromPlace == null) {
+            Log.d(TAG, "Current Location:" + location.getLatitude() + "," + location.getLongitude());
+            // Add a marker in User Current Location, and move the camera.
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLng)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            mFromLatLng = latLng;
+            mFromAddressTextView.setText(R.string.current_location_text);
+            setCurrentLocationAddress(latLng);
+            //This will get called whenever map is reloaded and camera needs to be moved accordingly
+            //Otherwise what would happen on backpress, camera move would not happen for all markers on the map
+            //as it would assume there is only one marked which is current location marker and move camera accordinlgy
+            //as per the initial fragment load logic
+            moveCamera();
+
+        } else {
+            Log.d(TAG, "Location is null");
         }
     }
 

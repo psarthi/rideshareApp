@@ -122,8 +122,8 @@ public class APIUrl {
             "&result_type=street_address%7Cpoint_of_interest%7Croute%7Csublocality&key={key}";
 
     //Static Html Content
-    public static final String TERMS_AND_CONDITION_URL="http://digitusrevolution.com";
-    public static final String PRIVACY_POLICY_URL="http://digitusrevolution.com";
-    public static final String PRICE_DETAILS_URL="http://digitusrevolution.com";
+    public static final String TERMS_AND_CONDITION_URL="http://www.digitusrevolution.com/";
+    public static final String PRIVACY_POLICY_URL="http://www.digitusrevolution.com/";
+    public static final String PRICE_DETAILS_URL="http://www.digitusrevolution.com/";
 
 }

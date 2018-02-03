@@ -29,15 +29,15 @@
             android:icon="@drawable/ic_price_medium"
             android:title="Price"/>
         <item
-            android:id="@+id/nav_share"
-            android:icon="@drawable/ic_share_medium"
-            android:title="Share"/>
-    </group>
-    <group android:checkableBehavior="single" android:id="@+id/misc_group_menu">
-        <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_help_medium"
             android:title="Help"/>
+    </group>
+    <group android:checkableBehavior="single" android:id="@+id/misc_group_menu">
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_share_medium"
+            android:title="Share"/>
         <item
             android:id="@+id/nav_legal"
             android:icon="@drawable/ic_info_medium"

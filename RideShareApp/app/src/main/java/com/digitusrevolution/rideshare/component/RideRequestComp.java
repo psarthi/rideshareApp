@@ -32,6 +32,7 @@ import com.digitusrevolution.rideshare.model.user.dto.UserFeedbackInfo;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -59,6 +60,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     private RideRequestCompListener mListener;
     private RatingBar mRatingBar;
     private BasicUser mUser;
+    private TextView mRideRequestStatusTextView;
 
     public RideRequestComp(BaseFragment fragment, FullRideRequest rideRequest){
         mBaseFragment = fragment;
@@ -85,10 +87,11 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         mRideRequestCancelButton = layout.findViewById(R.id.ride_request_cancel_button);
         mDestinationNavigationButton = layout.findViewById(R.id.ride_request_navigate_to_destination_button);
         mBasicRideRequestButtonsLayout = layout.findViewById(R.id.ride_request_buttons_layout);
+        mRideRequestStatusTextView = layout.findViewById(R.id.ride_request_status_text);
 
         String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text);
         ((TextView) layout.findViewById(R.id.ride_request_id_text)).setText(rideRequestNumberText);
-        ((TextView) layout.findViewById(R.id.ride_request_status_text)).setText(mBasicRideRequest.getStatus().toString());
+        mRideRequestStatusTextView.setText(mBasicRideRequest.getStatus().toString());
         String pickupTime = mCommonUtil.getFormattedDateTimeString(mBasicRideRequest.getPickupTime());
         ((TextView) layout.findViewById(R.id.ride_request_pickup_time_text)).setText(pickupTime);
 
@@ -112,6 +115,13 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             //In case of Ride Request List, this will ensure that Destination Point navigation buttons
             //doesn't fail as all those action require fullride rrequest
             mBasicRideRequestButtonsLayout.setVisibility(View.GONE);
+            //This is the case of showing Expired ride requests, this will take care of the status in ride request list view
+            Calendar maxPickupTime = mCommonUtil.getRideRequestMaxPickupTime(mBasicRideRequest);
+            if (mBasicRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled) && maxPickupTime.before(Calendar.getInstance())){
+                Log.d(TAG, "Max Pickup time has passed, so no cancellation button for id:"+mBasicRideRequest.getId());
+                mRideRequestStatusTextView.setText(RideRequestStatus.Expired.toString());
+            }
+
         }
 
         RideRequestInfoFragment fragment = (RideRequestInfoFragment) mBaseFragment.getActivity().getSupportFragmentManager()
@@ -250,6 +260,13 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         if (mBasicRideRequest.getStatus().equals(RideRequestStatus.Cancelled)){
             mBasicRideRequestButtonsLayout.setVisibility(View.GONE);
         }
+        //This is the case of showing Expired ride requests
+        Calendar maxPickupTime = mCommonUtil.getRideRequestMaxPickupTime(mBasicRideRequest);
+        if (mBasicRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled) && maxPickupTime.before(Calendar.getInstance())){
+            Log.d(TAG, "Max Pickup time has passed, so no cancellation button for id:"+mBasicRideRequest.getId());
+            mRideRequestCancelButton.setVisibility(View.GONE);
+            mRideRequestStatusTextView.setText(RideRequestStatus.Expired.toString());
+        }
     }
 
     //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
@@ -285,6 +302,9 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
     private void setRideOwnerLayoutButtonsOnClickListener(final View view){
 
+        //Note - We always use Cancel word within the system but for user, we will show as Reject
+        //So logically Reject is same as cancelling confirmed ride request, don't try to change it
+        //else you will end up into mess as system is designed from the perspective of cancel and not reject
         mRideOwnerCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -445,7 +465,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 Log.d(TAG, "Ride Owner Cancelled");
                 mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
                 mListener.onRideRequestRefresh(mRideRequest);
-                Toast.makeText(mBaseFragment.getActivity(), "Ride Owner Cancelled", Toast.LENGTH_LONG).show();
+                Toast.makeText(mBaseFragment.getActivity(), "Ride Owner Rejected", Toast.LENGTH_LONG).show();
             }
         });
 

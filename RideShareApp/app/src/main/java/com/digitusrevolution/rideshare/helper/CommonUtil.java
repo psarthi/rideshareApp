@@ -252,6 +252,13 @@ public class CommonUtil {
         return endTime;
     }
 
+    public Calendar getRideRequestMaxPickupTime(BasicRideRequest rideRequest) {
+        Calendar maxPickupTime = Calendar.getInstance();
+        maxPickupTime.setTime(rideRequest.getPickupTime());
+        maxPickupTime.add(Calendar.MINUTE, getMinsFromLocalTimeString(rideRequest.getPickupTimeVariation()));
+        return maxPickupTime;
+    }
+
     public String getDecimalFormattedString(double number){
         Log.d(TAG, "Number is:"+number);
         String result = String.format("%.2f", number);
