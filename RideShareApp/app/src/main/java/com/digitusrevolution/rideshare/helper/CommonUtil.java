@@ -119,7 +119,7 @@ public class CommonUtil {
         editor.putString(key, value);
         editor.commit();
         String savedValue = getSharedPreferences().getString(key,null);
-        Log.d(TAG, "Saved Key/Value - " + key+":"+savedValue);
+        LogUtil.debug(TAG, "Saved Key/Value - " + key+":"+savedValue);
     }
 
     public void updateInSharedPref(String key, String value) {
@@ -128,11 +128,11 @@ public class CommonUtil {
         editor.putString(key, value);
         editor.apply();
         String savedValue = getSharedPreferences().getString(key,null);
-        Log.d(TAG, "Updated Key/Value - " + key+":"+savedValue);
+        LogUtil.debug(TAG, "Updated Key/Value - " + key+":"+savedValue);
     }
 
     public void removeSharedPref(){
-        Log.d(TAG, "Removing shared preference all keys");
+        LogUtil.debug(TAG, "Removing shared preference all keys");
         SharedPreferences sharedPref = getSharedPreferences();
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear().commit();
@@ -260,7 +260,7 @@ public class CommonUtil {
     }
 
     public String getDecimalFormattedString(double number){
-        Log.d(TAG, "Number is:"+number);
+        LogUtil.debug(TAG, "Number is:"+number);
         String result = String.format("%.2f", number);
         return result;
     }
@@ -270,7 +270,7 @@ public class CommonUtil {
     }
 
     public void showProgressDialog(){
-        Log.d(TAG, "Showing Progress Dialog");
+        LogUtil.debug(TAG, "Showing Progress Dialog");
         mProgressDialog = new ProgressDialog(getActivity(), R.style.MyTheme);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
@@ -279,17 +279,17 @@ public class CommonUtil {
 
     public void dismissProgressDialog(){
         if(mProgressDialog!=null && mProgressDialog.isShowing()){
-            Log.d(TAG, "Dismissing Progress Dialog");
+            LogUtil.debug(TAG, "Dismissing Progress Dialog");
             mProgressDialog.dismiss();
         } else {
-            Log.d(TAG, "Progress Dialog is not visible, so not dismissing");
+            LogUtil.debug(TAG, "Progress Dialog is not visible, so not dismissing");
         }
     }
 
     //IMP - We are doing all this as we need to support tint at API 19 and standard tint is not supported below API 21
     public void setDrawableTint(Drawable drawable, int color) {
         if (drawable != null) {
-            Log.d(TAG, "Applying Tint");
+            LogUtil.debug(TAG, "Applying Tint");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable.setTint(color);
             } else {
@@ -300,7 +300,7 @@ public class CommonUtil {
 
     public void removeDrawableTint(Drawable drawable) {
         if (drawable != null) {
-            Log.d(TAG, "Removing Tint");
+            LogUtil.debug(TAG, "Removing Tint");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable.setTintList(null);
             } else {
@@ -318,7 +318,7 @@ public class CommonUtil {
                 //Updating this from here as well just to ensure that updated token
                 //is always there at the time of login
                 //Note - We are doing this check and update at three points - Token Refresh, User Registration and User Login
-                Log.d(TAG, "Updating user push notification token as:"+refreshedToken);
+                LogUtil.debug(TAG, "Updating user push notification token as:"+refreshedToken);
                 String url = APIUrl.UPDATE_PUSH_NOTIFICATION_TOKEN.replace(APIUrl.USER_ID_KEY, Long.toString(user.getId()))
                         .replace(APIUrl.TOKEN_KEY, refreshedToken);
                 RESTClient.get(url, null, new RSJsonHttpResponseHandler(this){
@@ -328,10 +328,10 @@ public class CommonUtil {
                     }
                 });
             } else {
-                Log.d(TAG, "User push notification token is current, so no need to update");
+                LogUtil.debug(TAG, "User push notification token is current, so no need to update");
             }
         } else {
-            Log.d(TAG, "User is null, so can't update push notification token");
+            LogUtil.debug(TAG, "User is null, so can't update push notification token");
         }
     }
 

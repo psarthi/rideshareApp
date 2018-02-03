@@ -13,6 +13,8 @@ android {
     }
     buildTypes {
         release {
+            debuggable false
+            //Don't make minifyEnabled as true, else somehow application doesn't work
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
