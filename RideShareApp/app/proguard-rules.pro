@@ -27,7 +27,3 @@
 #This is required as its throwing warning for this picasso classes
 #and if you don't skip then build is getting failed
 -dontwarn com.squareup.picasso.*
-
--assumenosideeffects class android.util.Log {
-    public static *** d(...);
-}
