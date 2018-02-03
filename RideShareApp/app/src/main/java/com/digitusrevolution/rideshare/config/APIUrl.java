@@ -6,9 +6,11 @@ package com.digitusrevolution.rideshare.config;
 
 public class APIUrl {
 
-    public static final String BASE_URL_USER_SYSTEM = "http://10.0.0.5:8080/RSUserSystem/api";
-    public static final String BASE_URL_RIDE_SYSTEM = "http://10.0.0.5:8080/RSRideSystem/api/users/{userId}";
-    public static final String BASE_URL_BILLING_SYSTEM = "http://10.0.0.5:8080/RSBillingSystem/api/users/{userId}";
+    public static final String HOST_NAME = "http://10.0.0.6:8080";
+    public static final String BASE_URL_USER_SYSTEM = HOST_NAME + "/RSUserSystem/api";
+    public static final String BASE_URL_RIDE_SYSTEM = HOST_NAME + "/RSRideSystem/api/users/{userId}";
+    public static final String BASE_URL_BILLING_SYSTEM = HOST_NAME + "/RSBillingSystem/api/users/{userId}";
+    public static final String BASE_URL_SERVICE_PROVIDER_SYSTEM = HOST_NAME + "/RSServiceProviderSystem/api";
 
     public static final String USER_EMAIL_KEY = "{userEmail}";
     public static final String USER_ID_KEY = "{userId}";
@@ -77,7 +79,6 @@ public class APIUrl {
     public static final String UPDATE_PUSH_NOTIFICATION_TOKEN = BASE_URL_USER_SYSTEM + "/users/{userId}/updatepushnotificationtoken/{token}";
 
 
-
     //Ride System URL's
     public static final String OFFER_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/rides";
     public static final String REQUEST_RIDE_URL = BASE_URL_RIDE_SYSTEM + "/riderequests";
@@ -108,6 +109,9 @@ public class APIUrl {
     public static final String GET_PENDING_BILLS = BASE_URL_BILLING_SYSTEM + "/billing/pending";
 
 
+    //Service Provider URL's
+    public static final String GET_HELP_QUESTION_ANSWER_LIST = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/serviceprovider/help";
+
     //Google Service
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +
             "&destination={destinationLat},{destinationLng}&departure_time={departureEpochSecond}&key={key}";
@@ -116,5 +120,10 @@ public class APIUrl {
             "&destinations={destinationLat},{destinationLng}&key={key}";
     public static final String GET_GOOGLE_REVERSE_GEOCODE_URL="https://maps.googleapis.com/maps/api/geocode/json?latlng={originLat},{originLng}" +
             "&result_type=street_address%7Cpoint_of_interest%7Croute%7Csublocality&key={key}";
+
+    //Static Html Content
+    public static final String TERMS_AND_CONDITION_URL="http://digitusrevolution.com";
+    public static final String PRIVACY_POLICY_URL="http://digitusrevolution.com";
+    public static final String PRICE_DETAILS_URL="http://digitusrevolution.com";
 
 }

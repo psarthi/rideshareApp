@@ -19,15 +19,29 @@
             android:icon="@drawable/ic_group_medium"
             android:title="Groups"/>
     </group>
-    <group android:checkableBehavior="single" android:id="@+id/misc_group_menu">
+    <group android:checkableBehavior="single" android:id="@+id/second_group_menu">
         <item
             android:id="@+id/nav_wallet"
             android:icon="@drawable/ic_wallet_card_medium"
             android:title="Wallet"/>
         <item
+            android:id="@+id/nav_price"
+            android:icon="@drawable/ic_price_medium"
+            android:title="Price"/>
+        <item
             android:id="@+id/nav_share"
             android:icon="@drawable/ic_share_medium"
             android:title="Share"/>
+    </group>
+    <group android:checkableBehavior="single" android:id="@+id/misc_group_menu">
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help_medium"
+            android:title="Help"/>
+        <item
+            android:id="@+id/nav_legal"
+            android:icon="@drawable/ic_info_medium"
+            android:title="Legal"/>
         <item
             android:id="@+id/nav_signout"
             android:icon="@drawable/ic_sign_out_medium"

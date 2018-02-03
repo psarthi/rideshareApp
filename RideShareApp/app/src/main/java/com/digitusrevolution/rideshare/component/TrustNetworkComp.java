@@ -7,12 +7,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
+import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustCategory;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustCategoryName;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
+import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 
 /**
  * Created by psarthi on 12/6/17.
@@ -35,6 +38,8 @@ public class TrustNetworkComp {
     private ColorFilter mDefaultImageTint;
     private LinearLayout mAllLayout;
     private LinearLayout mGroupLayout;
+    private boolean mIsUserGroupMember;
+    private CommonUtil mCommonUtil;
 
 
     public TrustNetworkComp(BaseFragment fragment, TrustNetwork trustNetwork){
@@ -42,6 +47,8 @@ public class TrustNetworkComp {
         mTrustNetwork = trustNetwork;
         //Initial value on home page. It would be only set once so that on fragment reload it would not get reset and maintain its previous state
         mAllSelected = true;
+        mCommonUtil = new CommonUtil(fragment);
+        mIsUserGroupMember = mCommonUtil.isUserGroupMember();
     }
 
     public void setTrustCategoryViews(View view) {
@@ -83,6 +90,11 @@ public class TrustNetworkComp {
                     mAllSelected = false;
                 }
                 updateTrustCategoryItemsColor();
+                //This will only show up if user is not member of any group
+                if (!mIsUserGroupMember){
+                    Toast.makeText(mBaseFragment.getActivity(), "You are not member of any group, " +
+                            "please become member of your preferred groups to find trusted ride partner", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

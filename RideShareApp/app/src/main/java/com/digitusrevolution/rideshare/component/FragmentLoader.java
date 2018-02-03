@@ -15,6 +15,9 @@ import com.digitusrevolution.rideshare.fragment.CreateMembershipFormFragment;
 import com.digitusrevolution.rideshare.fragment.CreateRidesFragment;
 import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
+import com.digitusrevolution.rideshare.fragment.HelpFragment;
+import com.digitusrevolution.rideshare.fragment.HelpQuestionAnswerFragment;
+import com.digitusrevolution.rideshare.fragment.LegalFragment;
 import com.digitusrevolution.rideshare.fragment.MembershipRequestFragment;
 import com.digitusrevolution.rideshare.fragment.SearchGroupFragment;
 import com.digitusrevolution.rideshare.fragment.SearchUserForGroupFragment;
@@ -25,6 +28,7 @@ import com.digitusrevolution.rideshare.fragment.RidesListHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.RidesOptionFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.fragment.WalletFragment;
+import com.digitusrevolution.rideshare.fragment.WebPageFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.model.app.FetchType;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
@@ -224,6 +228,43 @@ public class FragmentLoader {
                 newInstance(membershipRequest, adminRole, newRequest);
         fragmentTransaction.replace(R.id.home_page_container, membershipRequestFragment, MembershipRequestFragment.TAG);
         fragmentTransaction.addToBackStack(CreateMembershipFormFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadWebPageFragment(String url, String pageTitle) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        WebPageFragment webPageFragment = WebPageFragment.
+                newInstance(url, pageTitle);
+        fragmentTransaction.replace(R.id.home_page_container, webPageFragment, WebPageFragment.TAG);
+        fragmentTransaction.addToBackStack(WebPageFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadHelpFragment(String param1, String param2) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        HelpFragment helpFragment = HelpFragment.
+                newInstance(param1,param2);
+        fragmentTransaction.replace(R.id.home_page_container, helpFragment, HelpFragment.TAG);
+        fragmentTransaction.addToBackStack(HelpFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadLegalFragment(String param1, String param2) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        LegalFragment legalFragment = LegalFragment.
+                newInstance(param1,param2);
+        fragmentTransaction.replace(R.id.home_page_container, legalFragment, LegalFragment.TAG);
+        fragmentTransaction.addToBackStack(LegalFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadHelpQuestionAnswerFragment(String data) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        HelpQuestionAnswerFragment helpQuestionAnswerFragment = HelpQuestionAnswerFragment.
+                newInstance(data);
+        fragmentTransaction.replace(R.id.home_page_container, helpQuestionAnswerFragment,
+                HelpQuestionAnswerFragment.TAG);
+        fragmentTransaction.addToBackStack(HelpQuestionAnswerFragment.TAG);
         fragmentTransaction.commit();
     }
 

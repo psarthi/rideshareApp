@@ -64,7 +64,6 @@ public class TransactionFragment extends BaseFragment {
     private CommonUtil mCommonUtil;
     private List<Transaction> mTransactions = new ArrayList<>();
     private Account mAccount;
-    private boolean mInitialDataLoaded;
     private BasicUser mUser;
 
     // Store a member variable for the listener
@@ -157,7 +156,6 @@ public class TransactionFragment extends BaseFragment {
                 //dismissProgressDialog();
                 Type listType = new TypeToken<ArrayList<Transaction>>(){}.getType();
                 mTransactions = new Gson().fromJson(response.toString(), listType);
-                mInitialDataLoaded = true;
                 setAdapter();
                 //This will load adapter only when data is loaded
             }

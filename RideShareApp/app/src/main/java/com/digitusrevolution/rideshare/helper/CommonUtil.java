@@ -110,6 +110,7 @@ public class CommonUtil {
         saveInSharedPref(Constant.SHARED_PREFS_VIRTUAL_ACCOUNT_KEY,new Gson().toJson(((List<Account>) userSignInResult.getUser().getAccounts()).get(0)));
         saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_KEY,new Gson().toJson(userSignInResult.getCurrentRide()));
         saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY,new Gson().toJson(userSignInResult.getCurrentRideRequest()));
+        saveInSharedPref(Constant.SHARED_PREFS_USER_IS_GROUP_MEMBER_KEY,Boolean.toString(userSignInResult.isGroupMember()));
     }
 
     public void saveInSharedPref(String key, String value) {
@@ -146,11 +147,6 @@ public class CommonUtil {
         return new Gson().fromJson(user, BasicUser.class);
     }
 
-    public FullUser getFullUser() {
-        String user = getSharedPreferences().getString(Constant.SHARED_PREFS_FULL_USER_KEY,null);
-        return new Gson().fromJson(user, FullUser.class);
-    }
-
     public Account getAccount() {
         String account = getSharedPreferences().getString(Constant.SHARED_PREFS_VIRTUAL_ACCOUNT_KEY,null);
         return new Gson().fromJson(account, Account.class);
@@ -166,29 +162,10 @@ public class CommonUtil {
         return new Gson().fromJson(currentRideRequest,FullRideRequest.class);
     }
 
-    public List<FullRide> getRecentRides() {
-        String rides = getSharedPreferences().getString(Constant.SHARED_PREFS_RECENT_RIDE_LIST_KEY,null);
-        Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
-        List<FullRide> recentRides = new Gson().fromJson(rides, listType);
-        return recentRides;
+    public boolean isUserGroupMember() {
+        boolean status = Boolean.valueOf(getSharedPreferences().getString(Constant.SHARED_PREFS_USER_IS_GROUP_MEMBER_KEY,"false"));
+        return status;
     }
-
-    public List<FullRideRequest> getRecentRideRequests() {
-        String rides = getSharedPreferences().getString(Constant.SHARED_PREFS_RECENT_RIDE_REQUEST_LIST_KEY,null);
-        Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
-        List<FullRideRequest> recentRideRequests = new Gson().fromJson(rides, listType);
-        return recentRideRequests;
-    }
-
-
-    public void updateRecentRides(List<FullRide> recentRides){
-        updateInSharedPref(Constant.SHARED_PREFS_RECENT_RIDE_LIST_KEY,new Gson().toJson(recentRides));
-    }
-
-    public void updateRecentRideRequests(List<FullRideRequest> recentRideRequests){
-        updateInSharedPref(Constant.SHARED_PREFS_RECENT_RIDE_REQUEST_LIST_KEY,new Gson().toJson(recentRideRequests));
-    }
-
 
     public void updateAccessToken(String token){
         updateInSharedPref(Constant.SHARED_PREFS_TOKEN_KEY,token);
@@ -196,10 +173,6 @@ public class CommonUtil {
 
     public void updateUser(BasicUser user){
         updateInSharedPref(Constant.SHARED_PREFS_USER_KEY,new Gson().toJson(user));
-    }
-
-    public void updateFullUser(FullUser user){
-        updateInSharedPref(Constant.SHARED_PREFS_FULL_USER_KEY,new Gson().toJson(user));
     }
 
     public void updateAccount(Account account){
@@ -213,6 +186,11 @@ public class CommonUtil {
     public void updateCurrentRideRequest(FullRideRequest currentRideRequest){
         updateInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY,new Gson().toJson(currentRideRequest));
     }
+
+    public void updateIsUserGroupMember(boolean status){
+        updateInSharedPref(Constant.SHARED_PREFS_USER_IS_GROUP_MEMBER_KEY,Boolean.toString(status));
+    }
+
 
     public String getFormattedDateString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("EEE, MMM d");

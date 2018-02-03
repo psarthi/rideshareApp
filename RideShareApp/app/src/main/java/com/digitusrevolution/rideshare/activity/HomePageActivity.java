@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
+import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.AboutGroupFragment;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BillFragment;
@@ -24,6 +25,9 @@ import com.digitusrevolution.rideshare.fragment.CreateGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupHomePageFragment;
 import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
 import com.digitusrevolution.rideshare.fragment.GroupMembershipRequestListFragment;
+import com.digitusrevolution.rideshare.fragment.HelpFragment;
+import com.digitusrevolution.rideshare.fragment.HelpQuestionAnswerFragment;
+import com.digitusrevolution.rideshare.fragment.LegalFragment;
 import com.digitusrevolution.rideshare.fragment.MembershipRequestFragment;
 import com.digitusrevolution.rideshare.fragment.SearchGroupFragment;
 import com.digitusrevolution.rideshare.fragment.SearchUserForGroupFragment;
@@ -43,6 +47,7 @@ import com.digitusrevolution.rideshare.fragment.TransactionFragment;
 import com.digitusrevolution.rideshare.fragment.UserMembershipRequestListFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.fragment.WalletFragment;
+import com.digitusrevolution.rideshare.fragment.WebPageFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.RESTClient;
@@ -88,7 +93,11 @@ public class HomePageActivity extends BaseActivity
         GroupMemberListFragment.OnFragmentInteractionListener,
         SearchGroupFragment.OnFragmentInteractionListener,
         UserMembershipRequestListFragment.OnFragmentInteractionListener,
-        MembershipRequestFragment.OnFragmentInteractionListener{
+        MembershipRequestFragment.OnFragmentInteractionListener,
+        WebPageFragment.OnFragmentInteractionListener,
+        LegalFragment.OnFragmentInteractionListener,
+        HelpFragment.OnFragmentInteractionListener,
+        HelpQuestionAnswerFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -243,9 +252,21 @@ public class HomePageActivity extends BaseActivity
                 Log.d(TAG, "Wallet Clicked");
                 mFragmentLoader.loadWalletFragment(false, 0);
             }
+            else if (id == R.id.nav_price) {
+                Log.d(TAG, "Price Clicked");
+                mFragmentLoader.loadWebPageFragment(APIUrl.PRICE_DETAILS_URL, Constant.PRICE_DETAILS_PAGE_TITLE);
+            }
             else if (id == R.id.nav_share) {
                 Log.d(TAG, "Share Clicked");
                 share();
+            }
+            else if (id == R.id.nav_help) {
+                Log.d(TAG, "Help Clicked");
+                mFragmentLoader.loadHelpFragment(null, null);
+            }
+            else if (id == R.id.nav_legal) {
+                Log.d(TAG, "Legal Clicked");
+                mFragmentLoader.loadLegalFragment(null, null);
             }
             else if (id == R.id.nav_signout) {
                 Log.d(TAG, "Signout Clicked");
@@ -528,5 +549,25 @@ public class HomePageActivity extends BaseActivity
         GroupInfoFragment fragment = (GroupInfoFragment) getSupportFragmentManager().findFragmentByTag(GroupInfoFragment.TAG);
         fragment.refreshBasicInfo(groupDetail);
         getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onWebPageFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onHelpFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onLegalFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onHelpQuestionAnswerFragmentInteraction(String data) {
+
     }
 }

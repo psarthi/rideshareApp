@@ -198,6 +198,9 @@ public class CreateGroupFragment extends BaseFragment{
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
                             mCommonUtil.dismissProgressDialog();
+                            //This will update the status of user group member in shared preference
+                            //which will be used by create ride use case
+                            mCommonUtil.updateIsUserGroupMember(true);
                             GroupDetail groupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
                             FragmentLoader fragmentLoader = new FragmentLoader(CreateGroupFragment.this);
                             fragmentLoader.loadGroupInfoByRemovingBackStacks(groupDetail);

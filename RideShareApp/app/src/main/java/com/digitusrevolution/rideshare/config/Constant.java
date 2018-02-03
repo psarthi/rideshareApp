@@ -15,12 +15,10 @@ public class Constant {
     public static final String SHARED_PREFS_KEY_FILE = ".rideshare";
     public static final String SHARED_PREFS_TOKEN_KEY = "token";
     public static final String SHARED_PREFS_USER_KEY = "user";
-    public static final String SHARED_PREFS_FULL_USER_KEY = "fullUser";
     public static final String SHARED_PREFS_VIRTUAL_ACCOUNT_KEY = "virtualAccount";
     public static final String SHARED_PREFS_CURRENT_RIDE_KEY = "currentRide";
     public static final String SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY = "currentRideRequest";
-    public static final String SHARED_PREFS_RECENT_RIDE_LIST_KEY = "recentRideList";
-    public static final String SHARED_PREFS_RECENT_RIDE_REQUEST_LIST_KEY = "recentRideRequestList";
+    public static final String SHARED_PREFS_USER_IS_GROUP_MEMBER_KEY = "isUserGroupMember";
     public static final int ACCESS_FINE_LOCATION_REQUEST_CODE=1;
     public static final float MAP_SINGLE_LOCATION_ZOOM_LEVEL = 15;
     public static final double LAT_LNG_LARGE_PADDING_PERCENT = 0.30;
@@ -43,7 +41,5 @@ public class Constant {
     public static final int MIN_TOPUP_AMOUNT = 1;
     public static final int MAX_TOPUP_AMOUNT = 1000;
     public static final int LONG_DISTANCE_IN_METERS=100000;
-    public static final String LOADING_MSG="Loading...";
-
-
+    public static final String PRICE_DETAILS_PAGE_TITLE="Price";
 }

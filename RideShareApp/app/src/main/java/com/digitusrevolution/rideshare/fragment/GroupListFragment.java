@@ -145,6 +145,12 @@ public class GroupListFragment extends BaseFragment {
                 mCommonUtil.dismissProgressDialog();
                 Type listType = new TypeToken<ArrayList<GroupDetail>>(){}.getType();
                 mGroups = new Gson().fromJson(response.toString(), listType);
+                if (mGroups.size()!=0){
+                    //This will ensure that whenever user membership is approved and if user is already
+                    //logged in so once he checks his list of groups, then his grouo membership status in shared
+                    //preference would get updated which will be used by create ride use case
+                    mCommonUtil.updateIsUserGroupMember(true);
+                }
                 for (GroupDetail groupDetail:mGroups){
                     Log.d(TAG,"Original Groups:"+new Gson().toJson(groupDetail));
                 }

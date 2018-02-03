@@ -94,5 +94,7 @@
         \n2. What\'s your flat number <i>(apartment groups)</i>
         \n3. What\'s your college name <i>(friend groups)</i>
         \n\n<b>Note</b> - Membership request comes with user name and number by default</string>
+    <string name="terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="privacy_policy">Privacy Policy</string>
 
 </resources>
