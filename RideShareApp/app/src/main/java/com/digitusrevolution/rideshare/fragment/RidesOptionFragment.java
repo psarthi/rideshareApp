@@ -25,6 +25,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
@@ -138,7 +139,7 @@ public class RidesOptionFragment extends BaseFragment
         //IMP - This will ensure we always get the updated data of user on fragment reload
         //e.g. when vehicle is added and this is reloaded new vehicle would show up properly
         mUser = mCommonUtil.getUser();
-        Log.d(TAG, "Rides Option is:"+mRidesOptionData);
+        Logger.debug(TAG, "Rides Option is:"+mRidesOptionData);
         //We will always have rides option passed either user preference or updated preference
         mRidesOption = new Gson().fromJson(mRidesOptionData, Preference.class);
 
@@ -149,7 +150,7 @@ public class RidesOptionFragment extends BaseFragment
         }
 
         View view;
-        Log.d(TAG,"RideType:"+mRideType);
+        Logger.debug(TAG,"RideType:"+mRideType);
         if (mRideType.equals(RideType.OfferRide)){
             // Inflate the layout for this fragment
             view = inflater.inflate(R.layout.fragment_offer_ride_option, container, false);
@@ -208,7 +209,7 @@ public class RidesOptionFragment extends BaseFragment
         vehicleList.add(new Vehicle());
 
         RecyclerView recyclerView = view.findViewById(R.id.offer_ride_vehicles_list);
-        Log.d(TAG, "Default Vehicle is:"+new Gson().toJson(mRidesOption.getDefaultVehicle()));
+        Logger.debug(TAG, "Default Vehicle is:"+new Gson().toJson(mRidesOption.getDefaultVehicle()));
         //IMP - Reason for using User and not ridesOption to get default vehicle as initially when no vehicle is there, ridesoption default vehicle is null
         //but when vehicle is added only user gets updated and not rides option
         mVehicleAdapter = new ThumbnailVehicleAdapter(this, vehicleList, mRidesOption.getDefaultVehicle());
@@ -234,10 +235,10 @@ public class RidesOptionFragment extends BaseFragment
         //Common for both Ride Type
         if (mRidesOption.getRideMode().equals(RideMode.Paid)){
             mPaidRideRadioButton.setChecked(true);
-            Log.d(TAG, "Paid Ride is the user default ride mode");
+            Logger.debug(TAG, "Paid Ride is the user default ride mode");
         } else {
             mFreeRideRadioButton.setChecked(true);
-            Log.d(TAG, "Free Ride is the user default ride mode");
+            Logger.debug(TAG, "Free Ride is the user default ride mode");
         }
 
         //Specific for Ride Types
@@ -249,7 +250,7 @@ public class RidesOptionFragment extends BaseFragment
             int dropVaritaionMax;
             int timeVariationMax;
 
-            Log.d(TAG, "Travel Distance, Multiplier:"+mTravelDistance+","+multiplier);
+            Logger.debug(TAG, "Travel Distance, Multiplier:"+mTravelDistance+","+multiplier);
             //This will take care of changing the max value of seekbar depending on the travel distance
             //Note - We are not changing the default values
             if (multiplier <=1){
@@ -274,9 +275,9 @@ public class RidesOptionFragment extends BaseFragment
             mPickupTimeVariationSeekBar.setMax(timeVariationMax);
             mPickupTimeVariationSeekBar.setProgress(pickupTimeVariation);
 
-            Log.d(TAG, "Pickup Time Seekbar value - Current, Max:"+mPickupTimeVariationSeekBar.getProgress() +","+mPickupTimeVariationSeekBar.getMax());
-            Log.d(TAG, "Pickup Seekbar value - Current, Max:"+mPickupPointVariationSeekBar.getProgress() +","+mPickupPointVariationSeekBar.getMax());
-            Log.d(TAG, "Drop Seekbar value - Current, Max:"+mDropPointVariationSeekBar.getProgress() +","+mDropPointVariationSeekBar.getMax());
+            Logger.debug(TAG, "Pickup Time Seekbar value - Current, Max:"+mPickupTimeVariationSeekBar.getProgress() +","+mPickupTimeVariationSeekBar.getMax());
+            Logger.debug(TAG, "Pickup Seekbar value - Current, Max:"+mPickupPointVariationSeekBar.getProgress() +","+mPickupPointVariationSeekBar.getMax());
+            Logger.debug(TAG, "Drop Seekbar value - Current, Max:"+mDropPointVariationSeekBar.getProgress() +","+mDropPointVariationSeekBar.getMax());
         }
     }
 
@@ -392,7 +393,7 @@ public class RidesOptionFragment extends BaseFragment
                 if (mRideType.equals(RideType.OfferRide) && mUser.getVehicles().size()==0){
                     Toast.makeText(getActivity(), "Please add a vehicle", Toast.LENGTH_LONG).show();
                 } else {
-                    Log.d(TAG, "Rides Option Saved");
+                    Logger.debug(TAG, "Rides Option Saved");
                     setRidesOption();
                     if (mSavePreferenceSwitch.isChecked()){
                         mCommonUtil.showProgressDialog();
@@ -427,7 +428,7 @@ public class RidesOptionFragment extends BaseFragment
         } else {
             getActivity().setTitle(REQUEST_RIDE_OPTION_TITLE);
         }
-        Log.d(TAG,"Inside OnResume");
+        Logger.debug(TAG,"Inside OnResume");
         showBackStackDetails();
     }
 
@@ -474,13 +475,13 @@ public class RidesOptionFragment extends BaseFragment
     @Override
     public void onSeatSelection(int seatCount) {
         mSeatCount = seatCount;
-        Log.d(TAG, "Updating seat count");
+        Logger.debug(TAG, "Updating seat count");
     }
 
     @Override
     public void onLuggageSelection(int luggageCount) {
         mLuggageCount = luggageCount;
-        Log.d(TAG, "Updating luggage count");
+        Logger.debug(TAG, "Updating luggage count");
     }
 
     @Override

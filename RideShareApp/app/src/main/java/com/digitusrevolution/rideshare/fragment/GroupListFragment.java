@@ -17,6 +17,7 @@ import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener
 import com.digitusrevolution.rideshare.adapter.GroupListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.dto.GroupListType;
@@ -103,7 +104,7 @@ public class GroupListFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_list, container, false);
-        Log.d(TAG, "Group Result Type is:"+ mGroupListType);
+        Logger.debug(TAG, "Group Result Type is:"+ mGroupListType);
         mRecyclerView = view.findViewById(R.id.group_list);
         mEmptyTextView = view.findViewById(R.id.empty_result_text);
 
@@ -141,7 +142,7 @@ public class GroupListFragment extends BaseFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                Log.d(TAG,"Raw Response:"+response.toString());
+                Logger.debug(TAG,"Raw Response:"+response.toString());
                 mCommonUtil.dismissProgressDialog();
                 Type listType = new TypeToken<ArrayList<GroupDetail>>(){}.getType();
                 mGroups = new Gson().fromJson(response.toString(), listType);
@@ -152,9 +153,9 @@ public class GroupListFragment extends BaseFragment {
                     mCommonUtil.updateIsUserGroupMember(true);
                 }
                 for (GroupDetail groupDetail:mGroups){
-                    Log.d(TAG,"Original Groups:"+new Gson().toJson(groupDetail));
+                    Logger.debug(TAG,"Original Groups:"+new Gson().toJson(groupDetail));
                 }
-                Log.d(TAG, "Size of initial set of data is: "+mGroups.size());
+                Logger.debug(TAG, "Size of initial set of data is: "+mGroups.size());
                 //This will load adapter only when data is loaded
                 setAdapter();
             }
@@ -193,7 +194,7 @@ public class GroupListFragment extends BaseFragment {
                 List<GroupDetail> newGroups = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
                 mGroups.addAll(newGroups);
-                Log.d(TAG, "Size of new set of data is: "+newGroups.size()+" :Updated count is:"+mGroups.size());
+                Logger.debug(TAG, "Size of new set of data is: "+newGroups.size()+" :Updated count is:"+mGroups.size());
                 mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mGroups.size()-1);
             }
         });

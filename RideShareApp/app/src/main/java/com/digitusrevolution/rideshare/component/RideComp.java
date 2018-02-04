@@ -21,6 +21,7 @@ import com.digitusrevolution.rideshare.dialog.StandardAlertDialog;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideInfoFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
@@ -135,7 +136,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         RideInfoFragment fragment = (RideInfoFragment) mBaseFragment.getActivity().getSupportFragmentManager()
                 .findFragmentByTag(RideInfoFragment.TAG);
         if (fragment != null && mBasicRide.getId() == fragment.getRideId()) {
-            Log.d(TAG, "Ride Info is already loaded");
+            Logger.debug(TAG, "Ride Info is already loaded");
         } else {
             basic_ride_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -176,7 +177,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);
                                 mCommonUtil.dismissProgressDialog();
-                                Log.d(TAG, "Ride Cancelled");
+                                Logger.debug(TAG, "Ride Cancelled");
                                 //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
                                 mListener.onRideRefresh(mRide);
@@ -187,7 +188,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
 
                     @Override
                     public void onNegativeStandardAlertDialog() {
-                        Log.d(TAG, "Negative Button clicked on standard dialog");
+                        Logger.debug(TAG, "Negative Button clicked on standard dialog");
                     }
                 });
 
@@ -207,7 +208,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         mCommonUtil.dismissProgressDialog();
-                        Log.d(TAG, "Ride Started");
+                        Logger.debug(TAG, "Ride Started");
                         //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
@@ -232,7 +233,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
 
                         @Override
                         public void onNegativeStandardAlertDialog() {
-                            Log.d(TAG, "Negative Button clicked on standard dialog");
+                            Logger.debug(TAG, "Negative Button clicked on standard dialog");
                         }
                     });
                     dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), StandardAlertDialog.TAG);
@@ -251,7 +252,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         mCommonUtil.dismissProgressDialog();
-                        Log.d(TAG, "Ride Ended");
+                        Logger.debug(TAG, "Ride Ended");
                         //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
@@ -264,7 +265,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         mNavigationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Continue Navigation");
+                Logger.debug(TAG, "Continue Navigation");
                 navigate(mRide);
             }
         });
@@ -298,8 +299,8 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             startTime.add(Calendar.MINUTE, -Constant.START_TIME_BUFFER);
             //This will make Start button invisible if its early than start time by subtracting buffer
             //e.g. if ride start time is 3:00 PM and buffer is 15 mins, then it can only be started after 2:45 PM
-            Log.d(TAG, "Ride Start Time - Buffer:" + startTime.getTime().toString());
-            Log.d(TAG, "Current Time:" + Calendar.getInstance().getTime().toString());
+            Logger.debug(TAG, "Ride Start Time - Buffer:" + startTime.getTime().toString());
+            Logger.debug(TAG, "Current Time:" + Calendar.getInstance().getTime().toString());
             if (Calendar.getInstance().getTime().before(startTime.getTime())) {
                 mStartButton.setVisibility(View.GONE);
             }
@@ -358,7 +359,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         mCommonUtil.dismissProgressDialog();
-                        Log.d(TAG, "CoTraveller Picked");
+                        Logger.debug(TAG, "CoTraveller Picked");
                         //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                         mRide = new Gson().fromJson(response.toString(), FullRide.class);
                         mListener.onRideRefresh(mRide);
@@ -439,9 +440,9 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         RadioButton paidRideButton = (RadioButton) dialog.findViewById(R.id.paid_ride_radio_button);
         RadioButton freeRideButton = (RadioButton) dialog.findViewById(R.id.free_ride_radio_button);
         TextView paymentCode = dialog.findViewById(R.id.payment_code_text);
-        Log.d(TAG, "CoTraveller Dropped with Ride Request Id:" + rideRequest.getId());
-        Log.d(TAG, "Paid Ride Status:" + paidRideButton.isChecked());
-        Log.d(TAG, "Free Ride Status:" + freeRideButton.isChecked());
+        Logger.debug(TAG, "CoTraveller Dropped with Ride Request Id:" + rideRequest.getId());
+        Logger.debug(TAG, "Paid Ride Status:" + paidRideButton.isChecked());
+        Logger.debug(TAG, "Free Ride Status:" + freeRideButton.isChecked());
 
         RideMode rideMode;
         String code;
@@ -452,7 +453,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             rideMode = RideMode.Paid;
             code = paymentCode.getText().toString();
         }
-        Log.d(TAG, "Ride Mode is:" + rideMode.toString());
+        Logger.debug(TAG, "Ride Mode is:" + rideMode.toString());
         //Input is fine as Full Ride as caller set the fullride in constructor
         String DROP_PASSENGER = APIUrl.DROP_PASSENGER.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
                 .replace(APIUrl.RIDE_ID_KEY, Long.toString(mRide.getId()))
@@ -465,7 +466,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 mCommonUtil.dismissProgressDialog();
-                Log.d(TAG, "CoTraveller Dropped");
+                Logger.debug(TAG, "CoTraveller Dropped");
                 //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
                 Account account = ((List<Account>) mRide.getDriver().getAccounts()).get(0);
@@ -480,14 +481,14 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
 
     @Override
     public void onNegativeClickOfDropCoTravellerFragment(Dialog dialog, BasicRideRequest rideRequest) {
-        Log.d(TAG, "CoTraveller Not Dropped");
+        Logger.debug(TAG, "CoTraveller Not Dropped");
     }
 
     @Override
     public void onPositiveClickOfCancelCoTravellerFragment(Dialog dialog, FullRideRequest rideRequest) {
 
         RatingBar ratingBar = dialog.findViewById(R.id.rating_bar);
-        Log.d(TAG, "Rating value:" + ratingBar.getRating());
+        Logger.debug(TAG, "Rating value:" + ratingBar.getRating());
 
         //Input is fine as Full Ride as caller set the fullride in constructor
         String CANCEL_PASSENGER = APIUrl.CANCEL_PASSENGER.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
@@ -501,7 +502,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 mCommonUtil.dismissProgressDialog();
-                Log.d(TAG, "CoTraveller Rejected");
+                Logger.debug(TAG, "CoTraveller Rejected");
                 //Imp - Ensure that output is always saved as FullRide as you actually get fullride
                 mRide = new Gson().fromJson(response.toString(), FullRide.class);
                 mListener.onRideRefresh(mRide);
@@ -513,7 +514,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
 
     @Override
     public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, FullRideRequest rideRequest) {
-        Log.d(TAG, "CoTraveller Not Cancelled");
+        Logger.debug(TAG, "CoTraveller Not Cancelled");
     }
 
     //Reason behind having seperate rating function for ride owner and cotraveller as we have to refresh different page on recieving response
@@ -523,7 +524,7 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 String USER_FEEDBACK_URL;
                 final UserFeedbackInfo feedbackInfo = new UserFeedbackInfo();
-                Log.d(TAG, "Rating is:" + rating + "Given By Driver User Id:" + mRide.getDriver().getId());
+                Logger.debug(TAG, "Rating is:" + rating + "Given By Driver User Id:" + mRide.getDriver().getId());
                 USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Long.toString(rideRequest.getPassenger().getId()))
                         .replace(APIUrl.RIDE_TYPE_KEY, RideType.OfferRide.toString());
                 feedbackInfo.setGivenByUser(mRide.getDriver());

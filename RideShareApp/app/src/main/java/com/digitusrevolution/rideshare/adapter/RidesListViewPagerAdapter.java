@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.digitusrevolution.rideshare.fragment.RidesListFragment;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 
 /**
@@ -29,11 +30,11 @@ public class RidesListViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = null;
         if (position==0){
-            Log.d(TAG, "Getting Ride List Fragment with Offered Ride Type");
+            Logger.debug(TAG, "Getting Ride List Fragment with Offered Ride Type");
             fragment = RidesListFragment.newInstance(RideType.OfferRide);
         }
         if (position == 1){
-            Log.d(TAG, "Getting Ride List Fragment with Requested Ride Type");
+            Logger.debug(TAG, "Getting Ride List Fragment with Requested Ride Type");
             fragment = RidesListFragment.newInstance(RideType.RequestRide);
         }
         return fragment;
@@ -59,7 +60,7 @@ public class RidesListViewPagerAdapter extends FragmentStatePagerAdapter {
     //IMP - This will take care of all fragments reload when notifyDataSetChanged called on viewPagerAdapter
     @Override
     public int getItemPosition(Object object) {
-        Log.d(TAG,"getItemPosition Called "+object.toString());
+        Logger.debug(TAG,"getItemPosition Called "+object.toString());
         return POSITION_NONE;
     }
 }

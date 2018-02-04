@@ -16,6 +16,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.MapComp;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideRequestStatus;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
@@ -101,7 +102,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     }
 
     private void setRideRequestInfoView(View view) {
-        Log.d(TAG, "Setting Ride Request Info View");
+        Logger.debug(TAG, "Setting Ride Request Info View");
 
         //This should be initialized here so that it can be reloaded on refresh
         RideRequestComp rideRequestComp = new RideRequestComp(this, mRideRequest);
@@ -181,7 +182,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
                 // and your setRideOnMap would also be called that many times
                 //This will ensure only once this is called
                 mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                Log.d(TAG, "Map Layout is ready");
+                Logger.debug(TAG, "Map Layout is ready");
                 mMapLoaded = true;
                 mMapComp.setRideRequestOnMap(mRideRequest);
             }
@@ -190,7 +191,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         //Reason behind this as on refresh of view, getViewTreeObserver would not get called
         //as its called only first time when map is loaded
         if (mMapLoaded){
-            Log.d(TAG, "Map already loaded");
+            Logger.debug(TAG, "Map already loaded");
             mMapComp.setRideRequestOnMap(mRideRequest);
         }
 
@@ -199,13 +200,13 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
             @Override
             public void onMapClick(LatLng latLng) {
                 if (mMapFullView){
-                    Log.d(TAG, "Map Clicked, Current state is Full View");
+                    Logger.debug(TAG, "Map Clicked, Current state is Full View");
                     mBasicRideRequestLayout.setVisibility(View.GONE);
                     mRideOwnerLayout.setVisibility(View.GONE);
                     expandMapLayout();
                     mMapFullView=false;
                 } else {
-                    Log.d(TAG, "Map Clicked, Current state is Small View");
+                    Logger.debug(TAG, "Map Clicked, Current state is Small View");
                     mBasicRideRequestLayout.setVisibility(View.VISIBLE);
                     mRideOwnerLayout.setVisibility(View.VISIBLE);
                     collapseMapLayout();
@@ -223,7 +224,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
 
     @Override
     public void onRideRequestRefresh(FullRideRequest rideRequest) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id with status:"
+        Logger.debug(TAG, "Recieved Callback for Refresh for Ride Request Id with status:"
                 +rideRequest.getId()+":"+rideRequest.getStatus());
         mRideRequest = rideRequest;
         setRideRequestInfoView(getView());

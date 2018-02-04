@@ -50,6 +50,7 @@ import com.digitusrevolution.rideshare.fragment.WalletFragment;
 import com.digitusrevolution.rideshare.fragment.WebPageFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.FetchType;
@@ -188,9 +189,9 @@ public class HomePageActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-            Log.d(TAG,"On Back Pressed: Inside Drawer Open State");
+            Logger.debug(TAG,"On Back Pressed: Inside Drawer Open State");
         } else {
-            Log.d(TAG,"On Back Pressed: Inside Else Block");
+            Logger.debug(TAG,"On Back Pressed: Inside Else Block");
             super.onBackPressed();
         }
     }
@@ -214,7 +215,7 @@ public class HomePageActivity extends BaseActivity
         //Toast.makeText(this,item.getTitle(),Toast.LENGTH_SHORT).show();
 
         if (id == R.id.nav_home) {
-            Log.d(TAG, "Home Clicked");
+            Logger.debug(TAG, "Home Clicked");
             //First set the fetchType
             HomePageWithCurrentRidesFragment fragment = (HomePageWithCurrentRidesFragment) getSupportFragmentManager()
                     .findFragmentByTag(HomePageWithCurrentRidesFragment.TAG);
@@ -225,7 +226,7 @@ public class HomePageActivity extends BaseActivity
             fragment.setFetchType(FetchType.Server);
 
             if (getSupportFragmentManager().getBackStackEntryCount() == 0){
-                Log.d(TAG, "Refreshing Home Page View");
+                Logger.debug(TAG, "Refreshing Home Page View");
                 //This will refresh the view if the fragment is already loaded which is based on the backstack count
                 //Note - Don't do this on else block otherwise it will throw NPE as view would only be created post onCreateView is called
                 //But if some other fragment is loaded then View is already destroyed
@@ -242,34 +243,34 @@ public class HomePageActivity extends BaseActivity
             removeAllBackStacks();
 
             if (id == R.id.nav_rides) {
-                Log.d(TAG, "Rides Clicked");
+                Logger.debug(TAG, "Rides Clicked");
                 mFragmentLoader.loadRidesListFragment();
             } else if (id == R.id.nav_groups) {
                 mFragmentLoader.loadGroupHomePageFragment();
-                Log.d(TAG, "Groups Clicked");
+                Logger.debug(TAG, "Groups Clicked");
             }
             else if (id == R.id.nav_wallet) {
-                Log.d(TAG, "Wallet Clicked");
+                Logger.debug(TAG, "Wallet Clicked");
                 mFragmentLoader.loadWalletFragment(false, 0);
             }
             else if (id == R.id.nav_price) {
-                Log.d(TAG, "Price Clicked");
+                Logger.debug(TAG, "Price Clicked");
                 mFragmentLoader.loadWebPageFragment(APIUrl.PRICE_DETAILS_URL, Constant.PRICE_DETAILS_PAGE_TITLE);
             }
             else if (id == R.id.nav_share) {
-                Log.d(TAG, "Share Clicked");
+                Logger.debug(TAG, "Share Clicked");
                 share();
             }
             else if (id == R.id.nav_help) {
-                Log.d(TAG, "Help Clicked");
+                Logger.debug(TAG, "Help Clicked");
                 mFragmentLoader.loadHelpFragment(null, null);
             }
             else if (id == R.id.nav_legal) {
-                Log.d(TAG, "Legal Clicked");
+                Logger.debug(TAG, "Legal Clicked");
                 mFragmentLoader.loadLegalFragment(null, null);
             }
             else if (id == R.id.nav_signout) {
-                Log.d(TAG, "Signout Clicked");
+                Logger.debug(TAG, "Signout Clicked");
                 signOut();
             }
         }
@@ -304,11 +305,11 @@ public class HomePageActivity extends BaseActivity
         //onSuccess response e.g. mCommonUtil etc. then you will get NPE
 
         int count = getSupportFragmentManager().getBackStackEntryCount();
-        Log.d(TAG, "Backstack Count is:"+count);
+        Logger.debug(TAG, "Backstack Count is:"+count);
         for (int i = 0; i < count; i++) {
             int backStackId = getSupportFragmentManager().getBackStackEntryAt(i).getId();
             String name = getSupportFragmentManager().getBackStackEntryAt(i).getName();
-            Log.d(TAG, "Removing Backstack [Name,Id]:"+name+","+backStackId);
+            Logger.debug(TAG, "Removing Backstack [Name,Id]:"+name+","+backStackId);
             getSupportFragmentManager().popBackStack(backStackId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
@@ -316,13 +317,13 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onHomePageWithCurrentRidesFragmentInteraction(String data) {
-        Log.d(TAG,"Value returned to activity from Blank Fragment:"+data);
+        Logger.debug(TAG,"Value returned to activity from Blank Fragment:"+data);
 
     }
 
     @Override
     public void onCreateRideFragmentInteraction(RideType rideType, String data) {
-        Log.d(TAG, "Recieved callback post Create Rides Fragment");
+        Logger.debug(TAG, "Recieved callback post Create Rides Fragment");
         //This will clean up all back stacks and start from fresh
         //Reason for not doing popback as map was not getting reloaded properly and viewtreeobserver was not getting callback
         //which was causing old map to show up with previous markers/lines

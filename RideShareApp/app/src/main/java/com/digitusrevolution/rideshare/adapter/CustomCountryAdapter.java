@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.MobileRegistrationActivity;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.user.domain.Country;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class CustomCountryAdapter extends ArrayAdapter<Country>{
 
     @Override
     public int getCount() {
-        Log.d(TAG, "Country Count:"+mCountries.size());
+        Logger.debug(TAG, "Country Count:"+mCountries.size());
         return mCountries.size();
     }
 
@@ -74,7 +75,7 @@ public class CustomCountryAdapter extends ArrayAdapter<Country>{
         // Reason for adding "+" in the code as while sending the GET request for getting OTP with +91,
         // somehow + gets omitted, so we are storing the data without + and while sending OTP we can drawable.add + from backend
         String countryNameWithCode = country.getName() +" (" + country.getCode() +")";
-        Log.d(TAG, "Country Name with Code:"+countryNameWithCode);
+        Logger.debug(TAG, "Country Name with Code:"+countryNameWithCode);
         viewHolder.countryTextView.setText(countryNameWithCode);
         return convertView;
     }
@@ -85,7 +86,7 @@ public class CustomCountryAdapter extends ArrayAdapter<Country>{
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         convertView = getView(position,convertView,parent);
-        Log.d(TAG, "Get Drop Down view:"+((ViewHolder)convertView.getTag()).countryTextView.getText().toString());
+        Logger.debug(TAG, "Get Drop Down view:"+((ViewHolder)convertView.getTag()).countryTextView.getText().toString());
         return convertView;
     }
 

@@ -21,6 +21,7 @@ import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.domain.MembershipForm;
@@ -121,7 +122,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
         mHelpContentTextView.setVisibility(View.GONE);
 
         if (mGroup.getId()!=0){
-            Log.d(TAG, "Its a existing group membership form");
+            Logger.debug(TAG, "Its a existing group membership form");
             mCreateGroupButton.setVisibility(View.GONE);
 
             for (String question:mGroup.getMembershipForm().getQuestions()){
@@ -129,7 +130,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
             }
 
         } else {
-            Log.d(TAG, "Its a new group membeship form");
+            Logger.debug(TAG, "Its a new group membeship form");
             mUpdateButton.setVisibility(View.GONE);
         }
 
@@ -185,7 +186,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
                             mCommonUtil.dismissProgressDialog();
-                            Log.d(TAG, "Group Created:"+response.toString());
+                            Logger.debug(TAG, "Group Created:"+response.toString());
                             GroupDetail groupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
                             hideSoftKeyBoard();
                             mListener.onMembershipFormFragmentLoadGroup(groupDetail);
@@ -208,7 +209,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
                             mCommonUtil.dismissProgressDialog();
-                            Log.d(TAG, "Form updated:"+response.toString());
+                            Logger.debug(TAG, "Form updated:"+response.toString());
                             GroupDetail groupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
                             mListener.onMembershipFormFragmentLoadGroup(groupDetail);
                         }
@@ -252,7 +253,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
     private void setupGroup(){
         for (int i = 0; i < mQuestionsLayout.getChildCount(); i++){
             String question = ((EditText)mQuestionsLayout.getChildAt(i).findViewById(R.id.question)).getText().toString();
-            Log.d(TAG, "Question No "+i+":"+question);
+            Logger.debug(TAG, "Question No "+i+":"+question);
             mMembershipForm.getQuestions().add(question);
         }
         mGroup.setMembershipForm(mMembershipForm);
@@ -260,7 +261,7 @@ public class CreateMembershipFormFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        Log.d(TAG,"onResume");
+        Logger.debug(TAG,"onResume");
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(true);
         if (mGroup.getId()==0){

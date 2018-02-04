@@ -8,6 +8,7 @@ import android.util.Log;
 import com.digitusrevolution.rideshare.fragment.RedeemFragment;
 import com.digitusrevolution.rideshare.fragment.TopUpFragment;
 import com.digitusrevolution.rideshare.fragment.TransactionFragment;
+import com.digitusrevolution.rideshare.helper.Logger;
 
 /**
  * Created by psarthi on 12/8/17.
@@ -34,15 +35,15 @@ public class WalletViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = null;
         if (position==0){
-            Log.d(TAG, "Get Top Up Fragment");
+            Logger.debug(TAG, "Get Top Up Fragment");
             fragment = TopUpFragment.newInstance(mRequiredBalanceVisiblity, mRequiredBalanceAmount);
         }
         if (position == 1){
-            Log.d(TAG, "Get Transaction Fragment");
+            Logger.debug(TAG, "Get Transaction Fragment");
             fragment = TransactionFragment.newInstance(null, null);
         }
         if (position == 2){
-            Log.d(TAG, "Get Redeem Fragment");
+            Logger.debug(TAG, "Get Redeem Fragment");
             fragment = RedeemFragment.newInstance(null, null);
         }
 
@@ -71,7 +72,7 @@ public class WalletViewPagerAdapter extends FragmentStatePagerAdapter {
     //IMP - This will take care of all fragments reload when notifyDataSetChanged called on viewPagerAdapter
     @Override
     public int getItemPosition(Object object) {
-        Log.d(TAG,"getItemPosition Called "+object.toString());
+        Logger.debug(TAG,"getItemPosition Called "+object.toString());
         return POSITION_NONE;
     }
 }

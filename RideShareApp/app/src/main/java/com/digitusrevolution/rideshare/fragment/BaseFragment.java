@@ -26,6 +26,7 @@ import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
@@ -54,22 +55,22 @@ public class BaseFragment extends Fragment implements UserComp.OnUserCompListene
     public void showBackStackDetails(){
 
         int count = getActivity().getSupportFragmentManager().getBackStackEntryCount();
-        Log.d(TAG,"Fragment count in backstack is:"+count);
+        Logger.debug(TAG,"Fragment count in backstack is:"+count);
         for (int i=0; i< count;i++){
             String name = getActivity().getSupportFragmentManager().getBackStackEntryAt(i).getName();
             int id = getActivity().getSupportFragmentManager().getBackStackEntryAt(i).getId();
-            Log.d(TAG, "Backstack entry [name,id] at index "+i+":"+name+","+id);
+            Logger.debug(TAG, "Backstack entry [name,id] at index "+i+":"+name+","+id);
         }
     }
 
     public void showChildFragmentDetails(){
 
         List<Fragment> fragments = getChildFragmentManager().getFragments();
-        Log.d(TAG,"Child Fragment details of:"+this.getTag());
-        Log.d(TAG,"Child Fragment count is:"+fragments.size());
+        Logger.debug(TAG,"Child Fragment details of:"+this.getTag());
+        Logger.debug(TAG,"Child Fragment count is:"+fragments.size());
         for (int i=0; i< fragments.size();i++){
-            Log.d(TAG, "Child Fragment Id:"+Integer.toString(fragments.get(i).getId()));
-            if (fragments.get(i).getId()!=0) Log.d(TAG, "Child Container Resource Name of Id:"+getResources().getResourceName(fragments.get(i).getId()));
+            Logger.debug(TAG, "Child Fragment Id:"+Integer.toString(fragments.get(i).getId()));
+            if (fragments.get(i).getId()!=0) Logger.debug(TAG, "Child Container Resource Name of Id:"+getResources().getResourceName(fragments.get(i).getId()));
         }
     }
 
@@ -126,7 +127,7 @@ public class BaseFragment extends Fragment implements UserComp.OnUserCompListene
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     call(mUserMobileNumber);
                 } else {
-                    Log.d("TAG", "Call Permission Not Granted");
+                    Logger.debug("TAG", "Call Permission Not Granted");
                 }
                 break;
             default:

@@ -24,6 +24,7 @@ import com.digitusrevolution.rideshare.adapter.GroupInviteUserSearchListAdapter;
 import com.digitusrevolution.rideshare.adapter.GroupListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.GroupInviteUserSearchResultWrapper;
@@ -149,7 +150,7 @@ public class SearchGroupFragment extends BaseFragment {
                 // Manage this event.
                 //This will reset the query
                 searchView.setQuery("",false);
-                Log.d(TAG, "Search View - Clicked on close");
+                Logger.debug(TAG, "Search View - Clicked on close");
                 clearSearchResult();
             }
         });
@@ -174,7 +175,7 @@ public class SearchGroupFragment extends BaseFragment {
                 mGroupDetails = new Gson().fromJson(response.toString(), listType);
                 mAdapter = new GroupListAdapter(mGroupDetails, SearchGroupFragment.this);
                 mRecyclerView.setAdapter(mAdapter);
-                Log.d(TAG, "Search Result size is:"+mGroupDetails.size());
+                Logger.debug(TAG, "Search Result size is:"+mGroupDetails.size());
                 if (mGroupDetails.size()==0) {
                     mEmptyTextView.setVisibility(View.VISIBLE);
                 } else {
@@ -207,7 +208,7 @@ public class SearchGroupFragment extends BaseFragment {
                 List<GroupDetail> newSearchResults = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
                 mGroupDetails.addAll(newSearchResults);
-                Log.d(TAG, "Group Size changed. Current Size is:" + mGroupDetails.size());
+                Logger.debug(TAG, "Group Size changed. Current Size is:" + mGroupDetails.size());
                 mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mGroupDetails.size() - 1);
             }
         });

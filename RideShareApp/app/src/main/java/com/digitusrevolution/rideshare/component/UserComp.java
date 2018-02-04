@@ -17,6 +17,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -74,7 +75,7 @@ public class UserComp {
         mobileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Calling User Mobile - "+mUser.getCountry().getCode() + mUser.getMobileNumber());
+                Logger.debug(TAG, "Calling User Mobile - "+mUser.getCountry().getCode() + mUser.getMobileNumber());
                 mBaseFragment.call(mUser.getMobileNumber());
             }
         });
@@ -88,7 +89,7 @@ public class UserComp {
         UserProfileFragment fragment = (UserProfileFragment) mBaseFragment.getActivity().getSupportFragmentManager()
                 .findFragmentByTag(UserProfileFragment.TAG);
         if (fragment!=null && mUser.getId() == fragment.getUserId()){
-            Log.d(TAG, "User Profile is already loaded");
+            Logger.debug(TAG, "User Profile is already loaded");
         } else {
             setUserProfileLayoutOnClickListener(user_profile_layout);
         }*/

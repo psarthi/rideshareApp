@@ -14,6 +14,7 @@ import com.digitusrevolution.rideshare.component.GroupComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.SearchGroupFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.app.MembershipStatusType;
 import com.digitusrevolution.rideshare.model.user.dto.BasicMembershipRequest;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
@@ -52,7 +53,7 @@ public class UserMembershipRequestListAdapter extends RecyclerView.Adapter<UserM
         View view = holder.itemView;
         BasicMembershipRequest request = mRequests.get(position);
         final GroupDetail groupDetail = request.getGroup();
-        Log.d(TAG, "Group is:"+new Gson().toJson(groupDetail));
+        Logger.debug(TAG, "Group is:"+new Gson().toJson(groupDetail));
         GroupComp groupComp = new GroupComp(mBaseFragment, groupDetail);
         groupComp.setGroupBasicInfo(view);
         //This will set the name of the group which has been handled differently for different view

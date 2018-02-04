@@ -19,6 +19,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.GroupHomePageViewPagerAdapter;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.helper.Logger;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,18 +107,18 @@ public class GroupHomePageFragment extends BaseFragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.d(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
+                Logger.debug(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                Log.d(TAG, "Tab Unselected:"+tab.getText());
+                Logger.debug(TAG, "Tab Unselected:"+tab.getText());
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                Log.d(TAG, "Tab Reselected:"+tab.getText());
+                Logger.debug(TAG, "Tab Reselected:"+tab.getText());
             }
         });
 
@@ -126,7 +127,7 @@ public class GroupHomePageFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        Log.d(TAG,"onResume");
+        Logger.debug(TAG,"onResume");
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(false);
         showBackStackDetails();
@@ -188,10 +189,10 @@ public class GroupHomePageFragment extends BaseFragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        Log.d(TAG,"Selected Item is-"+item.getTitle().toString());
+        Logger.debug(TAG,"Selected Item is-"+item.getTitle().toString());
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_item) {
-            Log.d(TAG, "Search Clicked");
+            Logger.debug(TAG, "Search Clicked");
             mFragmentLoader.loadSearchGroupFragment();
             return true;
         }
@@ -199,7 +200,7 @@ public class GroupHomePageFragment extends BaseFragment {
     }
 
     public void refresh(){
-        Log.d(TAG,"refresh called");
+        Logger.debug(TAG,"refresh called");
         //Needs to validate if this works or not as what i have observed, that this will only work when view pager
         // is already loaded with all fragments else you will get exception that fragment doesn't exist
         //mGroupHomePageViewPagerAdapter.notifyDataSetChanged();

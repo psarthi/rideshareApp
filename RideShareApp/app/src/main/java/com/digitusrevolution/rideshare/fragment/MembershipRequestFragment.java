@@ -20,6 +20,7 @@ import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.dto.BasicMembershipRequest;
@@ -267,7 +268,7 @@ public class MembershipRequestFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        Log.d(TAG,"onResume");
+        Logger.debug(TAG,"onResume");
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(true);
         getActivity().setTitle(TITLE);

@@ -100,7 +100,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         optionsMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG,"View Tag is: " + v.getTag());
+                Logger.debuge(TAG,"View Tag is: " + v.getTag());
                 showPopup(v);
             }
         });
@@ -120,7 +120,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        Log.e(TAG, "Selected Position: " + mCurrentSelectedPosition);
+        Logger.debuge(TAG, "Selected Position: " + mCurrentSelectedPosition);
         switch (item.getItemId()) {
             case R.id.menu_add_admin:
                 addAdmin();

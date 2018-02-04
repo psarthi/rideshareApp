@@ -30,6 +30,7 @@ import com.digitusrevolution.rideshare.fragment.UserProfileFragment;
 import com.digitusrevolution.rideshare.fragment.WalletFragment;
 import com.digitusrevolution.rideshare.fragment.WebPageFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.app.FetchType;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
@@ -211,7 +212,7 @@ public class FragmentLoader {
     }
 
     public void loadGroupInfoByRemovingBackStacks(GroupDetail groupDetail) {
-        Log.d(TAG, "Removing all backstacks till GroupInfoFragment");
+        Logger.debug(TAG, "Removing all backstacks till GroupInfoFragment");
         //IMP - We are removing all fragments from transaction till Group Home Page
         //so that we don't go back to membership request form by pressing back
         //This will ensure Group Home page fragment doesn't get popped by setting

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustCategory;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustCategoryName;
 import com.digitusrevolution.rideshare.model.ride.domain.TrustNetwork;
@@ -62,7 +63,7 @@ public class TrustNetworkComp {
         mSelectedColor = ContextCompat.getColor(mBaseFragment.getActivity(), R.color.colorAccent);
         mDefaultTextColor = mAllTextView.getTextColors().getDefaultColor();
         mDefaultImageTint = mAllImageView.getColorFilter();
-        Log.d(TAG,"Text Default color:"+ mDefaultTextColor+":Image Default Tint:"+mAllImageView.getColorFilter());
+        Logger.debug(TAG,"Text Default color:"+ mDefaultTextColor+":Image Default Tint:"+mAllImageView.getColorFilter());
 
         setTrustCategoryOnClickListener(view);
 
@@ -73,7 +74,7 @@ public class TrustNetworkComp {
         mAllLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"Clicked on the All Image View: Selected Status:" + mAllSelected);
+                Logger.debug(TAG,"Clicked on the All Image View: Selected Status:" + mAllSelected);
                 if (!mAllSelected){
                     mAllSelected = true;
                     mGroupsSelected = false;
@@ -84,7 +85,7 @@ public class TrustNetworkComp {
         mGroupLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"Clicked on the Groups Image View: Selected Status:" + mGroupsSelected);
+                Logger.debug(TAG,"Clicked on the Groups Image View: Selected Status:" + mGroupsSelected);
                 if (!mGroupsSelected){
                     mGroupsSelected = true;
                     mAllSelected = false;

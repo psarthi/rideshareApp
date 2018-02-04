@@ -34,6 +34,7 @@ import com.digitusrevolution.rideshare.dialog.TimePickerFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.helper.GoogleUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.google.Bounds;
@@ -152,7 +153,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private String mToAddress;
 
     public CreateRidesFragment() {
-        Log.d(TAG, "CreateRidesFragment() Called");
+        Logger.debug(TAG, "CreateRidesFragment() Called");
         // Required empty public constructor
     }
 
@@ -165,7 +166,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
      * @return A new instance of fragment CreateRidesFragment.
      */
     public static CreateRidesFragment newInstance(RideType rideType, String data) {
-        Log.d(TAG, "newInstance Called with RideType:" + rideType);
+        Logger.debug(TAG, "newInstance Called with RideType:" + rideType);
         CreateRidesFragment fragment = new CreateRidesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_RIDE_TYPE, rideType.toString());
@@ -176,7 +177,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate Called");
+        Logger.debug(TAG, "onCreate Called");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mData = getArguments().getString(ARG_DATA);
@@ -198,7 +199,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView Called");
+        Logger.debug(TAG, "onCreateView Called");
         //IMP - This will ensure on fragment reload, user data is upto date e.g. in case of vehicle addition
         //new vehicle would reflect and role would also show up else it will again ask for adding vehicle
         mUser = mCommonUtil.getUser();
@@ -211,7 +212,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         }
         //Reason for putting it here so that we can get latest balance on refresh
         mAccount = mCommonUtil.getAccount();
-        Log.d(TAG, "User Name is:" + mUser.getFirstName());
+        Logger.debug(TAG, "User Name is:" + mUser.getFirstName());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_rides, container, false);
         mFareTextView = view.findViewById(R.id.create_rides_fare_text);
@@ -245,7 +246,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         //Set current time
         mDateTextView.setText(mCommonUtil.getFormattedDateString(mStartTimeCalendar.getTime()));
         mTimeTextView.setText(mCommonUtil.getTimeIn12HrFormat(mStartTimeCalendar.get(Calendar.HOUR_OF_DAY), mStartTimeCalendar.get(Calendar.MINUTE)));
-        Log.d(TAG, "Current Time in Millis:" + mStartTimeCalendar.getTimeInMillis());
+        Logger.debug(TAG, "Current Time in Millis:" + mStartTimeCalendar.getTimeInMillis());
         setDateTimeOnClickListener();
 
         //Since TrustnetworkComp has been initialized in OnCreate so member variable values would not get reset and state of trust category would be maintained
@@ -265,7 +266,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     //Keep this here instead of moving to BaseFragment, so that you have better control
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady Called");
+        Logger.debug(TAG, "onMapReady Called");
         mMap = googleMap;
         mMapComp = new MapComp(this, googleMap);
         mMapComp.setPadding(false, mRideType);
@@ -277,18 +278,18 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     // Apart from that you can customize the marker icon, move camera to different zoom level which may be required for different fragements
     private void setCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Location Permission not there");
+            Logger.debug(TAG, "Location Permission not there");
             //This is important for Fragment and not we are not using Activity requestPermissions method but we are using Fragment requestPermissions,
             // so that request can be handled in this class itself instead of handling it in Activity class
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constant.ACCESS_FINE_LOCATION_REQUEST_CODE);
         } else {
-            Log.d(TAG, "Location Permission already there");
+            Logger.debug(TAG, "Location Permission already there");
             //This will update current location based on last known location
             FusedLocationProviderClient locationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
             locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    Log.d(TAG, "Updating current location based on last known location");
+                    Logger.debug(TAG, "Updating current location based on last known location");
                     setCurrentLocationMarker(location);
 
                 }
@@ -304,7 +305,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             LocationListener locationListener = new LocationListener() {
                 public void onLocationChanged(Location location) {
                     // Called when a new location is found by the network location provider.
-                    Log.d(TAG, "Updating current location based on current location");
+                    Logger.debug(TAG, "Updating current location based on current location");
                     setCurrentLocationMarker(location);
                     locationManager.removeUpdates(this);
                 }
@@ -325,7 +326,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private void setCurrentLocationMarker(Location location) {
         //Reason for checking mFromPlace to consider reload scenario
         if (location != null && mFromPlace == null) {
-            Log.d(TAG, "Current Location:" + location.getLatitude() + "," + location.getLongitude());
+            Logger.debug(TAG, "Current Location:" + location.getLatitude() + "," + location.getLongitude());
             // Add a marker in User Current Location, and move the camera.
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng)
@@ -340,7 +341,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             moveCamera();
 
         } else {
-            Log.d(TAG, "Location is null");
+            Logger.debug(TAG, "Location is null");
         }
     }
 
@@ -354,7 +355,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                Log.d(TAG, "Google Geocode Success Response:" + response);
+                Logger.debug(TAG, "Google Geocode Success Response:" + response);
                 mGoogleGeocode = new Gson().fromJson(response.toString(), GoogleGeocode.class);
                 mFromAddress = GoogleUtil.getAddress(mGoogleGeocode);
                 mFromAddressTextView.setText(mFromAddress);
@@ -366,14 +367,14 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d(TAG, "Permission Result Recieved");
+        Logger.debug(TAG, "Permission Result Recieved");
         switch (requestCode) {
             case Constant.ACCESS_FINE_LOCATION_REQUEST_CODE: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Log.d(TAG, "Location Permission granted");
+                    Logger.debug(TAG, "Location Permission granted");
                     setCurrentLocation();
                 } else {
-                    Log.d(TAG, "Location Permission denied");
+                    Logger.debug(TAG, "Location Permission denied");
                 }
             }
         }
@@ -408,7 +409,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     if (!driverStatus){
                         mFragmentLoader.loadRidesOptionFragment(mRideType, ridesOption, mTravelDistance);
                     } else {
-                        Log.d(TAG, "User is a driver, so create ride directly");
+                        Logger.debug(TAG, "User is a driver, so create ride directly");
                         if (validateInput()){
                             setRideOffer();
                             mCommonUtil.showProgressDialog();
@@ -419,10 +420,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                     super.onSuccess(statusCode, headers, response);
                                     mCommonUtil.dismissProgressDialog();
                                     RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
-                                    Log.d(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
+                                    Logger.debug(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
                                     if (rideOfferResult.isCurrentRide()) {
                                         mCommonUtil.updateCurrentRide(rideOfferResult.getRide());
-                                        Log.d(TAG, "Updated Current Ride");
+                                        Logger.debug(TAG, "Updated Current Ride");
                                     }
                                     mListener.onCreateRideFragmentInteraction(mRideType, new Gson().toJson(rideOfferResult.getRide()));
                                     //mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
@@ -432,7 +433,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                     //page would display and user would be confused.
                                     if (rideOfferResult.isCurrentRide()){
                                         mCommonUtil.updateCurrentRide(rideOfferResult.getRide());
-                                        Log.d(TAG, "Updated Current Ride");
+                                        Logger.debug(TAG, "Updated Current Ride");
                                         mListener.onCreateRideFragmentInteraction(null);
                                     } else {
                                         //This will load the Ride Info fragment
@@ -472,12 +473,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
         //This is successful case when user has sufficient balance
         if (mAccount.getBalance() >= requiredWalletBalance){
-            Log.d(TAG, "Sufficient Wallet Balance, so creating ride request");
+            Logger.debug(TAG, "Sufficient Wallet Balance, so creating ride request");
             createRideRequest();
         }
         //This is the case when user doesn't have sufficient balance
         else {
-            Log.d(TAG, "InSufficient Wallet Balance, current balance/required balance:"
+            Logger.debug(TAG, "InSufficient Wallet Balance, current balance/required balance:"
                     +mAccount.getBalance()+"/"+requiredWalletBalance);
             mFragmentLoader.loadWalletFragment(true, requiredWalletBalance);
         }
@@ -492,10 +493,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 super.onSuccess(statusCode, headers, response);
                 mCommonUtil.dismissProgressDialog();
                 RideRequestResult rideRequestResult = new Gson().fromJson(response.toString(), RideRequestResult.class);
-                Log.d(TAG, "Ride Request Successfully created with id:"+rideRequestResult.getRideRequest().getId());
+                Logger.debug(TAG, "Ride Request Successfully created with id:"+rideRequestResult.getRideRequest().getId());
                 if (rideRequestResult.isCurrentRideRequest()) {
                     mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
-                    Log.d(TAG, "Updated Current Ride Request");
+                    Logger.debug(TAG, "Updated Current Ride Request");
                 }
                 mListener.onCreateRideFragmentInteraction(mRideType, new Gson().toJson(rideRequestResult.getRideRequest()));
                 //mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
@@ -505,7 +506,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                     //page would display and user would be confused.
                                 if (rideRequestResult.isCurrentRideRequest()){
                                     mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
-                                    Log.d(TAG, "Updated Current Ride Request");
+                                    Logger.debug(TAG, "Updated Current Ride Request");
                                     mListener.onCreateRideFragmentInteraction(null);
                                 } else {
                                     //This will load the Ride Request Info fragment
@@ -636,7 +637,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     @Override
     public void onResume() {
-        Log.d(TAG,"onResume Called");
+        Logger.debug(TAG,"onResume Called");
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(false);
         //Its important to set Title here else while loading fragment from backstack, title would not change
@@ -704,7 +705,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         if (requestCode == PLACE_FROM_ADDRESS_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 mFromPlace = PlaceAutocomplete.getPlace(getActivity(), data);
-                Log.i(TAG, "From Place: " + mFromPlace.getName());
+                Logger.debug(TAG, "From Place: " + mFromPlace.getName());
                 mFromAddress = getPlaceFullAddress(mFromPlace);
                 mFromAddressTextView.setText(mFromAddress);
                 mFromLatLng = mFromPlace.getLatLng();
@@ -713,7 +714,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
                 // TODO: Handle the error.
-                Log.i(TAG, status.getStatusMessage());
+                Logger.debug(TAG, status.getStatusMessage());
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // The user canceled the operation.
@@ -723,18 +724,18 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         if (requestCode == PLACE_TO_ADDRESS_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 mToPlace = PlaceAutocomplete.getPlace(getActivity(), data);
-                Log.i(TAG, "To Place Name: " + mToPlace.getName());
-                Log.i(TAG, "To Place Address: " + mToPlace.getAddress());
+                Logger.debug(TAG, "To Place Name: " + mToPlace.getName());
+                Logger.debug(TAG, "To Place Address: " + mToPlace.getAddress());
                 mToAddress = getPlaceFullAddress(mToPlace);
                 mToAddressTextView.setText(mToAddress);
                 mToLatLng = mToPlace.getLatLng();
-                Log.d(TAG, "To Place:"+new Gson().toJson(mToPlace));
+                Logger.debug(TAG, "To Place:"+new Gson().toJson(mToPlace));
                 mLocationChanged = true;
                 drawOnMap();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
                 // TODO: Handle the error.
-                Log.i(TAG, status.getStatusMessage());
+                Logger.debug(TAG, status.getStatusMessage());
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // The user canceled the operation.
@@ -762,7 +763,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 //Draw Pickup/Drop Zone using circle
                 //IMP - Reason for setting the Ride request as fare uses vehicle sub category/ride mode etc. Circle uses variation
                 setRideRequest();
-                Log.d(TAG, "Ride Request:"+new Gson().toJson(mRideRequest));
+                Logger.debug(TAG, "Ride Request:"+new Gson().toJson(mRideRequest));
                 if (mFromLatLng!=null) mMap.addCircle(new CircleOptions().center(mFromLatLng).radius(mRideRequest.getPickupPointVariation()));
                 if (mToLatLng!=null) mMap.addCircle(new CircleOptions().center(mToLatLng).radius(mRideRequest.getDropPointVariation()));
                 //Move camera
@@ -788,7 +789,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 mCommonUtil.dismissProgressDialog();
-                Log.d(TAG, "Google Direction Success Response:" + response);
+                Logger.debug(TAG, "Google Direction Success Response:" + response);
                 mGoogleDirection = new Gson().fromJson(response.toString(), GoogleDirection.class);
                 //Draw Route
                 if (mGoogleDirection.getStatus().equals("OK")){
@@ -822,7 +823,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 //No need to dismiss progress dialog as we are calling getFare and we are dismissing there
-                Log.d(TAG, "Google Distance Success Response:" + response);
+                Logger.debug(TAG, "Google Distance Success Response:" + response);
                 mGoogleDistance = new Gson().fromJson(response.toString(), GoogleDistance.class);
                 if (mGoogleDistance.getStatus().equals("OK") && mGoogleDistance.getRows().get(0).getElements().get(0).getStatus().equals("OK")){
                     Element element = mGoogleDistance.getRows().get(0).getElements().get(0);
@@ -891,7 +892,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         //This will extend the bound to cover circle
         //TODO Replace with actual radius of rides
         if (mRideType.equals(RideType.RequestRide)){
-            Log.d(TAG, "mFromLatLng, mToLatLng - "+mFromLatLng.toString() +":"+mToLatLng.toString());
+            Logger.debug(TAG, "mFromLatLng, mToLatLng - "+mFromLatLng.toString() +":"+mToLatLng.toString());
             if (mFromLatLng!=null) {
                 //This will ensure we are getting the right variation as initally mRideRequest variations are not set
                 int variation = mRideRequest.getPickupPointVariation();
@@ -910,27 +911,27 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             }
         }
         latLngBounds = latLngBoundsBuilder.build();
-        Log.d(TAG, "Bound Northeast"+latLngBounds.northeast.toString());
-        Log.d(TAG, "Bound Southwest"+latLngBounds.southwest.toString());
+        Logger.debug(TAG, "Bound Northeast"+latLngBounds.northeast.toString());
+        Logger.debug(TAG, "Bound Southwest"+latLngBounds.southwest.toString());
         return latLngBounds;
     }
 
     private void moveCamera() {
         if (mFromLatLng == null || mToLatLng == null){
-            Log.d(TAG, "To Field is empty, so using location camera zoom");
+            Logger.debug(TAG, "To Field is empty, so using location camera zoom");
             if (mFromLatLng!=null) mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mFromLatLng,Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
             if (mToLatLng!=null) mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mToLatLng,Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
         } else {
             LatLngBounds bounds = getBounds();
             //Note - padding should be "0" as we have already set padding on map seperately using setPadding()
             mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,0));
-            Log.d(TAG, "To Field exist, so using latlng bounds camera zoom");
+            Logger.debug(TAG, "To Field exist, so using latlng bounds camera zoom");
         }
     }
 
     @Override
     public void onAttach(Context context) {
-        Log.d(TAG,"onAttach Called");
+        Logger.debug(TAG,"onAttach Called");
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -943,20 +944,20 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     @Override
     public void onDetach() {
-        Log.d(TAG,"onDetach Called");
+        Logger.debug(TAG,"onDetach Called");
         super.onDetach();
         mListener = null;
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Log.d(TAG,"Recieved callback. Value of HH:MM-"+hourOfDay+":"+minute);
+        Logger.debug(TAG,"Recieved callback. Value of HH:MM-"+hourOfDay+":"+minute);
         String timeIn12HrFormat = mCommonUtil.getTimeIn12HrFormat(hourOfDay, minute);
         mTimeTextView.setText(timeIn12HrFormat);
         mStartTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         mStartTimeCalendar.set(Calendar.MINUTE, minute);
-        Log.d(TAG,"Selected Date:"+mStartTimeCalendar.getTime());
-        Log.d(TAG,"Current Date:"+Calendar.getInstance().getTime());
+        Logger.debug(TAG,"Selected Date:"+mStartTimeCalendar.getTime());
+        Logger.debug(TAG,"Current Date:"+Calendar.getInstance().getTime());
         validateStartTime();
     }
 
@@ -974,7 +975,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day){
-        Log.d(TAG,"Recieved callback. Value of DD/MM/YY-"+day+"/"+month+"/"+year);
+        Logger.debug(TAG,"Recieved callback. Value of DD/MM/YY-"+day+"/"+month+"/"+year);
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.set(year, month, day);
         Date date = calendar.getTime();
@@ -1000,9 +1001,9 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     }
 
     public void updateRidesOption(Preference ridesOption){
-        Log.d(TAG, "Ride Option has been updated");
+        Logger.debug(TAG, "Ride Option has been updated");
         mRidesOptionUpdated = true;
         mUpdatedRidesOption = ridesOption;
-        Log.d(TAG,"Updated Value is:"+new Gson().toJson(ridesOption));
+        Logger.debug(TAG,"Updated Value is:"+new Gson().toJson(ridesOption));
     }
 }

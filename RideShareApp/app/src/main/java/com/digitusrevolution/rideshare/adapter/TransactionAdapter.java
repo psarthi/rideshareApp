@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Purpose;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Transaction;
 import com.digitusrevolution.rideshare.model.billing.domain.core.TransactionType;
@@ -35,7 +36,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         mBaseFragment = fragment;
         mCommonUtil = new CommonUtil(fragment);
         mCurrencySymbol = mCommonUtil.getCurrencySymbol(mCommonUtil.getUser().getCountry());
-        Log.d(TAG, "Transaction Count is:"+transactions.size());
+        Logger.debug(TAG, "Transaction Count is:"+transactions.size());
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

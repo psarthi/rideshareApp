@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.TimePicker;
 
 import com.digitusrevolution.rideshare.config.Constant;
+import com.digitusrevolution.rideshare.helper.Logger;
 
 import java.util.Calendar;
 
@@ -49,7 +50,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         // Do something with the time chosen by the user
-        Log.d(TAG,"Value of HH:MM-"+hourOfDay+":"+minute);
+        Logger.debug(TAG,"Value of HH:MM-"+hourOfDay+":"+minute);
         mTimePickerFragmentListener.onTimeSet(view, hourOfDay, minute);
     }
 

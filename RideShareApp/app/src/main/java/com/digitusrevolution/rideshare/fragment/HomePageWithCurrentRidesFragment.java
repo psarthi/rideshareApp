@@ -32,6 +32,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.FetchType;
@@ -121,13 +122,13 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     }
 
     public void setFetchType(FetchType fetchType) {
-        Log.d(TAG, "Fetch Type has been set to:"+fetchType.toString());
+        Logger.debug(TAG, "Fetch Type has been set to:"+fetchType.toString());
         mFetchType = fetchType;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onCreate Called of instance:"+this.hashCode());
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mData = getArguments().getString(ARG_DATA);
@@ -141,7 +142,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onCreateView Called of instance:"+this.hashCode());
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page_with_current_rides, container, false);
@@ -202,7 +203,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     }
 
     private void setHomePageView(View view) {
-        Log.d(TAG, "Setting Home Page View");
+        Logger.debug(TAG, "Setting Home Page View");
         //This will get status based on current ride and ride request value
         mCurrentRidesStatus = getCurrentRidesStatus();
         //This will ensure title is updated on page refresh as well, when full page is not reloaded and onResume function doesn't get called
@@ -211,11 +212,11 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         //setTitle();
 
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)){
-            Log.d(TAG, "Setting Current Ride View");
+            Logger.debug(TAG, "Setting Current Ride View");
             setCurrentRideView(view);
         }
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)){
-            Log.d(TAG, "Setting Current Ride Request View");
+            Logger.debug(TAG, "Setting Current Ride Request View");
             setCurrentRideRequestView(view);
         }
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
@@ -233,7 +234,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     //Keep this here instead of moving to BaseFragment, so that you have better control
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onMapReady called of instance:"+this.hashCode());
         mMap = googleMap;
         mMapComp = new MapComp(this, googleMap);
         mMapComp.setPadding(true, null);
@@ -248,7 +249,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
                 // and your setRideOnMap would also be called that many times
                 //This will ensure only once this is called
                 mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                Log.d(TAG, "Map Layout is ready");
+                Logger.debug(TAG, "Map Layout is ready");
                 mMapLoaded = true;
                 drawOnMap();
             }
@@ -257,7 +258,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         //Reason behind this as on refresh of view, getViewTreeObserver would not get called
         //as its called only first time when map is loaded
         if (mMapLoaded){
-            Log.d(TAG, "Map already loaded");
+            Logger.debug(TAG, "Map already loaded");
             drawOnMap();
         }
     }
@@ -267,15 +268,15 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mMap.clear();
 
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRide)) {
-            Log.d(TAG, "Setting Ride On Map");
+            Logger.debug(TAG, "Setting Ride On Map");
             mMapComp.setRideOnMap(mCurrentRide);
         }
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.CurrentRideRequest)) {
-            Log.d(TAG, "Setting Ride Request On Map");
+            Logger.debug(TAG, "Setting Ride Request On Map");
             mMapComp.setRideRequestOnMap(mCurrentRideRequest);
         }
         if (mCurrentRidesStatus.equals(CurrentRidesStatus.NoRide)){
-            Log.d(TAG, "No Ride On Map");
+            Logger.debug(TAG, "No Ride On Map");
             setCurrentLocation();
         }
     }
@@ -286,18 +287,18 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         Context context = getActivity();
         Activity activity = getActivity();
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Location Permission not there of instance:"+this.hashCode());
+            Logger.debug(TAG, "Location Permission not there of instance:"+this.hashCode());
             //This is important for Fragment and not we are not using Activity requestPermissions method but we are using Fragment requestPermissions,
             // so that request can be handled in this class itself instead of handling it in Activity class
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constant.ACCESS_FINE_LOCATION_REQUEST_CODE);
         } else {
-            Log.d(TAG, "Location Permission already there of instance:"+this.hashCode());
+            Logger.debug(TAG, "Location Permission already there of instance:"+this.hashCode());
             //This will update current location based on last known location
             FusedLocationProviderClient locationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
             locationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    Log.d(TAG, "Updating current location based on last known location");
+                    Logger.debug(TAG, "Updating current location based on last known location");
                     setCurrentLocationMarker(location);
                 }
             });
@@ -313,7 +314,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
             LocationListener locationListener = new LocationListener() {
                 public void onLocationChanged(Location location) {
                     // Called when a new location is found by the network location provider.
-                    Log.d(TAG, "Updating current location based on current location");
+                    Logger.debug(TAG, "Updating current location based on current location");
                     setCurrentLocationMarker(location);
                     locationManager.removeUpdates(this);
                 }
@@ -333,14 +334,14 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     private void setCurrentLocationMarker(Location location) {
         if (location != null) {
-            Log.d(TAG, "Current Location:"+location.getLatitude()+","+location.getLongitude());
+            Logger.debug(TAG, "Current Location:"+location.getLatitude()+","+location.getLongitude());
             // Add a marker in User Current Location, and move the camera.
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constant.MAP_SINGLE_LOCATION_ZOOM_LEVEL));
         } else {
-            Log.d(TAG, "Location is null");
+            Logger.debug(TAG, "Location is null");
         }
     }
 
@@ -348,14 +349,14 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d(TAG, "Permission Result Recieved");
+        Logger.debug(TAG, "Permission Result Recieved");
         switch (requestCode) {
             case Constant.ACCESS_FINE_LOCATION_REQUEST_CODE: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Log.d(TAG, "Location Permission granted");
+                    Logger.debug(TAG, "Location Permission granted");
                     setCurrentLocation();
                 } else {
-                    Log.d(TAG, "Location Permission denied");
+                    Logger.debug(TAG, "Location Permission denied");
                 }
             }
         }
@@ -365,7 +366,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     public void onResume() {
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(false);
-        Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
+        Logger.debug(TAG,"Inside OnResume of instance:"+this.hashCode());
         //We are using this temporarily as there is an issue with setting title on page load as whenever we click any item in left nav
         //Home page get refreshed as we are poppping all backstacks and home is the only fragment which would get reloaded
         //so that's having issue in the title as it overwrites the title when we get the response late
@@ -392,7 +393,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "Inside Destroy View of instance:"+this.hashCode());
+        Logger.debug(TAG, "Inside Destroy View of instance:"+this.hashCode());
         showChildFragmentDetails();
 
         //Below remarks is for reference. Commented till we find cleaner solution to ensure maps get reloaded
@@ -412,7 +413,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     @Override
     public void onRideRefresh(FullRide ride) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Id with status:"
+        Logger.debug(TAG, "Recieved Callback for Refresh for Ride Id with status:"
                 +ride.getId()+":"+ride.getStatus());
         //Reason for refetching as we don't know what action user has performed e.g. if he has cancelled the ride
         //then our current rides status would itself change
@@ -421,7 +422,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     @Override
     public void onRideRequestRefresh(FullRideRequest rideRequest) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id with status:"
+        Logger.debug(TAG, "Recieved Callback for Refresh for Ride Request Id with status:"
                 +rideRequest.getId()+":"+rideRequest.getStatus());
         //Reason for refetching as we don't know what action user has performed e.g. if he has cancelled the ride
         //then our current rides status would itself change
@@ -435,31 +436,31 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     private CurrentRidesStatus getCurrentRidesStatus() {
         if (mCurrentRide!=null && mCurrentRideRequest!=null){
             if (mCurrentRide.getStartTime().before(mCurrentRideRequest.getPickupTime())) {
-                Log.d(TAG,"Status - Current Ride as its before Ride Request");
+                Logger.debug(TAG,"Status - Current Ride as its before Ride Request");
                 return CurrentRidesStatus.CurrentRide;
             } else {
-                Log.d(TAG,"Status - Current Ride Request as its before Ride");
+                Logger.debug(TAG,"Status - Current Ride Request as its before Ride");
                 return CurrentRidesStatus.CurrentRideRequest;
             }
         }
         else if (mCurrentRide!=null){
-            Log.d(TAG,"Status - Current Ride as there is no Ride Request");
+            Logger.debug(TAG,"Status - Current Ride as there is no Ride Request");
             return CurrentRidesStatus.CurrentRide;
         }
         else if (mCurrentRideRequest!=null){
-            Log.d(TAG,"Status - Current Ride Request as there is no Ride");
+            Logger.debug(TAG,"Status - Current Ride Request as there is no Ride");
             return CurrentRidesStatus.CurrentRideRequest;
         }
         else {
-            Log.d(TAG,"Status - Home Page with No Rides");
+            Logger.debug(TAG,"Status - Home Page with No Rides");
             return CurrentRidesStatus.NoRide;
         }
     }
 
     private void showRidesLayoutVisibilityStatusForDebugging(){
-        Log.d(TAG,"Current Ride Visibility: " + Integer.toString(mCurrentRideLinearLayout.getVisibility()));
-        Log.d(TAG,"Current Ride Request Visibility: " + Integer.toString(mCurrentRideRequestLinearLayout.getVisibility()));
-        Log.d(TAG,"Current Map Visibility: " + Integer.toString(mMapView.getVisibility()));
+        Logger.debug(TAG,"Current Ride Visibility: " + Integer.toString(mCurrentRideLinearLayout.getVisibility()));
+        Logger.debug(TAG,"Current Ride Request Visibility: " + Integer.toString(mCurrentRideRequestLinearLayout.getVisibility()));
+        Logger.debug(TAG,"Current Map Visibility: " + Integer.toString(mMapView.getVisibility()));
     }
 
     private void setCurrentRideView(View view){
@@ -499,7 +500,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     @Override
     public void onAttach(Context context) {
-        Log.d(TAG, "Inside onAttach of instance:"+this.hashCode());
+        Logger.debug(TAG, "Inside onAttach of instance:"+this.hashCode());
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -512,7 +513,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     @Override
     public void onDetach() {
-        Log.d(TAG, "Inside onDetach of instance:"+this.hashCode());
+        Logger.debug(TAG, "Inside onDetach of instance:"+this.hashCode());
         super.onDetach();
         mListener = null;
     }

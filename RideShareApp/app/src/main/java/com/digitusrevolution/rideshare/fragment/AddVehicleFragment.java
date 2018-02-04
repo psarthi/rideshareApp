@@ -20,6 +20,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
@@ -158,7 +159,7 @@ CommonComp.onSeatLuggageSelectionListener{
                             mCommonUtil.dismissProgressDialog();
                             mUser = new Gson().fromJson(response.toString(), BasicUser.class);
                             mCommonUtil.updateUser(mUser);
-                            Log.d(TAG, "Vehicle Added");
+                            Logger.debug(TAG, "Vehicle Added");
                             getActivity().getSupportFragmentManager().popBackStack();
 
                         }
@@ -195,7 +196,7 @@ CommonComp.onSeatLuggageSelectionListener{
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(true);
         getActivity().setTitle(TITLE);
-        Log.d(TAG,"Inside OnResume");
+        Logger.debug(TAG,"Inside OnResume");
         showBackStackDetails();
     }
 
@@ -225,13 +226,13 @@ CommonComp.onSeatLuggageSelectionListener{
     @Override
     public void onSeatSelection(int seatCount) {
         mSeatCount = seatCount;
-        Log.d(TAG, "Updating seat count");
+        Logger.debug(TAG, "Updating seat count");
     }
 
     @Override
     public void onLuggageSelection(int luggageCount) {
         mLuggageCount = luggageCount;
-        Log.d(TAG, "Updating luggage count");
+        Logger.debug(TAG, "Updating luggage count");
     }
 
 

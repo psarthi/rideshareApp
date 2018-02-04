@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.ride.domain.core.RideMode;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -122,7 +123,7 @@ public class DropCoTravellerFragment extends DialogFragment{
                 public void onClick(View v) {
                     //This will take care of Paid Ride
                     if (!mFreeRideRadioButton.isChecked()){
-                        Log.d(TAG, "Inside onStart Positive Button Click. Code is/Entered Code:"+mRideRequest.getConfirmationCode()+"/"+mPaymentTextView.getText());
+                        Logger.debug(TAG, "Inside onStart Positive Button Click. Code is/Entered Code:"+mRideRequest.getConfirmationCode()+"/"+mPaymentTextView.getText());
                         if (mPaymentTextView.getText().toString().equals(mRideRequest.getConfirmationCode())){
                             mListener.onPositiveClickOfDropCoTravellerFragment(dialog, mRideRequest);
                             //dismiss should be the last line otherwise you will get NPE on the Listener callback as Dialog fragment would be lost on call of Dismiss

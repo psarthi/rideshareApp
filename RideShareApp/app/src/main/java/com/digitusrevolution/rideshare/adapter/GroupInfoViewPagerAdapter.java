@@ -8,6 +8,7 @@ import android.util.Log;
 import com.digitusrevolution.rideshare.fragment.AboutGroupFragment;
 import com.digitusrevolution.rideshare.fragment.GroupMemberListFragment;
 import com.digitusrevolution.rideshare.fragment.GroupMembershipRequestListFragment;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
 
@@ -32,16 +33,16 @@ public class GroupInfoViewPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
         String mGroupDetailJson = new Gson().toJson(mGroupDetail);
         if (position==0){
-            Log.d(TAG, "Creating new instance of AboutGroupFragment");
+            Logger.debug(TAG, "Creating new instance of AboutGroupFragment");
             fragment = AboutGroupFragment.newInstance(mGroupDetailJson);
-            Log.d(TAG, "Tag of AboutGroupFragment:"+fragment.getTag());
+            Logger.debug(TAG, "Tag of AboutGroupFragment:"+fragment.getTag());
         }
         if (position==1){
-            Log.d(TAG, "Creating new instance of GroupMemberListFragment");
+            Logger.debug(TAG, "Creating new instance of GroupMemberListFragment");
             fragment = GroupMemberListFragment.newInstance(mGroupDetailJson);
         }
         if (position == 2){
-            Log.d(TAG, "Creating new instance of GroupMembershipRequestListFragment");
+            Logger.debug(TAG, "Creating new instance of GroupMembershipRequestListFragment");
             fragment = GroupMembershipRequestListFragment.newInstance(mGroupDetailJson);
         }
         return fragment;
@@ -69,7 +70,7 @@ public class GroupInfoViewPagerAdapter extends FragmentStatePagerAdapter {
     //IMP - This will take care of all fragments reload when notifyDataSetChanged called on viewPagerAdapter
     @Override
     public int getItemPosition(Object object) {
-        Log.d(TAG,"getItemPosition Called "+object.toString());
+        Logger.debug(TAG,"getItemPosition Called "+object.toString());
         return POSITION_NONE;
     }
 }

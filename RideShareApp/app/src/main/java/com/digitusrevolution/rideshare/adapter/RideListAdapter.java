@@ -14,6 +14,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RidesListFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
@@ -91,7 +92,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.ViewHo
 
     @Override
     public void onRideRefresh(FullRide ride) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Id with status:"
+        Logger.debug(TAG, "Recieved Callback for Refresh for Ride Id with status:"
                 +ride.getId()+":"+ride.getStatus());
 
         int i = 0 ;
@@ -101,7 +102,7 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.ViewHo
                 //Somehow its not working, so using notifydatasetChanged
                 //notifyItemChanged(i + 1);
                 notifyDataSetChanged();
-                Log.d(TAG, "Item matched at position:"+i);
+                Logger.debug(TAG, "Item matched at position:"+i);
                 break;
             }
             i++;

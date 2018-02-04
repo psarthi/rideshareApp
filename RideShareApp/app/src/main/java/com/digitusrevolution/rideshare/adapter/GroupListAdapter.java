@@ -13,6 +13,7 @@ import com.digitusrevolution.rideshare.component.GroupComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.SearchGroupFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.app.MembershipStatusType;
 import com.digitusrevolution.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
@@ -49,7 +50,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     public void onBindViewHolder(ViewHolder holder, final int position) {
         View view = holder.itemView;
         GroupDetail groupDetail = mGroups.get(position);
-        Log.d(TAG, "Group is:"+new Gson().toJson(mGroups.get(position)));
+        Logger.debug(TAG, "Group is:"+new Gson().toJson(mGroups.get(position)));
         GroupComp groupComp = new GroupComp(mBaseFragment, groupDetail);
         groupComp.setGroupBasicInfo(view);
         //This will set the name of the group which has been handled differently for different view

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
@@ -81,7 +82,7 @@ public class RedeemFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG,"onCreate Called");
+        Logger.debug(TAG,"onCreate Called");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -95,7 +96,7 @@ public class RedeemFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG,"onCreateView Called");
+        Logger.debug(TAG,"onCreateView Called");
         //This will ensure we will get updated Amount on wallet top ups
         mAccount = mCommonUtil.getAccount();
         // Inflate the layout for this fragment
@@ -162,7 +163,7 @@ public class RedeemFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"Inside OnResume");
+        Logger.debug(TAG,"Inside OnResume");
     }
 
     @Override

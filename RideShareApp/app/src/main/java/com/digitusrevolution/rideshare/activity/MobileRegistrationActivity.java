@@ -14,6 +14,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.adapter.CustomCountryAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ResponseMessage;
@@ -64,7 +65,7 @@ public class MobileRegistrationActivity extends BaseActivity {
         //Package name would always be same for the application, so key would also be the same and its independent of activity
         String data = intent.getStringExtra(getExtraDataKey());
         mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
-        Log.d(TAG,"Photo URL:"+mUserRegistration.getPhoto().getImageLocation());
+        Logger.debug(TAG,"Photo URL:"+mUserRegistration.getPhoto().getImageLocation());
         displayProfilePhoto();
 
         mSendOTPButton.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +89,7 @@ public class MobileRegistrationActivity extends BaseActivity {
             public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
 
                 String photo = Base64.encodeToString(binaryData,Base64.DEFAULT);
-                Log.d(TAG,photo);
+                Logger.debug(TAG,photo);
                 mPhotoImageView.setImageBitmap(BitmapFactory.decodeByteArray(binaryData,0,binaryData.length));
             }
 
@@ -109,7 +110,7 @@ public class MobileRegistrationActivity extends BaseActivity {
     private void sendOTP(){
         mSelectedCountry = (Country) mCountryNameSpinner.getSelectedItem();
         mSelectedCountryCode = mSelectedCountry.getCode();
-        Log.d(TAG,"Sending OTP to Mobile number "+
+        Logger.debug(TAG,"Sending OTP to Mobile number "+
                 mSelectedCountryCode +
                 mMobileNumber.getText().toString());
 
@@ -126,7 +127,7 @@ public class MobileRegistrationActivity extends BaseActivity {
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             super.onSuccess(statusCode, headers, response);
                             mCommonUtil.dismissProgressDialog();
-                            Log.d(TAG, "Response Success:" + response);
+                            Logger.debug(TAG, "Response Success:" + response);
                             String data = getExtraData();
                             Intent otpVerificationIntent = new Intent(getApplicationContext(), OtpVerificationActivity.class);
                             //Reason for storing key name as well, so that calling class don't have to know the key name
@@ -161,7 +162,7 @@ public class MobileRegistrationActivity extends BaseActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                Log.d(TAG,"Response Success:"+response);
+                Logger.debug(TAG,"Response Success:"+response);
                 //This is important otherwise Gson is unable to convert JsonArray to List
                 Type listType = new TypeToken<List<Country>>() {}.getType();
                 List<Country> countries= (List<Country>) new Gson().fromJson(response.toString(), listType);

@@ -18,6 +18,7 @@ import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.dialog.StandardAlertDialog;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.domain.ApprovalStatus;
@@ -77,7 +78,7 @@ public class AboutGroupFragment extends BaseFragment {
      */
     // TODO: Rename and change types and number of parameters
     public static AboutGroupFragment newInstance(String group) {
-        Log.d(TAG, "newInstance Called");
+        Logger.debug(TAG, "newInstance Called");
         AboutGroupFragment fragment = new AboutGroupFragment();
         Bundle args = new Bundle();
         args.putString(ARG_GROUP, group);
@@ -87,7 +88,7 @@ public class AboutGroupFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onCreate Called of instance:"+this.hashCode());
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mGroupData = getArguments().getString(ARG_GROUP);
@@ -101,7 +102,7 @@ public class AboutGroupFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onCreateView Called of instance:"+this.hashCode());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_about_group, container, false);
         ((TextView) view.findViewById(R.id.group_description)).setText(mGroup.getInformation());
@@ -212,7 +213,7 @@ public class AboutGroupFragment extends BaseFragment {
 
                     @Override
                     public void onNegativeStandardAlertDialog() {
-                        Log.d(TAG, "Negative Button clicked on standard dialog");
+                        Logger.debug(TAG, "Negative Button clicked on standard dialog");
                     }
                 });
                 dialogFragment.show(getActivity().getSupportFragmentManager(), StandardAlertDialog.TAG);
@@ -231,7 +232,7 @@ public class AboutGroupFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
+        Logger.debug(TAG,"Inside OnResume of instance:"+this.hashCode());
     }
 
     @Override

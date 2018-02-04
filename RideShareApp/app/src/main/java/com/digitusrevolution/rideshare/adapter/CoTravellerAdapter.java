@@ -15,6 +15,7 @@ import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
@@ -56,7 +57,7 @@ public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        if (convertView!=null) Log.d(TAG,"ConvertView Instance:"+convertView.hashCode());
+        if (convertView!=null) Logger.debug(TAG,"ConvertView Instance:"+convertView.hashCode());
         final FullRideRequest rideRequest= getItem(position);
 
         LayoutInflater inflater = LayoutInflater.from(mBaseFragment.getActivity());
@@ -70,13 +71,13 @@ public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
         rideRequestComp.setRidePickupDropPointsLayout(convertView);
 
         RatingBar coTravellerRatingBar = convertView.findViewById(R.id.co_traveller_rating_bar);
-        Log.d(TAG,"RatingBar Instance:"+coTravellerRatingBar.hashCode());
-        Log.d(TAG, "Initial Rating-"+coTravellerRatingBar.getRating());
+        Logger.debug(TAG,"RatingBar Instance:"+coTravellerRatingBar.hashCode());
+        Logger.debug(TAG, "Initial Rating-"+coTravellerRatingBar.getRating());
         boolean feedbackAvailable = false;
         //This will show the user given rating
         for (UserFeedback feedback: rideRequest.getFeedbacks()) {
             if (feedback.getForUser().getId() == rideRequest.getPassenger().getId() && feedback.getRideRequest().getId() == rideRequest.getId()) {
-                Log.d(TAG,"Setting Rating:"+feedback.getRating());
+                Logger.debug(TAG,"Setting Rating:"+feedback.getRating());
                 coTravellerRatingBar.setRating(feedback.getRating());
                 coTravellerRatingBar.setEnabled(false);
                 feedbackAvailable = true;
@@ -84,7 +85,7 @@ public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
         }
 
         RideComp rideComp = new RideComp(mBaseFragment, rideRequest.getAcceptedRide());
-        Log.d(TAG, "Actual Rating-"+coTravellerRatingBar.getRating());
+        Logger.debug(TAG, "Actual Rating-"+coTravellerRatingBar.getRating());
         if (!feedbackAvailable){
             rideComp.setCoTravellerRatingBar(coTravellerRatingBar, rideRequest);
         }
@@ -94,7 +95,7 @@ public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
         //This will set the listeners on co traveller buttons
         rideComp.setCoTravellerButtonsOnClickListener(convertView, rideRequest);
 
-        Log.d(TAG, "Final Rating before exiting-"+coTravellerRatingBar.getRating());
+        Logger.debug(TAG, "Final Rating before exiting-"+coTravellerRatingBar.getRating());
         return convertView;
     }
 

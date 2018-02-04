@@ -46,7 +46,7 @@ public class RESTClient {
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         //This will overwrite default value of 10 seconds so that we are able to get response properly
         client.setTimeout(TIMEOUT_VALUE);
-        Log.d(TAG,"GET URL:"+url);
+        Logger.debug(TAG,"GET URL:"+url);
         setHeader(url, responseHandler);
         client.get(url, params, responseHandler);
     }
@@ -57,7 +57,7 @@ public class RESTClient {
         BaseFragment fragment = ((RSJsonHttpResponseHandler) responseHandler).getCommonUtil().getBaseFragment();
         if (fragment instanceof CreateRidesFragment) {
             client.setTimeout(EXTENDED_TIMEOUT_VALUE);
-            Log.d(TAG, "Setting extended timeout value of:"+client.getConnectTimeout());
+            Logger.debug(TAG, "Setting extended timeout value of:"+client.getConnectTimeout());
         }
         /*This is very important as Gson default serializer would not convert the Date into ISO format with UTC timezone
         and in the backend Jackson expects the date in ISO format with UTC timezone - yyyy-MM-dd'T'HH:mm:ss.SSS'Z' (e.g. 2017-11-10T15:30:00Z).
@@ -73,8 +73,8 @@ public class RESTClient {
         //so we need to specify explicity else google api result would fail in json parsing as its not a standard text
         //Default way to convert to entity is = new StringEntity(json). This would be wrong for UTF-8 encoding
         StringEntity entity = new StringEntity(json, "UTF-8");
-        Log.d(TAG,"POST URL:"+url);
-        Log.d(TAG, "POST Message:"+json);
+        Logger.debug(TAG,"POST URL:"+url);
+        Logger.debug(TAG, "POST Message:"+json);
         setHeader(url,responseHandler);
         client.post(context, url, entity, "application/json", responseHandler);
     }

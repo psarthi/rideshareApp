@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 
+import com.digitusrevolution.rideshare.helper.Logger;
+
 /**
  * Created by psarthi on 12/19/17.
  */
@@ -34,14 +36,14 @@ public class StandardAlertDialog extends DialogFragment {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "Submit Clicked");
+                        Logger.debug(TAG, "Submit Clicked");
                         mListener.onPositiveStandardAlertDialog();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "Cancel Clicked");
+                        Logger.debug(TAG, "Cancel Clicked");
                         mListener.onNegativeStandardAlertDialog();
                     }
                 });

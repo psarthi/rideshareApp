@@ -15,6 +15,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.AddVehicleFragment;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
@@ -72,7 +73,7 @@ public class CommonComp {
                 ArrayList<String> vehicleCategoryNames = new ArrayList<>();
                 for (VehicleCategory vehicleCategory : mVehicleCategories){
                     vehicleCategoryNames.add(vehicleCategory.getName());
-                    Log.d(TAG,"Vehicle Category Name:"+vehicleCategory.getName());
+                    Logger.debug(TAG,"Vehicle Category Name:"+vehicleCategory.getName());
                 }
                 mBaseFragment.populateSpinner(vehicleCategoryNames,vehicleCategotySpinner);
             }
@@ -85,7 +86,7 @@ public class CommonComp {
                 ArrayList<String> vehicleSubCategoryNames = new ArrayList<>();
                 for (VehicleSubCategory vehicleSubCategory : mVehicleCategories.get(position).getSubCategories()){
                     vehicleSubCategoryNames.add(vehicleSubCategory.getName());
-                    Log.d(TAG,"Vehicle Sub Category Name:"+ vehicleSubCategory.getName());
+                    Logger.debug(TAG,"Vehicle Sub Category Name:"+ vehicleSubCategory.getName());
                 }
                 Collections.sort(vehicleSubCategoryNames);
 
@@ -116,7 +117,7 @@ public class CommonComp {
         //Setting initial value
         String count = Integer.toString(mSeatCount);
         seatCountTextView.setText(count);
-        Log.d(TAG, "Setting Seat Count:"+mSeatCount);
+        Logger.debug(TAG, "Setting Seat Count:"+mSeatCount);
         //Setting listeners
         ((ImageView) view.findViewById(R.id.seat_plus_image)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +155,7 @@ public class CommonComp {
         //Setting initial value
         String count = Integer.toString(mLuggageCount);
         luggageCountTextView.setText(count);
-        Log.d(TAG, "Setting Luggage Count:"+mSeatCount);
+        Logger.debug(TAG, "Setting Luggage Count:"+mSeatCount);
 
         //Setting listeners
         ((ImageView) view.findViewById(R.id.luggage_plus_image)).setOnClickListener(new View.OnClickListener() {
@@ -197,7 +198,7 @@ public class CommonComp {
         locationString += Double.toString(destination.getLatitude()) + ",";
         locationString += Double.toString(destination.getLongitude());
 
-        Log.d(TAG, "Location String:" + locationString);
+        Logger.debug(TAG, "Location String:" + locationString);
 
         Uri gmmIntentUri = Uri.parse("google.navigation:q="+locationString);
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
 import com.digitusrevolution.rideshare.model.ride.domain.RidePoint;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
@@ -63,20 +64,20 @@ public class MapComp{
 
         int topPadding = (int) (mHeight * Constant.LAT_LNG_LARGE_PADDING_PERCENT);
         int smallPadding = (int) (mHeight * Constant.LAT_LNG_SMALL_PADDING_PERCENT);
-        Log.d(TAG, "Width Pixel:"+mWidth+",Heigth Pixel:"+mHeight+",Customm Top Padding Pixel:"+topPadding+",Standard Padding Pixel:"+mStandardPadding);
+        Logger.debug(TAG, "Width Pixel:"+mWidth+",Heigth Pixel:"+mHeight+",Customm Top Padding Pixel:"+topPadding+",Standard Padding Pixel:"+mStandardPadding);
 
         if (standard){
-            Log.d(TAG, "Setting Standard Padding");
+            Logger.debug(TAG, "Setting Standard Padding");
             // void setPadding (int left,int top,int right,int bottom)
             mMap.setPadding(smallPadding,mStandardPadding, smallPadding,smallPadding);
         } else {
             if (rideType.equals(RideType.RequestRide)){
-                Log.d(TAG, "Setting Custom Padding for Request Ride");
+                Logger.debug(TAG, "Setting Custom Padding for Request Ride");
                 //This is very important to customize the visibility range of camera
                 // void setPadding (int left,int top,int right,int bottom)
                 mMap.setPadding(smallPadding,topPadding, smallPadding, mStandardPadding);
             } else {
-                Log.d(TAG, "Setting Custom Padding for Offer Ride");
+                Logger.debug(TAG, "Setting Custom Padding for Offer Ride");
                 //This is very important to customize the visibility range of camera
                 // void setPadding (int left,int top,int right,int bottom)
                 mMap.setPadding(smallPadding,topPadding, smallPadding, smallPadding);
@@ -87,7 +88,7 @@ public class MapComp{
 
     public void setRideOnMap(FullRide ride){
 
-        Log.d(TAG,"Setting Ride on Map");
+        Logger.debug(TAG,"Setting Ride on Map");
 
         List<LatLng> latLngs = new ArrayList<>();
         LatLng fromLatLng = new LatLng(ride.getStartPoint().getPoint().getLatitude(), ride.getStartPoint().getPoint().getLongitude());

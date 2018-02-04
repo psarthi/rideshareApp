@@ -15,6 +15,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.RidesListViewPagerAdapter;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.FullUser;
 
@@ -72,7 +73,7 @@ public class RidesListHomePageFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG,"onCreate");
+        Logger.debug(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -86,7 +87,7 @@ public class RidesListHomePageFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG,"onCreateView");
+        Logger.debug(TAG,"onCreateView");
         showChildFragmentDetails();
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_rides_list_home_page, container, false);
@@ -113,21 +114,21 @@ public class RidesListHomePageFragment extends BaseFragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.d(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
-                Log.d(TAG, "Before - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
+                Logger.debug(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
+                Logger.debug(TAG, "Before - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
                 mViewPager.setCurrentItem(tab.getPosition());
-                Log.d(TAG, "After - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
+                Logger.debug(TAG, "After - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
                 showChildFragmentDetails();
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                Log.d(TAG, "Tab Unselected:"+tab.getText());
+                Logger.debug(TAG, "Tab Unselected:"+tab.getText());
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                Log.d(TAG, "Tab Reselected:"+tab.getText());
+                Logger.debug(TAG, "Tab Reselected:"+tab.getText());
             }
         });
 
@@ -136,7 +137,7 @@ public class RidesListHomePageFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        Log.d(TAG,"onResume");
+        Logger.debug(TAG,"onResume");
         super.onResume();
         showBackStackDetails();
         ((HomePageActivity)getActivity()).showBackButton(false);
@@ -164,7 +165,7 @@ public class RidesListHomePageFragment extends BaseFragment {
 
     @Override
     public void onDetach() {
-        Log.d(TAG,"onDetach");
+        Logger.debug(TAG,"onDetach");
         super.onDetach();
         mListener = null;
     }
@@ -191,7 +192,7 @@ public class RidesListHomePageFragment extends BaseFragment {
     }
 
     public void refresh(){
-        Log.d(TAG,"refresh called");
+        Logger.debug(TAG,"refresh called");
         //Needs to validate if this works or not as what i have observed, that this will only work when view pager
         // is already loaded with all fragments else you will get exception that fragment doesn't exist
         //mRidesListViewPagerAdapter.notifyDataSetChanged();

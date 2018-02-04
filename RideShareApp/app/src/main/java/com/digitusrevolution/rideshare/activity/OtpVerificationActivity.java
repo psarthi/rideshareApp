@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
@@ -79,7 +80,7 @@ public class OtpVerificationActivity extends BaseActivity {
         //Package name would always be same for the application, so key would also be the same and its independent of activity
         String data = intent.getStringExtra(getExtraDataKey());
         mUserRegistration = new Gson().fromJson(data,UserRegistration.class);
-        Log.d(TAG,"Mobile Number:" + mUserRegistration.getMobileNumber());
+        Logger.debug(TAG,"Mobile Number:" + mUserRegistration.getMobileNumber());
 
         addTextChangedListenerOnOTPTextField();
 
@@ -95,7 +96,7 @@ public class OtpVerificationActivity extends BaseActivity {
                         +mOTPCode3rdNumber.getText().toString()
                         +mOTPCode4thNumber.getText().toString();
 
-                Log.d(TAG,"OTP Input Code is - "+ mOTPInput);
+                Logger.debug(TAG,"OTP Input Code is - "+ mOTPInput);
 
                 validateOTP();
 
@@ -208,17 +209,17 @@ public class OtpVerificationActivity extends BaseActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
-                    Log.d(TAG,"Response Success:"+response);
+                    Logger.debug(TAG,"Response Success:"+response);
                     mCommonUtil.dismissProgressDialog();
                     ResponseMessage responseMessage = new Gson().fromJson(response.toString(), ResponseMessage.class);
                     boolean OTPMatch = Boolean.parseBoolean(responseMessage.getResult());
                     if (OTPMatch) {
-                        Log.d(TAG,"OTP Validation Success");
+                        Logger.debug(TAG,"OTP Validation Success");
                         mUserRegistration.setOtp(mOTPInput);
                         registerUser();
 
                     } else {
-                        Log.d(TAG,"OTP Validation failed");
+                        Logger.debug(TAG,"OTP Validation failed");
                         Toast.makeText(OtpVerificationActivity.this,"OTP Validation Failed, please reenter valid OTP",Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -238,8 +239,8 @@ public class OtpVerificationActivity extends BaseActivity {
                 super.onSuccess(statusCode, headers, response);
                 mCommonUtil.dismissProgressDialog();
                 UserSignInResult userSignInResult = new Gson().fromJson(response.toString(),UserSignInResult.class);
-                Log.d(TAG,"User has been successfully registered, Redirect to Home Page");
-                Log.d(TAG,"Access Token:"+userSignInResult.getToken());
+                Logger.debug(TAG,"User has been successfully registered, Redirect to Home Page");
+                Logger.debug(TAG,"Access Token:"+userSignInResult.getToken());
                 CommonUtil commonUtil = new CommonUtil(OtpVerificationActivity.this);
                 commonUtil.saveUserSignInResult(userSignInResult);
                 startHomePageActivity();
@@ -259,7 +260,7 @@ public class OtpVerificationActivity extends BaseActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
                     mCommonUtil.dismissProgressDialog();
-                    Log.d(TAG, "Response Success:" + response);
+                    Logger.debug(TAG, "Response Success:" + response);
                     Toast.makeText(OtpVerificationActivity.this, "You will get call shortly", Toast.LENGTH_LONG).show();
                 }
             });

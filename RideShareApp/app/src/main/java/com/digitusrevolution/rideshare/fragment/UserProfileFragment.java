@@ -19,6 +19,7 @@ import com.digitusrevolution.rideshare.adapter.GroupListAdapter;
 import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserProfile;
@@ -83,7 +84,7 @@ public class UserProfileFragment extends BaseFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         mUserProfile = new Gson().fromJson(mUserProfileData, UserProfile.class);
-        Log.d(TAG, "User Profile loaded for user Id:"+mUserProfile.getUser().getId());
+        Logger.debug(TAG, "User Profile loaded for user Id:"+mUserProfile.getUser().getId());
         mCommonUtil = new CommonUtil(this);
         mFragmentLoader = new FragmentLoader(this);
         mCurrentRide = mCommonUtil.getCurrentRide();

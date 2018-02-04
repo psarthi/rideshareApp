@@ -24,6 +24,7 @@ import com.digitusrevolution.rideshare.component.RideComp;
 import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.dialog.DropCoTravellerFragment;
 import com.digitusrevolution.rideshare.dialog.CancelCoTravellerFragment;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Bill;
 import com.digitusrevolution.rideshare.model.ride.dto.BasicRideRequest;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
@@ -111,7 +112,7 @@ public class RideInfoFragment extends BaseFragment implements
     }
 
     private void setRideInfoView(View view) {
-        Log.d(TAG, "Setting Ride Info View");
+        Logger.debug(TAG, "Setting Ride Info View");
 
         //This should be initialized here so that it can be reloaded on refresh
         RideComp rideComp = new RideComp(this, mRide);
@@ -145,7 +146,7 @@ public class RideInfoFragment extends BaseFragment implements
         mapFragment.getMapAsync(this);
 
         for (int i=0; i<mCoTravellerLinearLayout.getChildCount();i++){
-            Log.d(TAG, "Rating is (Set Ride Info View):"+Float.toString(((RatingBar)
+            Logger.debug(TAG, "Rating is (Set Ride Info View):"+Float.toString(((RatingBar)
                     mCoTravellerLinearLayout.getChildAt(i).findViewById(R.id.co_traveller_rating_bar)).getRating()));
         }
     }
@@ -167,7 +168,7 @@ public class RideInfoFragment extends BaseFragment implements
                 // and your setRideOnMap would also be called that many times
                 //This will ensure only once this is called
                 mMapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                Log.d(TAG, "Map Layout is ready");
+                Logger.debug(TAG, "Map Layout is ready");
                 mMapLoaded = true;
                 mMapComp.setRideOnMap(mRide);
             }
@@ -176,7 +177,7 @@ public class RideInfoFragment extends BaseFragment implements
         //Reason behind this as on refresh of view, getViewTreeObserver would not get called
         //as its called only first time when map is loaded
         if (mMapLoaded) {
-            Log.d(TAG, "Map already loaded");
+            Logger.debug(TAG, "Map already loaded");
             mMapComp.setRideOnMap(mRide);
         }
 
@@ -191,18 +192,18 @@ public class RideInfoFragment extends BaseFragment implements
         ((HomePageActivity)getActivity()).showBackButton(true);
 
         getActivity().setTitle(TITLE);
-        Log.d(TAG,"Inside OnResume");
+        Logger.debug(TAG,"Inside OnResume");
 
         //VERY VERY IMP - Rating bar value is getting overwritten when super.onResume function is called,
         // so moved the setRideInfoView in onResume post calling its super.onResume method
         // Don't move it to onCreate else rating bar would not show up the rating properly
         //No clarity on the reason, needs to be analyzed later
 
-        Log.d(TAG, "Setting Ride Info View from inside onResume");
+        Logger.debug(TAG, "Setting Ride Info View from inside onResume");
         setRideInfoView(getView());
 
         for (int i=0; i<mCoTravellerLinearLayout.getChildCount();i++){
-            Log.d(TAG, "Rating is (Inside OnResume):"+Float.toString(((RatingBar)
+            Logger.debug(TAG, "Rating is (Inside OnResume):"+Float.toString(((RatingBar)
                     mCoTravellerLinearLayout.getChildAt(i).findViewById(R.id.co_traveller_rating_bar)).getRating()));
         }
 
@@ -225,7 +226,7 @@ public class RideInfoFragment extends BaseFragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "Inside Destroy View");
+        Logger.debug(TAG, "Inside Destroy View");
         showChildFragmentDetails();
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.ride_info_map);
         if (mapFragment != null) {
@@ -242,8 +243,8 @@ public class RideInfoFragment extends BaseFragment implements
 
     public void onPositiveClickOfCancelCoTravellerFragment(DialogFragment dialogFragment) {
         RatingBar ratingBar = (RatingBar) dialogFragment.getDialog().findViewById(R.id.rating_bar);
-        Log.d(TAG, "CoTraveller Rejected");
-        Log.d(TAG, "Rating"+ratingBar.getRating());
+        Logger.debug(TAG, "CoTraveller Rejected");
+        Logger.debug(TAG, "Rating"+ratingBar.getRating());
     }
 
     public void onNegativeClickOfCancelCoTravellerFragment(DialogFragment dialogFragment) {
@@ -252,7 +253,7 @@ public class RideInfoFragment extends BaseFragment implements
 
     @Override
     public void onRideRefresh(FullRide ride) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Id with status:"
+        Logger.debug(TAG, "Recieved Callback for Refresh for Ride Id with status:"
                 +ride.getId()+":"+ride.getStatus());
 
         mRide = ride;

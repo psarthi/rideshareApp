@@ -13,6 +13,7 @@ import com.digitusrevolution.rideshare.component.RideRequestComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
@@ -92,7 +93,7 @@ implements RideRequestComp.RideRequestCompListener{
 
     @Override
     public void onRideRequestRefresh(FullRideRequest rideRequest) {
-        Log.d(TAG, "Recieved Callback for Refresh for Ride Request Id with status:"
+        Logger.debug(TAG, "Recieved Callback for Refresh for Ride Request Id with status:"
                 +rideRequest.getId()+":"+rideRequest.getStatus());
         int i = 0 ;
         for (BasicRideRequest basicRideRequest: mRideRequests){
@@ -101,7 +102,7 @@ implements RideRequestComp.RideRequestCompListener{
                 //Somehow its not working, so using notifydatasetChanged
                 //notifyItemChanged(i + 1);
                 notifyDataSetChanged();
-                Log.d(TAG, "Item matched at position:"+i);
+                Logger.debug(TAG, "Item matched at position:"+i);
                 break;
             }
             i++;

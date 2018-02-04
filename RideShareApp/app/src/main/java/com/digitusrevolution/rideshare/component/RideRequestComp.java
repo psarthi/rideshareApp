@@ -18,6 +18,7 @@ import com.digitusrevolution.rideshare.dialog.StandardAlertDialog;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.RideRequestInfoFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.billing.domain.core.BillStatus;
@@ -102,7 +103,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         if (mListener instanceof BaseFragment){
             setExtraOfBasicLayout(layout);
         } else {
-            Log.d(TAG, "Basic Ride Request Layout found. Called from Rides List, so hiding payment code information for Id:"+mBasicRideRequest.getId());
+            Logger.debug(TAG, "Basic Ride Request Layout found. Called from Rides List, so hiding payment code information for Id:"+mBasicRideRequest.getId());
             layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.GONE);
         }
 
@@ -118,7 +119,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             //This is the case of showing Expired ride requests, this will take care of the status in ride request list view
             Calendar maxPickupTime = mCommonUtil.getRideRequestMaxPickupTime(mBasicRideRequest);
             if (mBasicRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled) && maxPickupTime.before(Calendar.getInstance())){
-                Log.d(TAG, "Max Pickup time has passed, so no cancellation button for id:"+mBasicRideRequest.getId());
+                Logger.debug(TAG, "Max Pickup time has passed, so no cancellation button for id:"+mBasicRideRequest.getId());
                 mRideRequestStatusTextView.setText(RideRequestStatus.Expired.toString());
             }
 
@@ -127,7 +128,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         RideRequestInfoFragment fragment = (RideRequestInfoFragment) mBaseFragment.getActivity().getSupportFragmentManager()
                 .findFragmentByTag(RideRequestInfoFragment.TAG);
         if (fragment!=null && mBasicRideRequest.getId() == fragment.getRideRequestId()){
-            Log.d(TAG, "Ride Request Info is already loaded");
+            Logger.debug(TAG, "Ride Request Info is already loaded");
         } else {
 
             layout.setOnClickListener(new View.OnClickListener() {
@@ -156,13 +157,13 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         String paymentCode = mRideRequest.getConfirmationCode();
         //IMP - This will work fine when getting called from Ride Request Info with Full Ride Request
         if (mRideRequest.getAcceptedRide()!=null && mRideRequest.getBill().getStatus().equals(BillStatus.Pending)){
-            Log.d(TAG, "Accepted Ride Request for Id:"+mRideRequest.getId()+" is :"+mRideRequest.getAcceptedRide().getId());
+            Logger.debug(TAG, "Accepted Ride Request for Id:"+mRideRequest.getId()+" is :"+mRideRequest.getAcceptedRide().getId());
             //Reason behind making it visible so that its visible on refresh
             layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.VISIBLE);
             String paymentLabel = mBaseFragment.getString(R.string.ride_request_payment_code_text);
             ((TextView) layout.findViewById(R.id.ride_request_confirmation_code_text)).setText(paymentLabel+paymentCode);
         }else {
-            Log.d(TAG, "No Accepted Ride for Id or Its a Free Ride:"+mBasicRideRequest.getId());
+            Logger.debug(TAG, "No Accepted Ride for Id or Its a Free Ride:"+mBasicRideRequest.getId());
             layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.GONE);
         }
     }
@@ -186,7 +187,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 super.onSuccess(statusCode, headers, response);
                                 mCommonUtil.dismissProgressDialog();
-                                Log.d(TAG, "Ride Request Cancelled");
+                                Logger.debug(TAG, "Ride Request Cancelled");
                                 mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
                                 mListener.onRideRequestRefresh(mRideRequest);
                                 Toast.makeText(mBaseFragment.getActivity(), "Ride Request Cancelled", Toast.LENGTH_LONG).show();
@@ -196,7 +197,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
                     @Override
                     public void onNegativeStandardAlertDialog() {
-                        Log.d(TAG, "Negative Button clicked on standard dialog");
+                        Logger.debug(TAG, "Negative Button clicked on standard dialog");
                     }
                 });
                 dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), StandardAlertDialog.TAG);
@@ -205,7 +206,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         mDestinationNavigationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Navigate to Destination for Id:"+mBasicRideRequest.getId());
+                Logger.debug(TAG, "Navigate to Destination for Id:"+mBasicRideRequest.getId());
                 CommonComp commonComp = new CommonComp(mBaseFragment);
                 commonComp.googleNavigation(mRideRequest.getDropPoint().getPoint());
             }
@@ -244,13 +245,13 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 mRideRequestCancelButton.setVisibility(View.GONE);
 
                 Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mBasicRideRequest);
-                //Log.d(TAG, "Drop Time with Variation:"+maxEndTime.getTime().toString());
-                //Log.d(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
+                //Logger.debug(TAG, "Drop Time with Variation:"+maxEndTime.getTime().toString());
+                //Logger.debug(TAG, "Current Time:"+Calendar.getInstance().getTime().toString());
 
                 //Exception Rules
                 //This will make destination button invisible if current time is after drop time + drop variation which includes drop time buffer as well
                 if (maxEndTime.before(Calendar.getInstance())){
-                    Log.d(TAG, "Drop time has passed, so no Destination button for id:"+mBasicRideRequest.getId());
+                    Logger.debug(TAG, "Drop time has passed, so no Destination button for id:"+mBasicRideRequest.getId());
                     //IMP - Disabling this so that user can cancel ride request at any point of time so that his money can be released
                     //mRideRequestCancelButton.setVisibility(View.GONE);
                     mDestinationNavigationButton.setVisibility(View.GONE);
@@ -263,7 +264,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         //This is the case of showing Expired ride requests
         Calendar maxPickupTime = mCommonUtil.getRideRequestMaxPickupTime(mBasicRideRequest);
         if (mBasicRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled) && maxPickupTime.before(Calendar.getInstance())){
-            Log.d(TAG, "Max Pickup time has passed, so no cancellation button for id:"+mBasicRideRequest.getId());
+            Logger.debug(TAG, "Max Pickup time has passed, so no cancellation button for id:"+mBasicRideRequest.getId());
             mRideRequestCancelButton.setVisibility(View.GONE);
             mRideRequestStatusTextView.setText(RideRequestStatus.Expired.toString());
         }
@@ -317,18 +318,18 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         mPickupPointNavigationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Navigate to Pickup Point for Id:"+mRideRequest.getId());
+                Logger.debug(TAG, "Navigate to Pickup Point for Id:"+mRideRequest.getId());
                 CommonComp commonComp = new CommonComp(mBaseFragment);
                 commonComp.googleNavigation(mRideRequest.getRidePickupPoint().getPoint());
             }
         });
 
         boolean feedbackAvailable = false;
-        Log.d(TAG,"RatingBar Instance:"+mRatingBar.hashCode());
+        Logger.debug(TAG,"RatingBar Instance:"+mRatingBar.hashCode());
         //This will show the user given rating
         for (UserFeedback feedback: mRideRequest.getFeedbacks()) {
             if (feedback.getForUser().getId() == mRideRequest.getAcceptedRide().getDriver().getId()) {
-                Log.d(TAG,"Setting Rating:"+feedback.getRating());
+                Logger.debug(TAG,"Setting Rating:"+feedback.getRating());
                 mRatingBar.setRating(feedback.getRating());
                 mRatingBar.setEnabled(false);
                 feedbackAvailable = true;
@@ -347,7 +348,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 String USER_FEEDBACK_URL;
                 final UserFeedbackInfo feedbackInfo = new UserFeedbackInfo();
-                Log.d(TAG, "Rating is:"+rating+" Given By Passenger User Id:"+mRideRequest.getPassenger().getId());
+                Logger.debug(TAG, "Rating is:"+rating+" Given By Passenger User Id:"+mRideRequest.getPassenger().getId());
                 USER_FEEDBACK_URL = APIUrl.USER_FEEDBACK.replace(APIUrl.USER_ID_KEY, Long.toString(mRideRequest.getAcceptedRide().getDriver().getId()))
                         .replace(APIUrl.RIDE_TYPE_KEY, RideType.RequestRide.toString());
                 feedbackInfo.setGivenByUser(mRideRequest.getPassenger());
@@ -380,8 +381,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 || mRideRequest.getPassengerStatus().equals(PassengerStatus.Picked)){
 
             Calendar maxEndTime = mCommonUtil.getRideRequestMaxEndTime(mRideRequest);
-            Log.d(TAG, "Current Time is:"+Calendar.getInstance().getTime().toString());
-            Log.d(TAG, "Max End Time is:"+maxEndTime.getTime().toString());
+            Logger.debug(TAG, "Current Time is:"+Calendar.getInstance().getTime().toString());
+            Logger.debug(TAG, "Max End Time is:"+maxEndTime.getTime().toString());
             if (maxEndTime.before(Calendar.getInstance())){
                 //Visible Buttons
                 mRideOwnerCancelButton.setVisibility(View.VISIBLE);
@@ -449,7 +450,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     @Override
     public void onPositiveClickOfCancelCoTravellerFragment(Dialog dialog, FullRideRequest rideRequest) {
         RatingBar ratingBar = dialog.findViewById(R.id.rating_bar);
-        Log.d(TAG, "Rating value:"+ratingBar.getRating());
+        Logger.debug(TAG, "Rating value:"+ratingBar.getRating());
 
         String CANCEL_DRIVER = APIUrl.CANCEL_DRIVER.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
                 .replace(APIUrl.RIDE_REQUEST_ID_KEY, Long.toString(rideRequest.getId()))
@@ -462,7 +463,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 mCommonUtil.dismissProgressDialog();
-                Log.d(TAG, "Ride Owner Cancelled");
+                Logger.debug(TAG, "Ride Owner Cancelled");
                 mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
                 mListener.onRideRequestRefresh(mRideRequest);
                 Toast.makeText(mBaseFragment.getActivity(), "Ride Owner Rejected", Toast.LENGTH_LONG).show();
@@ -473,7 +474,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
     @Override
     public void onNegativeClickOfCancelCoTravellerFragment(Dialog dialog, FullRideRequest rideRequest) {
-        Log.d(TAG, "Ride Owner Not Cancelled");
+        Logger.debug(TAG, "Ride Owner Not Cancelled");
 
     }
 

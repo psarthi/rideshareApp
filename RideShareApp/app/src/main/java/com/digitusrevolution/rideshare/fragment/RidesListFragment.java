@@ -19,6 +19,7 @@ import com.digitusrevolution.rideshare.adapter.RideListAdapter;
 import com.digitusrevolution.rideshare.adapter.RideRequestListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ErrorMessage;
@@ -85,7 +86,7 @@ public class RidesListFragment extends BaseFragment{
      */
     // TODO: Rename and change types and number of parameters
     public static RidesListFragment newInstance(RideType rideType) {
-        Log.d(TAG,"newInstance");
+        Logger.debug(TAG,"newInstance");
         RidesListFragment fragment = new RidesListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_RIDE_TYPE, rideType.toString());
@@ -95,7 +96,7 @@ public class RidesListFragment extends BaseFragment{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG,"onCreate");
+        Logger.debug(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
@@ -109,7 +110,7 @@ public class RidesListFragment extends BaseFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG,"onCreateView. mRides,mRidesRequest Size:"+mRides.size()+","+mRideRequests.size());
+        Logger.debug(TAG,"onCreateView. mRides,mRidesRequest Size:"+mRides.size()+","+mRideRequests.size());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_rides_list, container, false);
 
@@ -154,7 +155,7 @@ public class RidesListFragment extends BaseFragment{
                     Type listType = new TypeToken<ArrayList<BasicRide>>(){}.getType();
                     mRides = new Gson().fromJson(response.toString(), listType);
                     //This will load adapter only when data is loaded
-                    Log.d(TAG, "Size of initial set of data is: "+mRides.size());
+                    Logger.debug(TAG, "Size of initial set of data is: "+mRides.size());
                     setAdapter();
                 }
             });
@@ -173,7 +174,7 @@ public class RidesListFragment extends BaseFragment{
                     Type listType = new TypeToken<ArrayList<BasicRideRequest>>(){}.getType();
                     mRideRequests = new Gson().fromJson(response.toString(), listType);
                     //This will load adapter only when data is loaded
-                    Log.d(TAG, "Size of initial set of data is: "+mRideRequests.size());
+                    Logger.debug(TAG, "Size of initial set of data is: "+mRideRequests.size());
                     setAdapter();
                 }
             });
@@ -182,7 +183,7 @@ public class RidesListFragment extends BaseFragment{
 
     private void setAdapter() {
         if (mRideType.equals(RideType.OfferRide)){
-            Log.d(TAG, "Setting Adapter for Offer Ride. Size:" + mRides.size());
+            Logger.debug(TAG, "Setting Adapter for Offer Ride. Size:" + mRides.size());
             mAdapter = new RideListAdapter(mRides, this);
             if (mRides.size()==0) {
                 mEmptyTextView.setVisibility(View.VISIBLE);
@@ -190,7 +191,7 @@ public class RidesListFragment extends BaseFragment{
                 mEmptyTextView.setVisibility(View.GONE);
             }
         } else {
-            Log.d(TAG, "Setting Adapter for Requested Ride. Size:" + mRideRequests.size());
+            Logger.debug(TAG, "Setting Adapter for Requested Ride. Size:" + mRideRequests.size());
             mAdapter = new RideRequestListAdapter(mRideRequests, this);
             if (mRideRequests.size()==0) {
                 mEmptyTextView.setVisibility(View.VISIBLE);
@@ -226,7 +227,7 @@ public class RidesListFragment extends BaseFragment{
                     List<FullRide> newRides = new Gson().fromJson(response.toString(), listType);
                     //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
                     mRides.addAll(newRides);
-                    Log.d(TAG, "Size of new set of data is: "+newRides.size()+" :Updated count is:"+mRides.size());
+                    Logger.debug(TAG, "Size of new set of data is: "+newRides.size()+" :Updated count is:"+mRides.size());
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRides.size()-1);
                 }
             });
@@ -243,7 +244,7 @@ public class RidesListFragment extends BaseFragment{
                     Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
                     List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
                     mRideRequests.addAll(rideRequests);
-                    Log.d(TAG, "Size of new set of data is: "+rideRequests.size()+" :Updated count is:"+mRideRequests.size());
+                    Logger.debug(TAG, "Size of new set of data is: "+rideRequests.size()+" :Updated count is:"+mRideRequests.size());
                     mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRideRequests.size()-1);
                 }
             });
@@ -271,7 +272,7 @@ public class RidesListFragment extends BaseFragment{
 
     @Override
     public void onDetach() {
-        Log.d(TAG,"onDetach");
+        Logger.debug(TAG,"onDetach");
         super.onDetach();
         mListener = null;
     }

@@ -13,6 +13,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.config.Constant;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
@@ -85,8 +86,8 @@ public class BaseActivity extends AppCompatActivity {
     public void googleSignIn() {
         //This is for debugging purpose
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
-        Log.d(TAG,"Google Sign In Button Clicked");
+        Logger.debug(TAG, "Refreshed token: " + refreshedToken);
+        Logger.debug(TAG,"Google Sign In Button Clicked");
         Intent signInIntent = getGoogleSignInClient().getSignInIntent();
         mCommonUtil.showProgressDialog();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -107,7 +108,7 @@ public class BaseActivity extends AppCompatActivity {
             final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
-            Log.d(TAG,"Sign in success");
+            Logger.debug(TAG,"Sign in success");
 
             String CHECK_USER_EXIST_URL = APIUrl.CHECK_USER_EXIST_URL;
             CHECK_USER_EXIST_URL = CHECK_USER_EXIST_URL.replace(APIUrl.USER_EMAIL_KEY, account.getEmail());
@@ -116,13 +117,13 @@ public class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
-                    Log.d(TAG,"CHECK_USER_EXIST_URL Response Success (JsonObject): "+response);
+                    Logger.debug(TAG,"CHECK_USER_EXIST_URL Response Success (JsonObject): "+response);
                     UserStatus status = new Gson().fromJson(response.toString(), UserStatus.class);
                     if (status.isUserExist()){
                         loadHomePage(account.getEmail(), account.getIdToken());
                     }
                     else {
-                        Log.d(TAG,"User doesn't exist:" + account.getEmail());
+                        Logger.debug(TAG,"User doesn't exist:" + account.getEmail());
                         mCommonUtil.dismissProgressDialog();
                         mobileRegistration(account);
                     }
@@ -132,10 +133,10 @@ public class BaseActivity extends AppCompatActivity {
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            Logger.warn(TAG, "signInResult:failed code=" + e.getStatusCode());
             mCommonUtil.dismissProgressDialog();
             if (e.getStatusCode() == GoogleSignInStatusCodes.SIGN_IN_CANCELLED){
-                Log.d(TAG, "Sign in Cancelled");
+                Logger.debug(TAG, "Sign in Cancelled");
             } else {
                 Toast.makeText(BaseActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();
             }
@@ -144,7 +145,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void loadHomePage(String email, String googleSignInIdToken) {
-        Log.d(TAG,"Redirect to Home Page as User exist");
+        Logger.debug(TAG,"Redirect to Home Page as User exist");
         //Toast.makeText(LandingPageActivity.this,"User Exist, Redirecting to Home Page",Toast.LENGTH_SHORT).show();
 
         GoogleSignInInfo googleSignInInfo = new GoogleSignInInfo();
@@ -173,7 +174,7 @@ public class BaseActivity extends AppCompatActivity {
     private void mobileRegistration(GoogleSignInAccount account){
 
         //TokenId is only useful if you want to revalidate signIn from backend server again
-        Log.d(TAG,"DisplayName:"+account.getDisplayName()
+        Logger.debug(TAG,"DisplayName:"+account.getDisplayName()
                 +"\nEmail:"+account.getEmail()
                 +"\nFirst Name:"+account.getGivenName()
                 +"\nLast Name:"+account.getFamilyName()

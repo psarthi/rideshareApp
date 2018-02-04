@@ -19,6 +19,7 @@ import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener
 import com.digitusrevolution.rideshare.adapter.TransactionAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
@@ -84,7 +85,7 @@ public class TransactionFragment extends BaseFragment {
      */
     // TODO: Rename and change types and number of parameters
     public static TransactionFragment newInstance(String param1, String param2) {
-        Log.d(TAG, "newInstance Called");
+        Logger.debug(TAG, "newInstance Called");
         TransactionFragment fragment = new TransactionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -96,7 +97,7 @@ public class TransactionFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onCreate Called of instance:"+this.hashCode());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -111,7 +112,7 @@ public class TransactionFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onCreateView Called of instance:"+this.hashCode());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_transaction, container, false);
         mRecyclerView = view.findViewById(R.id.transaction_list);
@@ -140,11 +141,11 @@ public class TransactionFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
+        Logger.debug(TAG,"Inside OnResume of instance:"+this.hashCode());
     }
 
     private void loadInitialData() {
-        Log.d(TAG, "loadInitialData Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "loadInitialData Called of instance:"+this.hashCode());
         //Initial Data loading
 
         String URL = GET_USER_WALLET_TRANSACTION_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
@@ -163,7 +164,7 @@ public class TransactionFragment extends BaseFragment {
     }
 
     private void setAdapter() {
-        Log.d(TAG, "Setting Adapter of Transaction instance:"+this.hashCode());
+        Logger.debug(TAG, "Setting Adapter of Transaction instance:"+this.hashCode());
         mAdapter = new TransactionAdapter(mTransactions, this);
         mRecyclerView.setAdapter(mAdapter);
         if (mTransactions.size()==0) {
@@ -176,7 +177,7 @@ public class TransactionFragment extends BaseFragment {
     // Append the next page of data into the adapter
     // This method probably sends out a network request and appends new data items to your adapter.
     public void loadNextDataFromApi(int offset) {
-        Log.d(TAG, "loadNextDataFromApi Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "loadNextDataFromApi Called of instance:"+this.hashCode());
         // Send an API request to retrieve appropriate paginated data
         //  --> Send the request including an offset value (i.e `page`) as a query parameter.
         //  --> Deserialize and construct new model objects from the API response
@@ -193,7 +194,7 @@ public class TransactionFragment extends BaseFragment {
                 Type listType = new TypeToken<ArrayList<Transaction>>(){}.getType();
                 List<Transaction> transactions = new Gson().fromJson(response.toString(), listType);
                 mTransactions.addAll(transactions);
-                Log.d(TAG, "Transaction Size changed. Current Size is:"+mTransactions.size());
+                Logger.debug(TAG, "Transaction Size changed. Current Size is:"+mTransactions.size());
                 mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mTransactions.size()-1);
             }
         });
@@ -223,13 +224,13 @@ public class TransactionFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        Log.d(TAG, "onDetach Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onDetach Called of instance:"+this.hashCode());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "Inside Destroy View of instance:"+this.hashCode());
+        Logger.debug(TAG, "Inside Destroy View of instance:"+this.hashCode());
     }
 
     /**

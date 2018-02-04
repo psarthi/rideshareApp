@@ -28,6 +28,7 @@ import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.common.ResponseMessage;
@@ -331,8 +332,8 @@ public class CreateGroupFragment extends BaseFragment{
         String groupDesription = ((EditText) getView().findViewById(R.id.group_description)).getText().toString();
         String trimmedGroupDescription = groupDesription.trim().replaceAll(" +"," ")
                 .replaceAll("\n"," ");
-        Log.d(TAG, "Original Information -"+groupDesription);
-        Log.d(TAG, "Post Trimming Information -"+trimmedGroupDescription);
+        Logger.debug(TAG, "Original Information -"+groupDesription);
+        Logger.debug(TAG, "Post Trimming Information -"+trimmedGroupDescription);
 
         CommonUtil commonUtil = new CommonUtil(this);
         BasicUser user = commonUtil.getUser();
@@ -343,7 +344,7 @@ public class CreateGroupFragment extends BaseFragment{
 
     @Override
     public void onResume() {
-        Log.d(TAG,"onResume");
+        Logger.debug(TAG,"onResume");
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(true);
         if (mNewGroup){

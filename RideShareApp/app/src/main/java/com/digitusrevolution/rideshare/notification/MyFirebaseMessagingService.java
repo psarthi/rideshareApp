@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.SplashScreenActivity;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -45,17 +46,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Logger.debug(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            Logger.debug(TAG, "Message data payload: " + remoteMessage.getData());
             //handleNow();
         }
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            Logger.debug(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
         //NOTE - If you want to customize the notification, then write your own custom notification in handleNow
@@ -77,7 +78,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Handle time allotted to BroadcastReceivers.
      */
     private void handleNow(String message) {
-        Log.d(TAG, "Short lived task is done.");
+        Logger.debug(TAG, "Short lived task is done.");
         sendNotification(message);
     }
 
@@ -87,7 +88,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * @param messageBody FCM message body received.
      */
     private void sendNotification(String messageBody) {
-        Log.e(TAG,"Send Notification Method");
+        Logger.debug(TAG,"Send Notification Method");
         Intent intent = new Intent(this, SplashScreenActivity.class);
         //Disabling this as we will open up standard application
         //Otherwise this intent extra can be used to make decision which fragment to load once home page activity is loaded
@@ -114,11 +115,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (isAppIsInBackground(getApplicationContext())){
-            Log.d(TAG,"App is in Background");
+            Logger.debug(TAG,"App is in Background");
             //We can customize notification depending on the state of application
 
         } else {
-            Log.d(TAG,"App is in Foreground");
+            Logger.debug(TAG,"App is in Foreground");
         }
     }
 

@@ -15,6 +15,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.ride.domain.RideType;
@@ -178,7 +179,7 @@ public class BillFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(TITLE);
-        Log.d(TAG,"Inside OnResume");
+        Logger.debug(TAG,"Inside OnResume");
         showBackStackDetails();
         ((HomePageActivity)getActivity()).showBackButton(true);
     }

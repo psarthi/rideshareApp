@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.digitusrevolution.rideshare.fragment.GroupListFragment;
 import com.digitusrevolution.rideshare.fragment.UserMembershipRequestListFragment;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.model.user.dto.GroupListType;
 
 /**
@@ -27,15 +28,15 @@ public class GroupHomePageViewPagerAdapter extends FragmentStatePagerAdapter{
     public Fragment getItem(int position) {
         Fragment fragment = null;
         if (position==0){
-            Log.d(TAG, "Getting Group Membership List Fragment");
+            Logger.debug(TAG, "Getting Group Membership List Fragment");
             fragment = GroupListFragment.newInstance(GroupListType.Member, null);
         }
         if (position == 1){
-            Log.d(TAG, "Getting Group Invitation List Fragment");
+            Logger.debug(TAG, "Getting Group Invitation List Fragment");
             fragment = GroupListFragment.newInstance(GroupListType.Invite, null);
         }
         if (position == 2){
-            Log.d(TAG, "Getting User Membership Request List Fragment");
+            Logger.debug(TAG, "Getting User Membership Request List Fragment");
             fragment = UserMembershipRequestListFragment.newInstance();
         }
         return fragment;
@@ -63,7 +64,7 @@ public class GroupHomePageViewPagerAdapter extends FragmentStatePagerAdapter{
     //IMP - This will take care of all fragments reload when notifyDataSetChanged called on viewPagerAdapter
     @Override
     public int getItemPosition(Object object) {
-        Log.d(TAG,"getItemPosition Called "+object.toString());
+        Logger.debug(TAG,"getItemPosition Called "+object.toString());
         return POSITION_NONE;
     }
 }

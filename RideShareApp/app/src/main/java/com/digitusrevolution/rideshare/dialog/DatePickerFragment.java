@@ -7,6 +7,8 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.widget.DatePicker;
 
+import com.digitusrevolution.rideshare.helper.Logger;
+
 import java.util.Calendar;
 
 /**
@@ -44,7 +46,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
         // Do something with the date chosen by the user
-        Log.d(TAG,"Value of DD/MM/YY-"+day+"/"+month+"/"+year);
+        Logger.debug(TAG,"Value of DD/MM/YY-"+day+"/"+month+"/"+year);
         mDatePickerFragmentListener.onDateSet(view, year, month, day);
 
     }

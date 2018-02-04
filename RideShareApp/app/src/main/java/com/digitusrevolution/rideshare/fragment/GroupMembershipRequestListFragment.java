@@ -17,6 +17,7 @@ import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener
 import com.digitusrevolution.rideshare.adapter.GroupMembershipRequestListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.dto.BasicMembershipRequest;
@@ -73,7 +74,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
      */
     // TODO: Rename and change types and number of parameters
     public static GroupMembershipRequestListFragment newInstance(String groupDetail) {
-        Log.d(TAG, "newInstance Called");
+        Logger.debug(TAG, "newInstance Called");
         GroupMembershipRequestListFragment fragment = new GroupMembershipRequestListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_GROUP_DETAIL, groupDetail);
@@ -83,7 +84,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onCreate Called of instance:"+this.hashCode());
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mGroupDetailData = getArguments().getString(ARG_GROUP_DETAIL);
@@ -98,7 +99,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onCreateView Called of instance:"+this.hashCode());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_list, container, false);
         mRecyclerView = view.findViewById(R.id.user_list);
@@ -128,7 +129,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
     }
 
     private void loadInitialData() {
-        Log.d(TAG, "loadInitialData Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "loadInitialData Called of instance:"+this.hashCode());
         //Initial Data loading
         //Its important to use local variable else you will get updated string
         String URL = GET_GROUP_MEMBERSHIP_REQUEST_URL.replace(APIUrl.PAGE_KEY, Integer.toString(0));
@@ -141,7 +142,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
                 mCommonUtil.dismissProgressDialog();
                 Type listType = new TypeToken<ArrayList<BasicMembershipRequest>>(){}.getType();
                 mRequests = new Gson().fromJson(response.toString(), listType);
-                Log.d(TAG, "Size of initial set of data is: "+mRequests.size());
+                Logger.debug(TAG, "Size of initial set of data is: "+mRequests.size());
                 //This will load adapter only when data is loaded
                 setAdapter();
             }
@@ -150,7 +151,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
     }
 
     private void setAdapter() {
-        Log.d(TAG, "setAdapter Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "setAdapter Called of instance:"+this.hashCode());
         mAdapter = new GroupMembershipRequestListAdapter(mRequests, this);
         mRecyclerView.setAdapter(mAdapter);
         if (mRequests.size()==0) {
@@ -163,7 +164,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
     // Append the next page of data into the adapter
     // This method probably sends out a network request and appends new data items to your adapter.
     public void loadNextDataFromApi(final int offset) {
-        Log.d(TAG, "loadNextDataFromApi Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "loadNextDataFromApi Called of instance:"+this.hashCode());
         // Send an API request to retrieve appropriate paginated data
         //  --> Send the request including an offset value (i.e `page`) as a query parameter.
         //  --> Deserialize and construct new model objects from the API response
@@ -183,7 +184,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
                 List<BasicMembershipRequest> newRequests = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
                 mRequests.addAll(newRequests);
-                Log.d(TAG, "Size of new set of data is: "+newRequests.size()+" :Updated count is:"+mRequests.size());
+                Logger.debug(TAG, "Size of new set of data is: "+newRequests.size()+" :Updated count is:"+mRequests.size());
                 mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRequests.size()-1);
             }
         });
@@ -192,7 +193,7 @@ public class GroupMembershipRequestListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
+        Logger.debug(TAG,"Inside OnResume of instance:"+this.hashCode());
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.billing.domain.core.Account;
@@ -84,7 +85,7 @@ public class TopUpFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG,"onCreate Called");
+        Logger.debug(TAG,"onCreate Called");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mRequiredBalanceVisiblity = getArguments().getBoolean(ARG_REQD_BALANCE_VISIBILITY);
@@ -98,7 +99,7 @@ public class TopUpFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG,"onCreateView Called");
+        Logger.debug(TAG,"onCreateView Called");
         //This will ensure we will get updated Amount on wallet top ups
         mAccount = mCommonUtil.getAccount();
         // Inflate the layout for this fragment
@@ -111,7 +112,7 @@ public class TopUpFragment extends BaseFragment {
             String reqdAmount = getResources().getString(R.string.required_wallet_balance_label) +
                     mCurrencySymbol + mCommonUtil.getDecimalFormattedString(mRequiredBalanceAmount);
             mRequiredBalanceTextView.setText(reqdAmount);
-            Log.d(TAG, "Required Min Balance:"+mRequiredBalanceAmount);
+            Logger.debug(TAG, "Required Min Balance:"+mRequiredBalanceAmount);
             //Reason for adding 1 is to just take care of decimals
             mMinTopUpAmount = (int) (mRequiredBalanceAmount - mAccount.getBalance() + 1);
 
@@ -155,7 +156,7 @@ public class TopUpFragment extends BaseFragment {
                 //TODO Add Money via PayTm
 
                 String topUpAmountString = ((TextView) view.findViewById(R.id.topup_amount)).getText().toString();
-                Log.d(TAG, "Top Up Amount:"+topUpAmountString);
+                Logger.debug(TAG, "Top Up Amount:"+topUpAmountString);
                 if (validateInput(topUpAmountString)){
                     String ADD_MONEY = APIUrl.ADD_MONEY.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
                             .replace(APIUrl.ACCOUNT_NUMBER_KEY, Long.toString(mAccount.getNumber()))
@@ -251,12 +252,12 @@ public class TopUpFragment extends BaseFragment {
                         // Payment Gateway Activity or may be due to //
                         // initialization of webview. // Error Message details
                         // the error occurred.
-                        Log.d(TAG, "someUIErrorOccurred" + inErrorMessage);
+                        Logger.debug(TAG, "someUIErrorOccurred" + inErrorMessage);
                     }
 
                     @Override
                     public void onTransactionResponse(Bundle inResponse) {
-                        Log.d(TAG, "Payment Transaction : " + inResponse);
+                        Logger.debug(TAG, "Payment Transaction : " + inResponse);
                         Toast.makeText(getActivity(), "Payment Transaction response "+inResponse.toString(), Toast.LENGTH_LONG).show();
                     }
 
@@ -265,7 +266,7 @@ public class TopUpFragment extends BaseFragment {
                         // If network is not
                         // available, then this
                         // method gets called.
-                        Log.d(TAG, "networkNotAvailable");
+                        Logger.debug(TAG, "networkNotAvailable");
                     }
 
                     @Override
@@ -277,14 +278,14 @@ public class TopUpFragment extends BaseFragment {
                         // proper format. // 3. Server failed to authenticate
                         // that client. That is value of payt_STATUS is 2. //
                         // Error Message describes the reason for failure.
-                        Log.d(TAG, "clientAuthenticationFailed" + inErrorMessage);
+                        Logger.debug(TAG, "clientAuthenticationFailed" + inErrorMessage);
                     }
 
                     @Override
                     public void onErrorLoadingWebPage(int iniErrorCode,
                                                       String inErrorMessage, String inFailingUrl) {
 
-                        Log.d(TAG, "onErrorLoadingWebPage:" + iniErrorCode +":"+inErrorMessage);
+                        Logger.debug(TAG, "onErrorLoadingWebPage:" + iniErrorCode +":"+inErrorMessage);
 
                     }
 
@@ -296,7 +297,7 @@ public class TopUpFragment extends BaseFragment {
 
                     @Override
                     public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
-                        Log.d(TAG, "Payment Transaction Failed " + inErrorMessage);
+                        Logger.debug(TAG, "Payment Transaction Failed " + inErrorMessage);
                         Toast.makeText(getActivity(), "Payment Transaction Failed ", Toast.LENGTH_LONG).show();
                     }
 
@@ -306,7 +307,7 @@ public class TopUpFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"Inside OnResume");
+        Logger.debug(TAG,"Inside OnResume");
     }
 
     @Override

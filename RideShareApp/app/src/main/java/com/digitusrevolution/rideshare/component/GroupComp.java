@@ -15,6 +15,7 @@ import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.fragment.GroupInfoFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.domain.GroupFeedback;
@@ -168,7 +169,7 @@ public class GroupComp {
                 mGroup = new Gson().fromJson(response.toString(), GroupDetail.class);
                 int color = mBaseFragment.getResources().getColor(R.color.colorAccent);
                 if (vote.equals(Vote.Genuine)){
-                    Log.d(TAG, "Voted as Genuine");
+                    Logger.debug(TAG, "Voted as Genuine");
                     //This will set genuine vote tint as well as update vote count
                     mGroupUpVoteCount.setText(Integer.toString(mGroup.getGenuineVotes()));
                     mCommonUtil.setDrawableTint(mGroupUpVoteCount.getCompoundDrawables()[0], color);
@@ -177,7 +178,7 @@ public class GroupComp {
                     mGroupDownVoteCount.setText(Integer.toString(mGroup.getFakeVotes()));
                     mCommonUtil.removeDrawableTint(mGroupDownVoteCount.getCompoundDrawables()[0]);
                 } else {
-                    Log.d(TAG, "Voted as Fake");
+                    Logger.debug(TAG, "Voted as Fake");
                     //This will set fake vote tint as well as update vote count
                     mGroupDownVoteCount.setText(Integer.toString(mGroup.getFakeVotes()));
                     mCommonUtil.setDrawableTint(mGroupDownVoteCount.getCompoundDrawables()[0], color);

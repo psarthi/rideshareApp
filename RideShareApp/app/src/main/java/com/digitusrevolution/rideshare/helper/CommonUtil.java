@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.util.Log;
 
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.BaseActivity;
@@ -23,18 +20,14 @@ import com.digitusrevolution.rideshare.model.ride.dto.FullRide;
 import com.digitusrevolution.rideshare.model.ride.dto.FullRideRequest;
 import com.digitusrevolution.rideshare.model.user.domain.Country;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
-import com.digitusrevolution.rideshare.model.user.dto.FullUser;
 import com.digitusrevolution.rideshare.model.user.dto.UserSignInResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
@@ -119,7 +112,7 @@ public class CommonUtil {
         editor.putString(key, value);
         editor.commit();
         String savedValue = getSharedPreferences().getString(key,null);
-        LogUtil.debug(TAG, "Saved Key/Value - " + key+":"+savedValue);
+        Logger.debug(TAG, "Saved Key/Value - " + key+":"+savedValue);
     }
 
     public void updateInSharedPref(String key, String value) {
@@ -128,11 +121,11 @@ public class CommonUtil {
         editor.putString(key, value);
         editor.apply();
         String savedValue = getSharedPreferences().getString(key,null);
-        LogUtil.debug(TAG, "Updated Key/Value - " + key+":"+savedValue);
+        Logger.debug(TAG, "Updated Key/Value - " + key+":"+savedValue);
     }
 
     public void removeSharedPref(){
-        LogUtil.debug(TAG, "Removing shared preference all keys");
+        Logger.debug(TAG, "Removing shared preference all keys");
         SharedPreferences sharedPref = getSharedPreferences();
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear().commit();
@@ -260,7 +253,7 @@ public class CommonUtil {
     }
 
     public String getDecimalFormattedString(double number){
-        LogUtil.debug(TAG, "Number is:"+number);
+        Logger.debug(TAG, "Number is:"+number);
         String result = String.format("%.2f", number);
         return result;
     }
@@ -270,7 +263,7 @@ public class CommonUtil {
     }
 
     public void showProgressDialog(){
-        LogUtil.debug(TAG, "Showing Progress Dialog");
+        Logger.debug(TAG, "Showing Progress Dialog");
         mProgressDialog = new ProgressDialog(getActivity(), R.style.MyTheme);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
@@ -279,17 +272,17 @@ public class CommonUtil {
 
     public void dismissProgressDialog(){
         if(mProgressDialog!=null && mProgressDialog.isShowing()){
-            LogUtil.debug(TAG, "Dismissing Progress Dialog");
+            Logger.debug(TAG, "Dismissing Progress Dialog");
             mProgressDialog.dismiss();
         } else {
-            LogUtil.debug(TAG, "Progress Dialog is not visible, so not dismissing");
+            Logger.debug(TAG, "Progress Dialog is not visible, so not dismissing");
         }
     }
 
     //IMP - We are doing all this as we need to support tint at API 19 and standard tint is not supported below API 21
     public void setDrawableTint(Drawable drawable, int color) {
         if (drawable != null) {
-            LogUtil.debug(TAG, "Applying Tint");
+            Logger.debug(TAG, "Applying Tint");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable.setTint(color);
             } else {
@@ -300,7 +293,7 @@ public class CommonUtil {
 
     public void removeDrawableTint(Drawable drawable) {
         if (drawable != null) {
-            LogUtil.debug(TAG, "Removing Tint");
+            Logger.debug(TAG, "Removing Tint");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable.setTintList(null);
             } else {
@@ -318,7 +311,7 @@ public class CommonUtil {
                 //Updating this from here as well just to ensure that updated token
                 //is always there at the time of login
                 //Note - We are doing this check and update at three points - Token Refresh, User Registration and User Login
-                LogUtil.debug(TAG, "Updating user push notification token as:"+refreshedToken);
+                Logger.debug(TAG, "Updating user push notification token as:"+refreshedToken);
                 String url = APIUrl.UPDATE_PUSH_NOTIFICATION_TOKEN.replace(APIUrl.USER_ID_KEY, Long.toString(user.getId()))
                         .replace(APIUrl.TOKEN_KEY, refreshedToken);
                 RESTClient.get(url, null, new RSJsonHttpResponseHandler(this){
@@ -328,10 +321,10 @@ public class CommonUtil {
                     }
                 });
             } else {
-                LogUtil.debug(TAG, "User push notification token is current, so no need to update");
+                Logger.debug(TAG, "User push notification token is current, so no need to update");
             }
         } else {
-            LogUtil.debug(TAG, "User is null, so can't update push notification token");
+            Logger.debug(TAG, "User is null, so can't update push notification token");
         }
     }
 

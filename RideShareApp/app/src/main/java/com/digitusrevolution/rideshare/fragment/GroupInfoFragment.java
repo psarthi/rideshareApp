@@ -20,6 +20,7 @@ import com.digitusrevolution.rideshare.component.FragmentLoader;
 import com.digitusrevolution.rideshare.component.GroupComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.user.dto.BasicUser;
@@ -68,7 +69,7 @@ public class GroupInfoFragment extends BaseFragment {
      */
     // TODO: Rename and change types and number of parameters
     public static GroupInfoFragment newInstance(String group) {
-        Log.d(TAG, "newInstance Called");
+        Logger.debug(TAG, "newInstance Called");
         GroupInfoFragment fragment = new GroupInfoFragment();
         Bundle args = new Bundle();
         args.putString(ARG_GROUP, group);
@@ -78,7 +79,7 @@ public class GroupInfoFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onCreate Called of instance:"+this.hashCode());
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mGroupData = getArguments().getString(ARG_GROUP);
@@ -91,7 +92,7 @@ public class GroupInfoFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView Called of instance:"+this.hashCode());
+        Logger.debug(TAG, "onCreateView Called of instance:"+this.hashCode());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group_info, container, false);
         TabLayout tabLayout = view.findViewById(R.id.group_tab);
@@ -121,18 +122,18 @@ public class GroupInfoFragment extends BaseFragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.d(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
+                Logger.debug(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                Log.d(TAG, "Tab Unselected:"+tab.getText());
+                Logger.debug(TAG, "Tab Unselected:"+tab.getText());
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                Log.d(TAG, "Tab Reselected:"+tab.getText());
+                Logger.debug(TAG, "Tab Reselected:"+tab.getText());
             }
         });
         return view;
@@ -140,7 +141,7 @@ public class GroupInfoFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        Log.d(TAG,"Inside OnResume of instance:"+this.hashCode());
+        Logger.debug(TAG,"Inside OnResume of instance:"+this.hashCode());
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(false);
         //This will set the title as group name
@@ -184,7 +185,7 @@ public class GroupInfoFragment extends BaseFragment {
     // Don't use this function till we sort the issue of refreshing AboutFragment
     /*
     public void refresh(GroupDetail groupDetail){
-        Log.d(TAG,"refresh called with updated group:"+new Gson().toJson(groupDetail));
+        Logger.debug(TAG,"refresh called with updated group:"+new Gson().toJson(groupDetail));
         //This will update the latest groupDetail
         //This will not work as internally we need to ensure AboutFragment gets updated Group which is not possible from here
         //mGroup = groupDetail;
@@ -200,7 +201,7 @@ public class GroupInfoFragment extends BaseFragment {
      * e.g. nmember count, vote up, down
      */
     public void refreshBasicInfo(GroupDetail groupDetail){
-        Log.d(TAG,"Basic refresh called with updated group:"+new Gson().toJson(groupDetail));
+        Logger.debug(TAG,"Basic refresh called with updated group:"+new Gson().toJson(groupDetail));
         mGroup = groupDetail;
     }
 }

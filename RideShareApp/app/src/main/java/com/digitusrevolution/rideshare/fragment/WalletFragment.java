@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.digitusrevolution.rideshare.R;
 import com.digitusrevolution.rideshare.activity.HomePageActivity;
 import com.digitusrevolution.rideshare.adapter.WalletViewPagerAdapter;
+import com.digitusrevolution.rideshare.helper.Logger;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -101,21 +102,21 @@ public class WalletFragment extends BaseFragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.d(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
-                Log.d(TAG, "Before - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
+                Logger.debug(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
+                Logger.debug(TAG, "Before - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
                 mViewPager.setCurrentItem(tab.getPosition());
-                Log.d(TAG, "After - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
+                Logger.debug(TAG, "After - Current Item in ViewPager is:"+mViewPager.getCurrentItem());
                 showChildFragmentDetails();
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                Log.d(TAG, "Tab Unselected:"+tab.getText());
+                Logger.debug(TAG, "Tab Unselected:"+tab.getText());
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                Log.d(TAG, "Tab Reselected:"+tab.getText());
+                Logger.debug(TAG, "Tab Reselected:"+tab.getText());
             }
         });
 
@@ -124,7 +125,7 @@ public class WalletFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        Log.d(TAG,"onResume");
+        Logger.debug(TAG,"onResume");
         super.onResume();
         showBackStackDetails();
         if (mRequiredBalanceVisiblity){
@@ -168,7 +169,7 @@ public class WalletFragment extends BaseFragment {
     }
 
     public void refresh(){
-        Log.d(TAG,"refresh called");
+        Logger.debug(TAG,"refresh called");
         //IMP - This takes care of updating the dataset of transaction
         //else createView doesn't even get called for Transaction Fragment
         mWalletViewPagerAdapter.notifyDataSetChanged();

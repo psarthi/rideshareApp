@@ -23,6 +23,7 @@ import com.digitusrevolution.rideshare.adapter.EndlessRecyclerViewScrollListener
 import com.digitusrevolution.rideshare.adapter.GroupInviteUserSearchListAdapter;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.GroupInviteUserSearchResultWrapper;
@@ -165,7 +166,7 @@ public class SearchUserForGroupFragment extends BaseFragment {
                 // Manage this event.
                 //This will reset the query
                 searchView.setQuery("",false);
-                Log.d(TAG, "Search View - Clicked on close");
+                Logger.debug(TAG, "Search View - Clicked on close");
                 clearSearchResult();
             }
         });
@@ -190,7 +191,7 @@ public class SearchUserForGroupFragment extends BaseFragment {
                 mUserSearchResultsWrappers = new Gson().fromJson(response.toString(), listType);
                 mAdapter = new GroupInviteUserSearchListAdapter(mUserSearchResultsWrappers, SearchUserForGroupFragment.this);
                 mRecyclerView.setAdapter(mAdapter);
-                Log.d(TAG, "Search Result size is:"+mUserSearchResultsWrappers.size());
+                Logger.debug(TAG, "Search Result size is:"+mUserSearchResultsWrappers.size());
                 if (mUserSearchResultsWrappers.size()==0) {
                     mEmptyTextView.setVisibility(View.VISIBLE);
                 } else {
@@ -222,7 +223,7 @@ public class SearchUserForGroupFragment extends BaseFragment {
                 List<GroupInviteUserSearchResultWrapper> newSearchResults = new Gson().fromJson(response.toString(), listType);
                 //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
                 mUserSearchResultsWrappers.addAll(newSearchResults);
-                Log.d(TAG, "User Size changed. Current Size is:"+mUserSearchResultsWrappers.size());
+                Logger.debug(TAG, "User Size changed. Current Size is:"+mUserSearchResultsWrappers.size());
                 mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mUserSearchResultsWrappers.size()-1);
             }
         });
@@ -284,7 +285,7 @@ public class SearchUserForGroupFragment extends BaseFragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d(TAG,"Search Query is:"+query);
+                Logger.debug(TAG,"Search Query is:"+query);
                 return false;
             }
 
@@ -302,10 +303,10 @@ public class SearchUserForGroupFragment extends BaseFragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        Log.d(TAG,"Selected Item is:"+item.getTitle().toString());
+        Logger.debug(TAG,"Selected Item is:"+item.getTitle().toString());
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_item) {
-            Log.d(TAG, "Invite Clicked");
+            Logger.debug(TAG, "Invite Clicked");
             sendInvite();
             return true;
         }
@@ -318,9 +319,9 @@ public class SearchUserForGroupFragment extends BaseFragment {
         //as Wrapper will only get initialized on first result set
         if (mUserSearchResultsWrappers!=null){
             for (GroupInviteUserSearchResultWrapper userSearchResultWrapper:mUserSearchResultsWrappers){
-                Log.d(TAG, "User Selected:"+userSearchResultWrapper.getUser().getFirstName()+"-"+userSearchResultWrapper.isSelected());
+                Logger.debug(TAG, "User Selected:"+userSearchResultWrapper.getUser().getFirstName()+"-"+userSearchResultWrapper.isSelected());
                 if (userSearchResultWrapper.isSelected()){
-                    Log.d(TAG, "Adding to the invite list");
+                    Logger.debug(TAG, "Adding to the invite list");
                     userIds.add(userSearchResultWrapper.getUser().getId());
                 }
             }
