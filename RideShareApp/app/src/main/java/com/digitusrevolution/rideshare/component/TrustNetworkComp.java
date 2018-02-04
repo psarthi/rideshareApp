@@ -92,8 +92,7 @@ public class TrustNetworkComp {
                 updateTrustCategoryItemsColor();
                 //This will only show up if user is not member of any group
                 if (!mIsUserGroupMember){
-                    Toast.makeText(mBaseFragment.getActivity(), "You are not member of any group, " +
-                            "please become member of your preferred groups to find trusted ride partner", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mBaseFragment.getActivity(), R.string.no_group_membership_msg, Toast.LENGTH_LONG).show();
                 }
             }
         });

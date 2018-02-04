@@ -97,5 +97,6 @@
         \n\n<b>Note</b> - Membership request comes with user name and number by default</string>
     <string name="terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="no_group_membership_msg">Please join groups to find trusted ride partner</string>
 
 </resources>

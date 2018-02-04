@@ -107,10 +107,6 @@ public class BillFragment extends BaseFragment {
     }
 
     private void setBillView(View view) {
-        //We are not showing bill number here, so removed the bill number but let
-        //the placeholder be there so in future if we want to add
-        String billNumberText = getResources().getString(R.string.bill_no_text);
-        ((TextView) view.findViewById(R.id.bill_number)).setText(billNumberText);
         String coTravellerName = mBill.getRideRequest().getPassenger().getFirstName() + " "+
                 mBill.getRideRequest().getPassenger().getLastName();
         ((TextView) view.findViewById(R.id.co_traveller_name)).setText(coTravellerName);
