@@ -16,6 +16,7 @@ import com.digitusrevolution.rideshare.component.UserComp;
 import com.digitusrevolution.rideshare.config.APIUrl;
 import com.digitusrevolution.rideshare.fragment.BaseFragment;
 import com.digitusrevolution.rideshare.helper.CommonUtil;
+import com.digitusrevolution.rideshare.helper.Logger;
 import com.digitusrevolution.rideshare.helper.RESTClient;
 import com.digitusrevolution.rideshare.helper.RSJsonHttpResponseHandler;
 import com.digitusrevolution.rideshare.model.app.MemberRole;
@@ -100,7 +101,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         optionsMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logger.debuge(TAG,"View Tag is: " + v.getTag());
+                Logger.debug(TAG,"View Tag is: " + v.getTag());
                 showPopup(v);
             }
         });
@@ -120,7 +121,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        Logger.debuge(TAG, "Selected Position: " + mCurrentSelectedPosition);
+        Logger.debug(TAG, "Selected Position: " + mCurrentSelectedPosition);
         switch (item.getItemId()) {
             case R.id.menu_add_admin:
                 addAdmin();
