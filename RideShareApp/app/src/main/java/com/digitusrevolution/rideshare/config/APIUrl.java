@@ -6,7 +6,7 @@ package com.digitusrevolution.rideshare.config;
 
 public class APIUrl {
 
-    public static final String HOST_NAME = "http://10.0.0.6:8080";
+    public static final String HOST_NAME = "http://10.0.0.3:8080";
     public static final String BASE_URL_USER_SYSTEM = HOST_NAME + "/RSUserSystem/api";
     public static final String BASE_URL_RIDE_SYSTEM = HOST_NAME + "/RSRideSystem/api/users/{userId}";
     public static final String BASE_URL_BILLING_SYSTEM = HOST_NAME + "/RSBillingSystem/api/users/{userId}";
