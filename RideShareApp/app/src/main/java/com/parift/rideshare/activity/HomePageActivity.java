@@ -105,6 +105,7 @@ public class HomePageActivity extends BaseActivity
     private ImageView mProfilePhotoImageView;
     private TextView mUserNameTextView;
     private TextView mUserEmailTextView;
+    private TextView mUserMobileTextView;
     private ActionBarDrawerToggle mDrawerToggle;
     private boolean mToolBarNavigationListenerIsRegistered = false;
     private DrawerLayout mDrawer;
@@ -178,7 +179,9 @@ public class HomePageActivity extends BaseActivity
                 +mUser.getLastName());
 
         mUserEmailTextView = headerView.findViewById(R.id.user_email_text);
-        mUserEmailTextView.setText(mUser.getEmail());
+        //mUserEmailTextView.setText(mUser.getEmail());
+        mUserMobileTextView = headerView.findViewById(R.id.user_mobile_text);
+        mUserMobileTextView.setText(mUser.getMobileNumber());
     }
 
     //This method is just to close drawer if system back button is pressed

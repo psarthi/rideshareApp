@@ -35,6 +35,13 @@
         android:id="@+id/user_email_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="android.studio@android.com"/>
+        android:text="android.studio@android.com"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/user_mobile_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+91 8123110011"/>
 
 </LinearLayout>
