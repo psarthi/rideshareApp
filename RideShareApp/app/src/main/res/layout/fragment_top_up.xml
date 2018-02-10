@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context="com.digitusrevolution.rideshare.fragment.TopUpFragment">
+              tools:context="com.parift.rideshare.fragment.TopUpFragment">
 
     <include layout="@layout/wallet_balance"/>
 

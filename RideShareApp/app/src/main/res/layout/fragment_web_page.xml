@@ -4,7 +4,7 @@
              android:layout_height="match_parent"
              android:fillViewport="true"
             android:layout_margin="@dimen/small_margin"
-             tools:context="com.digitusrevolution.rideshare.fragment.WebPageFragment">
+             tools:context="com.parift.rideshare.fragment.WebPageFragment">
 
     <TextView
         android:id="@+id/html_content_text_view"

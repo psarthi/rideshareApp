@@ -1,0 +1,44 @@
+package com.parift.rideshare.model.user.dto;
+
+import com.parift.rideshare.model.ride.dto.FullRide;
+import com.parift.rideshare.model.ride.dto.FullRideRequest;
+
+public class UserSignInResult {
+
+	private String token;
+	private BasicUser user;
+	private FullRide currentRide;
+	private FullRideRequest currentRideRequest;
+	private boolean groupMember;
+	
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
+	}
+	public BasicUser getUser() {
+		return user;
+	}
+	public void setUser(BasicUser user) {
+		this.user = user;
+	}
+	public FullRide getCurrentRide() {
+		return currentRide;
+	}
+	public void setCurrentRide(FullRide currentRide) {
+		this.currentRide = currentRide;
+	}
+	public FullRideRequest getCurrentRideRequest() {
+		return currentRideRequest;
+	}
+	public void setCurrentRideRequest(FullRideRequest currentRideRequest) {
+		this.currentRideRequest = currentRideRequest;
+	}
+	public boolean isGroupMember() {
+		return groupMember;
+	}
+	public void setGroupMember(boolean groupMember) {
+		this.groupMember = groupMember;
+	}
+}

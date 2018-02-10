@@ -4,7 +4,7 @@
              android:layout_height="match_parent"
               android:orientation="vertical"
               android:layout_margin="@dimen/small_margin"
-             tools:context="com.digitusrevolution.rideshare.fragment.HelpQuestionAnswerFragment">
+             tools:context="com.parift.rideshare.fragment.HelpQuestionAnswerFragment">
 
     <TextView
         android:id="@+id/question"

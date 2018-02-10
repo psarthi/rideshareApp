@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.digitusrevolution.rideshare.activity.LandingPageActivity">
+    tools:context="com.parift.rideshare.activity.LandingPageActivity">
 
     <LinearLayout
         android:id="@+id/company_name_layout"

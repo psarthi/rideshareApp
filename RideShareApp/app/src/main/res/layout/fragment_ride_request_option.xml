@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.digitusrevolution.rideshare.fragment.RidesOptionFragment">
+    tools:context="com.parift.rideshare.fragment.RidesOptionFragment">
 
     <include layout="@layout/seat_luggage_single_row_layout" android:id="@+id/seat_luggage_single_row_layout"/>
 

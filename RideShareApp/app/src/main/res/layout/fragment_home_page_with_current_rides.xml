@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.digitusrevolution.rideshare.activity.LandingPageActivity">
+    tools:context="com.parift.rideshare.activity.LandingPageActivity">
 
     <RelativeLayout android:id="@+id/home_page_rides_layout"
                     android:layout_width="match_parent"

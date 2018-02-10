@@ -2,8 +2,8 @@
     <string name="app_name">Parift Ride</string>
     <string name="company_name">Digitus Revolution</string>
     <string name="product_name">Ride Share</string>
-    <string name="GOOGLE_API_KEY">AIzaSyDzj1_oMiGKS7Zxc8mj-_p0efPAH1d3FTs</string>
-    <string name="server_client_id">715653590540-t5nknnctr11h9sakhhnmpohcnactkp6g.apps.googleusercontent.com</string>
+    <string name="GOOGLE_API_KEY">AIzaSyAkJXg9ACV6-Oa0mfIDC4Jh6YyVpyu2SPs</string>
+    <string name="google_signin_client_id">400812239675-n2312q12vnv0hnmalr4i37iqmpa8tuga.apps.googleusercontent.com</string>
     <string name="sign_up">Join</string>
     <string name="sign_in">Sign In</string>
     <string name="google_sign_in">Sign in with Google</string>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.digitusrevolution.rideshare.fragment.GroupInfoFragment">
+    tools:context="com.parift.rideshare.fragment.GroupInfoFragment">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/group_appbar"
