@@ -122,8 +122,8 @@ public class APIUrl {
             "&result_type=street_address%7Cpoint_of_interest%7Croute%7Csublocality&key={key}";
 
     //Static Html Content
-    public static final String TERMS_AND_CONDITION_URL="http://www.parift.com/";
-    public static final String PRIVACY_POLICY_URL="http://www.parift.com/";
-    public static final String PRICE_DETAILS_URL="http://www.parift.com/";
-
+    public static final String PRICE_DETAILS_URL="http://www.parift.com/price";
+    public static final String TERMS_OF_SERVICE_URL ="http://www.parift.com/termsofservice";
+    public static final String PRIVACY_POLICY_URL="http://www.parift.com/privacypolicy";
+    public static final String WEBSITE_URL="http://www.parift.com";
 }

@@ -1,7 +1,8 @@
 package com.parift.rideshare.fragment;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,14 +19,14 @@ import com.parift.rideshare.config.APIUrl;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link LegalFragment.OnFragmentInteractionListener} interface
+ * {@link InfoFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link LegalFragment#newInstance} factory method to
+ * Use the {@link InfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LegalFragment extends BaseFragment {
-    public static final String TAG = LegalFragment.class.getName();
-    public static final String TITLE = "Legal";
+public class InfoFragment extends BaseFragment {
+    public static final String TAG = InfoFragment.class.getName();
+    public static final String TITLE = "Information";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,7 +39,7 @@ public class LegalFragment extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public LegalFragment() {
+    public InfoFragment() {
         // Required empty public constructor
     }
 
@@ -48,11 +49,11 @@ public class LegalFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment LegalFragment.
+     * @return A new instance of fragment InfoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static LegalFragment newInstance(String param1, String param2) {
-        LegalFragment fragment = new LegalFragment();
+    public static InfoFragment newInstance(String param1, String param2) {
+        InfoFragment fragment = new InfoFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -74,12 +75,19 @@ public class LegalFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_legal, container, false);
-        view.findViewById(R.id.terms_and_conditions).setOnClickListener(new View.OnClickListener() {
+        View view = inflater.inflate(R.layout.fragment_info, container, false);
+        view.findViewById(R.id.price).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentLoader.loadWebPageFragment(APIUrl.TERMS_AND_CONDITION_URL,
-                        getResources().getString(R.string.terms_and_conditions));
+                mFragmentLoader.loadWebPageFragment(APIUrl.PRICE_DETAILS_URL,
+                        getResources().getString(R.string.price));
+            }
+        });
+        view.findViewById(R.id.terms_of_service).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFragmentLoader.loadWebPageFragment(APIUrl.TERMS_OF_SERVICE_URL,
+                        getResources().getString(R.string.terms_of_service));
             }
         });
         view.findViewById(R.id.privacy_policy).setOnClickListener(new View.OnClickListener() {
@@ -89,6 +97,23 @@ public class LegalFragment extends BaseFragment {
                         getResources().getString(R.string.privacy_policy));
             }
         });
+        view.findViewById(R.id.website).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFragmentLoader.loadWebPageFragment(APIUrl.WEBSITE_URL,
+                        getResources().getString(R.string.website));
+            }
+        });
+
+        String version = null;
+        try {
+            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            version = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String appVersion = getResources().getString(R.string.app_version) + version;
+        ((TextView) view.findViewById(R.id.app_version)).setText(appVersion);
         return view;
     }
 

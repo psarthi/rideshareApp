@@ -3,7 +3,6 @@ package com.parift.rideshare.component;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.BaseActivity;
@@ -17,7 +16,7 @@ import com.parift.rideshare.fragment.GroupHomePageFragment;
 import com.parift.rideshare.fragment.GroupInfoFragment;
 import com.parift.rideshare.fragment.HelpFragment;
 import com.parift.rideshare.fragment.HelpQuestionAnswerFragment;
-import com.parift.rideshare.fragment.LegalFragment;
+import com.parift.rideshare.fragment.InfoFragment;
 import com.parift.rideshare.fragment.MembershipRequestFragment;
 import com.parift.rideshare.fragment.SearchGroupFragment;
 import com.parift.rideshare.fragment.SearchUserForGroupFragment;
@@ -250,12 +249,12 @@ public class FragmentLoader {
         fragmentTransaction.commit();
     }
 
-    public void loadLegalFragment(String param1, String param2) {
+    public void loadInfoFragment(String param1, String param2) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        LegalFragment legalFragment = LegalFragment.
+        InfoFragment infoFragment = InfoFragment.
                 newInstance(param1,param2);
-        fragmentTransaction.replace(R.id.home_page_container, legalFragment, LegalFragment.TAG);
-        fragmentTransaction.addToBackStack(LegalFragment.TAG);
+        fragmentTransaction.replace(R.id.home_page_container, infoFragment, InfoFragment.TAG);
+        fragmentTransaction.addToBackStack(InfoFragment.TAG);
         fragmentTransaction.commit();
     }
 

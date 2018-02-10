@@ -1,14 +1,6 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:fillViewport="true"
-            android:layout_margin="@dimen/small_margin"
-             tools:context="com.parift.rideshare.fragment.WebPageFragment">
-
-    <TextView
-        android:id="@+id/html_content_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-</ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<WebView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_web_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>

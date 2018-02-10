@@ -1,7 +1,6 @@
 package com.parift.rideshare.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -9,12 +8,15 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
 import com.parift.rideshare.helper.CommonUtil;
+import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -39,7 +41,7 @@ public class WebPageFragment extends BaseFragment {
     private String mUrl;
     private String mPageTitle;
     private CommonUtil mCommonUtil;
-    private TextView mTextView;
+    private WebView mWebView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -80,21 +82,10 @@ public class WebPageFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_web_page, container, false);
-        mTextView = view.findViewById(R.id.html_content_text_view);
-        mCommonUtil.showProgressDialog();
-        RESTClient.get(mUrl, null, new TextHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                mCommonUtil.dismissProgressDialog();
-                Toast.makeText(mCommonUtil.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                mCommonUtil.dismissProgressDialog();
-                mTextView.setText(Html.fromHtml(responseString));
-            }
-        });
+        mWebView = view.findViewById(R.id.content_web_view);
+        Logger.debug(TAG, "URL is:"+mUrl);
+        mWebView.setWebViewClient(new WebViewClient());
+        mWebView.loadUrl(mUrl);
         return view;
     }
 

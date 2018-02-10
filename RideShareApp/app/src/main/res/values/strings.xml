@@ -95,8 +95,13 @@
         \n2. What\'s your flat number <i>(apartment groups)</i>
         \n3. What\'s your college name <i>(friend groups)</i>
         \n\n<b>Note</b> - Membership request comes with user name and number by default</string>
-    <string name="terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="price">Price</string>
+    <string name="terms_of_service">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="website">Website</string>
+    <string name="app_version">"App Version "</string>
     <string name="no_group_membership_msg">Please join groups to find trusted ride partner</string>
+    <string name="app_share_msg">Check this out.Its awesome.<b>PARIFT RIDE</b> - Solving Traffic Problems. Download - https://play.google.com/store/apps/details?id=com.google.android.apps.plus</string>
+    <string name="agreement_text">By Signing in, you agree to our Terms of Service and Privacy Policy</string>
 
 </resources>

@@ -8,7 +8,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.config.APIUrl;
-import com.parift.rideshare.config.Constant;
 import com.parift.rideshare.fragment.AboutGroupFragment;
 import com.parift.rideshare.fragment.AddVehicleFragment;
 import com.parift.rideshare.fragment.BillFragment;
@@ -27,7 +25,7 @@ import com.parift.rideshare.fragment.GroupInfoFragment;
 import com.parift.rideshare.fragment.GroupMembershipRequestListFragment;
 import com.parift.rideshare.fragment.HelpFragment;
 import com.parift.rideshare.fragment.HelpQuestionAnswerFragment;
-import com.parift.rideshare.fragment.LegalFragment;
+import com.parift.rideshare.fragment.InfoFragment;
 import com.parift.rideshare.fragment.MembershipRequestFragment;
 import com.parift.rideshare.fragment.SearchGroupFragment;
 import com.parift.rideshare.fragment.SearchUserForGroupFragment;
@@ -96,7 +94,7 @@ public class HomePageActivity extends BaseActivity
         UserMembershipRequestListFragment.OnFragmentInteractionListener,
         MembershipRequestFragment.OnFragmentInteractionListener,
         WebPageFragment.OnFragmentInteractionListener,
-        LegalFragment.OnFragmentInteractionListener,
+        InfoFragment.OnFragmentInteractionListener,
         HelpFragment.OnFragmentInteractionListener,
         HelpQuestionAnswerFragment.OnFragmentInteractionListener{
 
@@ -253,21 +251,13 @@ public class HomePageActivity extends BaseActivity
                 Logger.debug(TAG, "Wallet Clicked");
                 mFragmentLoader.loadWalletFragment(false, 0);
             }
-            else if (id == R.id.nav_price) {
-                Logger.debug(TAG, "Price Clicked");
-                mFragmentLoader.loadWebPageFragment(APIUrl.PRICE_DETAILS_URL, Constant.PRICE_DETAILS_PAGE_TITLE);
+            else if (id == R.id.nav_info) {
+                Logger.debug(TAG, "Info Clicked");
+                mFragmentLoader.loadInfoFragment(null, null);
             }
             else if (id == R.id.nav_share) {
                 Logger.debug(TAG, "Share Clicked");
                 share();
-            }
-            else if (id == R.id.nav_help) {
-                Logger.debug(TAG, "Help Clicked");
-                mFragmentLoader.loadHelpFragment(null, null);
-            }
-            else if (id == R.id.nav_legal) {
-                Logger.debug(TAG, "Legal Clicked");
-                mFragmentLoader.loadLegalFragment(null, null);
             }
             else if (id == R.id.nav_signout) {
                 Logger.debug(TAG, "Signout Clicked");
@@ -284,7 +274,7 @@ public class HomePageActivity extends BaseActivity
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT,
-                "Rideshare by RadShift Technologies https://play.google.com/store/apps/details?id=com.google.android.apps.plus");
+                getString(R.string.app_share_msg));
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }
