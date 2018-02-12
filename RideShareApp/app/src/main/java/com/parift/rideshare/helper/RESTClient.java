@@ -40,7 +40,7 @@ public class RESTClient {
     private static AsyncHttpClient client = new AsyncHttpClient();
     //This will avoid connection timeout issue, where we don't get response on time
     //Value is in milliseconds
-    private static final int TIMEOUT_VALUE=20 * 1000;
+    private static final int TIMEOUT_VALUE=30 * 1000;
     private static final int EXTENDED_TIMEOUT_VALUE=60 * 1000;
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {

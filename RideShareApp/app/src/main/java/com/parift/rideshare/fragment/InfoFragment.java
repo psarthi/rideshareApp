@@ -76,11 +76,11 @@ public class InfoFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_info, container, false);
-        view.findViewById(R.id.price).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.website).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentLoader.loadWebPageFragment(APIUrl.PRICE_DETAILS_URL,
-                        getResources().getString(R.string.price));
+                mFragmentLoader.loadWebPageFragment(APIUrl.WEBSITE_URL,
+                        getResources().getString(R.string.website));
             }
         });
         view.findViewById(R.id.terms_of_service).setOnClickListener(new View.OnClickListener() {
@@ -97,14 +97,6 @@ public class InfoFragment extends BaseFragment {
                         getResources().getString(R.string.privacy_policy));
             }
         });
-        view.findViewById(R.id.website).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFragmentLoader.loadWebPageFragment(APIUrl.WEBSITE_URL,
-                        getResources().getString(R.string.website));
-            }
-        });
-
         String version = null;
         try {
             PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);

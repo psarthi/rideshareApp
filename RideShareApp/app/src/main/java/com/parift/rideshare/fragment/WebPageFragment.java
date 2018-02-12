@@ -8,6 +8,8 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -84,7 +86,20 @@ public class WebPageFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_web_page, container, false);
         mWebView = view.findViewById(R.id.content_web_view);
         Logger.debug(TAG, "URL is:"+mUrl);
-        mWebView.setWebViewClient(new WebViewClient());
+        mWebView.setWebViewClient(new MyWebViewClient());
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                if (progress == 100) {
+                    //This will dismiss the fragment when page load is 100% done
+                    mCommonUtil.dismissProgressDialog();
+                 }
+            }
+        });
+        //This will show up the progress dialog when this fragment loads
+        mCommonUtil.showProgressDialog();
         mWebView.loadUrl(mUrl);
         return view;
     }
@@ -127,5 +142,13 @@ public class WebPageFragment extends BaseFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onWebPageFragmentInteraction(String data);
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
     }
 }
