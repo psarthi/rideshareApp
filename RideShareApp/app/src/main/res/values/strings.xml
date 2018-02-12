@@ -101,7 +101,7 @@
     <string name="website">Website</string>
     <string name="app_version">"App Version "</string>
     <string name="no_group_membership_msg">Please join groups to find trusted ride partner</string>
-    <string name="app_share_msg">Parift Ride (Solving Traffic Problems). https://play.google.com/store/apps/details?id=com.google.android.apps.plus</string>
+    <string name="app_share_msg">Parift Ride (Share your rides with trusted people in your personal vehicle). https://play.google.com/store/apps/details?id=com.google.android.apps.plus</string>
     <string name="agreement_text">By Signing in, you agree to our Terms of Service and Privacy Policy</string>
 
 </resources>
