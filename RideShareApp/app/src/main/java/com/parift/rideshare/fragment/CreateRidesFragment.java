@@ -185,11 +185,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         }
         mCommonUtil = new CommonUtil(this);
         mFragmentLoader = new FragmentLoader(this);
-        //Setting calender to current time
-        mStartTimeCalendar = Calendar.getInstance();
-        //This will increment the start time by lets say 10 mins, so that we don't get into issues of google API trying to get data of the past time
-        mStartTimeCalendar.add(Calendar.MINUTE, Constant.START_TIME_INCREMENT);
-        mMinStartTime = mStartTimeCalendar.getTime();
         mTrustNetworkComp = new TrustNetworkComp(this, null);
 
         //This will enable or disable back button
@@ -203,6 +198,11 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         //IMP - This will ensure on fragment reload, user data is upto date e.g. in case of vehicle addition
         //new vehicle would reflect and role would also show up else it will again ask for adding vehicle
         mUser = mCommonUtil.getUser();
+        //Setting calender to current time
+        mStartTimeCalendar = Calendar.getInstance();
+        //This will increment the start time by lets say 10 mins, so that we don't get into issues of google API trying to get data of the past time
+        mStartTimeCalendar.add(Calendar.MINUTE, Constant.START_TIME_INCREMENT);
+        mMinStartTime = mStartTimeCalendar.getTime();
         if (mUser.getCountry().getRideMode().equals(RideMode.Free)) {
             //This will overwrite user preference if country mode is Free mode
             //Its also useful if we decide to change the mode from Paid to Free at later point of time

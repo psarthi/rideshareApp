@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "400812239675-udop5e4l0rvacjk8n2dck9e5dem8dl2r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.parift.rideshare",
+            "certificate_hash": "a15c149e05380d076dcf3c96b7e0c782f6e8e248"
+          }
+        },
+        {
           "client_id": "400812239675-6qj2nhko8donak5mv1siicmb2b7i7f9b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

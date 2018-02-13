@@ -120,10 +120,12 @@ public class AboutGroupFragment extends BaseFragment {
             if (!mGroup.getMembershipStatus().isAdmin()){
                 //Only admin can see the membership form
                 mMemberShipFormButton.setVisibility(View.GONE);
+                view.findViewById(R.id.membership_form_button_seperator).setVisibility(View.GONE);
             }
             if (mGroup.getOwner().getId()==mUser.getId()){
                 //Owners's can't leave the group
                 mLeaveButton.setVisibility(View.GONE);
+                view.findViewById(R.id.leave_group_button_seperator).setVisibility(View.GONE);
             }
         }
         //If user is not member
@@ -131,6 +133,8 @@ public class AboutGroupFragment extends BaseFragment {
             //Non member don't see Leave/Membership Form button
             mLeaveButton.setVisibility(View.GONE);
             mMemberShipFormButton.setVisibility(View.GONE);
+            view.findViewById(R.id.leave_group_button_seperator).setVisibility(View.GONE);
+            view.findViewById(R.id.membership_form_button_seperator).setVisibility(View.GONE);
 
             //This is the case, when request has been submitted
             if (mGroup.getMembershipStatus().isRequestSubmitted()){

@@ -2,9 +2,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:fillViewport="true"
               android:orientation="vertical"
-              android:layout_margin="@dimen/default_margin"
               tools:context="com.parift.rideshare.fragment.AboutGroupFragment">
 
     <TextView
@@ -12,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Brief description about the group"
+        android:layout_margin="@dimen/default_margin"
         android:padding="@dimen/default_padding"
         android:layout_marginTop="@dimen/small_margin"
         android:layout_marginBottom="@dimen/small_margin"/>
@@ -20,9 +19,11 @@
         android:id="@+id/group_member_buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="@dimen/default_margin">
 
         <View
+            android:id="@+id/group_member_buttons_layout_seperator"
             android:layout_width="match_parent"
             android:layout_height="@dimen/line_seperator_thickness"
             android:background="@color/colorGrayLight"/>
@@ -38,6 +39,7 @@
             android:textAllCaps="true"/>
 
         <View
+            android:id="@+id/membership_form_button_seperator"
             android:layout_width="match_parent"
             android:layout_height="@dimen/line_seperator_thickness"
             android:background="@color/colorGrayLight"/>
@@ -53,6 +55,7 @@
             android:textAllCaps="true"/>
 
         <View
+            android:id="@+id/leave_group_button_seperator"
             android:layout_width="match_parent"
             android:layout_height="@dimen/line_seperator_thickness"
             android:background="@color/colorGrayLight"
@@ -66,9 +69,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Join"
-        android:background="@color/colorPrimary"
+        android:textColor="@android:color/black"
+        android:background="@color/colorGrayLight"
         android:textAllCaps="true"
-        android:layout_marginBottom="@dimen/default_margin"/>
+        android:layout_margin="@dimen/default_margin"/>
 
     <Button
         android:id="@+id/group_membership_request_status_button"
@@ -79,7 +83,7 @@
         android:textAllCaps="true"
         android:textColor="@android:color/black"
         android:background="@color/colorGrayLight"
-        android:layout_marginBottom="@dimen/default_margin"/>
+        android:layout_margin="@dimen/default_margin"/>
 
 
 </LinearLayout>
