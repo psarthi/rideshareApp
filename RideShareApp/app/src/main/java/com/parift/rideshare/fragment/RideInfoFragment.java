@@ -24,6 +24,7 @@ import com.parift.rideshare.component.RideComp;
 import com.parift.rideshare.component.RideRequestComp;
 import com.parift.rideshare.dialog.DropCoTravellerFragment;
 import com.parift.rideshare.dialog.CancelCoTravellerFragment;
+import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.model.billing.domain.core.Bill;
 import com.parift.rideshare.model.ride.dto.BasicRideRequest;
@@ -65,6 +66,7 @@ public class RideInfoFragment extends BaseFragment implements
     private MapComp mMapComp;
     private View mMapView;
     private boolean mMapLoaded;
+    private CommonUtil mCommonUtil;
 
     public RideInfoFragment() {
         // Required empty public constructor
@@ -93,6 +95,7 @@ public class RideInfoFragment extends BaseFragment implements
             mRideData = getArguments().getString(ARG_RIDE);
         }
         mRide = new Gson().fromJson(mRideData, FullRide.class);
+        mCommonUtil = new CommonUtil(this);
     }
 
     @Override
@@ -239,6 +242,15 @@ public class RideInfoFragment extends BaseFragment implements
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //This will take care of dismissing progress dialog so that we don't get NPE (not attached to window manager)
+        //This happens when you make http call which is async and when response comes, activity is no longer there
+        //and then when dismissProgressDialog is called it will throw error
+        mCommonUtil.dismissProgressDialog();
     }
 
     public void onPositiveClickOfCancelCoTravellerFragment(DialogFragment dialogFragment) {

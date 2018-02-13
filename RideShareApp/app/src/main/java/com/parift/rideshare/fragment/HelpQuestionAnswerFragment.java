@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
+import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.model.serviceprovider.domain.core.HelpQuestionAnswer;
 import com.google.gson.Gson;
 
@@ -35,6 +36,7 @@ public class HelpQuestionAnswerFragment extends BaseFragment {
     private String mQuestionAnswerData;
     private HelpQuestionAnswer mQuestionAnswer;
     private OnFragmentInteractionListener mListener;
+    private CommonUtil mCommonUtil;
 
     public HelpQuestionAnswerFragment() {
         // Required empty public constructor
@@ -63,6 +65,7 @@ public class HelpQuestionAnswerFragment extends BaseFragment {
             mQuestionAnswerData = getArguments().getString(ARG_QUESTION_ANSWER);
         }
         mQuestionAnswer = new Gson().fromJson(mQuestionAnswerData, HelpQuestionAnswer.class);
+        mCommonUtil = new CommonUtil(this);
     }
 
     @Override
@@ -91,6 +94,15 @@ public class HelpQuestionAnswerFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //This will take care of dismissing progress dialog so that we don't get NPE (not attached to window manager)
+        //This happens when you make http call which is async and when response comes, activity is no longer there
+        //and then when dismissProgressDialog is called it will throw error
+        mCommonUtil.dismissProgressDialog();
     }
 
     @Override

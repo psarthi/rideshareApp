@@ -16,17 +16,19 @@ import android.widget.Toast;
 import com.parift.rideshare.R;
 import com.google.android.gms.common.SignInButton;
 import com.parift.rideshare.config.APIUrl;
+import com.parift.rideshare.helper.CommonUtil;
 
 public class LandingPageActivity extends BaseActivity{
 
     private static final String TAG = LandingPageActivity.class.getName();
+    private CommonUtil mCommonUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
         getSupportActionBar().hide();
-
+        mCommonUtil = new CommonUtil(this);
         SignInButton googleSignInButton = findViewById(R.id.google_sign_in_button);
 
         //Change the text of google sign in button
@@ -87,5 +89,14 @@ public class LandingPageActivity extends BaseActivity{
         textView.setText(ss);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         textView.setHighlightColor(Color.TRANSPARENT);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //This will take care of dismissing progress dialog so that we don't get NPE (not attached to window manager)
+        //This happens when you make http call which is async and when response comes, activity is no longer there
+        //and then when dismissProgressDialog is called it will throw error
+        mCommonUtil.dismissProgressDialog();
     }
 }

@@ -15,6 +15,7 @@ import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
 import com.parift.rideshare.component.FragmentLoader;
 import com.parift.rideshare.config.APIUrl;
+import com.parift.rideshare.helper.CommonUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +39,7 @@ public class InfoFragment extends BaseFragment {
     private FragmentLoader mFragmentLoader;
 
     private OnFragmentInteractionListener mListener;
+    private CommonUtil mCommonUtil;
 
     public InfoFragment() {
         // Required empty public constructor
@@ -69,6 +71,7 @@ public class InfoFragment extends BaseFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         mFragmentLoader = new FragmentLoader(this);
+        mCommonUtil = new CommonUtil(this);
     }
 
     @Override
@@ -132,6 +135,15 @@ public class InfoFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //This will take care of dismissing progress dialog so that we don't get NPE (not attached to window manager)
+        //This happens when you make http call which is async and when response comes, activity is no longer there
+        //and then when dismissProgressDialog is called it will throw error
+        mCommonUtil.dismissProgressDialog();
     }
 
     /**

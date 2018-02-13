@@ -950,6 +950,15 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //This will take care of dismissing progress dialog so that we don't get NPE (not attached to window manager)
+        //This happens when you make http call which is async and when response comes, activity is no longer there
+        //and then when dismissProgressDialog is called it will throw error
+        mCommonUtil.dismissProgressDialog();
+    }
+
+    @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Logger.debug(TAG,"Recieved callback. Value of HH:MM-"+hourOfDay+":"+minute);
         String timeIn12HrFormat = mCommonUtil.getTimeIn12HrFormat(hourOfDay, minute);

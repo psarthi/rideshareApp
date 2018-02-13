@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
 import com.parift.rideshare.adapter.WalletViewPagerAdapter;
+import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 
 /**
@@ -40,6 +41,7 @@ public class WalletFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     private ViewPager mViewPager;
     private WalletViewPagerAdapter mWalletViewPagerAdapter;
+    private CommonUtil mCommonUtil;
 
     public WalletFragment() {
         // Required empty public constructor
@@ -71,6 +73,7 @@ public class WalletFragment extends BaseFragment {
             mRequiredBalanceAmount = getArguments().getFloat(ARG_REQD_BALANCE_AMOUNT);
         }
         mWalletViewPagerAdapter = new WalletViewPagerAdapter(getChildFragmentManager(), mRequiredBalanceVisiblity, mRequiredBalanceAmount);
+        mCommonUtil = new CommonUtil(this);
     }
 
     @Override
@@ -151,6 +154,15 @@ public class WalletFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //This will take care of dismissing progress dialog so that we don't get NPE (not attached to window manager)
+        //This happens when you make http call which is async and when response comes, activity is no longer there
+        //and then when dismissProgressDialog is called it will throw error
+        mCommonUtil.dismissProgressDialog();
     }
 
     /**

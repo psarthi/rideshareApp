@@ -235,6 +235,14 @@ CommonComp.onSeatLuggageSelectionListener{
         Logger.debug(TAG, "Updating luggage count");
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //This will take care of dismissing progress dialog so that we don't get NPE (not attached to window manager)
+        //This happens when you make http call which is async and when response comes, activity is no longer there
+        //and then when dismissProgressDialog is called it will throw error
+        mCommonUtil.dismissProgressDialog();
+    }
 
     /**
      * This interface must be implemented by activities that contain this

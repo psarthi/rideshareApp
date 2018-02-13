@@ -263,11 +263,14 @@ public class CommonUtil {
     }
 
     public void showProgressDialog(){
-        if (getActivity()!=null){
+        mProgressDialog = new ProgressDialog(getActivity(), R.style.MyTheme);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+        //VERY IMP - This will take care of NPE and crash when you press back intentionally and async call is in progress
+        //This is the scenario in splash screen if you go back immediately after launch, you will get the exception
+        //BinderProxy@45d459c0 is not valid; is your activity running?
+        if(!(getActivity().isFinishing())){
             Logger.debug(TAG, "Showing Progress Dialog");
-            mProgressDialog = new ProgressDialog(getActivity(), R.style.MyTheme);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
             mProgressDialog.show();
         } else {
             Logger.debug(TAG, "Activity is null, so not showing progress dialog");
