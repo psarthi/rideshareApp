@@ -73,7 +73,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                 }
             }
         } else {
-            if (groupDetail.getPendingRequestCount()!=0){
+            if (groupDetail.getMembershipStatus().isAdmin() && groupDetail.getPendingRequestCount()!=0){
                 statusText.setVisibility(View.VISIBLE);
                 String pendingRequest = "(" +Integer.toString(groupDetail.getPendingRequestCount()) +")";
                 statusText.setText(pendingRequest);
