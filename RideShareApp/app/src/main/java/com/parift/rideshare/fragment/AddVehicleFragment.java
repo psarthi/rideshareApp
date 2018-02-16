@@ -114,8 +114,8 @@ CommonComp.onSeatLuggageSelectionListener{
         View vehicleCatSubCatLayout = view.findViewById(R.id.vehicle_category_sub_category_layout);
 
         View seatLuggageView = view.findViewById(R.id.seat_luggage_layout);
-        mSeatCount = Constant.MIN_SEAT;
-        mLuggageCount = Constant.MIN_LUGGAGE;
+        mSeatCount = Constant.DEFAULT_SEAT;
+        mLuggageCount = Constant.DEFAULT_LUGGAGE;
         //Max value is just based on max capacity of SUV but this values can be fetched from backend
         mCommonComp.setSeatPicker(seatLuggageView, mSeatCount, Constant.MIN_SEAT, Constant.MAX_SEAT);
         mCommonComp.setLuggagePicker(seatLuggageView, mLuggageCount,Constant.MIN_LUGGAGE,Constant.MAX_LUGGAGE);

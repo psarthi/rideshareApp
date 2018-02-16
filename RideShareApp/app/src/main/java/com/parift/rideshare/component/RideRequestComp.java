@@ -229,7 +229,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
             //Rules based on passenger status
             if (mBasicRideRequest.getPassengerStatus().equals(PassengerStatus.Confirmed)
-                    || mBasicRideRequest.getPassengerStatus().equals(PassengerStatus.Unconfirmed)){
+                    || mBasicRideRequest.getPassengerStatus().equals(PassengerStatus.Unconfirmed)
+                    || mBasicRideRequest.getPassengerStatus().equals(PassengerStatus.Picked)){
 
                 //Visible Buttons
                 mRideRequestCancelButton.setVisibility(View.VISIBLE);
@@ -238,7 +239,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 mDestinationNavigationButton.setVisibility(View.GONE);
 
             } else {
-                //Visible Buttons for Picked / Dropped Status of passenger
+                //Visible Buttons for Dropped Status of passenger
                 mDestinationNavigationButton.setVisibility(View.VISIBLE);
 
                 //Invisible Buttons

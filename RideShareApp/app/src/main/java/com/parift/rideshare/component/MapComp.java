@@ -24,6 +24,8 @@ import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -93,8 +95,6 @@ public class MapComp{
         List<LatLng> latLngs = new ArrayList<>();
         LatLng fromLatLng = new LatLng(ride.getStartPoint().getPoint().getLatitude(), ride.getStartPoint().getPoint().getLongitude());
         LatLng toLatLng = new LatLng(ride.getEndPoint().getPoint().getLatitude(), ride.getEndPoint().getPoint().getLongitude());
-        latLngs.add(fromLatLng);
-        latLngs.add(toLatLng);
 
         //This will drawable.add marker for start and end point
         mMap.addMarker(new MarkerOptions().position(fromLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
@@ -102,8 +102,14 @@ public class MapComp{
 
         //This will draw polyline for route
         Collection<RidePoint> ridePoints = ride.getRoute().getRidePoints();
+        //VERY IMP - Please ensure your route points are sorted by sequence else you will get zig zag path
+        //Currently i have set this in the backend so that you get sorted list but in case you need to handle it here
+        //due to some reason code is for reference purpose so that you can sort the list
+        //VERY IMP - Uncommenting this just as a double safetly measure in case something messed up while gson conversion etc.
+        LinkedList<RidePoint> ridePointSorted = new LinkedList<>(ridePoints);
+        Collections.sort(ridePointSorted);
         List<LatLng> routeLatLngs = new ArrayList<>();
-        for (RidePoint ridePoint: ridePoints){
+        for (RidePoint ridePoint: ridePointSorted){
             routeLatLngs.add(new LatLng(ridePoint.getPoint().getLatitude(), ridePoint.getPoint().getLongitude()));
         }
         latLngs.addAll(routeLatLngs);

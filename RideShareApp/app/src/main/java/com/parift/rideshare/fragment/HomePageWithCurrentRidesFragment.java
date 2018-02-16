@@ -178,6 +178,11 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
             mCurrentRide = mCommonUtil.getCurrentRide();
             mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
             setHomePageView(view);
+            //This will ensure all future fetch is always from server
+            //First time when this page loads post login we don't fetch the current rides as it was already there in the login response
+            //but for any future reload of this page, data has to come from server as user can perform certain ride action in ride info / ride request info
+            //The same doesn't get reflected if we don't refresh the data of current rides
+            mFetchType = FetchType.Server;
         } else {
             fetchRidesFromServer(view);
         }

@@ -127,13 +127,13 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private GoogleDistance mGoogleDistance;
     private GoogleGeocode mGoogleGeocode;
     private Calendar mStartTimeCalendar;
+    private Calendar mIntialMinStartTimeCalender;
     private BasicUser mUser;
     private boolean mRidesOptionUpdated = false;
     private Preference mUpdatedRidesOption;
     private BasicRide mRide = new BasicRide();
     private RideOfferInfo mRideOfferInfo = new RideOfferInfo();
     private BasicRideRequest mRideRequest = new BasicRideRequest();
-    private Date mMinStartTime;
     private TrustNetworkComp mTrustNetworkComp;
     private int mDefaultTextColor;
     private CommonUtil mCommonUtil;
@@ -185,8 +185,14 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         }
         mCommonUtil = new CommonUtil(this);
         mFragmentLoader = new FragmentLoader(this);
+        //Setting calender to current time
+        mStartTimeCalendar = Calendar.getInstance();
+        //This will increment the start time by lets say 10 mins, so that we don't get into issues of google API trying to get data of the past time
+        mStartTimeCalendar.add(Calendar.MINUTE, Constant.START_TIME_INCREMENT);
         mTrustNetworkComp = new TrustNetworkComp(this, null);
-
+        //This is just to save a copy of the initial calender so that we can use to compare in our time validation method
+        //Note - Value is already incremented
+        mIntialMinStartTimeCalender = (Calendar) mStartTimeCalendar.clone();
         //This will enable or disable back button
         //((HomePageActivity) getActivity()).showBackButton(true);
     }
@@ -198,11 +204,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         //IMP - This will ensure on fragment reload, user data is upto date e.g. in case of vehicle addition
         //new vehicle would reflect and role would also show up else it will again ask for adding vehicle
         mUser = mCommonUtil.getUser();
-        //Setting calender to current time
-        mStartTimeCalendar = Calendar.getInstance();
-        //This will increment the start time by lets say 10 mins, so that we don't get into issues of google API trying to get data of the past time
-        mStartTimeCalendar.add(Calendar.MINUTE, Constant.START_TIME_INCREMENT);
-        mMinStartTime = mStartTimeCalendar.getTime();
         if (mUser.getCountry().getRideMode().equals(RideMode.Free)) {
             //This will overwrite user preference if country mode is Free mode
             //Its also useful if we decide to change the mode from Paid to Free at later point of time
@@ -410,7 +411,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         mFragmentLoader.loadRidesOptionFragment(mRideType, ridesOption, mTravelDistance);
                     } else {
                         Logger.debug(TAG, "User is a driver, so create ride directly");
-                        if (validateInput()){
+                        if (validateInput() && validateStartTime(true)){
                             setRideOffer();
                             mCommonUtil.showProgressDialog();
                             String url = APIUrl.OFFER_RIDE_URL.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
@@ -444,7 +445,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         }
                     }
                 } else {
-                    if (validateInput()){
+                    if (validateInput() && validateStartTime(true)){
                         setRideRequest();
                         if (mRideRequest.getRideMode().equals(RideMode.Paid)){
                             if (mPreBookingRideRequestResult!=null){
@@ -624,9 +625,9 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             Toast.makeText(getActivity(), "Please wait for route to show up",Toast.LENGTH_LONG).show();
             return false;
         }
-        if (!validateStartTime()){
-            return false;
-        }
+        //Don't validate time again here as this may effect fare calculation if time is not proper
+        //and fare has nothing to do with time so just keep time and address validation seperate
+        //and time validation is bit complicated and customized so just keep it seperate
         return true;
     }
 
@@ -653,7 +654,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         mDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dialogFragment = DatePickerFragment.newInstance(CreateRidesFragment.this);
+                DialogFragment dialogFragment = DatePickerFragment.newInstance(CreateRidesFragment.this, mStartTimeCalendar);
                 dialogFragment.show(getActivity().getSupportFragmentManager(), DatePickerFragment.TAG);
             }
         });
@@ -661,7 +662,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         mTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dialogFragment = TimePickerFragment.newInstance(CreateRidesFragment.this);
+                DialogFragment dialogFragment = TimePickerFragment.newInstance(CreateRidesFragment.this, mStartTimeCalendar);
                 dialogFragment.show(getActivity().getSupportFragmentManager(), TimePickerFragment.TAG );
             }
         });
@@ -967,12 +968,36 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         mStartTimeCalendar.set(Calendar.MINUTE, minute);
         Logger.debug(TAG,"Selected Date:"+mStartTimeCalendar.getTime());
         Logger.debug(TAG,"Current Date:"+Calendar.getInstance().getTime());
-        validateStartTime();
+        validateStartTime(false);
     }
 
     //This will validate if start time is valid or not
-    private boolean validateStartTime() {
-        if (mStartTimeCalendar.getTime().before(mMinStartTime)){
+    private boolean validateStartTime(boolean isValidationForConfirmation) {
+        Calendar currentTimeCalendar = Calendar.getInstance();
+        Date minStartTime;
+        //This will ensure that start time is atleast 2 mins from current time, so that we don't get into issues of google API trying to get data of the past time
+        //This will also take care if someone is idle on the screen and cross the initial set value of the start time,
+        //so his rides can't be confirmed as now it has become past rides
+        if (isValidationForConfirmation){
+            currentTimeCalendar.add(Calendar.MINUTE, Constant.START_TIME_MIN_INCREMENT_FOR_FINAL_CONFIRMATION);
+            minStartTime = currentTimeCalendar.getTime();
+        } else {
+            minStartTime = mIntialMinStartTimeCalender.getTime();
+        }
+        //This will reset the minIntialTime if it has passed current time itself and user has not even pressed the confirm button
+        //so that our time dialog validation is proper at any point of time
+        if (mIntialMinStartTimeCalender.getTime().before(currentTimeCalendar.getTime())){
+            //No cloning required here as this is a local obect and for every new call, new object would be created
+            //but mInitialMinStartTimeCalender would not get modified or referenced by another one
+            //so it will remain like a copy
+            mIntialMinStartTimeCalender = currentTimeCalendar;
+            //This will add the increment from current time as well
+            mIntialMinStartTimeCalender.add(Calendar.MINUTE, Constant.START_TIME_INCREMENT);
+        }
+        Logger.debug(TAG, "mStartTimeCalendar Time:"+mStartTimeCalendar.getTime());
+        Logger.debug(TAG, "mMinStartTime Time:"+ minStartTime);
+        Logger.debug(TAG, "Current Time:"+Calendar.getInstance().getTime());
+        if (mStartTimeCalendar.getTime().before(minStartTime)){
             Toast.makeText(getActivity(),"Earliest start time can be "+Constant.START_TIME_INCREMENT+"mins from now",Toast.LENGTH_LONG).show();
             mTimeTextView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             return false;
@@ -991,7 +1016,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         String formattedDate = mCommonUtil.getFormattedDateString(date);
         mDateTextView.setText(formattedDate);
         mStartTimeCalendar.set(year,month,day);
-        validateStartTime();
+        validateStartTime(false);
     }
 
     /**

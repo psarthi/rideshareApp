@@ -19,23 +19,23 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     public static final String TAG = DatePickerFragment.class.getName();
     public DatePickerFragmentListener mDatePickerFragmentListener;
+    private Calendar mCalendar;
 
     public DatePickerFragment() {
     }
 
-    public static DatePickerFragment newInstance(DatePickerFragmentListener listener) {
+    public static DatePickerFragment newInstance(DatePickerFragmentListener listener, Calendar calendar) {
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.mDatePickerFragmentListener = listener;
+        datePickerFragment.mCalendar = calendar;
         return datePickerFragment;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the current date as the default date in the picker
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        int year = mCalendar.get(Calendar.YEAR);
+        int month = mCalendar.get(Calendar.MONTH);
+        int day = mCalendar.get(Calendar.DAY_OF_MONTH);
 
         // Create a new instance of DatePickerDialog and return it
         DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);

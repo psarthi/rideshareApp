@@ -32,10 +32,16 @@ public class Constant {
     //This is used for setting start time in create rides screen i.e. all rides would have min. 10 mins from current time as start time
     //so that we don't end up having issues creating rides in the past
     public static final int START_TIME_INCREMENT = 10;
+    //This will be used while confirming the ride
+    public static final int START_TIME_MIN_INCREMENT_FOR_FINAL_CONFIRMATION = 2;
     //This would be used for enabling/disabling start button for offer rides i.e. any rides can be started only 15 mins before the ride start time
     public static final int START_TIME_BUFFER = 15;
     public static final int MIN_SEAT = 1;
     public static final int MAX_SEAT = 7;
+    //Keeping default to 2 just to avoid fulfilling all seats at one go
+    //and let user feel comfortable in ride by just picking two person
+    public static final int DEFAULT_SEAT = 2;
+    public static final int DEFAULT_LUGGAGE = 2;
     public static final int MIN_LUGGAGE = 0;
     public static final int MAX_LUGGAGE = 6;
     public static final int MIN_TOPUP_AMOUNT = 1;
