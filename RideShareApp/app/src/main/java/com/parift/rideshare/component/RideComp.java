@@ -105,8 +105,10 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
 
 
         TextView rideIdTextView = basic_ride_layout.findViewById(R.id.ride_id_text);
-        String rideIdText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text);
-        rideIdTextView.setText(rideIdText);
+        if (mBaseFragment.isAdded()){
+            String rideIdText = mBaseFragment.getResources().getString(R.string.ride_offer_id_text);
+            rideIdTextView.setText(rideIdText);
+        }
         mRideStatusTextView = basic_ride_layout.findViewById(R.id.ride_status_text);
         mRideStatusTextView.setText(mBasicRide.getStatus().toString());
         TextView rideStartTimeTextView = basic_ride_layout.findViewById(R.id.ride_start_time_text);

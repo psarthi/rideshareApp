@@ -6,7 +6,9 @@ e.g. in case of user list-->
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_margin="@dimen/default_margin">
+    android:layout_marginTop="@dimen/default_margin"
+    android:layout_marginLeft="@dimen/default_margin"
+    android:layout_marginRight="@dimen/default_margin">
 
     <include layout="@layout/user_profile_single_row_layout"
              android:id="@+id/user_profile_single_row_layout"/>

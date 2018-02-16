@@ -58,32 +58,33 @@ public class MapComp{
     }
 
     public void setPadding(boolean standard, RideType rideType){
+        if (mBaseFragment.isAdded()) {
+            mWidth = mBaseFragment.getResources().getDisplayMetrics().widthPixels;
+            //This is here for experience purpose, we can use either heigth or width whichever make sense
+            mHeight = mBaseFragment.getResources().getDisplayMetrics().heightPixels;
+            mStandardPadding = (int) (mHeight * Constant.LAT_LNG_MEDIUM_PADDING_PERCENT);
 
-        mWidth = mBaseFragment.getResources().getDisplayMetrics().widthPixels;
-        //This is here for experience purpose, we can use either heigth or width whichever make sense
-        mHeight = mBaseFragment.getResources().getDisplayMetrics().heightPixels;
-        mStandardPadding = (int) (mHeight * Constant.LAT_LNG_MEDIUM_PADDING_PERCENT);
+            int topPadding = (int) (mHeight * Constant.LAT_LNG_LARGE_PADDING_PERCENT);
+            int smallPadding = (int) (mHeight * Constant.LAT_LNG_SMALL_PADDING_PERCENT);
+            Logger.debug(TAG, "Width Pixel:" + mWidth + ",Heigth Pixel:" + mHeight + ",Customm Top Padding Pixel:" + topPadding + ",Standard Padding Pixel:" + mStandardPadding);
 
-        int topPadding = (int) (mHeight * Constant.LAT_LNG_LARGE_PADDING_PERCENT);
-        int smallPadding = (int) (mHeight * Constant.LAT_LNG_SMALL_PADDING_PERCENT);
-        Logger.debug(TAG, "Width Pixel:"+mWidth+",Heigth Pixel:"+mHeight+",Customm Top Padding Pixel:"+topPadding+",Standard Padding Pixel:"+mStandardPadding);
-
-        if (standard){
-            Logger.debug(TAG, "Setting Standard Padding");
-            // void setPadding (int left,int top,int right,int bottom)
-            mMap.setPadding(smallPadding,mStandardPadding, smallPadding,smallPadding);
-        } else {
-            if (rideType.equals(RideType.RequestRide)){
-                Logger.debug(TAG, "Setting Custom Padding for Request Ride");
-                //This is very important to customize the visibility range of camera
+            if (standard) {
+                Logger.debug(TAG, "Setting Standard Padding");
                 // void setPadding (int left,int top,int right,int bottom)
-                mMap.setPadding(smallPadding,topPadding, smallPadding, mStandardPadding);
+                mMap.setPadding(smallPadding, mStandardPadding, smallPadding, smallPadding);
             } else {
-                Logger.debug(TAG, "Setting Custom Padding for Offer Ride");
-                //This is very important to customize the visibility range of camera
-                // void setPadding (int left,int top,int right,int bottom)
-                mMap.setPadding(smallPadding,topPadding, smallPadding, smallPadding);
+                if (rideType.equals(RideType.RequestRide)) {
+                    Logger.debug(TAG, "Setting Custom Padding for Request Ride");
+                    //This is very important to customize the visibility range of camera
+                    // void setPadding (int left,int top,int right,int bottom)
+                    mMap.setPadding(smallPadding, topPadding, smallPadding, mStandardPadding);
+                } else {
+                    Logger.debug(TAG, "Setting Custom Padding for Offer Ride");
+                    //This is very important to customize the visibility range of camera
+                    // void setPadding (int left,int top,int right,int bottom)
+                    mMap.setPadding(smallPadding, topPadding, smallPadding, smallPadding);
 
+                }
             }
         }
     }

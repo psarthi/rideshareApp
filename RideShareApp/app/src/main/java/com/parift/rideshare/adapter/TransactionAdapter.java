@@ -79,8 +79,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.mPurposeTextView.setText(transaction.getRemark().getPurpose().toString());
         String amount = mCurrencySymbol+mCommonUtil.getDecimalFormattedString(transaction.getAmount());
         holder.mAmountTextView.setText(amount);
-        String transactionId = mBaseFragment.getResources().getString(R.string.transaction_id_text) +transaction.getId();
-        holder.mTransactionIdTextView.setText(transactionId);
+        if (mBaseFragment.isAdded()){
+            String transactionId = mBaseFragment.getResources().getString(R.string.transaction_id_text) +transaction.getId();
+            holder.mTransactionIdTextView.setText(transactionId);
+        }
 
         if (transaction.getType().equals(TransactionType.Debit)){
             holder.mTransactionTypeImageView.setImageResource(R.drawable.ic_minus);

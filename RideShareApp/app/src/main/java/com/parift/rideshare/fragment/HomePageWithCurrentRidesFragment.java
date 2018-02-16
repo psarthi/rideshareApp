@@ -495,7 +495,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
         if (mCurrentRideRequest.getAcceptedRide()!=null){
             UserComp userComp = new UserComp(this, mCurrentRideRequest.getAcceptedRide().getDriver());
-            userComp.setUserProfileSingleRow(view);
+            userComp.setUserProfileSingleRow(view, true);
         } else {
             //This will take care of ride request where there is no accepted ride
             view.findViewById(R.id.user_profile_single_row_layout).setVisibility(View.GONE);

@@ -89,9 +89,10 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         mDestinationNavigationButton = layout.findViewById(R.id.ride_request_navigate_to_destination_button);
         mBasicRideRequestButtonsLayout = layout.findViewById(R.id.ride_request_buttons_layout);
         mRideRequestStatusTextView = layout.findViewById(R.id.ride_request_status_text);
-
-        String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text);
-        ((TextView) layout.findViewById(R.id.ride_request_id_text)).setText(rideRequestNumberText);
+        if (mBaseFragment.isAdded()){
+            String rideRequestNumberText = mBaseFragment.getResources().getString(R.string.ride_request_id_text);
+            ((TextView) layout.findViewById(R.id.ride_request_id_text)).setText(rideRequestNumberText);
+        }
         mRideRequestStatusTextView.setText(mBasicRideRequest.getStatus().toString());
         String pickupTime = mCommonUtil.getFormattedDateTimeString(mBasicRideRequest.getPickupTime());
         ((TextView) layout.findViewById(R.id.ride_request_pickup_time_text)).setText(pickupTime);
@@ -275,7 +276,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     public void setRideOwnerLayout(View view){
 
         UserComp userComp = new UserComp(mBaseFragment, mRideRequest.getAcceptedRide().getDriver());
-        userComp.setUserProfileSingleRow(view);
+        userComp.setUserProfileSingleRow(view, true);
 
         String vehicle = mRideRequest.getAcceptedRide().getVehicle().getModel() + " " +
                 mRideRequest.getAcceptedRide().getVehicle().getRegistrationNumber();
@@ -286,10 +287,12 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         ((TextView) view.findViewById(R.id.ride_pickup_point_text)).setText(mRideRequest.getRidePickupPointAddress());
         ((TextView) view.findViewById(R.id.ride_drop_point_text)).setText(mRideRequest.getRideDropPointAddress());
 
-        String pickupDistance = Integer.toString((int)mRideRequest.getRidePickupPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
-        String dropDistance = Integer.toString((int)mRideRequest.getRideDropPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
-        ((TextView) view.findViewById(R.id.ride_pickup_point_variation_text)).setText(pickupDistance);
-        ((TextView) view.findViewById(R.id.ride_drop_point_variation_text)).setText(dropDistance);
+        if (mBaseFragment.isAdded()){
+            String pickupDistance = Integer.toString((int)mRideRequest.getRidePickupPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
+            String dropDistance = Integer.toString((int)mRideRequest.getRideDropPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
+            ((TextView) view.findViewById(R.id.ride_pickup_point_variation_text)).setText(pickupDistance);
+            ((TextView) view.findViewById(R.id.ride_drop_point_variation_text)).setText(dropDistance);
+        }
 
         mRideOwnerButtonsLayout = view.findViewById(R.id.ride_owner_buttons_layout);
         mRideOwnerCancelButton = view.findViewById(R.id.ride_owner_cancel_button);

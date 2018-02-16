@@ -102,14 +102,16 @@ public class GroupComp {
 
         if (mGroup.getMembershipStatus().isMember()){
             if (mGroup.getMembershipStatus().getVote()!=null){
-                int color = mBaseFragment.getResources().getColor(R.color.colorAccent);
-                if (mGroup.getMembershipStatus().getVote().equals(Vote.Genuine)){
-                    Drawable drawable = mGroupUpVoteCount.getCompoundDrawables()[0];
-                    mCommonUtil.setDrawableTint(drawable, color);
-                }
-                if (mGroup.getMembershipStatus().getVote().equals(Vote.Fake)){
-                    Drawable drawable = mGroupDownVoteCount.getCompoundDrawables()[0];
-                    mCommonUtil.setDrawableTint(drawable, color);
+                if (mBaseFragment.isAdded()){
+                    int color = mBaseFragment.getResources().getColor(R.color.colorAccent);
+                    if (mGroup.getMembershipStatus().getVote().equals(Vote.Genuine)){
+                        Drawable drawable = mGroupUpVoteCount.getCompoundDrawables()[0];
+                        mCommonUtil.setDrawableTint(drawable, color);
+                    }
+                    if (mGroup.getMembershipStatus().getVote().equals(Vote.Fake)){
+                        Drawable drawable = mGroupDownVoteCount.getCompoundDrawables()[0];
+                        mCommonUtil.setDrawableTint(drawable, color);
+                    }
                 }
             }
             //Voting functionality not required in basic view, so setting lisneters here only
@@ -167,28 +169,28 @@ public class GroupComp {
                 super.onSuccess(statusCode, headers, response);
                 mCommonUtil.dismissProgressDialog();
                 mGroup = new Gson().fromJson(response.toString(), GroupDetail.class);
-                int color = mBaseFragment.getResources().getColor(R.color.colorAccent);
-                if (vote.equals(Vote.Genuine)){
-                    Logger.debug(TAG, "Voted as Genuine");
-                    //This will set genuine vote tint as well as update vote count
-                    mGroupUpVoteCount.setText(Integer.toString(mGroup.getGenuineVotes()));
-                    mCommonUtil.setDrawableTint(mGroupUpVoteCount.getCompoundDrawables()[0], color);
+                if (mBaseFragment.isAdded()) {
+                    int color = mBaseFragment.getResources().getColor(R.color.colorAccent);
+                    if (vote.equals(Vote.Genuine)) {
+                        Logger.debug(TAG, "Voted as Genuine");
+                        //This will set genuine vote tint as well as update vote count
+                        mGroupUpVoteCount.setText(Integer.toString(mGroup.getGenuineVotes()));
+                        mCommonUtil.setDrawableTint(mGroupUpVoteCount.getCompoundDrawables()[0], color);
 
-                    //This will set remove fake vote tint as well as update vote count
-                    mGroupDownVoteCount.setText(Integer.toString(mGroup.getFakeVotes()));
-                    mCommonUtil.removeDrawableTint(mGroupDownVoteCount.getCompoundDrawables()[0]);
-                } else {
-                    Logger.debug(TAG, "Voted as Fake");
-                    //This will set fake vote tint as well as update vote count
-                    mGroupDownVoteCount.setText(Integer.toString(mGroup.getFakeVotes()));
-                    mCommonUtil.setDrawableTint(mGroupDownVoteCount.getCompoundDrawables()[0], color);
+                        //This will set remove fake vote tint as well as update vote count
+                        mGroupDownVoteCount.setText(Integer.toString(mGroup.getFakeVotes()));
+                        mCommonUtil.removeDrawableTint(mGroupDownVoteCount.getCompoundDrawables()[0]);
+                    } else {
+                        Logger.debug(TAG, "Voted as Fake");
+                        //This will set fake vote tint as well as update vote count
+                        mGroupDownVoteCount.setText(Integer.toString(mGroup.getFakeVotes()));
+                        mCommonUtil.setDrawableTint(mGroupDownVoteCount.getCompoundDrawables()[0], color);
 
-                    //This will set remove genuine vote tint as well as update vote count
-                    mGroupUpVoteCount.setText(Integer.toString(mGroup.getGenuineVotes()));
-                    mCommonUtil.removeDrawableTint(mGroupUpVoteCount.getCompoundDrawables()[0]);
-
+                        //This will set remove genuine vote tint as well as update vote count
+                        mGroupUpVoteCount.setText(Integer.toString(mGroup.getGenuineVotes()));
+                        mCommonUtil.removeDrawableTint(mGroupUpVoteCount.getCompoundDrawables()[0]);
+                    }
                 }
-
             }
         });
     }

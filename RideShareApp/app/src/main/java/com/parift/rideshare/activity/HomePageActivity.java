@@ -167,7 +167,7 @@ public class HomePageActivity extends BaseActivity
                         super.onSuccess(statusCode, headers, response);
                         mCommonUtil.dismissProgressDialog();
                         FragmentLoader fragmentLoader = new FragmentLoader(HomePageActivity.this);
-                        fragmentLoader.loadUserProfileFragment(response.toString(), null);
+                        fragmentLoader.loadUserProfileFragment(response.toString(), true);
                     }
                 });
 

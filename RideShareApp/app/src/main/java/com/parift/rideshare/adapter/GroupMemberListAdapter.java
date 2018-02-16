@@ -69,7 +69,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         View view = holder.itemView;
         //We can set groupMember as its also an extension of BasicUser
         UserComp userComp = new UserComp(mBaseFragment, groupMember);
-        userComp.setUserProfileSingleRow(view);
+        userComp.setUserProfileSingleRow(view, false);
         ImageView optionsMenu = view.findViewById(R.id.more_options_image);
         optionsMenu.setTag(position);
         TextView memberRole = view.findViewById(R.id.member_role_text);

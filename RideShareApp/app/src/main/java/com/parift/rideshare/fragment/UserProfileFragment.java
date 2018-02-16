@@ -40,12 +40,12 @@ public class UserProfileFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_USER = "userProfile";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_SHOW_PERSONAL_INFO = "showPersonalInfo";
     public static final String TITLE = "User Profile";
 
     // TODO: Rename and change types of parameters
     private String mUserProfileData;
-    private String mParam2;
+    private boolean mShowPersonalInfo;
 
     private OnFragmentInteractionListener mListener;
     private UserProfile mUserProfile;
@@ -63,15 +63,15 @@ public class UserProfileFragment extends BaseFragment {
      * this fragment using the provided parameters.
      *
      * @param userProfile UserProfile in Json format
-     * @param param2 Parameter 2.
+     * @param showPersonalInfo Whether to show personal information or not
      * @return A new instance of fragment UserProfileFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static UserProfileFragment newInstance(String userProfile, String param2) {
+    public static UserProfileFragment newInstance(String userProfile, boolean showPersonalInfo) {
         UserProfileFragment fragment = new UserProfileFragment();
         Bundle args = new Bundle();
         args.putString(ARG_USER, userProfile);
-        args.putString(ARG_PARAM2, param2);
+        args.putBoolean(ARG_SHOW_PERSONAL_INFO, showPersonalInfo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,7 +81,7 @@ public class UserProfileFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mUserProfileData = getArguments().getString(ARG_USER);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mShowPersonalInfo = getArguments().getBoolean(ARG_SHOW_PERSONAL_INFO);
         }
         mUserProfile = new Gson().fromJson(mUserProfileData, UserProfile.class);
         Logger.debug(TAG, "User Profile loaded for user Id:"+mUserProfile.getUser().getId());
@@ -101,7 +101,7 @@ public class UserProfileFragment extends BaseFragment {
                 .into(userProfileImageView);
 
         UserComp userComp = new UserComp(this, mUserProfile.getUser());
-        userComp.setUserProfileSingleRow(view);
+        userComp.setUserProfileSingleRow(view, mShowPersonalInfo);
 
         View user_profile_layout = view.findViewById(R.id.user_profile_single_row_layout);
         //This will make small user image invisible

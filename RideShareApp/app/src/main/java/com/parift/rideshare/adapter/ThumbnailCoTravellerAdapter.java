@@ -93,7 +93,7 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
                         super.onSuccess(statusCode, headers, response);
                         mCommonUtil.dismissProgressDialog();
                         FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                        fragmentLoader.loadUserProfileFragment(response.toString(), null);
+                        fragmentLoader.loadUserProfileFragment(response.toString(), true);
                     }
                 });
             }

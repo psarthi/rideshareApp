@@ -48,7 +48,7 @@ public class GroupMembershipRequestListAdapter extends RecyclerView.Adapter<Grou
         final BasicMembershipRequest request = getItem(position);
         View view = holder.view;
         UserComp userComp = new UserComp(mBaseFragment, request.getUser());
-        userComp.setUserProfileSingleRow(view);
+        userComp.setUserProfileSingleRow(view, true);
         ImageView formImageView = view.findViewById(R.id.membership_form_image);
         formImageView.setVisibility(View.VISIBLE);
         formImageView.setOnClickListener(new View.OnClickListener() {

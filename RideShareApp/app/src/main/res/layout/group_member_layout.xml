@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_margin">
+    android:layout_marginTop="@dimen/default_margin"
+    android:layout_marginLeft="@dimen/default_margin"
+    android:layout_marginRight="@dimen/default_margin">
 
 
     <include layout="@layout/user_profile_single_row_layout"
@@ -14,7 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/default_margin"
         android:layout_below="@id/user_profile_single_row_layout">
 
         <TextView
@@ -44,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_seperator_thickness"
         android:background="@color/colorGrayLight"
-        android:layout_below="@id/user_extra_layout"
-        android:layout_marginTop="@dimen/default_margin"/>
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_below="@id/user_extra_layout"/>
 
 </RelativeLayout>

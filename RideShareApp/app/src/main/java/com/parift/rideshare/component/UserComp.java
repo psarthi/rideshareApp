@@ -15,6 +15,7 @@ import com.parift.rideshare.Manifest;
 import com.parift.rideshare.R;
 import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.fragment.BaseFragment;
+import com.parift.rideshare.fragment.GroupMemberListFragment;
 import com.parift.rideshare.fragment.UserProfileFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
@@ -57,7 +58,7 @@ public class UserComp {
         userNameTextView.setText(userName);
     }
 
-    public void setUserProfileSingleRow(View view){
+    public void setUserProfileSingleRow(View view, boolean showPersonalInfo){
 
         View user_profile_layout = view.findViewById(R.id.user_profile_single_row_layout);
 
@@ -80,7 +81,12 @@ public class UserComp {
             }
         });
 
-        setUserProfileLayoutOnClickListener(user_profile_layout);
+        if (!showPersonalInfo){
+            mobileImageView.setVisibility(View.GONE);
+            userRatingTextView.setVisibility(View.GONE);
+        }
+
+        setUserProfileLayoutOnClickListener(user_profile_layout, showPersonalInfo);
 
         /* Disabled this as its causing issue in getting the right state of UserProfile,
         //as this can be loaded from multiple places e.g. group memebers, request etc.
@@ -95,7 +101,7 @@ public class UserComp {
         }*/
     }
 
-    private void setUserProfileLayoutOnClickListener(View user_profile_layout) {
+    private void setUserProfileLayoutOnClickListener(View user_profile_layout, final boolean showPersonalInfo) {
         user_profile_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +114,7 @@ public class UserComp {
                         super.onSuccess(statusCode, headers, response);
                         mCommonUtil.dismissProgressDialog();
                         FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                        fragmentLoader.loadUserProfileFragment(response.toString(), null);
+                        fragmentLoader.loadUserProfileFragment(response.toString(), showPersonalInfo);
                     }
                 });
             }

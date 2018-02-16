@@ -25,6 +25,7 @@ import java.util.List;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     public static final String TAG = MyFirebaseMessagingService.class.getName();
+    private RemoteMessage mRemoteMessage;
 
     /**
      * Called when message is received.
@@ -44,7 +45,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
         // [END_EXCLUDE]
 
-        // TODO(developer): Handle FCM messages here.
+        mRemoteMessage = remoteMessage;
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Logger.debug(TAG, "From: " + remoteMessage.getFrom());
 
@@ -68,7 +69,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        //handleNow(remoteMessage.getNotification().getBody());
+        handleNow();
     }
     // [END receive_message]
 
@@ -77,17 +78,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     /**
      * Handle time allotted to BroadcastReceivers.
      */
-    private void handleNow(String message) {
+    private void handleNow() {
         Logger.debug(TAG, "Short lived task is done.");
-        sendNotification(message);
+        sendNotification();
     }
 
     /**
      * Create and show a simple notification containing the received FCM message.
      *
-     * @param messageBody FCM message body received.
      */
-    private void sendNotification(String messageBody) {
+    private void sendNotification() {
         Logger.debug(TAG,"Send Notification Method");
         Intent intent = new Intent(this, SplashScreenActivity.class);
         //Disabling this as we will open up standard application
@@ -104,20 +104,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setContentTitle("FCM Message")
-                        .setContentText(messageBody)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setContentTitle(mRemoteMessage.getNotification().getTitle())
+                        .setContentText(mRemoteMessage.getNotification().getBody())
                         .setAutoCancel(true)
+                        .setColor(getResources().getColor(R.color.colorPrimary))
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
+        //Lets show notification for all scenario irrespective of its in foreground or background
+        notificationManager.notify(NotificationID.getID() /* ID of notification */, notificationBuilder.build());
+
         if (isAppIsInBackground(getApplicationContext())){
             Logger.debug(TAG,"App is in Background");
             //We can customize notification depending on the state of application
-
         } else {
             Logger.debug(TAG,"App is in Foreground");
         }

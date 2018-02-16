@@ -92,8 +92,8 @@ public class FragmentLoader {
                 .commit();
     }
 
-    public void loadUserProfileFragment(String userProfile, String data) {
-        Fragment userProfileFragment = UserProfileFragment.newInstance(userProfile, data);
+    public void loadUserProfileFragment(String userProfile, boolean showPersonalInfo) {
+        Fragment userProfileFragment = UserProfileFragment.newInstance(userProfile, showPersonalInfo);
         //Add to back stack as user may want to go back to home page and choose alternate option
         getFragmentManager().beginTransaction()
                 .replace(R.id.home_page_container,userProfileFragment, UserProfileFragment.TAG)

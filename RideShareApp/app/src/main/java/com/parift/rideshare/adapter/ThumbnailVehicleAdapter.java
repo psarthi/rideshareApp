@@ -87,10 +87,12 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
         //This will take care of adding drawable.add thumbnail at the end
         else {
             Picasso.with(mBaseFragment.getActivity()).load(R.drawable.ic_add).into(holder.mImageView);
-            holder.mTextView.setText(mBaseFragment.getResources().getString(R.string.add_vehicle_thumbnail_text));
-            //This will ensure to highlight in case of no vehicles are there. Reason for 1 as there is a dummy vehicle added for add vehicle
-            if (mVehicles.size() == 1){
-                holder.mTextView.setTextColor(mBaseFragment.getResources().getColor(R.color.colorAccent));
+            if (mBaseFragment.isAdded()){
+                holder.mTextView.setText(mBaseFragment.getResources().getString(R.string.add_vehicle_thumbnail_text));
+                //This will ensure to highlight in case of no vehicles are there. Reason for 1 as there is a dummy vehicle added for add vehicle
+                if (mVehicles.size() == 1){
+                    holder.mTextView.setTextColor(mBaseFragment.getResources().getColor(R.color.colorAccent));
+                }
             }
             holder.mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -118,7 +120,9 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
     }
 
     private void select(ThumbnailVehicleAdapter.ViewHolder holder, int position){
-        holder.mTextView.setTextColor(mBaseFragment.getResources().getColor(R.color.colorAccent));
+        if (mBaseFragment.isAdded()){
+            holder.mTextView.setTextColor(mBaseFragment.getResources().getColor(R.color.colorAccent));
+        }
         //Reason for setting it here instead of onClick in Bind,
         //so that this function can be used to set default vehicle on load as well without click
         //IMP - Even though the holder is reusable, this will take care of the visible holder selection/deselection
