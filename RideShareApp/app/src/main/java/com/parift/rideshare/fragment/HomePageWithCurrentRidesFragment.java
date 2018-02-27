@@ -172,20 +172,6 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
                 mFragmentLoader.loadCreatesRideFragment(RideType.RequestRide, null);
             }});
 
-        //Reason for putting it here, so that whenever the fragment get loaded either new or from backstack, onCreateView would get the latest
-        //Otherwise, it was showing old ride information
-        if (mFetchType.equals(FetchType.Local)){
-            mCurrentRide = mCommonUtil.getCurrentRide();
-            mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
-            setHomePageView(view);
-            //This will ensure all future fetch is always from server
-            //First time when this page loads post login we don't fetch the current rides as it was already there in the login response
-            //but for any future reload of this page, data has to come from server as user can perform certain ride action in ride info / ride request info
-            //The same doesn't get reflected if we don't refresh the data of current rides
-            mFetchType = FetchType.Server;
-        } else {
-            fetchRidesFromServer(view);
-        }
         return view;
     }
 
@@ -377,6 +363,24 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         super.onResume();
         ((HomePageActivity)getActivity()).showBackButton(false);
         Logger.debug(TAG,"Inside OnResume of instance:"+this.hashCode());
+
+        //IMP - If you put this code in onCreateView it was not fetching the latest if it was coming from backstack i.e. if you move to another application
+        //and come back to this, it was showing old data
+        //Reason for putting it here, so that whenever the fragment get loaded either new or from backstack, we would get the latest
+        //Otherwise, it was showing old ride information
+        if (mFetchType.equals(FetchType.Local)){
+            mCurrentRide = mCommonUtil.getCurrentRide();
+            mCurrentRideRequest = mCommonUtil.getCurrentRideRequest();
+            setHomePageView(getView());
+            //This will ensure all future fetch is always from server
+            //First time when this page loads post login we don't fetch the current rides as it was already there in the login response
+            //but for any future reload of this page, data has to come from server as user can perform certain ride action in ride info / ride request info
+            //The same doesn't get reflected if we don't refresh the data of current rides
+            mFetchType = FetchType.Server;
+        } else {
+            fetchRidesFromServer(getView());
+        }
+
         //We are using this temporarily as there is an issue with setting title on page load as whenever we click any item in left nav
         //Home page get refreshed as we are poppping all backstacks and home is the only fragment which would get reloaded
         //so that's having issue in the title as it overwrites the title when we get the response late

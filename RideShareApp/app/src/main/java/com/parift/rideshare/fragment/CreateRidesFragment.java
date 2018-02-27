@@ -148,6 +148,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private boolean mLocationChanged;
     private float mMaxFare;
     private int mTravelDistance;
+    private int mTravelTime;
     private PreBookingRideRequestResult mPreBookingRideRequestResult;
     private String mFromAddress;
     private String mToAddress;
@@ -581,6 +582,8 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         mRideRequest.setDropPointAddress(mToAddress);
         mRideRequest.setPickupTime(mStartTimeCalendar.getTime());
         mRideRequest.setTrustNetwork(mTrustNetworkComp.getTrustNetworkFromView());
+        mRideRequest.setTravelDistance(mTravelDistance);
+        mRideRequest.setTravelTime(mTravelTime);
 
         if (mRidesOptionUpdated){
             mRideRequest.setSeatRequired(mUpdatedRidesOption.getSeatRequired());
@@ -591,7 +594,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             mRideRequest.setVehicleCategory(mUpdatedRidesOption.getVehicleCategory());
             mRideRequest.setVehicleSubCategory(mUpdatedRidesOption.getVehicleSubCategory());
             mRideRequest.setRideMode(mUpdatedRidesOption.getRideMode());
-            mRideRequest.setTravelDistance(mTravelDistance);
         } else {
             mRideRequest.setSeatRequired(mUser.getPreference().getSeatRequired());
             mRideRequest.setLuggageCapacityRequired(mUser.getPreference().getLuggageCapacityRequired());
@@ -601,7 +603,6 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             mRideRequest.setVehicleCategory(mUser.getPreference().getVehicleCategory());
             mRideRequest.setVehicleSubCategory(mUser.getPreference().getVehicleSubCategory());
             mRideRequest.setRideMode(mUser.getPreference().getRideMode());
-            mRideRequest.setTravelDistance(mTravelDistance);
         }
     }
 
@@ -825,6 +826,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 .replace(APIUrl.originLng_KEY, Double.toString(mFromLatLng.longitude))
                 .replace(APIUrl.destinationLat_KEY, Double.toString(mToLatLng.latitude))
                 .replace(APIUrl.destinationLng_KEY, Double.toString(mToLatLng.longitude))
+                .replace(APIUrl.departureEpochSecond_KEY, Long.toString(mStartTimeCalendar.getTimeInMillis()))
                 .replace(APIUrl.GOOGLE_API_KEY, getResources().getString(R.string.GOOGLE_API_KEY));
         mCommonUtil.showProgressDialog();
         RESTClient.get(GET_GOOGLE_DISTANCE_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
@@ -839,7 +841,12 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         Element element = mGoogleDistance.getRows().get(0).getElements().get(0);
                         //This is important for getting the dynamic value in pickup time/distance variation
                         mTravelDistance = element.getDistance().getValue();
-                        mRideRequest.setTravelDistance(mTravelDistance);
+                        mTravelTime = element.getDuration_in_traffic().getValue();
+                        //Note - Below statements of setting travelTime and Distance may be duplicate need to be 100% sure before removing them
+                        //as we are already setting the values while creating the ride request with other properties in setRideRequest()
+                        //mRideRequest.setTravelDistance(mTravelDistance);
+                        //IMP - Its important to get duration in traffic instead of using standard duration as traffic duration would cover actual time in traffic condition
+                        //mRideRequest.setTravelTime(mTravelTime);
                         //Maxfare is applicable for All Sub-Categories else for specific sub-category you will get exact fare
                         getFare();
                     } else {
@@ -1010,7 +1017,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         Logger.debug(TAG, "mMinStartTime Time:"+ minStartTime);
         Logger.debug(TAG, "Current Time:"+Calendar.getInstance().getTime());
         if (mStartTimeCalendar.getTime().before(minStartTime)){
-            Toast.makeText(getActivity(),"Earliest start time can be "+Constant.START_TIME_INCREMENT+"mins from now",Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),"Earliest start time should be "+Constant.START_TIME_INCREMENT+"mins from now",Toast.LENGTH_LONG).show();
             mTimeTextView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             return false;
         } else {

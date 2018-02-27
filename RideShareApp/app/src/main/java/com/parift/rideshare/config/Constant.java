@@ -31,9 +31,14 @@ public class Constant {
     public static final int TRAVEL_DISTANCE_BLOCK = 10000;
     //This is used for setting start time in create rides screen i.e. all rides would have min. 10 mins from current time as start time
     //so that we don't end up having issues creating rides in the past
-    public static final int START_TIME_INCREMENT = 10;
+    //VERY IMP NOTE - Don't create rides in the past else there would not be any match from starting point as its always in the past than current time
+    public static final int START_TIME_INCREMENT = 5;
     //This will be used while confirming the ride
-    public static final int START_TIME_MIN_INCREMENT_FOR_FINAL_CONFIRMATION = 2;
+    //By setting the value as -5, it means we are allowing 5 mins buffer from current time i.e. if user start time is not less than 5 mins from current time
+    //then it will work else it will throw exception
+    //-ve value is for reducing the time
+    //By setting value as 0, it means it can't be less than current time
+    public static final int START_TIME_MIN_INCREMENT_FOR_FINAL_CONFIRMATION = 0;
     //This would be used for enabling/disabling start button for offer rides i.e. any rides can be started only 15 mins before the ride start time
     public static final int START_TIME_BUFFER = 15;
     public static final int MIN_SEAT = 1;
