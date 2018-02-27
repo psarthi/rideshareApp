@@ -149,10 +149,12 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                     RESTClient.get(GET_RIDE_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            mCommonUtil.dismissProgressDialog();
-                            FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                            fragmentLoader.loadRideInfoFragment(response.toString());
+                            if (mBaseFragment.isAdded()) {
+                                super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
+                                FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                                fragmentLoader.loadRideInfoFragment(response.toString());
+                            }
                         }
                     });
                 }
@@ -177,13 +179,15 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                         RESTClient.get(CANCEL_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                super.onSuccess(statusCode, headers, response);
-                                mCommonUtil.dismissProgressDialog();
-                                Logger.debug(TAG, "Ride Cancelled");
-                                //Imp - Ensure that output is always saved as FullRide as you actually get fullride
-                                mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                                mListener.onRideRefresh(mRide);
-                                Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Cancelled", Toast.LENGTH_LONG).show();
+                                if (mBaseFragment.isAdded()) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    mCommonUtil.dismissProgressDialog();
+                                    Logger.debug(TAG, "Ride Cancelled");
+                                    //Imp - Ensure that output is always saved as FullRide as you actually get fullride
+                                    mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                                    mListener.onRideRefresh(mRide);
+                                    Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Cancelled", Toast.LENGTH_LONG).show();
+                                }
                             }
                         });
                     }
@@ -208,14 +212,16 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 RESTClient.get(START_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mCommonUtil.dismissProgressDialog();
-                        Logger.debug(TAG, "Ride Started");
-                        //Imp - Ensure that output is always saved as FullRide as you actually get fullride
-                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                        mListener.onRideRefresh(mRide);
-                        Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Started", Toast.LENGTH_LONG).show();
-                        navigate(mRide);
+                        if (mBaseFragment.isAdded()) {
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            Logger.debug(TAG, "Ride Started");
+                            //Imp - Ensure that output is always saved as FullRide as you actually get fullride
+                            mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                            mListener.onRideRefresh(mRide);
+                            Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Started", Toast.LENGTH_LONG).show();
+                            navigate(mRide);
+                        }
                     }
                 });
             }
@@ -252,13 +258,15 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
                 RESTClient.get(END_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mCommonUtil.dismissProgressDialog();
-                        Logger.debug(TAG, "Ride Ended");
-                        //Imp - Ensure that output is always saved as FullRide as you actually get fullride
-                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                        mListener.onRideRefresh(mRide);
-                        Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Ended", Toast.LENGTH_LONG).show();
+                        if (mBaseFragment.isAdded()) {
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            Logger.debug(TAG, "Ride Ended");
+                            //Imp - Ensure that output is always saved as FullRide as you actually get fullride
+                            mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                            mListener.onRideRefresh(mRide);
+                            Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Ended", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }
@@ -359,14 +367,16 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mCommonUtil.dismissProgressDialog();
-                        Logger.debug(TAG, "CoTraveller Picked");
-                        //Imp - Ensure that output is always saved as FullRide as you actually get fullride
-                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                        mListener.onRideRefresh(mRide);
-                        Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Picked", Toast.LENGTH_LONG).show();
-                        navigate(mRide);
+                        if (mBaseFragment.isAdded()) {
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            Logger.debug(TAG, "CoTraveller Picked");
+                            //Imp - Ensure that output is always saved as FullRide as you actually get fullride
+                            mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                            mListener.onRideRefresh(mRide);
+                            Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Picked", Toast.LENGTH_LONG).show();
+                            navigate(mRide);
+                        }
                     }
                 });
             }
@@ -466,17 +476,19 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         RESTClient.get(DROP_PASSENGER, null, new RSJsonHttpResponseHandler(mCommonUtil) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
-                Logger.debug(TAG, "CoTraveller Dropped");
-                //Imp - Ensure that output is always saved as FullRide as you actually get fullride
-                mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                Account account = ((List<Account>) mRide.getDriver().getAccounts()).get(0);
-                //This will update the account balance post dropping any passenger
-                mCommonUtil.updateAccount(account);
-                mListener.onRideRefresh(mRide);
-                Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Dropped", Toast.LENGTH_LONG).show();
-                navigate(mRide);
+                if (mBaseFragment.isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    Logger.debug(TAG, "CoTraveller Dropped");
+                    //Imp - Ensure that output is always saved as FullRide as you actually get fullride
+                    mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                    Account account = ((List<Account>) mRide.getDriver().getAccounts()).get(0);
+                    //This will update the account balance post dropping any passenger
+                    mCommonUtil.updateAccount(account);
+                    mListener.onRideRefresh(mRide);
+                    Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Dropped", Toast.LENGTH_LONG).show();
+                    navigate(mRide);
+                }
             }
         });
     }
@@ -502,13 +514,15 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
-                Logger.debug(TAG, "CoTraveller Rejected");
-                //Imp - Ensure that output is always saved as FullRide as you actually get fullride
-                mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                mListener.onRideRefresh(mRide);
-                Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Rejected", Toast.LENGTH_LONG).show();
+                if (mBaseFragment.isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    Logger.debug(TAG, "CoTraveller Rejected");
+                    //Imp - Ensure that output is always saved as FullRide as you actually get fullride
+                    mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                    mListener.onRideRefresh(mRide);
+                    Toast.makeText(mBaseFragment.getActivity(), "CoTraveller Rejected", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -538,11 +552,13 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mCommonUtil.dismissProgressDialog();
-                        userRatingBar.setEnabled(false);
-                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                        mListener.onRideRefresh(mRide);
+                        if (mBaseFragment.isAdded()) {
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            userRatingBar.setEnabled(false);
+                            mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                            mListener.onRideRefresh(mRide);
+                        }
                     }
                 });
             }

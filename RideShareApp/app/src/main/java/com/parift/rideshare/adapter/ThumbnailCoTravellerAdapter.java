@@ -90,10 +90,12 @@ public class ThumbnailCoTravellerAdapter extends RecyclerView.Adapter<ThumbnailC
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mCommonUtil.dismissProgressDialog();
-                        FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                        fragmentLoader.loadUserProfileFragment(response.toString(), true);
+                        if (mBaseFragment.isAdded()) {
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                            fragmentLoader.loadUserProfileFragment(response.toString(), true);
+                        }
                     }
                 });
             }

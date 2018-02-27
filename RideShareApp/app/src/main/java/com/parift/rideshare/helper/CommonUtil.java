@@ -263,6 +263,7 @@ public class CommonUtil {
     }
 
     public void showProgressDialog(){
+        Logger.debug(TAG,getActivity().getLocalClassName());
         mProgressDialog = new ProgressDialog(getActivity(), R.style.MyTheme);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
@@ -278,6 +279,7 @@ public class CommonUtil {
     }
 
     public void dismissProgressDialog(){
+        Logger.debug(TAG,getActivity().getLocalClassName());
         if(mProgressDialog!=null && mProgressDialog.isShowing()){
             Logger.debug(TAG, "Dismissing Progress Dialog");
             mProgressDialog.dismiss();

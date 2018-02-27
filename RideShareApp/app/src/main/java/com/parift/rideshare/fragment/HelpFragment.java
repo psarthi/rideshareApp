@@ -106,13 +106,16 @@ public class HelpFragment extends BaseFragment {
         RESTClient.get(APIUrl.GET_HELP_QUESTION_ANSWER_LIST, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<HelpQuestionAnswer>>(){}.getType();
-                mQuestionAnswers = new Gson().fromJson(response.toString(), listType);
-                mAdapter = new HelpListAdapter(mQuestionAnswers, HelpFragment.this);
-                //This will load adapter only when data is loaded
-                mRecyclerView.setAdapter(mAdapter);
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    Type listType = new TypeToken<ArrayList<HelpQuestionAnswer>>() {
+                    }.getType();
+                    mQuestionAnswers = new Gson().fromJson(response.toString(), listType);
+                    mAdapter = new HelpListAdapter(mQuestionAnswers, HelpFragment.this);
+                    //This will load adapter only when data is loaded
+                    mRecyclerView.setAdapter(mAdapter);
+                }
             }
         });
 

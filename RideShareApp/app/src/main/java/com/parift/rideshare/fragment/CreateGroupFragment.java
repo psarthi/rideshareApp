@@ -197,14 +197,16 @@ public class CreateGroupFragment extends BaseFragment{
                     RESTClient.post(getActivity(), url, basicGroupInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            mCommonUtil.dismissProgressDialog();
-                            //This will update the status of user group member in shared preference
-                            //which will be used by create ride use case
-                            mCommonUtil.updateIsUserGroupMember(true);
-                            GroupDetail groupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
-                            FragmentLoader fragmentLoader = new FragmentLoader(CreateGroupFragment.this);
-                            fragmentLoader.loadGroupInfoByRemovingBackStacks(groupDetail);
+                            if (isAdded()) {
+                                super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
+                                //This will update the status of user group member in shared preference
+                                //which will be used by create ride use case
+                                mCommonUtil.updateIsUserGroupMember(true);
+                                GroupDetail groupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
+                                FragmentLoader fragmentLoader = new FragmentLoader(CreateGroupFragment.this);
+                                fragmentLoader.loadGroupInfoByRemovingBackStacks(groupDetail);
+                            }
                         }
                     });
 
@@ -224,15 +226,17 @@ public class CreateGroupFragment extends BaseFragment{
                         RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                super.onSuccess(statusCode, headers, response);
-                                ResponseMessage responseMessage = new Gson().fromJson(response.toString(), ResponseMessage.class);
-                                boolean status = Boolean.valueOf(responseMessage.getResult());
-                                if (status){
-                                    mGroupNameExist = true;
-                                    mGroupNameExistMsgTextView.setVisibility(View.VISIBLE);
-                                } else {
-                                    mGroupNameExist = false;
-                                    mGroupNameExistMsgTextView.setVisibility(View.INVISIBLE);
+                                if (isAdded()) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    ResponseMessage responseMessage = new Gson().fromJson(response.toString(), ResponseMessage.class);
+                                    boolean status = Boolean.valueOf(responseMessage.getResult());
+                                    if (status) {
+                                        mGroupNameExist = true;
+                                        mGroupNameExistMsgTextView.setVisibility(View.VISIBLE);
+                                    } else {
+                                        mGroupNameExist = false;
+                                        mGroupNameExistMsgTextView.setVisibility(View.INVISIBLE);
+                                    }
                                 }
                             }
                         });

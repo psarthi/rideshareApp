@@ -44,6 +44,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
     private CommonUtil mCommonUtil;
     private GroupDetail mGroupDetail;
     private BasicUser mUser;
+    private GroupMember mSignedInGroupMember;
     private int mCurrentSelectedPosition = -1;
 
     public GroupMemberListAdapter(GroupDetail groupDetail, List<GroupMember> groupMembers, BaseFragment fragment) {
@@ -52,6 +53,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         mCommonUtil = new CommonUtil(fragment);
         mGroupDetail = groupDetail;
         mUser = mCommonUtil.getUser();
+        mSignedInGroupMember = getGroupMember(mUser);
     }
 
     @Override
@@ -73,29 +75,39 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         ImageView optionsMenu = view.findViewById(R.id.more_options_image);
         optionsMenu.setTag(position);
         TextView memberRole = view.findViewById(R.id.member_role_text);
+
+        //Rules are based on group member status
         if (groupMember.isAdmin()) {
             memberRole.setVisibility(View.VISIBLE);
-            optionsMenu.setVisibility(View.GONE);
             if (groupMember.getId() == mGroupDetail.getOwner().getId()){
                 memberRole.setText(MemberRole.Owner.toString());
             } else {
                 memberRole.setText(MemberRole.Admin.toString());
             }
         } else {
+            //Member role not visible for normal member which is default role and there is no point in showing that
+            //so member role would only be shown for Admins
             memberRole.setVisibility(View.GONE);
-            optionsMenu.setVisibility(View.VISIBLE);
         }
 
-        //Exception Rules goes here
-
-        //Applicable for owner, where if he/she is logged in user, then he will see options for all irrespective of admin status
-        if (mUser.getId() == mGroupDetail.getOwner().getId()){
-            optionsMenu.setVisibility(View.VISIBLE);
-        }
-
-        //Applicable for logged in user, option menu is not visible for self
-        if (groupMember.getId() == mUser.getId()){
+        //Rules are based on signedIn User Membership status
+        //SignedInUser is not an Admin and a normal group member
+        if (!mSignedInGroupMember.isAdmin() || mSignedInGroupMember.getId() == groupMember.getId()){
             optionsMenu.setVisibility(View.GONE);
+        } else {
+            //SignedInUser is Owner, then he will see options for all irrespective of admin status
+            if (mSignedInGroupMember.getId() == mGroupDetail.getOwner().getId()){
+                optionsMenu.setVisibility(View.VISIBLE);
+            }
+            //SignedInUser is admin
+            else {
+                //Check if group member is admin or not (Note - Its a combination of signedInUser and GroupMember status)
+                if (groupMember.isAdmin()){
+                    optionsMenu.setVisibility(View.GONE);
+                } else {
+                    optionsMenu.setVisibility(View.VISIBLE);
+                }
+            }
         }
 
         optionsMenu.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +117,15 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
                 showPopup(v);
             }
         });
+    }
+
+    private GroupMember getGroupMember(BasicUser basicUser){
+        for (GroupMember groupMember: mGroupMembers){
+            if (groupMember.getId()==basicUser.getId()){
+                return groupMember;
+            }
+        }
+        return null;
     }
 
     public void showPopup(View v) {
@@ -147,10 +168,12 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                GroupMember updatedMember = new Gson().fromJson(response.toString(), GroupMember.class);
-                mGroupMembers.get(mCurrentSelectedPosition).setAdmin(updatedMember.isAdmin());
-                notifyItemChanged(mCurrentSelectedPosition);
+                if (mBaseFragment.isAdded()){
+                    super.onSuccess(statusCode, headers, response);
+                    GroupMember updatedMember = new Gson().fromJson(response.toString(), GroupMember.class);
+                    mGroupMembers.get(mCurrentSelectedPosition).setAdmin(updatedMember.isAdmin());
+                    notifyItemChanged(mCurrentSelectedPosition);
+                }
             }
         });
     }
@@ -163,9 +186,11 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                mGroupMembers.remove(mCurrentSelectedPosition);
-                notifyItemRemoved(mCurrentSelectedPosition);
+                if (mBaseFragment.isAdded()){
+                    super.onSuccess(statusCode, headers, response);
+                    mGroupMembers.remove(mCurrentSelectedPosition);
+                    notifyItemRemoved(mCurrentSelectedPosition);
+                }
             }
         });
     }

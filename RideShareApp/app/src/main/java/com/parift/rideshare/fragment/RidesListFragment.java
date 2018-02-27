@@ -150,13 +150,16 @@ public class RidesListFragment extends BaseFragment{
             RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    super.onSuccess(statusCode, headers, response);
-                    mCommonUtil.dismissProgressDialog();
-                    Type listType = new TypeToken<ArrayList<BasicRide>>(){}.getType();
-                    mRides = new Gson().fromJson(response.toString(), listType);
-                    //This will load adapter only when data is loaded
-                    Logger.debug(TAG, "Size of initial set of data is: "+mRides.size());
-                    setAdapter();
+                    if (isAdded()) {
+                        super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
+                        Type listType = new TypeToken<ArrayList<BasicRide>>() {
+                        }.getType();
+                        mRides = new Gson().fromJson(response.toString(), listType);
+                        //This will load adapter only when data is loaded
+                        Logger.debug(TAG, "Size of initial set of data is: " + mRides.size());
+                        setAdapter();
+                    }
                 }
             });
         } else {
@@ -169,13 +172,16 @@ public class RidesListFragment extends BaseFragment{
             RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    super.onSuccess(statusCode, headers, response);
-                    //dismissProgressDialog();
-                    Type listType = new TypeToken<ArrayList<BasicRideRequest>>(){}.getType();
-                    mRideRequests = new Gson().fromJson(response.toString(), listType);
-                    //This will load adapter only when data is loaded
-                    Logger.debug(TAG, "Size of initial set of data is: "+mRideRequests.size());
-                    setAdapter();
+                    if (isAdded()) {
+                        super.onSuccess(statusCode, headers, response);
+                        //dismissProgressDialog();
+                        Type listType = new TypeToken<ArrayList<BasicRideRequest>>() {
+                        }.getType();
+                        mRideRequests = new Gson().fromJson(response.toString(), listType);
+                        //This will load adapter only when data is loaded
+                        Logger.debug(TAG, "Size of initial set of data is: " + mRideRequests.size());
+                        setAdapter();
+                    }
                 }
             });
         }
@@ -221,14 +227,17 @@ public class RidesListFragment extends BaseFragment{
             RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    super.onSuccess(statusCode, headers, response);
-                    if (offset != 1) mCommonUtil.dismissProgressDialog();
-                    Type listType = new TypeToken<ArrayList<FullRide>>(){}.getType();
-                    List<FullRide> newRides = new Gson().fromJson(response.toString(), listType);
-                    //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
-                    mRides.addAll(newRides);
-                    Logger.debug(TAG, "Size of new set of data is: "+newRides.size()+" :Updated count is:"+mRides.size());
-                    mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRides.size()-1);
+                    if (isAdded()) {
+                        super.onSuccess(statusCode, headers, response);
+                        if (offset != 1) mCommonUtil.dismissProgressDialog();
+                        Type listType = new TypeToken<ArrayList<FullRide>>() {
+                        }.getType();
+                        List<FullRide> newRides = new Gson().fromJson(response.toString(), listType);
+                        //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
+                        mRides.addAll(newRides);
+                        Logger.debug(TAG, "Size of new set of data is: " + newRides.size() + " :Updated count is:" + mRides.size());
+                        mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRides.size() - 1);
+                    }
                 }
             });
         } else {
@@ -239,13 +248,16 @@ public class RidesListFragment extends BaseFragment{
             RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    super.onSuccess(statusCode, headers, response);
-                    if (offset != 1) mCommonUtil.dismissProgressDialog();
-                    Type listType = new TypeToken<ArrayList<FullRideRequest>>(){}.getType();
-                    List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
-                    mRideRequests.addAll(rideRequests);
-                    Logger.debug(TAG, "Size of new set of data is: "+rideRequests.size()+" :Updated count is:"+mRideRequests.size());
-                    mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRideRequests.size()-1);
+                    if (isAdded()) {
+                        super.onSuccess(statusCode, headers, response);
+                        if (offset != 1) mCommonUtil.dismissProgressDialog();
+                        Type listType = new TypeToken<ArrayList<FullRideRequest>>() {
+                        }.getType();
+                        List<FullRideRequest> rideRequests = new Gson().fromJson(response.toString(), listType);
+                        mRideRequests.addAll(rideRequests);
+                        Logger.debug(TAG, "Size of new set of data is: " + rideRequests.size() + " :Updated count is:" + mRideRequests.size());
+                        mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRideRequests.size() - 1);
+                    }
                 }
             });
         }

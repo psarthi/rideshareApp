@@ -125,13 +125,16 @@ public class UserMembershipRequestListFragment extends BaseFragment {
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<BasicMembershipRequest>>(){}.getType();
-                mRequests = new Gson().fromJson(response.toString(), listType);
-                Logger.debug(TAG, "Size of initial set of data is: "+mRequests.size());
-                //This will load adapter only when data is loaded
-                setAdapter();
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    Type listType = new TypeToken<ArrayList<BasicMembershipRequest>>() {
+                    }.getType();
+                    mRequests = new Gson().fromJson(response.toString(), listType);
+                    Logger.debug(TAG, "Size of initial set of data is: " + mRequests.size());
+                    //This will load adapter only when data is loaded
+                    setAdapter();
+                }
             }
         });
 
@@ -165,14 +168,17 @@ public class UserMembershipRequestListFragment extends BaseFragment {
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                if (offset != 1) mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<BasicMembershipRequest>>(){}.getType();
-                List<BasicMembershipRequest> newRequests = new Gson().fromJson(response.toString(), listType);
-                //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
-                mRequests.addAll(newRequests);
-                Logger.debug(TAG, "Size of new set of data is: "+newRequests.size()+" :Updated count is:"+mRequests.size());
-                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRequests.size()-1);
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    if (offset != 1) mCommonUtil.dismissProgressDialog();
+                    Type listType = new TypeToken<ArrayList<BasicMembershipRequest>>() {
+                    }.getType();
+                    List<BasicMembershipRequest> newRequests = new Gson().fromJson(response.toString(), listType);
+                    //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
+                    mRequests.addAll(newRequests);
+                    Logger.debug(TAG, "Size of new set of data is: " + newRequests.size() + " :Updated count is:" + mRequests.size());
+                    mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mRequests.size() - 1);
+                }
             }
         });
     }

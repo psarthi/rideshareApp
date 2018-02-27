@@ -75,10 +75,12 @@ public class RideListAdapter extends RecyclerView.Adapter<RideListAdapter.ViewHo
                 RESTClient.get(GET_RIDE_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mCommonUtil.dismissProgressDialog();
-                        FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                        fragmentLoader.loadRideInfoFragment(response.toString());
+                        if (mBaseFragment.isAdded()){
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                            fragmentLoader.loadRideInfoFragment(response.toString());
+                        }
                     }
                 });
             }

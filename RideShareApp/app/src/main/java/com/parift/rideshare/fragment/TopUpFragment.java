@@ -165,27 +165,29 @@ public class TopUpFragment extends BaseFragment {
                     RESTClient.get(ADD_MONEY, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            mCommonUtil.dismissProgressDialog();
-                            mAccount = new Gson().fromJson(response.toString(), Account.class);
-                            mCommonUtil.updateAccount(mAccount);
-                            //This will refresh the wallet balance
-                            setWalletBalance(mAccount.getBalance());
-                            // No need to go back to create ride automatically, let user press back to do that
-                            //they can see their updated balance properly before moving back
-                            if (mRequiredBalanceVisiblity) {
-                                resetRequiredBalanceViews();
-                                //This will go back to the create rides page
-                                //Don't have this here as are refreshing the view and it will kill the fragment view above
-                                //hideSoftKeyBoard();
-                                //Toast.makeText(getActivity(), "New Wallet Balance:" + mCurrencySymbol + mAccount.getBalance(), Toast.LENGTH_LONG).show();
-                                //TODO Fix this bug as its causing Crash
-                                //getActivity().getSupportFragmentManager().popBackStack();
+                            if (isAdded()) {
+                                super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
+                                mAccount = new Gson().fromJson(response.toString(), Account.class);
+                                mCommonUtil.updateAccount(mAccount);
+                                //This will refresh the wallet balance
+                                setWalletBalance(mAccount.getBalance());
+                                // No need to go back to create ride automatically, let user press back to do that
+                                //they can see their updated balance properly before moving back
+                                if (mRequiredBalanceVisiblity) {
+                                    resetRequiredBalanceViews();
+                                    //This will go back to the create rides page
+                                    //Don't have this here as are refreshing the view and it will kill the fragment view above
+                                    //hideSoftKeyBoard();
+                                    //Toast.makeText(getActivity(), "New Wallet Balance:" + mCurrencySymbol + mAccount.getBalance(), Toast.LENGTH_LONG).show();
+                                    //TODO Fix this bug as its causing Crash
+                                    //getActivity().getSupportFragmentManager().popBackStack();
+                                }
+                                //VERY IMP - This has to be the last line else you will NPE on fragment
+                                //as it would get killed post this line
+                                //This will refresh the fragment and transaction list as well
+                                mListener.onTopUpFragmentRefresh();
                             }
-                            //VERY IMP - This has to be the last line else you will NPE on fragment
-                            //as it would get killed post this line
-                            //This will refresh the fragment and transaction list as well
-                            mListener.onTopUpFragmentRefresh();
                         }
                     });
                 }

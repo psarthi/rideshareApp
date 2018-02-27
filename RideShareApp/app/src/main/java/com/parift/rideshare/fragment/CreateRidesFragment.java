@@ -355,11 +355,13 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         RESTClient.get(GET_GOOGLE_REVERSE_GEOCODE_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                Logger.debug(TAG, "Google Geocode Success Response:" + response);
-                mGoogleGeocode = new Gson().fromJson(response.toString(), GoogleGeocode.class);
-                mFromAddress = GoogleUtil.getAddress(mGoogleGeocode);
-                mFromAddressTextView.setText(mFromAddress);
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    Logger.debug(TAG, "Google Geocode Success Response:" + response);
+                    mGoogleGeocode = new Gson().fromJson(response.toString(), GoogleGeocode.class);
+                    mFromAddress = GoogleUtil.getAddress(mGoogleGeocode);
+                    mFromAddressTextView.setText(mFromAddress);
+                }
             }
         });
     }
@@ -418,16 +420,17 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                             RESTClient.post(getActivity(),url, mRideOfferInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                    super.onSuccess(statusCode, headers, response);
-                                    mCommonUtil.dismissProgressDialog();
-                                    RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
-                                    Logger.debug(TAG, "Ride Successfully created with id:"+rideOfferResult.getRide().getId());
-                                    if (rideOfferResult.isCurrentRide()) {
-                                        mCommonUtil.updateCurrentRide(rideOfferResult.getRide());
-                                        Logger.debug(TAG, "Updated Current Ride");
-                                    }
-                                    mListener.onCreateRideFragmentInteraction(mRideType, new Gson().toJson(rideOfferResult.getRide()));
-                                    //mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
+                                    if (isAdded()) {
+                                        super.onSuccess(statusCode, headers, response);
+                                        mCommonUtil.dismissProgressDialog();
+                                        RideOfferResult rideOfferResult = new Gson().fromJson(response.toString(), RideOfferResult.class);
+                                        Logger.debug(TAG, "Ride Successfully created with id:" + rideOfferResult.getRide().getId());
+                                        if (rideOfferResult.isCurrentRide()) {
+                                            mCommonUtil.updateCurrentRide(rideOfferResult.getRide());
+                                            Logger.debug(TAG, "Updated Current Ride");
+                                        }
+                                        mListener.onCreateRideFragmentInteraction(mRideType, new Gson().toJson(rideOfferResult.getRide()));
+                                        //mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
                                     /*
                                     //Blocked this for the time being as it was causing issue in loading proper page
                                     //e.g. even if its current ride but home should have current ride request, then current ride request
@@ -440,6 +443,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                         //This will load the Ride Info fragment
                                         mFragmentLoader.loadRideInfoFragment(new Gson().toJson(rideOfferResult.getRide()));
                                     }*/
+                                    }
                                 }
                             });
                         }
@@ -491,16 +495,17 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         RESTClient.post(getActivity(),url, mRideRequest, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
-                RideRequestResult rideRequestResult = new Gson().fromJson(response.toString(), RideRequestResult.class);
-                Logger.debug(TAG, "Ride Request Successfully created with id:"+rideRequestResult.getRideRequest().getId());
-                if (rideRequestResult.isCurrentRideRequest()) {
-                    mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
-                    Logger.debug(TAG, "Updated Current Ride Request");
-                }
-                mListener.onCreateRideFragmentInteraction(mRideType, new Gson().toJson(rideRequestResult.getRideRequest()));
-                //mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    RideRequestResult rideRequestResult = new Gson().fromJson(response.toString(), RideRequestResult.class);
+                    Logger.debug(TAG, "Ride Request Successfully created with id:" + rideRequestResult.getRideRequest().getId());
+                    if (rideRequestResult.isCurrentRideRequest()) {
+                        mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
+                        Logger.debug(TAG, "Updated Current Ride Request");
+                    }
+                    mListener.onCreateRideFragmentInteraction(mRideType, new Gson().toJson(rideRequestResult.getRideRequest()));
+                    //mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
                                 /*
                                     //Blocked this for the time being as it was causing issue in loading proper page
                                     //e.g. even if its current ride but home should have current ride request, then current ride request
@@ -513,6 +518,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                                     //This will load the Ride Request Info fragment
                                     mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
                                 }*/
+                }
             }
         });
     }
@@ -788,19 +794,21 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         RESTClient.get(GET_GOOGLE_DIRECTION_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
-                Logger.debug(TAG, "Google Direction Success Response:" + response);
-                mGoogleDirection = new Gson().fromJson(response.toString(), GoogleDirection.class);
-                //Draw Route
-                if (mGoogleDirection.getStatus().equals("OK")){
-                    List<LatLng> latLngs = PolyUtil.decode(mGoogleDirection.getRoutes().get(0).getOverview_polyline().getPoints());
-                    mMap.addPolyline(new PolylineOptions().addAll(latLngs));
-                    //Move Camera to cover all markers on Map
-                    moveCamera();
-                    mTravelDistance = mGoogleDirection.getRoutes().get(0).getLegs().get(0).getDistance().getValue();
-                } else {
-                    Toast.makeText(getActivity(),"No valid route found, please enter alternate location",Toast.LENGTH_LONG).show();
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    Logger.debug(TAG, "Google Direction Success Response:" + response);
+                    mGoogleDirection = new Gson().fromJson(response.toString(), GoogleDirection.class);
+                    //Draw Route
+                    if (mGoogleDirection.getStatus().equals("OK")) {
+                        List<LatLng> latLngs = PolyUtil.decode(mGoogleDirection.getRoutes().get(0).getOverview_polyline().getPoints());
+                        mMap.addPolyline(new PolylineOptions().addAll(latLngs));
+                        //Move Camera to cover all markers on Map
+                        moveCamera();
+                        mTravelDistance = mGoogleDirection.getRoutes().get(0).getLegs().get(0).getDistance().getValue();
+                    } else {
+                        Toast.makeText(getActivity(), "No valid route found, please enter alternate location", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -822,21 +830,23 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         RESTClient.get(GET_GOOGLE_DISTANCE_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                //No need to dismiss progress dialog as we are calling getFare and we are dismissing there
-                Logger.debug(TAG, "Google Distance Success Response:" + response);
-                mGoogleDistance = new Gson().fromJson(response.toString(), GoogleDistance.class);
-                if (mGoogleDistance.getStatus().equals("OK") && mGoogleDistance.getRows().get(0).getElements().get(0).getStatus().equals("OK")){
-                    Element element = mGoogleDistance.getRows().get(0).getElements().get(0);
-                    //This is important for getting the dynamic value in pickup time/distance variation
-                    mTravelDistance = element.getDistance().getValue();
-                    mRideRequest.setTravelDistance(mTravelDistance);
-                    //Maxfare is applicable for All Sub-Categories else for specific sub-category you will get exact fare
-                    getFare();
-                }else {
-                    Toast.makeText(getActivity(),"No valid route found, please enter alternate location",Toast.LENGTH_LONG).show();
-                    mFareTextView.setVisibility(View.INVISIBLE);
-                    mCommonUtil.dismissProgressDialog();
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    //No need to dismiss progress dialog as we are calling getFare and we are dismissing there
+                    Logger.debug(TAG, "Google Distance Success Response:" + response);
+                    mGoogleDistance = new Gson().fromJson(response.toString(), GoogleDistance.class);
+                    if (mGoogleDistance.getStatus().equals("OK") && mGoogleDistance.getRows().get(0).getElements().get(0).getStatus().equals("OK")) {
+                        Element element = mGoogleDistance.getRows().get(0).getElements().get(0);
+                        //This is important for getting the dynamic value in pickup time/distance variation
+                        mTravelDistance = element.getDistance().getValue();
+                        mRideRequest.setTravelDistance(mTravelDistance);
+                        //Maxfare is applicable for All Sub-Categories else for specific sub-category you will get exact fare
+                        getFare();
+                    } else {
+                        Toast.makeText(getActivity(), "No valid route found, please enter alternate location", Toast.LENGTH_LONG).show();
+                        mFareTextView.setVisibility(View.INVISIBLE);
+                        mCommonUtil.dismissProgressDialog();
+                    }
                 }
             }
         });
@@ -866,12 +876,14 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             RESTClient.post(getActivity(),url, mRideRequest, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    super.onSuccess(statusCode, headers, response);
-                    mCommonUtil.dismissProgressDialog();
-                    mPreBookingRideRequestResult =
-                            new Gson().fromJson(response.toString(), PreBookingRideRequestResult.class);
-                    mMaxFare = mPreBookingRideRequestResult.getMaxFare();
-                    setFare(mMaxFare);
+                    if (isAdded()) {
+                        super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
+                        mPreBookingRideRequestResult =
+                                new Gson().fromJson(response.toString(), PreBookingRideRequestResult.class);
+                        mMaxFare = mPreBookingRideRequestResult.getMaxFare();
+                        setFare(mMaxFare);
+                    }
                 }
             });
         }

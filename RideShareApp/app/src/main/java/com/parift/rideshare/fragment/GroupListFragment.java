@@ -141,23 +141,26 @@ public class GroupListFragment extends BaseFragment {
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                Logger.debug(TAG,"Raw Response:"+response.toString());
-                mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<GroupDetail>>(){}.getType();
-                mGroups = new Gson().fromJson(response.toString(), listType);
-                if (mGroups.size()!=0){
-                    //This will ensure that whenever user membership is approved and if user is already
-                    //logged in so once he checks his list of groups, then his grouo membership status in shared
-                    //preference would get updated which will be used by create ride use case
-                    mCommonUtil.updateIsUserGroupMember(true);
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    Logger.debug(TAG, "Raw Response:" + response.toString());
+                    mCommonUtil.dismissProgressDialog();
+                    Type listType = new TypeToken<ArrayList<GroupDetail>>() {
+                    }.getType();
+                    mGroups = new Gson().fromJson(response.toString(), listType);
+                    if (mGroups.size() != 0) {
+                        //This will ensure that whenever user membership is approved and if user is already
+                        //logged in so once he checks his list of groups, then his grouo membership status in shared
+                        //preference would get updated which will be used by create ride use case
+                        mCommonUtil.updateIsUserGroupMember(true);
+                    }
+                    for (GroupDetail groupDetail : mGroups) {
+                        Logger.debug(TAG, "Original Groups:" + new Gson().toJson(groupDetail));
+                    }
+                    Logger.debug(TAG, "Size of initial set of data is: " + mGroups.size());
+                    //This will load adapter only when data is loaded
+                    setAdapter();
                 }
-                for (GroupDetail groupDetail:mGroups){
-                    Logger.debug(TAG,"Original Groups:"+new Gson().toJson(groupDetail));
-                }
-                Logger.debug(TAG, "Size of initial set of data is: "+mGroups.size());
-                //This will load adapter only when data is loaded
-                setAdapter();
             }
         });
     }
@@ -188,14 +191,17 @@ public class GroupListFragment extends BaseFragment {
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                if (offset != 1) mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<GroupDetail>>(){}.getType();
-                List<GroupDetail> newGroups = new Gson().fromJson(response.toString(), listType);
-                //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
-                mGroups.addAll(newGroups);
-                Logger.debug(TAG, "Size of new set of data is: "+newGroups.size()+" :Updated count is:"+mGroups.size());
-                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mGroups.size()-1);
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    if (offset != 1) mCommonUtil.dismissProgressDialog();
+                    Type listType = new TypeToken<ArrayList<GroupDetail>>() {
+                    }.getType();
+                    List<GroupDetail> newGroups = new Gson().fromJson(response.toString(), listType);
+                    //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
+                    mGroups.addAll(newGroups);
+                    Logger.debug(TAG, "Size of new set of data is: " + newGroups.size() + " :Updated count is:" + mGroups.size());
+                    mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mGroups.size() - 1);
+                }
             }
         });
     }

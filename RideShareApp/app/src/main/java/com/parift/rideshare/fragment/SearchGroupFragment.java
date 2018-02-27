@@ -170,16 +170,19 @@ public class SearchGroupFragment extends BaseFragment {
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                Type listType = new TypeToken<ArrayList<GroupDetail>>() {}.getType();
-                mGroupDetails = new Gson().fromJson(response.toString(), listType);
-                mAdapter = new GroupListAdapter(mGroupDetails, SearchGroupFragment.this);
-                mRecyclerView.setAdapter(mAdapter);
-                Logger.debug(TAG, "Search Result size is:"+mGroupDetails.size());
-                if (mGroupDetails.size()==0) {
-                    mEmptyTextView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyTextView.setVisibility(View.GONE);
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    Type listType = new TypeToken<ArrayList<GroupDetail>>() {
+                    }.getType();
+                    mGroupDetails = new Gson().fromJson(response.toString(), listType);
+                    mAdapter = new GroupListAdapter(mGroupDetails, SearchGroupFragment.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                    Logger.debug(TAG, "Search Result size is:" + mGroupDetails.size());
+                    if (mGroupDetails.size() == 0) {
+                        mEmptyTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        mEmptyTextView.setVisibility(View.GONE);
+                    }
                 }
             }
         });
@@ -201,15 +204,17 @@ public class SearchGroupFragment extends BaseFragment {
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                if (offset != 1) mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<GroupDetail>>() {
-                }.getType();
-                List<GroupDetail> newSearchResults = new Gson().fromJson(response.toString(), listType);
-                //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
-                mGroupDetails.addAll(newSearchResults);
-                Logger.debug(TAG, "Group Size changed. Current Size is:" + mGroupDetails.size());
-                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mGroupDetails.size() - 1);
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    if (offset != 1) mCommonUtil.dismissProgressDialog();
+                    Type listType = new TypeToken<ArrayList<GroupDetail>>() {
+                    }.getType();
+                    List<GroupDetail> newSearchResults = new Gson().fromJson(response.toString(), listType);
+                    //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
+                    mGroupDetails.addAll(newSearchResults);
+                    Logger.debug(TAG, "Group Size changed. Current Size is:" + mGroupDetails.size());
+                    mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mGroupDetails.size() - 1);
+                }
             }
         });
     }

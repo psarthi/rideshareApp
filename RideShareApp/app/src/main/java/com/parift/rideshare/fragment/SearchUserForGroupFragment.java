@@ -186,16 +186,19 @@ public class SearchUserForGroupFragment extends BaseFragment {
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                Type listType = new TypeToken<ArrayList<GroupInviteUserSearchResultWrapper>>() {}.getType();
-                mUserSearchResultsWrappers = new Gson().fromJson(response.toString(), listType);
-                mAdapter = new GroupInviteUserSearchListAdapter(mUserSearchResultsWrappers, SearchUserForGroupFragment.this);
-                mRecyclerView.setAdapter(mAdapter);
-                Logger.debug(TAG, "Search Result size is:"+mUserSearchResultsWrappers.size());
-                if (mUserSearchResultsWrappers.size()==0) {
-                    mEmptyTextView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyTextView.setVisibility(View.GONE);
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    Type listType = new TypeToken<ArrayList<GroupInviteUserSearchResultWrapper>>() {
+                    }.getType();
+                    mUserSearchResultsWrappers = new Gson().fromJson(response.toString(), listType);
+                    mAdapter = new GroupInviteUserSearchListAdapter(mUserSearchResultsWrappers, SearchUserForGroupFragment.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                    Logger.debug(TAG, "Search Result size is:" + mUserSearchResultsWrappers.size());
+                    if (mUserSearchResultsWrappers.size() == 0) {
+                        mEmptyTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        mEmptyTextView.setVisibility(View.GONE);
+                    }
                 }
             }
         });
@@ -217,14 +220,17 @@ public class SearchUserForGroupFragment extends BaseFragment {
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                if (offset != 1) mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<GroupInviteUserSearchResultWrapper>>(){}.getType();
-                List<GroupInviteUserSearchResultWrapper> newSearchResults = new Gson().fromJson(response.toString(), listType);
-                //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
-                mUserSearchResultsWrappers.addAll(newSearchResults);
-                Logger.debug(TAG, "User Size changed. Current Size is:"+mUserSearchResultsWrappers.size());
-                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mUserSearchResultsWrappers.size()-1);
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    if (offset != 1) mCommonUtil.dismissProgressDialog();
+                    Type listType = new TypeToken<ArrayList<GroupInviteUserSearchResultWrapper>>() {
+                    }.getType();
+                    List<GroupInviteUserSearchResultWrapper> newSearchResults = new Gson().fromJson(response.toString(), listType);
+                    //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
+                    mUserSearchResultsWrappers.addAll(newSearchResults);
+                    Logger.debug(TAG, "User Size changed. Current Size is:" + mUserSearchResultsWrappers.size());
+                    mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mUserSearchResultsWrappers.size() - 1);
+                }
             }
         });
     }
@@ -341,9 +347,11 @@ public class SearchUserForGroupFragment extends BaseFragment {
             RESTClient.post(getActivity(), URL, userIds, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    super.onSuccess(statusCode, headers, response);
-                    Toast.makeText(getActivity(), "Invite succesfully sent", Toast.LENGTH_SHORT).show();
-                    getActivity().getSupportFragmentManager().popBackStack();
+                    if (isAdded()){
+                        super.onSuccess(statusCode, headers, response);
+                        Toast.makeText(getActivity(), "Invite succesfully sent", Toast.LENGTH_SHORT).show();
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
                 }
             });
         } else {

@@ -111,10 +111,12 @@ public class UserComp {
                 RESTClient.get(GET_USER_PROFILE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mCommonUtil.dismissProgressDialog();
-                        FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                        fragmentLoader.loadUserProfileFragment(response.toString(), showPersonalInfo);
+                        if (mBaseFragment.isAdded()) {
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                            fragmentLoader.loadUserProfileFragment(response.toString(), showPersonalInfo);
+                        }
                     }
                 });
             }

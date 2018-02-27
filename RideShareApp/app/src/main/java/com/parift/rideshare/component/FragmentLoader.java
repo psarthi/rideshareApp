@@ -58,7 +58,7 @@ public class FragmentLoader {
     }
 
     private FragmentManager getFragmentManager(){
-        if (mBaseFragment!=null){
+        if (mBaseFragment!=null && mBaseFragment.isAdded()){
             return mBaseFragment.getActivity().getSupportFragmentManager();
         } else {
             return mBaseActivity.getSupportFragmentManager();

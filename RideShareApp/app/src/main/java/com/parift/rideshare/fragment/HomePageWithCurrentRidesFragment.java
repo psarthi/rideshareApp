@@ -191,18 +191,23 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
 
     public void fetchRidesFromServer(final View view) {
         String GET_USER_CURRENT_RIDES = APIUrl.GET_USER_CURRENT_RIDES.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
-        mCommonUtil.showProgressDialog();
+        //VERY VERY IMP - Not Showing progress dialog as this fragment keeps loading and getting destroyed whenever we remove all fragments from stack
+        //So what happens when all fragments gets removed by default this would load and in between some other frgament would load so it would not wait for
+        //the response of the current rides and your progress dialog would not get dismissed, so we will not show progress dialog here
+        //mCommonUtil.showProgressDialog();
         RESTClient.get(GET_USER_CURRENT_RIDES, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
-                FullRidesInfo fullRidesInfo = new Gson().fromJson(response.toString(), FullRidesInfo.class);
-                mCurrentRide = fullRidesInfo.getRide();
-                mCurrentRideRequest = fullRidesInfo.getRideRequest();
-                mCommonUtil.updateCurrentRide(mCurrentRide);
-                mCommonUtil.updateCurrentRideRequest(mCurrentRideRequest);
-                setHomePageView(view);
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    //mCommonUtil.dismissProgressDialog();
+                    FullRidesInfo fullRidesInfo = new Gson().fromJson(response.toString(), FullRidesInfo.class);
+                    mCurrentRide = fullRidesInfo.getRide();
+                    mCurrentRideRequest = fullRidesInfo.getRideRequest();
+                    mCommonUtil.updateCurrentRide(mCurrentRide);
+                    mCommonUtil.updateCurrentRideRequest(mCurrentRideRequest);
+                    setHomePageView(view);
+                }
             }
         });
     }

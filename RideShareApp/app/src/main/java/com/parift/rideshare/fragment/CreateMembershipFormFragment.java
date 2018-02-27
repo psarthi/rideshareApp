@@ -184,12 +184,14 @@ public class CreateMembershipFormFragment extends BaseFragment {
                     RESTClient.post(getActivity(), CREATE_GROUP, basicGroupInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            mCommonUtil.dismissProgressDialog();
-                            Logger.debug(TAG, "Group Created:"+response.toString());
-                            GroupDetail groupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
-                            hideSoftKeyBoard();
-                            mListener.onMembershipFormFragmentLoadGroup(groupDetail);
+                            if (isAdded()) {
+                                super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
+                                Logger.debug(TAG, "Group Created:" + response.toString());
+                                GroupDetail groupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
+                                hideSoftKeyBoard();
+                                mListener.onMembershipFormFragmentLoadGroup(groupDetail);
+                            }
                         }
                     });
                 }
@@ -207,11 +209,13 @@ public class CreateMembershipFormFragment extends BaseFragment {
                     RESTClient.post(getActivity(), URL, mGroup.getMembershipForm(), new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            mCommonUtil.dismissProgressDialog();
-                            Logger.debug(TAG, "Form updated:"+response.toString());
-                            GroupDetail groupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
-                            mListener.onMembershipFormFragmentLoadGroup(groupDetail);
+                            if (isAdded()) {
+                                super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
+                                Logger.debug(TAG, "Form updated:" + response.toString());
+                                GroupDetail groupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
+                                mListener.onMembershipFormFragmentLoadGroup(groupDetail);
+                            }
                         }
                     });
                 }

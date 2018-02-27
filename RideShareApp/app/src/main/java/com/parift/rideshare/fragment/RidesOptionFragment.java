@@ -401,12 +401,14 @@ public class RidesOptionFragment extends BaseFragment
                         RESTClient.post(getActivity(), url, mRidesOption, new RSJsonHttpResponseHandler(mCommonUtil){
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                super.onSuccess(statusCode, headers, response);
-                                mCommonUtil.dismissProgressDialog();
-                                //Preference is updated
-                                BasicUser updatedUser = new Gson().fromJson(response.toString(), BasicUser.class);
-                                mCommonUtil.updateUser(updatedUser);
-                                if (mListener != null) mListener.onRidesOptionFragmentInteraction(mRidesOption);
+                                if (isAdded()) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    mCommonUtil.dismissProgressDialog();
+                                    //Preference is updated
+                                    BasicUser updatedUser = new Gson().fromJson(response.toString(), BasicUser.class);
+                                    mCommonUtil.updateUser(updatedUser);
+                                    if (mListener != null) mListener.onRidesOptionFragmentInteraction(mRidesOption);
+                                }
                             }
                         });
                     }

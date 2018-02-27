@@ -175,11 +175,13 @@ public class MembershipRequestFragment extends BaseFragment {
                     RESTClient.post(getActivity(), url, mRequest, new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            mCommonUtil.dismissProgressDialog();
-                            GroupDetail updatedGroupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
-                            //Toast.makeText(getActivity(), "Request Submitted Successfully", Toast.LENGTH_SHORT).show();
-                            mListener.onMembershipRequestFragmentRefreshGroupInfo(updatedGroupDetail);
+                            if (isAdded()) {
+                                super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
+                                GroupDetail updatedGroupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
+                                //Toast.makeText(getActivity(), "Request Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                mListener.onMembershipRequestFragmentRefreshGroupInfo(updatedGroupDetail);
+                            }
                         }
                     });
                 }
@@ -198,11 +200,13 @@ public class MembershipRequestFragment extends BaseFragment {
                     RESTClient.post(getActivity(), url, mRequest.getAdminRemark(), new RSJsonHttpResponseHandler(mCommonUtil){
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            mCommonUtil.dismissProgressDialog();
-                            GroupDetail updatedGroupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
-                            Toast.makeText(getActivity(), "Request Approved", Toast.LENGTH_SHORT).show();
-                            mListener.onMembershipRequestFragmentRefreshBasicGroupInfo(updatedGroupDetail);
+                            if (isAdded()) {
+                                super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
+                                GroupDetail updatedGroupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
+                                Toast.makeText(getActivity(), "Request Approved", Toast.LENGTH_SHORT).show();
+                                mListener.onMembershipRequestFragmentRefreshBasicGroupInfo(updatedGroupDetail);
+                            }
                         }
                     });
                 }
@@ -225,11 +229,13 @@ public class MembershipRequestFragment extends BaseFragment {
                         RESTClient.post(getActivity(), url, mRequest.getAdminRemark(), new RSJsonHttpResponseHandler(mCommonUtil){
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                super.onSuccess(statusCode, headers, response);
-                                mCommonUtil.dismissProgressDialog();
-                                GroupDetail updatedGroupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
-                                Toast.makeText(getActivity(), "Request Rejected", Toast.LENGTH_SHORT).show();
-                                mListener.onMembershipRequestFragmentRefreshBasicGroupInfo(updatedGroupDetail);
+                                if (isAdded()) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    mCommonUtil.dismissProgressDialog();
+                                    GroupDetail updatedGroupDetail = new Gson().fromJson(response.toString(), GroupDetail.class);
+                                    Toast.makeText(getActivity(), "Request Rejected", Toast.LENGTH_SHORT).show();
+                                    mListener.onMembershipRequestFragmentRefreshBasicGroupInfo(updatedGroupDetail);
+                                }
                             }
                         });
                     }

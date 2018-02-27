@@ -186,10 +186,12 @@ public class AboutGroupFragment extends BaseFragment {
                 RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mCommonUtil.dismissProgressDialog();
-                        BasicMembershipRequest request = new Gson().fromJson(response.toString(), BasicMembershipRequest.class);
-                        mFragmentLoader.loadMembershipRequestFragment(new Gson().toJson(request),false, false);
+                        if (isAdded()) {
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            BasicMembershipRequest request = new Gson().fromJson(response.toString(), BasicMembershipRequest.class);
+                            mFragmentLoader.loadMembershipRequestFragment(new Gson().toJson(request), false, false);
+                        }
                     }
                 });
             }
@@ -207,10 +209,12 @@ public class AboutGroupFragment extends BaseFragment {
                         RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                super.onSuccess(statusCode, headers, response);
-                                mGroup = new Gson().fromJson(response.toString(), GroupDetail.class);
-                                //Toast.makeText(getActivity(), "Successfully left the group", Toast.LENGTH_SHORT).show();
-                                mListener.onAboutGroupFragmentRefresh(mGroup);
+                                if (isAdded()) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    mGroup = new Gson().fromJson(response.toString(), GroupDetail.class);
+                                    //Toast.makeText(getActivity(), "Successfully left the group", Toast.LENGTH_SHORT).show();
+                                    mListener.onAboutGroupFragmentRefresh(mGroup);
+                                }
                             }
                         });
                     }

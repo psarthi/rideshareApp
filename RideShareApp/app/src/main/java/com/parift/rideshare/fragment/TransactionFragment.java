@@ -153,12 +153,15 @@ public class TransactionFragment extends BaseFragment {
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                //dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<Transaction>>(){}.getType();
-                mTransactions = new Gson().fromJson(response.toString(), listType);
-                setAdapter();
-                //This will load adapter only when data is loaded
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    //dismissProgressDialog();
+                    Type listType = new TypeToken<ArrayList<Transaction>>() {
+                    }.getType();
+                    mTransactions = new Gson().fromJson(response.toString(), listType);
+                    setAdapter();
+                    //This will load adapter only when data is loaded
+                }
             }
         });
     }
@@ -189,13 +192,16 @@ public class TransactionFragment extends BaseFragment {
         RESTClient.get(URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                //dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<Transaction>>(){}.getType();
-                List<Transaction> transactions = new Gson().fromJson(response.toString(), listType);
-                mTransactions.addAll(transactions);
-                Logger.debug(TAG, "Transaction Size changed. Current Size is:"+mTransactions.size());
-                mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mTransactions.size()-1);
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    //dismissProgressDialog();
+                    Type listType = new TypeToken<ArrayList<Transaction>>() {
+                    }.getType();
+                    List<Transaction> transactions = new Gson().fromJson(response.toString(), listType);
+                    mTransactions.addAll(transactions);
+                    Logger.debug(TAG, "Transaction Size changed. Current Size is:" + mTransactions.size());
+                    mAdapter.notifyItemRangeInserted(mAdapter.getItemCount(), mTransactions.size() - 1);
+                }
             }
         });
     }

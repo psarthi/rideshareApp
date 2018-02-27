@@ -142,10 +142,12 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                     RESTClient.get(GET_RIDE_REQUEST_URL, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            mCommonUtil.dismissProgressDialog();
-                            FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                            fragmentLoader.loadRideRequestInfoFragment(response.toString());
+                            if (mBaseFragment.isAdded()) {
+                                super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
+                                FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                                fragmentLoader.loadRideRequestInfoFragment(response.toString());
+                            }
                         }
                     });
                 }
@@ -186,12 +188,14 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                         RESTClient.get(CANCEL_RIDE_REQUEST, null, new RSJsonHttpResponseHandler(mCommonUtil){
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                super.onSuccess(statusCode, headers, response);
-                                mCommonUtil.dismissProgressDialog();
-                                Logger.debug(TAG, "Ride Request Cancelled");
-                                mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
-                                mListener.onRideRequestRefresh(mRideRequest);
-                                Toast.makeText(mBaseFragment.getActivity(), "Ride Request Cancelled", Toast.LENGTH_LONG).show();
+                                if (mBaseFragment.isAdded()) {
+                                    super.onSuccess(statusCode, headers, response);
+                                    mCommonUtil.dismissProgressDialog();
+                                    Logger.debug(TAG, "Ride Request Cancelled");
+                                    mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
+                                    mListener.onRideRequestRefresh(mRideRequest);
+                                    Toast.makeText(mBaseFragment.getActivity(), "Ride Request Cancelled", Toast.LENGTH_LONG).show();
+                                }
                             }
                         });
                     }
@@ -364,11 +368,13 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mCommonUtil.dismissProgressDialog();
-                        userRatingBar.setEnabled(false);
-                        mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
-                        mListener.onRideRequestRefresh(mRideRequest);
+                        if (mBaseFragment.isAdded()) {
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            userRatingBar.setEnabled(false);
+                            mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
+                            mListener.onRideRequestRefresh(mRideRequest);
+                        }
                     }
                 });
 
@@ -465,12 +471,14 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
-                Logger.debug(TAG, "Ride Owner Cancelled");
-                mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
-                mListener.onRideRequestRefresh(mRideRequest);
-                Toast.makeText(mBaseFragment.getActivity(), "Ride Owner Rejected", Toast.LENGTH_LONG).show();
+                if (mBaseFragment.isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    Logger.debug(TAG, "Ride Owner Cancelled");
+                    mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
+                    mListener.onRideRequestRefresh(mRideRequest);
+                    Toast.makeText(mBaseFragment.getActivity(), "Ride Owner Rejected", Toast.LENGTH_LONG).show();
+                }
             }
         });
 

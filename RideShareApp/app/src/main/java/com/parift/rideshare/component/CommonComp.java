@@ -64,18 +64,21 @@ public class CommonComp {
         RESTClient.get(APIUrl.GET_VEHICLE_CATEGORIES_URL,null,new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
-                //Getting the value in Arraylist would ensure that position would always remains the same
-                //as compared to HashSet etc.
-                Type listType = new TypeToken<ArrayList<VehicleCategory>>(){}.getType();
-                mVehicleCategories = new Gson().fromJson(response.toString(), listType);
-                ArrayList<String> vehicleCategoryNames = new ArrayList<>();
-                for (VehicleCategory vehicleCategory : mVehicleCategories){
-                    vehicleCategoryNames.add(vehicleCategory.getName());
-                    Logger.debug(TAG,"Vehicle Category Name:"+vehicleCategory.getName());
+                if (mBaseFragment.isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    //Getting the value in Arraylist would ensure that position would always remains the same
+                    //as compared to HashSet etc.
+                    Type listType = new TypeToken<ArrayList<VehicleCategory>>() {
+                    }.getType();
+                    mVehicleCategories = new Gson().fromJson(response.toString(), listType);
+                    ArrayList<String> vehicleCategoryNames = new ArrayList<>();
+                    for (VehicleCategory vehicleCategory : mVehicleCategories) {
+                        vehicleCategoryNames.add(vehicleCategory.getName());
+                        Logger.debug(TAG, "Vehicle Category Name:" + vehicleCategory.getName());
+                    }
+                    mBaseFragment.populateSpinner(vehicleCategoryNames, vehicleCategotySpinner);
                 }
-                mBaseFragment.populateSpinner(vehicleCategoryNames,vehicleCategotySpinner);
             }
         });
 

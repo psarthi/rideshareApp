@@ -163,11 +163,13 @@ public class BillFragment extends BaseFragment {
                 RESTClient.post(getActivity(),url,billInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mCommonUtil.dismissProgressDialog();
-                        mBill = new Gson().fromJson(response.toString(), Bill.class);
-                        setBillView(getView());
-                        Toast.makeText(getActivity(),"Bill Paid Successfully", Toast.LENGTH_LONG).show();
+                        if (isAdded()) {
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            mBill = new Gson().fromJson(response.toString(), Bill.class);
+                            setBillView(getView());
+                            Toast.makeText(getActivity(), "Bill Paid Successfully", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
             }

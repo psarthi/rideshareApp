@@ -125,12 +125,14 @@ public class RedeemFragment extends BaseFragment {
                     RESTClient.get(REDEEM_MONEY, null, new RSJsonHttpResponseHandler(mCommonUtil) {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            mCommonUtil.dismissProgressDialog();
-                            mAccount = new Gson().fromJson(response.toString(), Account.class);
-                            mCommonUtil.updateAccount(mAccount);
-                            //This will refresh the wallet balance
-                            setWalletBalance(mAccount.getBalance());
+                            if (isAdded()) {
+                                super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
+                                mAccount = new Gson().fromJson(response.toString(), Account.class);
+                                mCommonUtil.updateAccount(mAccount);
+                                //This will refresh the wallet balance
+                                setWalletBalance(mAccount.getBalance());
+                            }
                         }
                     });
                 }

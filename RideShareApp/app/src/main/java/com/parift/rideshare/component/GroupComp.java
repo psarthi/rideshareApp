@@ -166,10 +166,10 @@ public class GroupComp {
         RESTClient.post(mBaseFragment.getActivity(), FEEDBACK_URL, getFeedbackInfo(vote), new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
-                mGroup = new Gson().fromJson(response.toString(), GroupDetail.class);
                 if (mBaseFragment.isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    mGroup = new Gson().fromJson(response.toString(), GroupDetail.class);
                     int color = mBaseFragment.getResources().getColor(R.color.colorAccent);
                     if (vote.equals(Vote.Genuine)) {
                         Logger.debug(TAG, "Voted as Genuine");
