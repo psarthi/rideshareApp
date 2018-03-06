@@ -77,7 +77,9 @@ public class DropCoTravellerFragment extends DialogFragment{
 
         if (mDriver.getCountry().getRideMode().equals(RideMode.Free)){
             //This will take care all view's inside it - ride mode buttons, payment code text
-            view.findViewById(R.id.ride_mode_payment_code_layout).setVisibility(View.GONE);
+            //view.findViewById(R.id.ride_mode_payment_code_layout).setVisibility(View.GONE);
+            //Making Payment code invisible as it doesn't make sense to show payment code when paid is not even enabled
+            view.findViewById(R.id.payment_code_text).setVisibility(View.GONE);
         }
 
         //This will enable/disable payment code text according to the selection of radio button

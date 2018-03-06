@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
@@ -27,6 +29,7 @@ import com.parift.rideshare.dialog.CancelCoTravellerFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.model.billing.domain.core.Bill;
+import com.parift.rideshare.model.ride.domain.core.RideStatus;
 import com.parift.rideshare.model.ride.dto.BasicRideRequest;
 import com.parift.rideshare.model.ride.dto.FullRide;
 import com.parift.rideshare.model.ride.dto.FullRideRequest;
@@ -36,6 +39,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -143,6 +147,12 @@ public class RideInfoFragment extends BaseFragment implements
             ViewGroup.LayoutParams layoutParams = mMapView.getLayoutParams();
             layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             mMapView.setLayoutParams(layoutParams);
+            //This will ensure this msg would only show up if ride has not expired and there is no matched partner
+            //Note - Not equal to condition
+            if (mRide.getStatus().equals(RideStatus.Planned)
+                    && !mRide.getEndTime().before(Calendar.getInstance().getTime())){
+                Toast.makeText(mActivity, R.string.no_ride_partner_found_msg, Toast.LENGTH_LONG).show();
+            }
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_info_map);

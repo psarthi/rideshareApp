@@ -168,7 +168,9 @@ public class RidesOptionFragment extends BaseFragment
         mFreeRideRadioButton = ride_mode_layout.findViewById(R.id.free_ride_radio_button);
 
         if (mUser.getCountry().getRideMode().equals(RideMode.Free)){
-            ride_mode_layout.setVisibility(View.GONE);
+            //ride_mode_layout.setVisibility(View.GONE);
+            //This will disable the Paid mode but the option would be visible to user
+            mPaidRideRadioButton.setEnabled(false);
         }
 
         setButtonsOnClickListener(view);

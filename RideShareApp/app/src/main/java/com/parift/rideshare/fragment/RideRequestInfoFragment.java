@@ -3,6 +3,7 @@ package com.parift.rideshare.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
@@ -27,6 +29,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -120,6 +124,13 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         //This will adjust height of map
         if (!mRideRequest.getStatus().equals(RideRequestStatus.Fulfilled)){
             expandMapLayout();
+            //This will ensure toast msg is only shown for unfulfilled and not expired ride request
+            //Note - Not equal to condition
+            Calendar maxPickupTime = mCommonUtil.getRideRequestMaxPickupTime(mRideRequest);
+            if (mRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)
+                    && !maxPickupTime.before(Calendar.getInstance())) {
+                Toast.makeText(mActivity, R.string.no_ride_partner_found_msg, Toast.LENGTH_LONG).show();
+            }
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.ride_request_info_map);
