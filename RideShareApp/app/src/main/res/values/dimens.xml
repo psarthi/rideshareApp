@@ -32,6 +32,7 @@
     <dimen name="user_photo_icon_size">40dp</dimen>
     <dimen name="line_seperator_thickness">1dp</dimen>
     <dimen name="thumbnail_image_size">50dp</dimen>
+    <dimen name="interest_image_size">100dp</dimen>
     <dimen name="user_profile_large_image_size">120dp</dimen>
     <dimen name="small_image_size">40dp</dimen>
     <dimen name="medium_image_size">60dp</dimen>

@@ -38,22 +38,24 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
     //This is for image suppport
     compile 'com.squareup.picasso:picasso:2.5.2'
+    //This is used for image transformation e.g. circular image, rounded corner image etc.
+    compile 'jp.wasabeef:picasso-transformations:2.2.1'
     //This is to create circular image view as its not available by default
     compile 'de.hdodenhof:circleimageview:2.2.0'
     //If you use the latest version, then there is chances that all android devices may not have updated
     // their google play services app and your application would not work. So better use bit old version
     //This is used for Google Sign In
-    compile 'com.google.android.gms:play-services-auth:11.6.0'
+    compile 'com.google.android.gms:play-services-auth:11.8.0'
     //Google Maps library
-    compile 'com.google.android.gms:play-services-maps:11.6.0'
+    compile 'com.google.android.gms:play-services-maps:11.8.0'
     //Google Location Service
-    compile 'com.google.android.gms:play-services-location:11.6.0'
+    compile 'com.google.android.gms:play-services-location:11.8.0'
     //Google Places Service for AutoComplete
-    compile 'com.google.android.gms:play-services-places:11.6.0'
+    compile 'com.google.android.gms:play-services-places:11.8.0'
     //Google Maps Android Util
     compile 'com.google.maps.android:android-maps-utils:0.5'
     compile files('lib/PGSDK_V2.1.jar')
-    compile 'com.google.firebase:firebase-messaging:11.6.0'
+    compile 'com.google.firebase:firebase-messaging:11.8.0'
 }
 
 //This has to be below the dependencies block otherwise you will get conflict with firebase (firebase comes with google services)

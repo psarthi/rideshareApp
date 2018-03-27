@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+        <!-- tint would make image bit darker so that text is visible properly
+        where 0 is fully tranparent and 1 would make it fully dark-->
+        <ImageView
+            android:id="@+id/interest_image"
+            android:layout_width="@dimen/interest_image_size"
+            android:layout_height="@dimen/interest_image_size"
+            android:tint="#50000000"
+            android:src="@drawable/ic_vehicle"/>
+
+        <TextView
+            android:id="@+id/interest_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/interest_image"
+            android:layout_alignEnd="@id/interest_image"
+            android:layout_alignStart="@id/interest_image"
+            android:layout_alignTop="@+id/interest_image"
+            android:layout_margin="@dimen/default_margin"
+            android:gravity="bottom|center"
+            android:text="Partha Sarthi"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/interest_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_tick"
+            android:tint="@android:color/white"
+            android:layout_alignTop="@id/interest_image"
+            android:layout_alignEnd="@id/interest_image"
+            android:layout_margin="@dimen/default_margin"/>
+
+</RelativeLayout>

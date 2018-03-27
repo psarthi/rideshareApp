@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.parift.rideshare.fragment.TransactionFragment"
+             android:layout_margin="@dimen/default_margin">
+
+    <TextView
+        android:id="@+id/interest_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/interest_heading_msg"
+        android:textSize="@dimen/heading3_text_size"
+        android:textStyle="bold|italic"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/interest_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/interest_heading">
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

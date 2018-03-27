@@ -157,6 +157,6 @@ public class InfoFragment extends BaseFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onLegalFragmentInteraction(String data);
+        void onInfoFragmentInteraction(String data);
     }
 }

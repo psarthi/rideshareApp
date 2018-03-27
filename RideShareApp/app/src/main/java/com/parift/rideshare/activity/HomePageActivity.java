@@ -26,6 +26,7 @@ import com.parift.rideshare.fragment.GroupMembershipRequestListFragment;
 import com.parift.rideshare.fragment.HelpFragment;
 import com.parift.rideshare.fragment.HelpQuestionAnswerFragment;
 import com.parift.rideshare.fragment.InfoFragment;
+import com.parift.rideshare.fragment.InterestFragment;
 import com.parift.rideshare.fragment.MembershipRequestFragment;
 import com.parift.rideshare.fragment.SearchGroupFragment;
 import com.parift.rideshare.fragment.SearchUserForGroupFragment;
@@ -96,7 +97,8 @@ public class HomePageActivity extends BaseActivity
         WebPageFragment.OnFragmentInteractionListener,
         InfoFragment.OnFragmentInteractionListener,
         HelpFragment.OnFragmentInteractionListener,
-        HelpQuestionAnswerFragment.OnFragmentInteractionListener{
+        HelpQuestionAnswerFragment.OnFragmentInteractionListener,
+        InterestFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -255,7 +257,12 @@ public class HomePageActivity extends BaseActivity
             if (id == R.id.nav_rides) {
                 Logger.debug(TAG, "Rides Clicked");
                 mFragmentLoader.loadRidesListFragment();
-            } else if (id == R.id.nav_groups) {
+            }
+            else if (id == R.id.nav_interest) {
+                mFragmentLoader.loadInterestFragment(null);
+                Logger.debug(TAG, "Interest Clicked");
+            }
+            else if (id == R.id.nav_groups) {
                 mFragmentLoader.loadGroupHomePageFragment();
                 Logger.debug(TAG, "Groups Clicked");
             }
@@ -565,12 +572,17 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onLegalFragmentInteraction(String data) {
+    public void onInfoFragmentInteraction(String data) {
 
     }
 
     @Override
     public void onHelpQuestionAnswerFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onInterestFragmentInteraction(String data) {
 
     }
 }
