@@ -19,6 +19,8 @@ import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.fragment.AboutGroupFragment;
 import com.parift.rideshare.fragment.AddVehicleFragment;
 import com.parift.rideshare.fragment.BillFragment;
+import com.parift.rideshare.fragment.CommonGroupListFragment;
+import com.parift.rideshare.fragment.CommonInterestListFragment;
 import com.parift.rideshare.fragment.CreateGroupFragment;
 import com.parift.rideshare.fragment.GroupHomePageFragment;
 import com.parift.rideshare.fragment.GroupInfoFragment;
@@ -98,7 +100,9 @@ public class HomePageActivity extends BaseActivity
         InfoFragment.OnFragmentInteractionListener,
         HelpFragment.OnFragmentInteractionListener,
         HelpQuestionAnswerFragment.OnFragmentInteractionListener,
-        InterestFragment.OnFragmentInteractionListener{
+        InterestFragment.OnFragmentInteractionListener,
+        CommonGroupListFragment.OnFragmentInteractionListener,
+        CommonInterestListFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -583,6 +587,16 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onInterestFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onCommonGroupListFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onCommonInterestListFragmentInteraction(String data) {
 
     }
 }

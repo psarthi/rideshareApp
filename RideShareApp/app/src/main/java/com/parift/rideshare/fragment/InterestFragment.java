@@ -19,6 +19,7 @@ import com.parift.rideshare.R;
 import com.parift.rideshare.adapter.InterestAdapter;
 import com.parift.rideshare.adapter.TransactionAdapter;
 import com.parift.rideshare.helper.CommonUtil;
+import com.parift.rideshare.helper.GridAutoFitLayoutManager;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.parift.rideshare.test.Interest;
@@ -97,7 +98,7 @@ public class InterestFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_interest, container, false);
         mRecyclerView = view.findViewById(R.id.interest_list);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+        GridAutoFitLayoutManager layoutManager = new GridAutoFitLayoutManager(getActivity(), 100);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         List<Interest> interests = new LinkedList<>();

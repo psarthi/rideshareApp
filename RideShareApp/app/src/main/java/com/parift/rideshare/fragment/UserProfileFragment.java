@@ -2,8 +2,10 @@ package com.parift.rideshare.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
 import com.parift.rideshare.adapter.GroupListAdapter;
+import com.parift.rideshare.adapter.UserProfileViewPagerAdapter;
 import com.parift.rideshare.component.UserComp;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.component.FragmentLoader;
@@ -53,6 +56,7 @@ public class UserProfileFragment extends BaseFragment {
     private CommonUtil mCommonUtil;
     private FragmentLoader mFragmentLoader;
     private BasicUser mUser;
+    private UserProfileViewPagerAdapter mUserProfileViewPagerAdapter;
 
     public UserProfileFragment() {
         // Required empty public constructor
@@ -89,6 +93,7 @@ public class UserProfileFragment extends BaseFragment {
         mFragmentLoader = new FragmentLoader(this);
         mCurrentRide = mCommonUtil.getCurrentRide();
         mUser = mCommonUtil.getUser();
+        mUserProfileViewPagerAdapter = new UserProfileViewPagerAdapter(this, getChildFragmentManager(), 2, mUserProfile);
     }
 
     @Override
@@ -113,39 +118,33 @@ public class UserProfileFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.rides_offered_text)).setText(offeredRideText);
         ((TextView) view.findViewById(R.id.rides_requested_text)).setText(ridesTakenText);
 
-        int commonGroupsSize = 0;
-        if (mUserProfile.getCommonGroups()!=null){
-            commonGroupsSize = mUserProfile.getCommonGroups().size();
-        }
-        String commonGroupLabel = getResources().getString(R.string.common_groups_text);
-        String commonGroupsText;
         //This is the case where user profile is of logged in user
         if (mUser.getId() == mUserProfile.getUser().getId()){
-            commonGroupLabel = getResources().getString(R.string.my_groups_text);
-            commonGroupsText = commonGroupLabel + commonGroupsSize;
-        }
-        //This is the case where user profile is of someone else
-        else {
-            //This is the scenario where there is no common groups
-            if (commonGroupsSize==0){
-                commonGroupsText = getResources().getString(R.string.no_common_groups_text);
-            }
-            //This is the scenario where you have some common groups
-            else {
-                commonGroupsText = commonGroupLabel + commonGroupsSize;
-            }
+            //Just kept it for adding some condition in case of logged in user
         }
 
-        ((TextView) view.findViewById(R.id.common_groups_count_text)).setText(commonGroupsText);
+        TabLayout tabLayout = view.findViewById(R.id.user_profile_tab);
+        final ViewPager viewPager = view.findViewById(R.id.user_profile_viewPager);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setAdapter(mUserProfileViewPagerAdapter);
 
-        RecyclerView mRecyclerView = view.findViewById(R.id.common_groups_list);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Logger.debug(TAG, "Selected Tab with position:"+tab.getText()+"("+tab.getPosition()+")");
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        layoutManager.setAutoMeasureEnabled(true);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        RecyclerView.Adapter mAdapter = new GroupListAdapter(mUserProfile.getCommonGroups(), this);
-        mRecyclerView.setAdapter(mAdapter);
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         return view;
     }
@@ -202,4 +201,5 @@ public class UserProfileFragment extends BaseFragment {
     public long getUserId(){
         return mUserProfile.getUser().getId();
     }
+
 }

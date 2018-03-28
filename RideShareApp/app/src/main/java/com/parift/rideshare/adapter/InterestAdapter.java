@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.fragment.BaseFragment;
+import com.parift.rideshare.fragment.InterestFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.test.Interest;
 import com.squareup.picasso.Picasso;
@@ -51,24 +52,28 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.ViewHo
         Picasso.with(mBaseFragment.getActivity()).load(interest.getImageUrl()).
                 transform(new RoundedCornersTransformation(10,5)).into(holder.mImageView);
 
-        if (interest.isSelected()){
-            holder.mSelected.setVisibility(View.VISIBLE);
-        } else {
-            holder.mSelected.setVisibility(View.INVISIBLE);
-        }
-
-        holder.mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (interest.isSelected()){
-                    holder.mSelected.setVisibility(View.INVISIBLE);
-                    interest.setSelected(false);
-                } else {
-                    holder.mSelected.setVisibility(View.VISIBLE);
-                    interest.setSelected(true);
-                }
+        if (mBaseFragment instanceof InterestFragment){
+            if (interest.isSelected()){
+                holder.mSelected.setVisibility(View.VISIBLE);
+            } else {
+                holder.mSelected.setVisibility(View.INVISIBLE);
             }
-        });
+
+            holder.mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (interest.isSelected()){
+                        holder.mSelected.setVisibility(View.INVISIBLE);
+                        interest.setSelected(false);
+                    } else {
+                        holder.mSelected.setVisibility(View.VISIBLE);
+                        interest.setSelected(true);
+                    }
+                }
+            });
+        } else {
+            holder.mSelected.setVisibility(View.GONE);
+        }
     }
 
     @Override

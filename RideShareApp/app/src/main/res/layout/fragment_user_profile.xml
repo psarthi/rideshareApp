@@ -2,7 +2,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               tools:context="com.parift.rideshare.fragment.UserProfileFragment"
               android:orientation="vertical">
 
@@ -85,30 +85,19 @@
         android:background="@color/colorGrayLight"/>
         -->
 
-    <TextView android:id="@+id/common_groups_count_text"
-              android:paddingTop="@dimen/default_margin"
-              android:paddingBottom="@dimen/default_margin"
-              android:paddingStart="@dimen/default_margin"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="@string/common_groups_text"
-              android:drawableStart="@drawable/ic_group"
-              android:drawablePadding="@dimen/default_padding"
-              android:textStyle="italic|bold"
-              android:layout_gravity="center"
-              android:textColor="@android:color/black"/>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/user_profile_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="fixed"
+            app:tabGravity="fill">
+        </android.support.design.widget.TabLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/line_seperator_thickness"
-        android:background="@color/colorGrayLight"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/common_groups_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/default_margin"/>
-
+        <android.support.v4.view.ViewPager
+            android:id="@+id/user_profile_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v4.view.ViewPager>
 
 </LinearLayout>
 

@@ -105,5 +105,6 @@
     <string name="agreement_text">By Signing in, you agree to our Terms of Service and Privacy Policy</string>
     <string name="no_ride_partner_found_msg">No Ride Partner found, will notify you when suitable match is found</string>
     <string name="interest_heading_msg">Select your interest to meet like-minded ride partners</string>
+    <string name="no_result_found">No result found</string>
 
 </resources>
