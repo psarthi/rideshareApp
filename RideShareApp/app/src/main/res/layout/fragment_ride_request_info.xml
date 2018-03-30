@@ -22,8 +22,25 @@
                   map:mapType="normal"
                   map:liteMode="true"/>
 
+        <TextView
+            android:id="@+id/rides_suggestion_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rides_suggestion_msg"
+            android:textColor="@color/colorAccent"
+            android:layout_margin="@dimen/default_margin"
+            android:visibility="gone"
+            android:layout_below="@id/ride_request_info_map"/>
+
+        <View
+            android:id="@+id/rides_suggestion_msg_line_seperator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_seperator_thickness"
+            android:background="@color/colorGrayLight"
+            android:layout_below="@id/rides_suggestion_msg"/>
+
         <include layout="@layout/ride_owner_layout" android:id="@+id/ride_owner_layout"
-                 android:layout_below="@id/ride_request_info_map"
+                 android:layout_below="@id/rides_suggestion_msg_line_seperator"
                  android:layout_height="wrap_content"
                  android:layout_width="match_parent"
                  android:layout_marginTop="4dp"/>

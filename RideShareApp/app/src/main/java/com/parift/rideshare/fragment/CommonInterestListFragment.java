@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.parift.rideshare.R;
 import com.parift.rideshare.adapter.InterestAdapter;
+import com.parift.rideshare.adapter.InterestWrapperAdapter;
 import com.parift.rideshare.helper.GridAutoFitLayoutManager;
+import com.parift.rideshare.model.user.dto.BasicInterest;
 import com.parift.rideshare.test.Interest;
 
 import java.lang.reflect.Type;
@@ -40,7 +40,7 @@ public class CommonInterestListFragment extends BaseFragment {
     private String mParam1;
 
     private OnFragmentInteractionListener mListener;
-    private List<Interest> mInterests = new ArrayList<>();
+    private List<BasicInterest> mInterests = new ArrayList<>();
 
     public CommonInterestListFragment() {
         // Required empty public constructor
@@ -67,7 +67,7 @@ public class CommonInterestListFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             String interestList = getArguments().getString(ARG_INTEREST_LIST);
-            Type listType = new TypeToken<ArrayList<Interest>>() {}.getType();
+            Type listType = new TypeToken<ArrayList<BasicInterest>>() {}.getType();
             mInterests = new Gson().fromJson(interestList, listType);
         }
     }

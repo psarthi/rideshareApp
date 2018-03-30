@@ -1,12 +1,9 @@
 package com.parift.rideshare.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,17 +12,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.parift.rideshare.R;
-import com.parift.rideshare.adapter.InterestAdapter;
-import com.parift.rideshare.adapter.TransactionAdapter;
+import com.parift.rideshare.adapter.InterestWrapperAdapter;
+import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.GridAutoFitLayoutManager;
 import com.parift.rideshare.helper.Logger;
+import com.parift.rideshare.helper.RESTClient;
+import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
+import com.parift.rideshare.model.app.BasicInterestWrapper;
+import com.parift.rideshare.model.user.dto.BasicInterest;
 import com.parift.rideshare.model.user.dto.BasicUser;
-import com.parift.rideshare.test.Interest;
 
-import java.util.LinkedList;
+import org.json.JSONArray;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -101,15 +109,31 @@ public class InterestFragment extends BaseFragment {
         GridAutoFitLayoutManager layoutManager = new GridAutoFitLayoutManager(getActivity(), 100);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        List<Interest> interests = new LinkedList<>();
-        for (int i =0; i<15; i ++){
-            Interest interest = new Interest();
-            interest.setImageUrl(mUser.getPhoto().getImageLocation());
-            interest.setName(mUser.getFirstName() + " " + mUser.getLastName());
-            interests.add(interest);
-        }
-        mAdapter = new InterestAdapter(interests, this);
-        mRecyclerView.setAdapter(mAdapter);
+
+        mCommonUtil.showProgressDialog();
+        RESTClient.get(APIUrl.GET_INTERESTS_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                mCommonUtil.dismissProgressDialog();
+                Type listType = new TypeToken<ArrayList<BasicInterestWrapper>>() {}.getType();
+                List<BasicInterestWrapper> interestWrappers = new Gson().fromJson(response.toString(), listType);
+
+                Collection<BasicInterest> userInterests = mUser.getInterests();
+                for (BasicInterestWrapper interestWrapper: interestWrappers){
+                    for (BasicInterest basicInterest: userInterests){
+                        if (interestWrapper.getId() == basicInterest.getId()){
+                            interestWrapper.setSelected(true);
+                            break;
+                        }
+                    }
+                }
+
+                mAdapter = new InterestWrapperAdapter(interestWrappers, InterestFragment.this);
+                mRecyclerView.setAdapter(mAdapter);
+
+            }
+        });
         return view;
     }
 
@@ -124,7 +148,7 @@ public class InterestFragment extends BaseFragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.option_menu_item, menu);
         MenuItem item = menu.findItem(R.id.action_item);
-        item.setIcon(R.drawable.ic_tick_without_circle);
+        item.setIcon(R.drawable.ic_tick);
     }
 
     @Override

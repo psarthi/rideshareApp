@@ -35,6 +35,7 @@ public class BasicUser {
 	private Preference preference;
 	private RegistrationType registrationType;
 	private String pushNotificationToken;
+	private Collection<BasicInterest> interests = new HashSet<BasicInterest>();
 
 	public long getId() {
 		return id;
@@ -147,6 +148,14 @@ public class BasicUser {
 
 	public void setPushNotificationToken(String pushNotificationToken) {
 		this.pushNotificationToken = pushNotificationToken;
+	}
+
+	public Collection<BasicInterest> getInterests() {
+		return interests;
+	}
+
+	public void setInterests(Collection<BasicInterest> interests) {
+		this.interests = interests;
 	}
 }
 

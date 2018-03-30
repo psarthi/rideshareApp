@@ -79,6 +79,8 @@ public class APIUrl {
     public static final String UPDATE_USER_PREFERENCE = BASE_URL_USER_SYSTEM + "/users/{userId}/preference";
     public static final String CHECK_GROUP_NAME_EXIST = BASE_URL_USER_SYSTEM + "/users/{userId}/groups/checkgroupexist/{name}";
     public static final String UPDATE_PUSH_NOTIFICATION_TOKEN = BASE_URL_USER_SYSTEM + "/users/{userId}/updatepushnotificationtoken/{token}";
+    public static final String GET_INTERESTS_URL = BASE_URL_USER_SYSTEM + "/usersystem/interests";
+    public static final String SAVE_USER_INTERESTS = BASE_URL_USER_SYSTEM + "/users/{userId}/interests";
 
 
     //Ride System URL's

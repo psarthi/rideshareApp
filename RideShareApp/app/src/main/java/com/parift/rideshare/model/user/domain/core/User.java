@@ -12,6 +12,7 @@ import com.parift.rideshare.model.ride.domain.core.RideRequest;
 import com.parift.rideshare.model.user.domain.City;
 import com.parift.rideshare.model.user.domain.Country;
 import com.parift.rideshare.model.user.domain.FriendRequest;
+import com.parift.rideshare.model.user.domain.Interest;
 import com.parift.rideshare.model.user.domain.MembershipRequest;
 import com.parift.rideshare.model.user.domain.Photo;
 import com.parift.rideshare.model.user.domain.Preference;
@@ -57,6 +58,7 @@ public class User implements Comparable<User>{
 	private Collection<MembershipRequest> membershipRequests = new HashSet<MembershipRequest>();
 	private RegistrationType registrationType;
 	private String pushNotificationToken;
+	private Collection<Interest> interests = new HashSet<Interest>();
 	
 	
 	public long getId() {
@@ -311,6 +313,14 @@ public class User implements Comparable<User>{
 
 	public void setPushNotificationToken(String pushNotificationToken) {
 		this.pushNotificationToken = pushNotificationToken;
+	}
+
+	public Collection<Interest> getInterests() {
+		return interests;
+	}
+
+	public void setInterests(Collection<Interest> interests) {
+		this.interests = interests;
 	}
 }
 

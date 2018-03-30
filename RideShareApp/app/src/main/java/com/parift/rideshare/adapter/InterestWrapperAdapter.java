@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.parift.rideshare.R;
 import com.parift.rideshare.fragment.BaseFragment;
 import com.parift.rideshare.helper.CommonUtil;
-import com.parift.rideshare.model.user.dto.BasicInterest;
+import com.parift.rideshare.model.app.BasicInterestWrapper;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,34 +22,53 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
  * Created by psarthi on 3/27/18.
  */
 
-public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.ViewHolder> {
+public class InterestWrapperAdapter extends RecyclerView.Adapter<InterestWrapperAdapter.ViewHolder> {
 
-    private static final String TAG = InterestAdapter.class.getName();
+    private static final String TAG = InterestWrapperAdapter.class.getName();
     private BaseFragment mBaseFragment;
     private CommonUtil mCommonUtil;
-    private List<BasicInterest> mInterests;
+    private List<BasicInterestWrapper> mInterests;
 
-    public InterestAdapter(List<BasicInterest> interests, BaseFragment fragment){
+    public InterestWrapperAdapter(List<BasicInterestWrapper> interests, BaseFragment fragment){
         mInterests = interests;
         mBaseFragment = fragment;
         mCommonUtil = new CommonUtil(fragment);
     }
 
     @Override
-    public InterestAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public InterestWrapperAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.interest_item, parent, false);
+                .inflate(R.layout.selectable_interest_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(final InterestAdapter.ViewHolder holder, int position) {
-        final BasicInterest interest = mInterests.get(position);
+    public void onBindViewHolder(final InterestWrapperAdapter.ViewHolder holder, int position) {
+        final BasicInterestWrapper interest = mInterests.get(position);
         holder.mTextView.setText(interest.getName());
         Picasso.with(mBaseFragment.getActivity()).load(interest.getPhoto().getImageLocation()).
                 transform(new CropCircleTransformation()).into(holder.mImageView);
+
+        if (interest.isSelected()){
+            holder.mSelected.setVisibility(View.VISIBLE);
+        } else {
+            holder.mSelected.setVisibility(View.INVISIBLE);
+        }
+
+        holder.mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (interest.isSelected()){
+                    holder.mSelected.setVisibility(View.INVISIBLE);
+                    interest.setSelected(false);
+                } else {
+                    holder.mSelected.setVisibility(View.VISIBLE);
+                    interest.setSelected(true);
+                }
+            }
+        });
     }
 
     @Override
@@ -61,11 +80,13 @@ public class InterestAdapter extends RecyclerView.Adapter<InterestAdapter.ViewHo
 
         TextView mTextView;
         ImageView mImageView;
+        ImageView mSelected;
 
         public ViewHolder(View v) {
             super(v);
             mTextView = v.findViewById(R.id.interest_name);
             mImageView = v.findViewById(R.id.interest_image);
+            mSelected = v.findViewById(R.id.interest_selected);
         }
     }
 }

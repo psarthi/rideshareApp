@@ -52,14 +52,7 @@ public class UserProfileViewPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
         if (position==0){
             Logger.debug(TAG, "Creating new instance of Common Interest List");
-            List<Interest> interests = new LinkedList<>();
-            for (int i =0; i<5; i ++){
-                Interest interest = new Interest();
-                interest.setImageUrl(mUser.getPhoto().getImageLocation());
-                interest.setName(mUser.getFirstName() + " " + mUser.getLastName());
-                interests.add(interest);
-            }
-            fragment = CommonInterestListFragment.newInstance(new Gson().toJson(interests));
+            fragment = CommonInterestListFragment.newInstance(new Gson().toJson(mUserProfile.getCommonInterests()));
         }
         if (position==1){
             Logger.debug(TAG, "Creating new instance of Common Group List");
