@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -27,10 +28,12 @@ import com.parift.rideshare.model.user.dto.BasicInterest;
 import com.parift.rideshare.model.user.dto.BasicUser;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -61,6 +64,7 @@ public class InterestFragment extends BaseFragment {
     private RecyclerView.Adapter mAdapter;
     private CommonUtil mCommonUtil;
     private BasicUser mUser;
+    private List<BasicInterestWrapper> mInterestWrappers;
 
 
     public InterestFragment() {
@@ -117,10 +121,9 @@ public class InterestFragment extends BaseFragment {
                 super.onSuccess(statusCode, headers, response);
                 mCommonUtil.dismissProgressDialog();
                 Type listType = new TypeToken<ArrayList<BasicInterestWrapper>>() {}.getType();
-                List<BasicInterestWrapper> interestWrappers = new Gson().fromJson(response.toString(), listType);
-
+                mInterestWrappers = new Gson().fromJson(response.toString(), listType);
                 Collection<BasicInterest> userInterests = mUser.getInterests();
-                for (BasicInterestWrapper interestWrapper: interestWrappers){
+                for (BasicInterestWrapper interestWrapper: mInterestWrappers){
                     for (BasicInterest basicInterest: userInterests){
                         if (interestWrapper.getId() == basicInterest.getId()){
                             interestWrapper.setSelected(true);
@@ -129,7 +132,7 @@ public class InterestFragment extends BaseFragment {
                     }
                 }
 
-                mAdapter = new InterestWrapperAdapter(interestWrappers, InterestFragment.this);
+                mAdapter = new InterestWrapperAdapter(mInterestWrappers, InterestFragment.this);
                 mRecyclerView.setAdapter(mAdapter);
 
             }
@@ -161,7 +164,27 @@ public class InterestFragment extends BaseFragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_item) {
             Logger.debug(TAG, "Save Clicked");
-            //TODO on Save
+            final List<BasicInterest> updatedInterests = new LinkedList<>();
+            for (BasicInterestWrapper interestWrapper: mInterestWrappers){
+                if (interestWrapper.isSelected()){
+                    updatedInterests.add(interestWrapper);
+                }
+            }
+
+            String url = APIUrl.SAVE_USER_INTERESTS.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
+            mCommonUtil.showProgressDialog();
+            RESTClient.post(getActivity(), url, updatedInterests, new RSJsonHttpResponseHandler(mCommonUtil){
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    mUser.getInterests().clear();
+                    mUser.getInterests().addAll(updatedInterests);
+                    mCommonUtil.updateUser(mUser);
+                    Toast.makeText(getActivity(),"Successfully Saved", Toast.LENGTH_SHORT).show();
+                }
+            });
+
             return true;
         }
         return super.onOptionsItemSelected(item);
