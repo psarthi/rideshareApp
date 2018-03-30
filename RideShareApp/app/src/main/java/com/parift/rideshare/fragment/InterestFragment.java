@@ -123,6 +123,7 @@ public class InterestFragment extends BaseFragment {
                 Type listType = new TypeToken<ArrayList<BasicInterestWrapper>>() {}.getType();
                 mInterestWrappers = new Gson().fromJson(response.toString(), listType);
                 Collection<BasicInterest> userInterests = mUser.getInterests();
+                Logger.debug(TAG, "Interest count is: "+mInterestWrappers.size());
                 for (BasicInterestWrapper interestWrapper: mInterestWrappers){
                     for (BasicInterest basicInterest: userInterests){
                         if (interestWrapper.getId() == basicInterest.getId()){

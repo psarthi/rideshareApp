@@ -53,4 +53,5 @@ public class Constant {
     public static final int MAX_TOPUP_AMOUNT = 1000;
     public static final int LONG_DISTANCE_IN_METERS=100000;
     public static final String PRICE_DETAILS_PAGE_TITLE="Price";
+    public static final int MAX_INTEREST = 5;
 }

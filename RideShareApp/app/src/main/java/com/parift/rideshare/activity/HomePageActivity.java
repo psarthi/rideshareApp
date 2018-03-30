@@ -58,6 +58,7 @@ import com.parift.rideshare.model.app.FetchType;
 import com.parift.rideshare.model.ride.domain.RideType;
 import com.parift.rideshare.model.billing.domain.core.Bill;
 import com.parift.rideshare.model.ride.domain.core.RideMode;
+import com.parift.rideshare.model.ride.dto.RideRequestResult;
 import com.parift.rideshare.model.user.domain.Preference;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.parift.rideshare.model.user.dto.GroupDetail;

@@ -10,13 +10,15 @@
 
     <include
         android:id="@+id/user_profile_single_row_layout"
-        layout="@layout/user_profile_single_row_layout"/>
+        layout="@layout/user_profile_single_row_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"/>
 
     <TextView
         android:id="@+id/ride_vehicle_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
         android:textStyle="bold"
         android:text="Volkswage Polo KA 51 MA 6127"
         android:textColor="@color/colorPrimaryDark"
@@ -93,6 +95,15 @@
             android:textColor="@color/colorAccent"/>
 
         <Button
+            android:id="@+id/ride_owner_accept_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:text="Accept"
+            android:textColor="@color/colorAccent"/>
+
+        <Button
             android:id="@+id/navigate_to_ride_pickup_point_button"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
@@ -112,6 +123,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_seperator_thickness"
-        android:background="@color/colorGrayLight"/>
+        android:background="@color/colorGrayLight"
+        android:layout_marginBottom="@dimen/default_margin"/>
 
 </LinearLayout>

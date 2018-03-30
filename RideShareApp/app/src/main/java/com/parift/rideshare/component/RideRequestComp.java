@@ -25,8 +25,10 @@ import com.parift.rideshare.model.billing.domain.core.BillStatus;
 import com.parift.rideshare.model.ride.domain.RideType;
 import com.parift.rideshare.model.ride.domain.core.PassengerStatus;
 import com.parift.rideshare.model.ride.domain.core.RideRequestStatus;
+import com.parift.rideshare.model.ride.dto.BasicRide;
 import com.parift.rideshare.model.ride.dto.BasicRideRequest;
 import com.parift.rideshare.model.ride.dto.FullRideRequest;
+import com.parift.rideshare.model.ride.dto.SuggestedMatchedRideInfo;
 import com.parift.rideshare.model.user.domain.UserFeedback;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.parift.rideshare.model.user.dto.UserFeedbackInfo;
@@ -303,10 +305,57 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         mPickupPointNavigationButton = view.findViewById(R.id.navigate_to_ride_pickup_point_button);
         mRatingBar = view.findViewById(R.id.ride_owner_rating_bar);
 
+        //IMP - This will ensure Accept button is not visible irrespective of any condition
+        //as this is only applicable for rides suggestion for manual accept
+        view.findViewById(R.id.ride_owner_accept_button).setVisibility(View.GONE);
+
         updateRideOwnerLayoutButtonsVisiblity(view);
         setRideOwnerLayoutButtonsOnClickListener(view);
 
     }
+
+    public void setSuggestedRideOwnerLayout(View view, SuggestedMatchedRideInfo rideInfo){
+
+        //IMP - Ensure all not applicable ones are marked as invisible
+        view.findViewById(R.id.ride_vehicle_name).setVisibility(View.GONE);
+        view.findViewById(R.id.ride_owner_cancel_button).setVisibility(View.GONE);
+        view.findViewById(R.id.navigate_to_ride_pickup_point_button).setVisibility(View.GONE);
+        view.findViewById(R.id.ride_owner_rating_bar).setVisibility(View.GONE);
+
+        View pickupTimeAndBilllayout = view.findViewById(R.id.pickup_time_bill_layout);
+        pickupTimeAndBilllayout.findViewById(R.id.fare_text).setVisibility(View.GONE);
+        pickupTimeAndBilllayout.findViewById(R.id.bill_status).setVisibility(View.GONE);
+
+        //All Required one's are below
+        UserComp userComp = new UserComp(mBaseFragment, rideInfo.getRide().getDriver());
+        userComp.setUserProfileSingleRow(view, true);
+
+        TextView pickupTimeTextView = pickupTimeAndBilllayout.findViewById(R.id.pickup_time_text);
+        Date pickupTime = rideInfo.getRidePickupPoint().getRidePointProperties().get(0).getDateTime();
+        String pickupTimeString = mCommonUtil.getFormattedDateTimeString(pickupTime);
+        pickupTimeTextView.setText(pickupTimeString);
+
+        ((TextView) view.findViewById(R.id.ride_pickup_point_text)).setText(rideInfo.getRidePickupPointAddress());
+        ((TextView) view.findViewById(R.id.ride_drop_point_text)).setText(rideInfo.getRideDropPointAddress());
+
+        if (mBaseFragment.isAdded()){
+            String pickupDistance = Integer.toString((int)rideInfo.getPickupPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
+            String dropDistance = Integer.toString((int)rideInfo.getDropPointDistance()) + mBaseFragment.getResources().getString(R.string.distance_metrics);
+            ((TextView) view.findViewById(R.id.ride_pickup_point_variation_text)).setText(pickupDistance);
+            ((TextView) view.findViewById(R.id.ride_drop_point_variation_text)).setText(dropDistance);
+        }
+
+        View acceptButton = view.findViewById(R.id.ride_owner_accept_button);
+        acceptButton.setVisibility(View.VISIBLE);
+        acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+    }
+
 
     //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
     private void setRideOwnerLayoutButtonsOnClickListener(final View view){

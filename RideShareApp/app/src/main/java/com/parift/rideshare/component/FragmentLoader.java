@@ -128,10 +128,10 @@ public class FragmentLoader {
     //Don't implement the same logic of getting the old fragment and create only when null.
     //This may impact the content of the fragment as we are passing rideRequest in newInstance
     // and if used old one then old data of another ride request would come. Need to think better
-    public void loadRideRequestInfoFragment(String rideRequest) {
+    public void loadRideRequestInfoFragment(String rideRequestResult) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         RideRequestInfoFragment rideRequestInfoFragment = RideRequestInfoFragment.
-                newInstance(rideRequest);
+                newInstance(rideRequestResult);
         fragmentTransaction.replace(R.id.home_page_container, rideRequestInfoFragment, RideRequestInfoFragment.TAG);
         fragmentTransaction.addToBackStack(RideRequestInfoFragment.TAG);
         fragmentTransaction.commit();

@@ -505,7 +505,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         mCommonUtil.updateCurrentRideRequest(rideRequestResult.getRideRequest());
                         Logger.debug(TAG, "Updated Current Ride Request");
                     }
-                    mListener.onCreateRideFragmentInteraction(mRideType, new Gson().toJson(rideRequestResult.getRideRequest()));
+                    mListener.onCreateRideFragmentInteraction(mRideType, new Gson().toJson(rideRequestResult));
                     //mFragmentLoader.loadRideRequestInfoFragment(new Gson().toJson(rideRequestResult.getRideRequest()));
                                 /*
                                     //Blocked this for the time being as it was causing issue in loading proper page

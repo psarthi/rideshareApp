@@ -45,6 +45,17 @@
                  android:layout_width="match_parent"
                  android:layout_marginTop="4dp"/>
 
+        <LinearLayout
+            android:id="@+id/ride_owner_suggestion_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_below="@id/rides_suggestion_msg_line_seperator">
+
+        </LinearLayout>
+
+
     </RelativeLayout>
 
 </ScrollView>

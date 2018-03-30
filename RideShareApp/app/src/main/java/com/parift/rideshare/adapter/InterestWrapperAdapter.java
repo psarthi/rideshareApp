@@ -6,10 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parift.rideshare.R;
+import com.parift.rideshare.config.Constant;
 import com.parift.rideshare.fragment.BaseFragment;
 import com.parift.rideshare.helper.CommonUtil;
+import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.model.app.BasicInterestWrapper;
 import com.squareup.picasso.Picasso;
 
@@ -28,6 +31,7 @@ public class InterestWrapperAdapter extends RecyclerView.Adapter<InterestWrapper
     private BaseFragment mBaseFragment;
     private CommonUtil mCommonUtil;
     private List<BasicInterestWrapper> mInterests;
+    private int mSelectedInterestCount = 0;
 
     public InterestWrapperAdapter(List<BasicInterestWrapper> interests, BaseFragment fragment){
         mInterests = interests;
@@ -53,6 +57,7 @@ public class InterestWrapperAdapter extends RecyclerView.Adapter<InterestWrapper
 
         if (interest.isSelected()){
             holder.mSelected.setVisibility(View.VISIBLE);
+            mSelectedInterestCount++;
         } else {
             holder.mSelected.setVisibility(View.INVISIBLE);
         }
@@ -60,12 +65,20 @@ public class InterestWrapperAdapter extends RecyclerView.Adapter<InterestWrapper
         holder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (interest.isSelected()){
-                    holder.mSelected.setVisibility(View.INVISIBLE);
-                    interest.setSelected(false);
-                } else {
-                    holder.mSelected.setVisibility(View.VISIBLE);
-                    interest.setSelected(true);
+                    if (interest.isSelected()){
+                        holder.mSelected.setVisibility(View.INVISIBLE);
+                        interest.setSelected(false);
+                        mSelectedInterestCount--;
+                    } else {
+                        if (mSelectedInterestCount<Constant.MAX_INTEREST) {
+                            holder.mSelected.setVisibility(View.VISIBLE);
+                            interest.setSelected(true);
+                            mSelectedInterestCount++;
+                        }
+                        else {
+                            Toast.makeText(mBaseFragment.getActivity(), "You can select max "
+                                    + Constant.MAX_INTEREST + " interest areas to ensure quality match", Toast.LENGTH_SHORT).show();
+                        }
                 }
             }
         });
@@ -73,6 +86,7 @@ public class InterestWrapperAdapter extends RecyclerView.Adapter<InterestWrapper
 
     @Override
     public int getItemCount() {
+        Logger.debug(TAG, "Interest count is adapter is:"+mInterests.size());
         return mInterests.size();
     }
 

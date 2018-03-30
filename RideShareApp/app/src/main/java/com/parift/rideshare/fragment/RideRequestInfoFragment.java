@@ -1,12 +1,9 @@
 package com.parift.rideshare.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +11,7 @@ import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.gson.reflect.TypeToken;
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
 import com.parift.rideshare.component.MapComp;
@@ -27,10 +25,14 @@ import com.parift.rideshare.model.ride.dto.FullRideRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.parift.rideshare.model.ride.dto.RideRequestResult;
+import com.parift.rideshare.model.ride.dto.SuggestedMatchedRideInfo;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,12 +46,9 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         RideRequestComp.RideRequestCompListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_RIDE_REQUEST = "rideRequest";
+    private static final String ARG_RIDE_REQUEST_RESULT = "rideRequestResult";
     public static final String TAG = RideRequestInfoFragment.class.getName();
     private static final String TITLE = "Requested Ride Info";
-
-    // TODO: Rename and change types of parameters
-    private String mRideRequestData;
 
     private OnFragmentInteractionListener mListener;
     private FullRideRequest mRideRequest;
@@ -61,6 +60,8 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     private View mBasicRideRequestLayout;
     private View mRideOwnerLayout;
     private CommonUtil mCommonUtil;
+    private List<SuggestedMatchedRideInfo> mSuggestedMatchedRideInfos;
+    private ViewGroup mContainer;
 
 
     public RideRequestInfoFragment() {
@@ -71,14 +72,14 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param rideRequest data in Json format
+     * @param rideRequestResult data in Json format
      * @return A new instance of fragment RideRequestInfoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RideRequestInfoFragment newInstance(String rideRequest) {
+    public static RideRequestInfoFragment newInstance(String rideRequestResult) {
         RideRequestInfoFragment fragment = new RideRequestInfoFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_RIDE_REQUEST, rideRequest);
+        args.putString(ARG_RIDE_REQUEST_RESULT, rideRequestResult);
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,9 +88,11 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mRideRequestData = getArguments().getString(ARG_RIDE_REQUEST);
+            String data = getArguments().getString(ARG_RIDE_REQUEST_RESULT);
+            RideRequestResult rideRequestResult = new Gson().fromJson(data, RideRequestResult.class);
+            mRideRequest = rideRequestResult.getRideRequest();
+            mSuggestedMatchedRideInfos = rideRequestResult.getSuggestedMatchedRideInfos();
         }
-        mRideRequest = new Gson().fromJson(mRideRequestData, FullRideRequest.class);
         mCommonUtil = new CommonUtil(this);
     }
 
@@ -101,7 +104,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         mMapView = view.findViewById(R.id.ride_request_info_map);
         mBasicRideRequestLayout = view.findViewById(R.id.basic_ride_request_layout);
         mRideOwnerLayout = view.findViewById(R.id.ride_owner_layout);
-
+        mContainer = container;
 
         setRideRequestInfoView(view);
 
@@ -114,11 +117,27 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         //This should be initialized here so that it can be reloaded on refresh
         RideRequestComp rideRequestComp = new RideRequestComp(this, mRideRequest);
         rideRequestComp.setRideRequestBasicLayout(view);
+        boolean suggestedRideAvailable = false;
 
         if (mRideRequest.getAcceptedRide()!=null){
+            view.findViewById(R.id.rides_suggestion_msg).setVisibility(View.GONE);
             rideRequestComp.setRideOwnerLayout(view);
         } else {
+            //Applicable for both case so keeping it outside
             view.findViewById(R.id.ride_owner_layout).setVisibility(View.GONE);
+            if (mSuggestedMatchedRideInfos!=null && mSuggestedMatchedRideInfos.size()!=0){
+                suggestedRideAvailable = true;
+                view.findViewById(R.id.rides_suggestion_msg).setVisibility(View.VISIBLE);
+
+                LinearLayout suggestionLayout = view.findViewById(R.id.ride_owner_suggestion_layout);
+                for (SuggestedMatchedRideInfo suggestedMatchedRideInfo: mSuggestedMatchedRideInfos){
+                    View rideOwnerView = getLayoutInflater().inflate(R.layout.ride_owner_layout, mContainer, false);
+                    rideRequestComp.setSuggestedRideOwnerLayout(rideOwnerView, suggestedMatchedRideInfo);
+                    suggestionLayout.addView(rideOwnerView);
+                }
+            } else {
+                view.findViewById(R.id.rides_suggestion_msg).setVisibility(View.GONE);
+            }
         }
 
         //This will adjust height of map
@@ -128,7 +147,8 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
             //Note - Not equal to condition
             Calendar maxPickupTime = mCommonUtil.getRideRequestMaxPickupTime(mRideRequest);
             if (mRideRequest.getStatus().equals(RideRequestStatus.Unfulfilled)
-                    && !maxPickupTime.before(Calendar.getInstance())) {
+                    && !maxPickupTime.before(Calendar.getInstance())
+                    && !suggestedRideAvailable) {
                 Toast.makeText(mActivity, R.string.no_ride_partner_found_msg, Toast.LENGTH_LONG).show();
             }
         }
