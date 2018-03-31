@@ -102,6 +102,7 @@ public class APIUrl {
     public static final String CANCEL_DRIVER = BASE_URL_RIDE_SYSTEM + "/riderequests/{rideRequestId}/canceldriver/{rideId}?rating={rating}";
     public static final String CANCEL_RIDE_REQUEST = BASE_URL_RIDE_SYSTEM + "/riderequests/cancel/{id}";
     public static final String GET_PRE_BOOKING_RIDE_REQUEST_INFO = BASE_URL_RIDE_SYSTEM + "/riderequests/prebookinginfo";
+    public static final String MANUAL_ACCEPT_RIDE = BASE_URL_RIDE_SYSTEM + "/riderequests/{rideRequestId}/accept/{rideId}";
 
 
 

@@ -29,7 +29,6 @@
             android:text="@string/rides_suggestion_msg"
             android:textColor="@color/colorAccent"
             android:layout_margin="@dimen/default_margin"
-            android:visibility="gone"
             android:layout_below="@id/ride_request_info_map"/>
 
         <View

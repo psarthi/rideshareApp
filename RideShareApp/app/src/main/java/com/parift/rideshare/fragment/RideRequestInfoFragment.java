@@ -121,14 +121,17 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
 
         if (mRideRequest.getAcceptedRide()!=null){
             view.findViewById(R.id.rides_suggestion_msg).setVisibility(View.GONE);
+            view.findViewById(R.id.ride_owner_suggestion_layout).setVisibility(View.GONE);
+
+            view.findViewById(R.id.ride_owner_layout).setVisibility(View.VISIBLE);
             rideRequestComp.setRideOwnerLayout(view);
         } else {
             //Applicable for both case so keeping it outside
             view.findViewById(R.id.ride_owner_layout).setVisibility(View.GONE);
             if (mSuggestedMatchedRideInfos!=null && mSuggestedMatchedRideInfos.size()!=0){
-                suggestedRideAvailable = true;
                 view.findViewById(R.id.rides_suggestion_msg).setVisibility(View.VISIBLE);
-
+                view.findViewById(R.id.ride_owner_suggestion_layout).setVisibility(View.VISIBLE);
+                suggestedRideAvailable = true;
                 LinearLayout suggestionLayout = view.findViewById(R.id.ride_owner_suggestion_layout);
                 for (SuggestedMatchedRideInfo suggestedMatchedRideInfo: mSuggestedMatchedRideInfos){
                     View rideOwnerView = getLayoutInflater().inflate(R.layout.ride_owner_layout, mContainer, false);
@@ -137,6 +140,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
                 }
             } else {
                 view.findViewById(R.id.rides_suggestion_msg).setVisibility(View.GONE);
+                view.findViewById(R.id.ride_owner_suggestion_layout).setVisibility(View.GONE);
             }
         }
 

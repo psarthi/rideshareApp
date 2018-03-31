@@ -314,7 +314,7 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
 
     }
 
-    public void setSuggestedRideOwnerLayout(View view, SuggestedMatchedRideInfo rideInfo){
+    public void setSuggestedRideOwnerLayout(View view, final SuggestedMatchedRideInfo rideInfo){
 
         //IMP - Ensure all not applicable ones are marked as invisible
         view.findViewById(R.id.ride_vehicle_name).setVisibility(View.GONE);
@@ -323,7 +323,6 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         view.findViewById(R.id.ride_owner_rating_bar).setVisibility(View.GONE);
 
         View pickupTimeAndBilllayout = view.findViewById(R.id.pickup_time_bill_layout);
-        pickupTimeAndBilllayout.findViewById(R.id.fare_text).setVisibility(View.GONE);
         pickupTimeAndBilllayout.findViewById(R.id.bill_status).setVisibility(View.GONE);
 
         //All Required one's are below
@@ -334,6 +333,11 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         Date pickupTime = rideInfo.getRidePickupPoint().getRidePointProperties().get(0).getDateTime();
         String pickupTimeString = mCommonUtil.getFormattedDateTimeString(pickupTime);
         pickupTimeTextView.setText(pickupTimeString);
+
+        TextView fareTextView = pickupTimeAndBilllayout.findViewById(R.id.fare_text);
+        String amount = mCommonUtil.getDecimalFormattedString(rideInfo.getPrice());
+        String symbol = mCommonUtil.getCurrencySymbol(mRideRequest.getPassenger().getCountry());
+        fareTextView.setText(symbol+amount);
 
         ((TextView) view.findViewById(R.id.ride_pickup_point_text)).setText(rideInfo.getRidePickupPointAddress());
         ((TextView) view.findViewById(R.id.ride_drop_point_text)).setText(rideInfo.getRideDropPointAddress());
@@ -350,7 +354,19 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String url = APIUrl.MANUAL_ACCEPT_RIDE.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                        .replace(APIUrl.RIDE_REQUEST_ID_KEY, Long.toString(rideInfo.getRideRequestId()))
+                        .replace(APIUrl.RIDE_ID_KEY, Long.toString(rideInfo.getRideId()));
+                mCommonUtil.showProgressDialog();
+                RESTClient.post(mBaseFragment.getActivity(), url, rideInfo, new RSJsonHttpResponseHandler(mCommonUtil){
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
+                        mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
+                        mListener.onRideRequestRefresh(mRideRequest);
+                    }
+                });
             }
         });
 
