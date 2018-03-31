@@ -361,10 +361,12 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 RESTClient.post(mBaseFragment.getActivity(), url, rideInfo, new RSJsonHttpResponseHandler(mCommonUtil){
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        mCommonUtil.dismissProgressDialog();
-                        mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
-                        mListener.onRideRequestRefresh(mRideRequest);
+                        if (mBaseFragment.isAdded()) {
+                            super.onSuccess(statusCode, headers, response);
+                            mCommonUtil.dismissProgressDialog();
+                            mRideRequest = new Gson().fromJson(response.toString(), FullRideRequest.class);
+                            mListener.onRideRequestRefresh(mRideRequest);
+                        }
                     }
                 });
             }

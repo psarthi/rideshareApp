@@ -118,24 +118,25 @@ public class InterestFragment extends BaseFragment {
         RESTClient.get(APIUrl.GET_INTERESTS_URL, null, new RSJsonHttpResponseHandler(mCommonUtil){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);
-                mCommonUtil.dismissProgressDialog();
-                Type listType = new TypeToken<ArrayList<BasicInterestWrapper>>() {}.getType();
-                mInterestWrappers = new Gson().fromJson(response.toString(), listType);
-                Collection<BasicInterest> userInterests = mUser.getInterests();
-                Logger.debug(TAG, "Interest count is: "+mInterestWrappers.size());
-                for (BasicInterestWrapper interestWrapper: mInterestWrappers){
-                    for (BasicInterest basicInterest: userInterests){
-                        if (interestWrapper.getId() == basicInterest.getId()){
-                            interestWrapper.setSelected(true);
-                            break;
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    Type listType = new TypeToken<ArrayList<BasicInterestWrapper>>() {}.getType();
+                    mInterestWrappers = new Gson().fromJson(response.toString(), listType);
+                    Collection<BasicInterest> userInterests = mUser.getInterests();
+                    Logger.debug(TAG, "Interest count is: "+mInterestWrappers.size());
+                    for (BasicInterestWrapper interestWrapper: mInterestWrappers){
+                        for (BasicInterest basicInterest: userInterests){
+                            if (interestWrapper.getId() == basicInterest.getId()){
+                                interestWrapper.setSelected(true);
+                                break;
+                            }
                         }
                     }
+
+                    mAdapter = new InterestWrapperAdapter(mInterestWrappers, InterestFragment.this);
+                    mRecyclerView.setAdapter(mAdapter);
                 }
-
-                mAdapter = new InterestWrapperAdapter(mInterestWrappers, InterestFragment.this);
-                mRecyclerView.setAdapter(mAdapter);
-
             }
         });
         return view;
@@ -177,12 +178,14 @@ public class InterestFragment extends BaseFragment {
             RESTClient.post(getActivity(), url, updatedInterests, new RSJsonHttpResponseHandler(mCommonUtil){
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    super.onSuccess(statusCode, headers, response);
-                    mCommonUtil.dismissProgressDialog();
-                    mUser.getInterests().clear();
-                    mUser.getInterests().addAll(updatedInterests);
-                    mCommonUtil.updateUser(mUser);
-                    Toast.makeText(getActivity(),"Successfully Saved", Toast.LENGTH_SHORT).show();
+                    if (isAdded()){
+                        super.onSuccess(statusCode, headers, response);
+                        mCommonUtil.dismissProgressDialog();
+                        mUser.getInterests().clear();
+                        mUser.getInterests().addAll(updatedInterests);
+                        mCommonUtil.updateUser(mUser);
+                        Toast.makeText(getActivity(),"Successfully Saved", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
