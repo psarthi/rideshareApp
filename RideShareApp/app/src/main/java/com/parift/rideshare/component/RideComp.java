@@ -317,7 +317,9 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             //This will make Start and Cancel button invisible post end time of ride
             if (mBasicRide.getEndTime().before(Calendar.getInstance().getTime())) {
                 mCancelButton.setVisibility(View.GONE);
-                mStartButton.setVisibility(View.GONE);
+                //IMP - This will ensure driver can always complete the flow in case he has missed to start on time
+                //otherwise payment is stuck of the passenger
+                //mStartButton.setVisibility(View.GONE);
                 mRideStatusTextView.setText(RideStatus.Expired.toString());
             }
         }

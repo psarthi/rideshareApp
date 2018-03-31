@@ -1,6 +1,8 @@
 package com.parift.rideshare.model.user.dto;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 import com.parift.rideshare.model.billing.domain.core.Account;
@@ -18,6 +20,7 @@ import com.parift.rideshare.model.user.domain.core.Vehicle;
 public class BasicUser {
 	
 	private long id;
+	private Date registrationDateTime;
 	private String firstName;
 	private String lastName;
 	private Sex sex;
@@ -156,6 +159,14 @@ public class BasicUser {
 
 	public void setInterests(Collection<BasicInterest> interests) {
 		this.interests = interests;
+	}
+
+	public Date getRegistrationDateTime() {
+		return registrationDateTime;
+	}
+
+	public void setRegistrationDateTime(Date registrationDateTime) {
+		this.registrationDateTime = registrationDateTime;
 	}
 }
 

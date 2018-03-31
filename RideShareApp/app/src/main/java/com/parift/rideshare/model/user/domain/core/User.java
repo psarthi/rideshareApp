@@ -1,6 +1,8 @@
 package com.parift.rideshare.model.user.domain.core;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -29,6 +31,7 @@ import com.parift.rideshare.model.user.domain.UserFeedback;
 public class User implements Comparable<User>{
 	
 	private long id;
+	private Date registrationDateTime;
 	private String firstName;
 	private String lastName;
 	private Sex sex;
@@ -321,6 +324,14 @@ public class User implements Comparable<User>{
 
 	public void setInterests(Collection<Interest> interests) {
 		this.interests = interests;
+	}
+
+	public Date getRegistrationDateTime() {
+		return registrationDateTime;
+	}
+
+	public void setRegistrationDateTime(Date registrationDateTime) {
+		this.registrationDateTime = registrationDateTime;
 	}
 }
 

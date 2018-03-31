@@ -108,6 +108,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentTitle(mRemoteMessage.getNotification().getTitle())
                         .setContentText(mRemoteMessage.getNotification().getBody())
                         .setAutoCancel(true)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(
+                                mRemoteMessage.getNotification().getBody()))
                         .setColor(getResources().getColor(R.color.colorPrimary))
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
