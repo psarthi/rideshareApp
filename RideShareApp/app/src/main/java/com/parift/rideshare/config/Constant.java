@@ -54,4 +54,9 @@ public class Constant {
     public static final int LONG_DISTANCE_IN_METERS=100000;
     public static final String PRICE_DETAILS_PAGE_TITLE="Price";
     public static final int MAX_INTEREST = 5;
+    public static final String CONTACT_US_EMAIL_ID = "support@parift.com";
+    public static final String USER_ID_KEY = "{userId}";
+    public static final String USER_FIRSTNAME_KEY = "{userFirstName}";
+    public static final String USER_LASTNAME_KEY = "{userLastName}";
+    public static final String CONTACT_US_EMAIL_SUBJECT = "Customer Feedback | {userFirstName} {userLastName} | User Id: {userId}";
 }

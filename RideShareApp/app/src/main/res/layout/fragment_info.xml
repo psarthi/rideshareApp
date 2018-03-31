@@ -48,6 +48,36 @@
         android:layout_height="@dimen/line_seperator_thickness"
         android:background="@color/colorGrayLight"/>
 
+    <LinearLayout
+        android:id="@+id/contact_us"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/heading3_text_size"
+            android:textColor="@android:color/black"
+            android:text="@string/contact_us"/>
+
+        <TextView
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/feedback_concern"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:background="@color/colorGrayLight"/>
+
     <TextView
         android:id="@+id/app_version"
         android:padding="@dimen/small_padding"

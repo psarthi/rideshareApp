@@ -107,5 +107,7 @@
     <string name="interest_heading_msg">Select your interest to meet like-minded ride partners</string>
     <string name="no_result_found">No result found</string>
     <string name="rides_suggestion_msg">No perfect match found. If you are flexible, Please check out other options</string>
+    <string name="contact_us">Contact us</string>
+    <string name="feedback_concern">(Feedback / Concern)</string>
 
 </resources>

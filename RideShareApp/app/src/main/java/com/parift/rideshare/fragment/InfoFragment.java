@@ -1,8 +1,10 @@
 package com.parift.rideshare.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,7 +17,10 @@ import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
 import com.parift.rideshare.component.FragmentLoader;
 import com.parift.rideshare.config.APIUrl;
+import com.parift.rideshare.config.Constant;
 import com.parift.rideshare.helper.CommonUtil;
+import com.parift.rideshare.model.ride.dto.BasicRide;
+import com.parift.rideshare.model.user.dto.BasicUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,6 +105,12 @@ public class InfoFragment extends BaseFragment {
                         getResources().getString(R.string.privacy_policy));
             }
         });
+        view.findViewById(R.id.contact_us).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                composeMail();
+            }
+        });
         String version = null;
         try {
             PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
@@ -110,6 +121,21 @@ public class InfoFragment extends BaseFragment {
         String appVersion = getResources().getString(R.string.app_version) + version;
         ((TextView) view.findViewById(R.id.app_version)).setText(appVersion);
         return view;
+    }
+
+    private void composeMail() {
+        BasicUser user = mCommonUtil.getUser();
+        String[] addresses = {Constant.CONTACT_US_EMAIL_ID};
+        String subject = Constant.CONTACT_US_EMAIL_SUBJECT.replace(Constant.USER_ID_KEY, Long.toString(user.getId()))
+                        .replace(Constant.USER_FIRSTNAME_KEY, user.getFirstName())
+                        .replace(Constant.USER_LASTNAME_KEY, user.getLastName());
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     @Override
