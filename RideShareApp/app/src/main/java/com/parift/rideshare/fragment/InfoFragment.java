@@ -126,9 +126,7 @@ public class InfoFragment extends BaseFragment {
     private void composeMail() {
         BasicUser user = mCommonUtil.getUser();
         String[] addresses = {Constant.CONTACT_US_EMAIL_ID};
-        String subject = Constant.CONTACT_US_EMAIL_SUBJECT.replace(Constant.USER_ID_KEY, Long.toString(user.getId()))
-                        .replace(Constant.USER_FIRSTNAME_KEY, user.getFirstName())
-                        .replace(Constant.USER_LASTNAME_KEY, user.getLastName());
+        String subject = Constant.CONTACT_US_EMAIL_SUBJECT.replace(APIUrl.USER_ID_KEY, Long.toString(user.getId()));
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, addresses);

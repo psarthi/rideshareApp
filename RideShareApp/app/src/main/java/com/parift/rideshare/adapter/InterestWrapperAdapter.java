@@ -37,6 +37,10 @@ public class InterestWrapperAdapter extends RecyclerView.Adapter<InterestWrapper
         mInterests = interests;
         mBaseFragment = fragment;
         mCommonUtil = new CommonUtil(fragment);
+
+        for (BasicInterestWrapper interestWrapper: interests){
+            if (interestWrapper.isSelected()) mSelectedInterestCount++;
+        }
     }
 
     @Override
@@ -57,7 +61,6 @@ public class InterestWrapperAdapter extends RecyclerView.Adapter<InterestWrapper
 
         if (interest.isSelected()){
             holder.mSelected.setVisibility(View.VISIBLE);
-            mSelectedInterestCount++;
         } else {
             holder.mSelected.setVisibility(View.INVISIBLE);
         }
