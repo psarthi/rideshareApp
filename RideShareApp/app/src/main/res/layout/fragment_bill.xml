@@ -5,34 +5,20 @@
               android:layout_height="match_parent"
               android:layout_margin="@dimen/default_margin">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin">
-
-        <TextView android:id="@+id/co_traveller_name"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Partha Sarthi"
-                  android:textStyle="bold"
-                  android:textColor="@color/colorPrimaryDark"
-                  android:textSize="@dimen/heading3_text_size"/>
-
-        <TextView android:id="@+id/bill_status"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="Approved"
-                  android:textStyle="bold|italic"
-                  android:textAlignment="viewEnd"
-                  android:textAllCaps="true"
-                  android:textColor="@color/colorPrimaryDark"
-                  android:textSize="@dimen/heading3_text_size"/>
-
-    </LinearLayout>
+    <TextView android:id="@+id/bill_status"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Approved"
+              android:textStyle="bold"
+              android:textAlignment="center"
+              android:textAllCaps="true"
+              android:textColor="@color/colorPrimaryDark"
+              android:textSize="@dimen/heading3_text_size"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_seperator_thickness"
+        android:layout_marginTop="@dimen/default_margin"
         android:background="@color/colorGrayLight"/>
 
     <LinearLayout
@@ -44,16 +30,14 @@
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="Rate/Km"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
+                  android:textSize="@dimen/heading3_text_size"/>
 
         <TextView android:id="@+id/rate_per_km_text"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:text="5"
                   android:textAlignment="viewEnd"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
+                  android:textSize="@dimen/heading3_text_size"/>
 
     </LinearLayout>
 
@@ -66,16 +50,14 @@
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="Distance (Km)"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
+                  android:textSize="@dimen/heading3_text_size"/>
 
         <TextView android:id="@+id/distance_text"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:text="10"
                   android:textAlignment="viewEnd"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
+                  android:textSize="@dimen/heading3_text_size"/>
 
     </LinearLayout>
 
@@ -88,16 +70,14 @@
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="Discount %"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
+                  android:textSize="@dimen/heading3_text_size"/>
 
         <TextView android:id="@+id/discount_text"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:text="0"
                   android:textAlignment="viewEnd"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
+                  android:textSize="@dimen/heading3_text_size"/>
 
     </LinearLayout>
 
@@ -110,16 +90,14 @@
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="Number of CoTraveller"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
+                  android:textSize="@dimen/heading3_text_size"/>
 
         <TextView android:id="@+id/co_traveller_count_text"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:text="0"
                   android:textAlignment="viewEnd"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
+                  android:textSize="@dimen/heading3_text_size"/>
 
     </LinearLayout>
 
@@ -134,7 +112,7 @@
                   android:text="Total Amount"
                   android:textStyle="bold"
                   android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
+                  android:textColor="@color/colorPrimaryDark"/>
 
         <TextView android:id="@+id/total_amount_text"
                   android:layout_width="match_parent"
@@ -143,74 +121,8 @@
                   android:textStyle="bold"
                   android:textAlignment="viewEnd"
                   android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
+                  android:textColor="@color/colorPrimaryDark"/>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin">
-
-        <TextView android:id="@+id/service_charge_label"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Service Charge"
-                  android:textStyle="italic"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
-
-        <TextView android:id="@+id/service_charge_text"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="10"
-                  android:textAlignment="viewEnd"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin">
-
-        <TextView android:id="@+id/ride_owner_amount_label"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="@string/pending_bills_ride_owner_amount_label"
-                  android:textStyle="italic"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
-
-        <TextView android:id="@+id/payable_to_ride_owner_amount_text"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="45"
-                  android:textAlignment="viewEnd"
-                  android:textSize="@dimen/heading3_text_size"
-                  android:textColor="@android:color/black"/>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:layout_margin="@dimen/default_margin">
-
-        <Button
-            android:id="@+id/bill_pay_button"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:text="Pay"
-            android:textAllCaps="false"
-            android:textStyle="bold"/>
-
-    </LinearLayout>
-
 
 </LinearLayout>

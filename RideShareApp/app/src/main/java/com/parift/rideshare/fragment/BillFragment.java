@@ -101,16 +101,10 @@ public class BillFragment extends BaseFragment {
         mBillStatusTextView = view.findViewById(R.id.bill_status);
 
         setBillView(view);
-
-        setButtonsOnClickListener(view);
-
         return view;
     }
 
     private void setBillView(View view) {
-        String coTravellerName = mBill.getRideRequest().getPassenger().getFirstName() + " "+
-                mBill.getRideRequest().getPassenger().getLastName();
-        ((TextView) view.findViewById(R.id.co_traveller_name)).setText(coTravellerName);
         mBillStatusTextView.setText(mBill.getStatus().toString());
         //Reason for casting to float to get decimal value as distance is int, its not giving decimal value
         float distance = (float) mBill.getRideRequest().getTravelDistance() / 1000;
@@ -123,58 +117,6 @@ public class BillFragment extends BaseFragment {
         String currencySymbol = mCommonUtil.getCurrencySymbol(mUser.getCountry());
         String amountText = currencySymbol + mCommonUtil.getDecimalFormattedString(mBill.getAmount());
         ((TextView) view.findViewById(R.id.total_amount_text)).setText(amountText);
-
-        float serviceCharge = mBill.getServiceChargePercentage() * mBill.getAmount() / 100;
-        float rideOwnerAmount = mBill.getAmount() - serviceCharge;
-
-        String serviceChargeText = currencySymbol + mCommonUtil.getDecimalFormattedString(serviceCharge);
-        String rideOwnerAmountText = currencySymbol + mCommonUtil.getDecimalFormattedString(rideOwnerAmount);
-
-        ((TextView) view.findViewById(R.id.service_charge_text)).setText(serviceChargeText);
-        ((TextView) view.findViewById(R.id.payable_to_ride_owner_amount_text)).setText(rideOwnerAmountText);
-
-        //This will ensure label is shown properly based on ride status
-        if (!mBill.getStatus().equals(BillStatus.Paid)){
-            ((TextView) view.findViewById(R.id.ride_owner_amount_label)).setText(R.string.pending_bills_ride_owner_amount_label);
-        } else {
-            ((TextView) view.findViewById(R.id.ride_owner_amount_label)).setText(R.string.paid_bills_ride_owner_amount_label);
-        }
-
-        //This will check is the person vewing the bill is the passenger or the driver
-        //if its passenger, then check if the status is approved. In that case only, show Pay button
-        if (mUser.getId() == mBill.getRideRequest().getPassenger().getId()
-                && mBill.getStatus().equals(BillStatus.Approved)){
-            view.findViewById(R.id.bill_pay_button).setVisibility(View.VISIBLE);
-        } else {
-            view.findViewById(R.id.bill_pay_button).setVisibility(View.GONE);
-        }
-    }
-
-    private void setButtonsOnClickListener(View view) {
-
-        view.findViewById(R.id.bill_pay_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                BillInfo billInfo = new BillInfo();
-                billInfo.setBillNumber(mBill.getNumber());
-                mCommonUtil.showProgressDialog();
-                String url = APIUrl.PAY_BILL.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()));
-                RESTClient.post(getActivity(),url,billInfo, new RSJsonHttpResponseHandler(mCommonUtil){
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        if (isAdded()) {
-                            super.onSuccess(statusCode, headers, response);
-                            mCommonUtil.dismissProgressDialog();
-                            mBill = new Gson().fromJson(response.toString(), Bill.class);
-                            setBillView(getView());
-                            Toast.makeText(getActivity(), "Bill Paid Successfully", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
-        });
-
     }
 
     @Override

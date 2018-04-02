@@ -25,6 +25,7 @@ import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
 import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
 import com.parift.rideshare.model.billing.domain.core.Account;
+import com.parift.rideshare.model.billing.domain.core.Invoice;
 import com.parift.rideshare.model.ride.domain.RidePoint;
 import com.parift.rideshare.model.ride.domain.RideType;
 import com.parift.rideshare.model.ride.domain.core.PassengerStatus;
@@ -113,6 +114,26 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         mRideStatusTextView.setText(mBasicRide.getStatus().toString());
         TextView rideStartTimeTextView = basic_ride_layout.findViewById(R.id.ride_start_time_text);
         rideStartTimeTextView.setText(mCommonUtil.getFormattedDateTimeString(mBasicRide.getStartTime()));
+
+        if (mBasicRide.getInvoice()!=null){
+            //This is required to ensure invisible items becomes visible on reload in recycler view
+            basic_ride_layout.findViewById(R.id.total_money_earned_text).setVisibility(View.VISIBLE);
+            basic_ride_layout.findViewById(R.id.invoice_status).setVisibility(View.VISIBLE);
+            Invoice invoice = mBasicRide.getInvoice();
+            float totalDeduction = invoice.getServiceCharge() + invoice.getCgst() + invoice.getSgst() + invoice.getIgst() + invoice.getTcs();
+            float driverNetEarning = invoice.getTotalAmountEarned() - totalDeduction;
+            String symbol = mCommonUtil.getCurrencySymbol(mBasicRide.getDriver().getCountry());
+            String amount = mCommonUtil.getDecimalFormattedString(driverNetEarning);
+            ((TextView) basic_ride_layout.findViewById(R.id.total_money_earned_text))
+                    .setText(symbol + amount);
+            ((TextView) basic_ride_layout.findViewById(R.id.invoice_status))
+                    .setText(mBasicRide.getInvoice().getStatus().toString());
+
+        } else {
+            basic_ride_layout.findViewById(R.id.total_money_earned_text).setVisibility(View.GONE);
+            basic_ride_layout.findViewById(R.id.invoice_status).setVisibility(View.GONE);
+        }
+
         TextView rideStartPointTextView = basic_ride_layout.findViewById(R.id.ride_start_point_text);
         rideStartPointTextView.setText(mBasicRide.getStartPointAddress());
         TextView rideEndPointTextView = basic_ride_layout.findViewById(R.id.ride_end_point_text);

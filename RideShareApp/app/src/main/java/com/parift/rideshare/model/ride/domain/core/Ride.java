@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 
+import com.parift.rideshare.model.billing.domain.core.Invoice;
 import com.parift.rideshare.model.ride.domain.RidePoint;
 import com.parift.rideshare.model.ride.domain.RecurringDetail;
 import com.parift.rideshare.model.ride.domain.Route;
@@ -41,6 +42,7 @@ public class Ride implements Comparable<Ride>{
 	private Collection<RideRequest> cancelledRideRequests = new HashSet<RideRequest>();
 	private int travelDistance;
 	private RideMode rideMode;
+	private Invoice invoice;
 	
 	public long getId() {
 		return id;
@@ -234,5 +236,11 @@ public class Ride implements Comparable<Ride>{
 		return Long.compare(ride.id, this.id);
 	}
 
-	
+	public Invoice getInvoice() {
+		return invoice;
+	}
+
+	public void setInvoice(Invoice invoice) {
+		this.invoice = invoice;
+	}
 }

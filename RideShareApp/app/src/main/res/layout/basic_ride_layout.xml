@@ -38,12 +38,40 @@ as well as inside any other layout as well e.g. In HomePage as well as RidesList
 
     </LinearLayout>
 
-    <TextView android:id="@+id/ride_start_time_text"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="Sat Dec 2, 9:00 AM"
-              android:textStyle="bold|italic"
-              android:layout_marginBottom="@dimen/default_margin"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView android:id="@+id/ride_start_time_text"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Sat Dec 2, 9:00 AM"
+                  android:textStyle="bold|italic"
+                  android:layout_marginBottom="@dimen/default_margin"/>
+
+        <TextView
+            android:id="@+id/total_money_earned_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rs 45/-"
+            android:textAlignment="viewEnd"
+            android:textStyle="bold|italic"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/invoice_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Paid"
+            android:gravity="center_vertical|end"
+            android:drawableEnd="@drawable/ic_receipt"
+            android:textAllCaps="true"
+            android:layout_weight="1"
+            android:textStyle="bold|italic"/>
+
+
+    </LinearLayout>
+
 
     <TextView android:id="@+id/ride_start_point_text"
               android:layout_width="wrap_content"
