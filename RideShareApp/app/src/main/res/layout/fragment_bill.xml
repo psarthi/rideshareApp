@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
               android:layout_margin="@dimen/default_margin">
 
-    <TextView android:id="@+id/bill_status"
+    <TextView android:id="@+id/reciept_status"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:text="Approved"

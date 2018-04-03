@@ -97,18 +97,45 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         }
         mRideRequestStatusTextView.setText(mBasicRideRequest.getStatus().toString());
         String pickupTime = mCommonUtil.getFormattedDateTimeString(mBasicRideRequest.getPickupTime());
-        ((TextView) layout.findViewById(R.id.ride_request_pickup_time_text)).setText(pickupTime);
+        View pickup_time_bill_layout = view.findViewById(R.id.start_time_bill_layout);
+        ((TextView) pickup_time_bill_layout.findViewById(R.id.time_text)).setText(pickupTime);
+        TextView fareTextView = pickup_time_bill_layout.findViewById(R.id.amount_text);
+        TextView billStatusTextView = pickup_time_bill_layout.findViewById(R.id.reciept_status);
+
+        if (mBasicRideRequest.getBill()!=null && !mBasicRideRequest.getBill().getStatus().equals(BillStatus.Cancelled)){
+            fareTextView.setVisibility(View.VISIBLE);
+            billStatusTextView.setVisibility(View.VISIBLE);
+
+            String amount = mCommonUtil.getDecimalFormattedString(mBasicRideRequest.getBill().getAmount());
+            String symbol = mCommonUtil.getCurrencySymbol(mBasicRideRequest.getPassenger().getCountry());
+            fareTextView.setText(symbol+amount);
+
+            String billStatus = mBasicRideRequest.getBill().getStatus().toString();
+            String paymentCode = mBasicRideRequest.getConfirmationCode();
+
+            if (mBasicRideRequest.getBill().getStatus().equals(BillStatus.Pending)){
+                billStatusTextView.setText(billStatus+"("+paymentCode+")");
+            } else {
+                billStatusTextView.setText(billStatus);
+            }
+
+            //This will ensure that listener is only enabled for ride info and not ride request list view
+            if (mBaseFragment instanceof RideRequestInfoFragment){
+                billStatusTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                        fragmentLoader.loadBillFragment(new Gson().toJson(mBasicRideRequest));
+                    }
+                });
+            }
+        } else {
+            fareTextView.setVisibility(View.GONE);
+            billStatusTextView.setVisibility(View.GONE);
+        }
 
         ((TextView) layout.findViewById(R.id.ride_request_pickup_point_text)).setText(mBasicRideRequest.getPickupPointAddress());
         ((TextView) layout.findViewById(R.id.ride_request_drop_point_text)).setText(mBasicRideRequest.getDropPointAddress());
-
-        //This will setup those views which is available only in Full Ride Request
-        if (mListener instanceof BaseFragment){
-            setExtraOfBasicLayout(layout);
-        } else {
-            Logger.debug(TAG, "Basic Ride Request Layout found. Called from Rides List, so hiding payment code information for Id:"+mBasicRideRequest.getId());
-            layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.GONE);
-        }
 
         if (mRideRequest!=null){
             //This will setup initial button visibility
@@ -154,22 +181,6 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                     });
                 }
             });
-        }
-    }
-
-    //Use all input as Full Ride Request with an assumption that fragments would have access to Full ride request
-    private void setExtraOfBasicLayout(View layout) {
-        String paymentCode = mRideRequest.getConfirmationCode();
-        //IMP - This will work fine when getting called from Ride Request Info with Full Ride Request
-        if (mRideRequest.getAcceptedRide()!=null && mRideRequest.getBill().getStatus().equals(BillStatus.Pending)){
-            Logger.debug(TAG, "Accepted Ride Request for Id:"+mRideRequest.getId()+" is :"+mRideRequest.getAcceptedRide().getId());
-            //Reason behind making it visible so that its visible on refresh
-            layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.VISIBLE);
-            String paymentLabel = mBaseFragment.getString(R.string.ride_request_payment_code_text);
-            ((TextView) layout.findViewById(R.id.ride_request_confirmation_code_text)).setText(paymentLabel+paymentCode);
-        }else {
-            Logger.debug(TAG, "No Accepted Ride for Id or Its a Free Ride:"+mBasicRideRequest.getId());
-            layout.findViewById(R.id.ride_request_confirmation_code_text).setVisibility(View.GONE);
         }
     }
 
@@ -288,7 +299,16 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 mRideRequest.getAcceptedRide().getVehicle().getRegistrationNumber();
         ((TextView) view.findViewById(R.id.ride_vehicle_name)).setText(vehicle);
 
-        setPickupTimeAndBillLayout(view, RideType.RequestRide);
+        View pickupTimeBillLayout = view.findViewById(R.id.pickup_time_bill_layout);
+        TextView pickupTimeTextView = pickupTimeBillLayout.findViewById(R.id.time_text);
+        Date pickupTime = mRideRequest.getRidePickupPoint().getRidePointProperties().get(0).getDateTime();
+        String pickupTimeString = mCommonUtil.getFormattedDateTimeString(pickupTime);
+        pickupTimeTextView.setText(pickupTimeString);
+
+        //This is not applicable for ride owner layout as its already visible in basic layout
+        pickupTimeBillLayout.findViewById(R.id.amount_text).setVisibility(View.GONE);
+        pickupTimeBillLayout.findViewById(R.id.reciept_status).setVisibility(View.GONE);
+
 
         ((TextView) view.findViewById(R.id.ride_pickup_point_text)).setText(mRideRequest.getRidePickupPointAddress());
         ((TextView) view.findViewById(R.id.ride_drop_point_text)).setText(mRideRequest.getRideDropPointAddress());
@@ -322,19 +342,19 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
         view.findViewById(R.id.navigate_to_ride_pickup_point_button).setVisibility(View.GONE);
         view.findViewById(R.id.ride_owner_rating_bar).setVisibility(View.GONE);
 
-        View pickupTimeAndBilllayout = view.findViewById(R.id.pickup_time_bill_layout);
-        pickupTimeAndBilllayout.findViewById(R.id.bill_status).setVisibility(View.GONE);
-
         //All Required one's are below
         UserComp userComp = new UserComp(mBaseFragment, rideInfo.getRide().getDriver());
         userComp.setUserProfileSingleRow(view, true);
 
-        TextView pickupTimeTextView = pickupTimeAndBilllayout.findViewById(R.id.pickup_time_text);
+        View pickupTimeAndBilllayout = view.findViewById(R.id.pickup_time_bill_layout);
+        pickupTimeAndBilllayout.findViewById(R.id.reciept_status).setVisibility(View.GONE);
+
+        TextView pickupTimeTextView = pickupTimeAndBilllayout.findViewById(R.id.time_text);
         Date pickupTime = rideInfo.getRidePickupPoint().getRidePointProperties().get(0).getDateTime();
         String pickupTimeString = mCommonUtil.getFormattedDateTimeString(pickupTime);
         pickupTimeTextView.setText(pickupTimeString);
 
-        TextView fareTextView = pickupTimeAndBilllayout.findViewById(R.id.fare_text);
+        TextView fareTextView = pickupTimeAndBilllayout.findViewById(R.id.amount_text);
         String amount = mCommonUtil.getDecimalFormattedString(rideInfo.getPrice());
         String symbol = mCommonUtil.getCurrencySymbol(mRideRequest.getPassenger().getCountry());
         fareTextView.setText(symbol+amount);
@@ -489,26 +509,26 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
     }
 
     //Use Full Ride Request as this would be called from Base Fragment where we have access to Full Ride Request
-    public void setPickupTimeAndBillLayout(View view, final RideType rideType){
+    public void setPickupTimeAndBillLayout(View view){
         View layout = view.findViewById(R.id.pickup_time_bill_layout);
-        TextView pickupTimeTextView = layout.findViewById(R.id.pickup_time_text);
+        TextView pickupTimeTextView = layout.findViewById(R.id.time_text);
         Date pickupTime = mRideRequest.getRidePickupPoint().getRidePointProperties().get(0).getDateTime();
         String pickupTimeString = mCommonUtil.getFormattedDateTimeString(pickupTime);
         pickupTimeTextView.setText(pickupTimeString);
 
-        TextView fareTextView = layout.findViewById(R.id.fare_text);
+        TextView fareTextView = layout.findViewById(R.id.amount_text);
         String amount = mCommonUtil.getDecimalFormattedString(mRideRequest.getBill().getAmount());
         String symbol = mCommonUtil.getCurrencySymbol(mRideRequest.getPassenger().getCountry());
         fareTextView.setText(symbol+amount);
 
-        TextView billStatusTextView = layout.findViewById(R.id.bill_status);
+        TextView billStatusTextView = layout.findViewById(R.id.reciept_status);
         billStatusTextView.setText(mRideRequest.getBill().getStatus().toString());
 
         billStatusTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                fragmentLoader.loadBillFragment(new Gson().toJson(mRideRequest.getBill()), rideType);
+                fragmentLoader.loadBillFragment(new Gson().toJson(mRideRequest));
             }
         });
     }

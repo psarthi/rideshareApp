@@ -300,15 +300,4 @@ public class RideInfoFragment extends BaseFragment implements
         // TODO: Update argument type and name
         void onRideInfoFragmentInteraction(String data);
     }
-
-    public void updateBill(Bill bill){
-
-        for (FullRideRequest rideRequest:mRide.getAcceptedRideRequests()){
-            if (rideRequest.getId() == bill.getRideRequest().getId()){
-                //Since its all by reference, so updating rideRequest would reflect in mRide as well
-                rideRequest.setBill(bill);
-                break;
-            }
-        }
-    }
 }

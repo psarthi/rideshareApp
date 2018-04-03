@@ -25,14 +25,12 @@
         android:maxLines="1"/>
 
     <include
-        android:id="@+id/pickup_time_bill_layout"
-        layout="@layout/pickup_time_bill_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:id="@+id/pickup_time_bill_layout" layout="@layout/time_reciept_layout"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp">
 
         <TextView
             android:id="@+id/ride_pickup_point_text"

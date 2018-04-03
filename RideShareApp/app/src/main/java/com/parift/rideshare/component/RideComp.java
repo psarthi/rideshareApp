@@ -1,11 +1,13 @@
 package com.parift.rideshare.component;
 
 import android.app.Dialog;
+import android.media.Image;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RatingBar;
@@ -40,6 +42,7 @@ import com.parift.rideshare.model.user.dto.UserFeedbackInfo;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -103,7 +106,10 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         mEndButton = basic_ride_layout.findViewById(R.id.ride_end_button);
         mNavigationButton = basic_ride_layout.findViewById(R.id.ride_navigation_button);
         mBasicRideButtonsLayout = basic_ride_layout.findViewById(R.id.ride_buttons_layout);
-
+        View time_invoice_layout = basic_ride_layout.findViewById(R.id.start_time_invoice_layout);
+        TextView rideStartTime = time_invoice_layout.findViewById(R.id.time_text);
+        TextView rideTotalEarnedAmount = time_invoice_layout.findViewById(R.id.amount_text);
+        TextView rideInvoiceStatus = time_invoice_layout.findViewById(R.id.reciept_status);
 
         TextView rideIdTextView = basic_ride_layout.findViewById(R.id.ride_id_text);
         if (mBaseFragment.isAdded()){
@@ -112,26 +118,24 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         }
         mRideStatusTextView = basic_ride_layout.findViewById(R.id.ride_status_text);
         mRideStatusTextView.setText(mBasicRide.getStatus().toString());
-        TextView rideStartTimeTextView = basic_ride_layout.findViewById(R.id.ride_start_time_text);
-        rideStartTimeTextView.setText(mCommonUtil.getFormattedDateTimeString(mBasicRide.getStartTime()));
+        rideStartTime.setText(mCommonUtil.getFormattedDateTimeString(mBasicRide.getStartTime()));
 
         if (mBasicRide.getInvoice()!=null){
             //This is required to ensure invisible items becomes visible on reload in recycler view
-            basic_ride_layout.findViewById(R.id.total_money_earned_text).setVisibility(View.VISIBLE);
-            basic_ride_layout.findViewById(R.id.invoice_status).setVisibility(View.VISIBLE);
+            rideTotalEarnedAmount.setVisibility(View.VISIBLE);
+            rideInvoiceStatus.setVisibility(View.VISIBLE);
             Invoice invoice = mBasicRide.getInvoice();
             float totalDeduction = invoice.getServiceCharge() + invoice.getCgst() + invoice.getSgst() + invoice.getIgst() + invoice.getTcs();
             float driverNetEarning = invoice.getTotalAmountEarned() - totalDeduction;
             String symbol = mCommonUtil.getCurrencySymbol(mBasicRide.getDriver().getCountry());
             String amount = mCommonUtil.getDecimalFormattedString(driverNetEarning);
-            ((TextView) basic_ride_layout.findViewById(R.id.total_money_earned_text))
-                    .setText(symbol + amount);
-            ((TextView) basic_ride_layout.findViewById(R.id.invoice_status))
-                    .setText(mBasicRide.getInvoice().getStatus().toString());
+
+            rideTotalEarnedAmount.setText(symbol + amount);
+            rideInvoiceStatus.setText(mBasicRide.getInvoice().getStatus().toString());
 
         } else {
-            basic_ride_layout.findViewById(R.id.total_money_earned_text).setVisibility(View.GONE);
-            basic_ride_layout.findViewById(R.id.invoice_status).setVisibility(View.GONE);
+            rideTotalEarnedAmount.setVisibility(View.GONE);
+            rideInvoiceStatus.setVisibility(View.GONE);
         }
 
         TextView rideStartPointTextView = basic_ride_layout.findViewById(R.id.ride_start_point_text);

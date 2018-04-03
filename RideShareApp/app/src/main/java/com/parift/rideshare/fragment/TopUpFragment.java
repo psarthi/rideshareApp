@@ -234,8 +234,8 @@ public class TopUpFragment extends BaseFragment {
         paramMap.put( "INDUSTRY_TYPE_ID" , "Retail");
         paramMap.put( "CHANNEL_ID" , "WAP");
         paramMap.put( "TXN_AMOUNT" , "1");
-        paramMap.put( "WEBSITE" , "WEB_STAGING");
-        paramMap.put( "CALLBACK_URL" , "https://pguat.paytm.com/oltp-web/processTransaction?ORDER_ID=ORDER0000000004");
+        paramMap.put( "WEBSITE" , "APPSTAGING");
+        paramMap.put( "CALLBACK_URL" , "https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp");
         paramMap.put( "EMAIL" , "partha.sarthi@gmail.com");
         paramMap.put( "MOBILE_NO" , "7777777777");
         paramMap.put( "CHECKSUMHASH" , "/C+EVL7C7t9ntKFpkZV0KGFelBjpKPvO2VdGHt2sNoJI+lTi0CzOqG0h96fpRs73Kh5y2JU1Z75ac0fzDSSQqIX0oBDtDrpgOgB8/0i9BWI=");

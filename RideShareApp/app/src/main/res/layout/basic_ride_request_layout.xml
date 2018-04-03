@@ -15,8 +15,7 @@ as well as inside any other layout as well e.g. In HomePage as well as RidesList
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="@dimen/default_margin">
+        android:orientation="horizontal">
 
         <TextView android:id="@+id/ride_request_id_text"
                   android:layout_width="0dp"
@@ -38,28 +37,7 @@ as well as inside any other layout as well e.g. In HomePage as well as RidesList
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin">
-
-        <TextView android:id="@+id/ride_request_pickup_time_text"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_weight="1"
-                  android:text="Sat Dec 2, 9:00 AM"
-                  android:textStyle="bold|italic"/>
-
-        <TextView android:id="@+id/ride_request_confirmation_code_text"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:layout_weight="1"
-                  android:text="Payment Code 1234"
-                  android:gravity="end"
-                  android:textStyle="bold|italic"
-                  android:textAllCaps="true"/>
-
-    </LinearLayout>
+    <include layout="@layout/time_reciept_layout" android:id="@+id/start_time_bill_layout"/>
 
     <TextView android:id="@+id/ride_request_pickup_point_text"
               android:layout_width="wrap_content"

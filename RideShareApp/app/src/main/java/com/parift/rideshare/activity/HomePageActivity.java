@@ -456,17 +456,7 @@ public class HomePageActivity extends BaseActivity
     }
 
     @Override
-    public void onBillFragmentInteraction(RideType rideType, String bill) {
-
-        if (rideType.equals(RideType.OfferRide)){
-            RideInfoFragment fragment = (RideInfoFragment) getSupportFragmentManager().findFragmentByTag(RideInfoFragment.TAG);
-            fragment.updateBill(new Gson().fromJson(bill, Bill.class));
-            getSupportFragmentManager().popBackStack();
-        } else {
-            RideRequestInfoFragment fragment = (RideRequestInfoFragment) getSupportFragmentManager().findFragmentByTag(RideRequestInfoFragment.TAG);
-            fragment.updateBill(new Gson().fromJson(bill, Bill.class));
-            getSupportFragmentManager().popBackStack();
-        }
+    public void onBillFragmentInteraction(String rideRequest) {
     }
 
     @Override

@@ -67,7 +67,7 @@ public class CoTravellerAdapter extends ArrayAdapter<FullRideRequest>{
         userComp.setUserProfileSingleRow(convertView, true);
 
         RideRequestComp rideRequestComp = new RideRequestComp(mBaseFragment, rideRequest);
-        rideRequestComp.setPickupTimeAndBillLayout(convertView, RideType.OfferRide);
+        rideRequestComp.setPickupTimeAndBillLayout(convertView);
         rideRequestComp.setRidePickupDropPointsLayout(convertView);
 
         RatingBar coTravellerRatingBar = convertView.findViewById(R.id.co_traveller_rating_bar);

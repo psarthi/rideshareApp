@@ -146,9 +146,9 @@ public class FragmentLoader {
         fragmentTransaction.commit();
     }
 
-    public void loadBillFragment(String bill, RideType rideType) {
+    public void loadBillFragment(String rideRequest) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        BillFragment billFragment = BillFragment.newInstance(bill, rideType);
+        BillFragment billFragment = BillFragment.newInstance(rideRequest);
         fragmentTransaction.replace(R.id.home_page_container, billFragment, BillFragment.TAG);
         fragmentTransaction.addToBackStack(BillFragment.TAG);
         fragmentTransaction.commit();

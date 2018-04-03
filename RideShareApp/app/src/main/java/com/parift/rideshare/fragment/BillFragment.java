@@ -4,32 +4,19 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
-import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
-import com.parift.rideshare.helper.RESTClient;
-import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
-import com.parift.rideshare.model.ride.domain.RideType;
 import com.parift.rideshare.model.billing.domain.core.Bill;
-import com.parift.rideshare.model.billing.domain.core.BillStatus;
-import com.parift.rideshare.model.billing.dto.BillInfo;
-import com.parift.rideshare.model.common.ErrorMessage;
+import com.parift.rideshare.model.ride.dto.FullRideRequest;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONObject;
-
-import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,17 +33,13 @@ public class BillFragment extends BaseFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_BILL = "bill";
-    private static final String ARG_RIDE_TYPE = "rideType";
-
-    // TODO: Rename and change types of parameters
-    private String mBillData;
-    private RideType mRideType;
+    private static final String ARG_RIDE_REQUEST = "rideRequest";
 
     private OnFragmentInteractionListener mListener;
     private CommonUtil mCommonUtil;
     private BasicUser mUser;
     private Bill mBill;
+    private FullRideRequest mRideRequest;
     private TextView mBillStatusTextView;
 
     public BillFragment() {
@@ -67,16 +50,14 @@ public class BillFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param bill Bill in Json format
-     * @param rideType Type of ride
+     * @param rideRequest Ride Request in Json format
      * @return A new instance of fragment BillFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BillFragment newInstance(String bill, RideType rideType) {
+    public static BillFragment newInstance(String rideRequest) {
         BillFragment fragment = new BillFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_BILL, bill);
-        args.putString(ARG_RIDE_TYPE, rideType.toString());
+        args.putString(ARG_RIDE_REQUEST, rideRequest);
         fragment.setArguments(args);
         return fragment;
     }
@@ -85,12 +66,12 @@ public class BillFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mBillData = getArguments().getString(ARG_BILL);
-            mRideType = RideType.valueOf(getArguments().getString(ARG_RIDE_TYPE));
+            String rideRequest = getArguments().getString(ARG_RIDE_REQUEST);
+            mRideRequest = new Gson().fromJson(rideRequest, FullRideRequest.class);
+            mBill = mRideRequest.getBill();
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        mBill = new Gson().fromJson(mBillData, Bill.class);
     }
 
     @Override
@@ -98,7 +79,7 @@ public class BillFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bill, container, false);
-        mBillStatusTextView = view.findViewById(R.id.bill_status);
+        mBillStatusTextView = view.findViewById(R.id.reciept_status);
 
         setBillView(view);
         return view;
@@ -107,12 +88,12 @@ public class BillFragment extends BaseFragment {
     private void setBillView(View view) {
         mBillStatusTextView.setText(mBill.getStatus().toString());
         //Reason for casting to float to get decimal value as distance is int, its not giving decimal value
-        float distance = (float) mBill.getRideRequest().getTravelDistance() / 1000;
+        float distance = (float) mRideRequest.getTravelDistance() / 1000;
 
         ((TextView) view.findViewById(R.id.rate_per_km_text)).setText(mCommonUtil.getDecimalFormattedString(mBill.getRate()));
         ((TextView) view.findViewById(R.id.distance_text)).setText(mCommonUtil.getDecimalFormattedString(distance));
         ((TextView) view.findViewById(R.id.discount_text)).setText(mCommonUtil.getDecimalFormattedString(mBill.getDiscountPercentage()));
-        ((TextView) view.findViewById(R.id.co_traveller_count_text)).setText(Integer.toString(mBill.getRideRequest().getSeatRequired()));
+        ((TextView) view.findViewById(R.id.co_traveller_count_text)).setText(Integer.toString(mRideRequest.getSeatRequired()));
 
         String currencySymbol = mCommonUtil.getCurrencySymbol(mUser.getCountry());
         String amountText = currencySymbol + mCommonUtil.getDecimalFormattedString(mBill.getAmount());
@@ -167,6 +148,6 @@ public class BillFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onBillFragmentInteraction(RideType rideType, String data);
+        void onBillFragmentInteraction(String data);
     }
 }

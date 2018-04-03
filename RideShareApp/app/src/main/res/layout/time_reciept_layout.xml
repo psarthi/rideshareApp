@@ -7,10 +7,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    tools:showIn="@layout/ride_co_traveller_layout">
+    tools:showIn="@layout/ride_co_traveller_layout"
+    android:layout_marginTop="@dimen/default_margin">
 
     <TextView
-        android:id="@+id/pickup_time_text"
+        android:id="@+id/time_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sat Dec 2, 9:00 AM"
@@ -18,23 +19,22 @@
         android:layout_weight="1"/>
 
     <TextView
-        android:id="@+id/fare_text"
+        android:id="@+id/amount_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Rs 45/-"
         android:textAlignment="viewEnd"
         android:textStyle="bold|italic"
-        android:layout_weight="1"/>
+        android:layout_marginRight="@dimen/small_margin"/>
 
     <TextView
-        android:id="@+id/bill_status"
+        android:id="@+id/reciept_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Paid"
         android:gravity="center_vertical|end"
-        android:drawableEnd="@drawable/ic_receipt"
+        android:drawableEnd="@drawable/ic_receipt_small"
         android:textAllCaps="true"
-        android:layout_weight="1"
         android:textStyle="bold|italic"/>
 
 </LinearLayout>
