@@ -6,11 +6,7 @@ public class Remark {
 	private String message;
 	private String paidBy;
 	private String paidTo;
-	private long billNumber;
-	private long rideId;
-	private long rideRequestId;
-	private long invoiceNumber;
-	
+
 	public String getMessage() {
 		return message;
 	}
@@ -34,29 +30,5 @@ public class Remark {
 	}
 	public void setPurpose(Purpose purpose) {
 		this.purpose = purpose;
-	}
-	public long getBillNumber() {
-		return billNumber;
-	}
-	public void setBillNumber(long billNumber) {
-		this.billNumber = billNumber;
-	}
-	public long getRideId() {
-		return rideId;
-	}
-	public void setRideId(long rideId) {
-		this.rideId = rideId;
-	}
-	public long getRideRequestId() {
-		return rideRequestId;
-	}
-	public void setRideRequestId(long rideRequestId) {
-		this.rideRequestId = rideRequestId;
-	}
-	public long getInvoiceNumber() {
-		return invoiceNumber;
-	}
-	public void setInvoiceNumber(long invoiceNumber) {
-		this.invoiceNumber = invoiceNumber;
 	}
 }

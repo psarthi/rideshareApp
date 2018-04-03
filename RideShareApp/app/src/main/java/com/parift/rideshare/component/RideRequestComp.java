@@ -125,7 +125,8 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                     @Override
                     public void onClick(View v) {
                         FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                        fragmentLoader.loadBillFragment(new Gson().toJson(mBasicRideRequest));
+                        //This is the scenario when you already have fullriderequest instead of basicriderequest
+                        fragmentLoader.loadBillFragment(new Gson().toJson(mRideRequest));
                     }
                 });
             }
