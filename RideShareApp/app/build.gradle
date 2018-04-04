@@ -54,7 +54,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:11.8.0'
     //Google Maps Android Util
     compile 'com.google.maps.android:android-maps-utils:0.5'
-    compile files('lib/PGSDK_V2.1.jar')
+    //PayTM Library
+    compile 'com.paytm.pgsdk:pgsdk:1.0.10'
     compile 'com.google.firebase:firebase-messaging:11.8.0'
 }
 

@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import com.parift.rideshare.model.billing.domain.core.Account;
 import com.parift.rideshare.model.billing.domain.core.AccountType;
 import com.parift.rideshare.model.billing.domain.core.Bill;
+import com.parift.rideshare.model.billing.domain.core.FinancialTransaction;
 import com.parift.rideshare.model.ride.domain.core.Ride;
 import com.parift.rideshare.model.ride.domain.core.RideRequest;
 import com.parift.rideshare.model.user.domain.City;
@@ -62,7 +63,7 @@ public class User implements Comparable<User>{
 	private RegistrationType registrationType;
 	private String pushNotificationToken;
 	private Collection<Interest> interests = new HashSet<Interest>();
-	
+	private Collection<FinancialTransaction> financialTransactions = new HashSet<FinancialTransaction>();
 	
 	public long getId() {
 		return id;
@@ -332,6 +333,14 @@ public class User implements Comparable<User>{
 
 	public void setRegistrationDateTime(Date registrationDateTime) {
 		this.registrationDateTime = registrationDateTime;
+	}
+
+	public Collection<FinancialTransaction> getFinancialTransactions() {
+		return financialTransactions;
+	}
+
+	public void setFinancialTransactions(Collection<FinancialTransaction> financialTransactions) {
+		this.financialTransactions = financialTransactions;
 	}
 }
 

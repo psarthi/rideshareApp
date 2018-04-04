@@ -9,6 +9,7 @@ public class Transaction implements Comparable<Transaction>{
 	private TransactionType type;
 	private float amount;
 	private Remark remark;
+	private Account account;
 	
 	public long getId() {
 		return id;
@@ -72,4 +73,11 @@ public class Transaction implements Comparable<Transaction>{
 		return Long.compare(transaction.getId(),this.getId());
 	}
 
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 }

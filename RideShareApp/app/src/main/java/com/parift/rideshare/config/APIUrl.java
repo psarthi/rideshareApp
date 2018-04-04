@@ -112,6 +112,7 @@ public class APIUrl {
     public static final String REDEEM_MONEY = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/redeem/{amount}";
     public static final String GET_USER_WALLET_TRANSACTION = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/transactions?page={page}";
     public static final String GET_PENDING_BILLS = BASE_URL_BILLING_SYSTEM + "/billing/pending";
+    public static final String GET_ORDER_INFO = BASE_URL_BILLING_SYSTEM + "/financialtransaction/{amount}/getorderinfo";
 
 
     //Service Provider URL's

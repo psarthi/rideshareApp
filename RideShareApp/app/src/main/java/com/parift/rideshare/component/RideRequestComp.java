@@ -119,17 +119,14 @@ public class RideRequestComp implements CancelCoTravellerFragment.CancelCoTravel
                 billStatusTextView.setText(billStatus);
             }
 
-            //This will ensure that listener is only enabled for ride info and not ride request list view
-            if (mBaseFragment instanceof RideRequestInfoFragment){
-                billStatusTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                        //This is the scenario when you already have fullriderequest instead of basicriderequest
-                        fragmentLoader.loadBillFragment(new Gson().toJson(mRideRequest));
-                    }
-                });
-            }
+            billStatusTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                    //Since we are passing as Gson its fine to pass basicRideRequest instead of fullriderequest
+                    fragmentLoader.loadBillFragment(new Gson().toJson(mBasicRideRequest));
+                }
+            });
         } else {
             fareTextView.setVisibility(View.GONE);
             billStatusTextView.setVisibility(View.GONE);
