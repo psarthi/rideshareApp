@@ -44,6 +44,7 @@ public class APIUrl {
     public static final String MEMBER_USER_ID_KEY = "{memberUserId}";
     public static final String OTP_RETRY_STATUS = "{retryStatus}";
     public static final String TOKEN_KEY = "{token}";
+    public static final String ORDER_ID_KEY = "{orderId}";
 
     //User System URL's
     public static final String GOOGLE_SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/googlesignin";
@@ -113,6 +114,8 @@ public class APIUrl {
     public static final String GET_USER_WALLET_TRANSACTION = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/transactions?page={page}";
     public static final String GET_PENDING_BILLS = BASE_URL_BILLING_SYSTEM + "/billing/pending";
     public static final String GET_ORDER_INFO = BASE_URL_BILLING_SYSTEM + "/financialtransaction/{amount}/getorderinfo";
+    public static final String VALIDATE_AND_PROCESS_PAYMENT = BASE_URL_BILLING_SYSTEM + "/financialtransaction/{accountNumber}/validateandprocesspayment";
+    public static final String CANCEL_FINANCIAL_TRANSACTION = BASE_URL_BILLING_SYSTEM + "/financialtransaction/cancel/{orderId}";
 
 
     //Service Provider URL's

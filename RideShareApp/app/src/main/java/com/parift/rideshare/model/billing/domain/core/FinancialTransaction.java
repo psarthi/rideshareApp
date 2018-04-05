@@ -16,7 +16,10 @@ public class FinancialTransaction{
 	private PaymentGateway paymentGateway;
 	private Transaction walletTransaction;
 	private User user;
-	
+	private String pgTransactionStatus;
+	private String pgResponseCode;
+	private String pgResponseMsg;
+
 	public long getId() {
 		return id;
 	}
@@ -73,5 +76,29 @@ public class FinancialTransaction{
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getPgTransactionStatus() {
+		return pgTransactionStatus;
+	}
+
+	public void setPgTransactionStatus(String pgTransactionStatus) {
+		this.pgTransactionStatus = pgTransactionStatus;
+	}
+
+	public String getPgResponseCode() {
+		return pgResponseCode;
+	}
+
+	public void setPgResponseCode(String pgResponseCode) {
+		this.pgResponseCode = pgResponseCode;
+	}
+
+	public String getPgResponseMsg() {
+		return pgResponseMsg;
+	}
+
+	public void setPgResponseMsg(String pgResponseMsg) {
+		this.pgResponseMsg = pgResponseMsg;
 	}
 }

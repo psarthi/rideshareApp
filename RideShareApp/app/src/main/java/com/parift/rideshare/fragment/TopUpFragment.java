@@ -18,6 +18,7 @@ import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
 import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
 import com.parift.rideshare.model.billing.domain.core.Account;
+import com.parift.rideshare.model.billing.dto.TopUpResponse;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
 import com.paytm.pgsdk.PaytmOrder;
@@ -27,7 +28,9 @@ import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -178,41 +181,6 @@ public class TopUpFragment extends BaseFragment {
         });
     }
 
-    private void addMoneyToWallet(String topUpAmountString) {
-        String ADD_MONEY = APIUrl.ADD_MONEY.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
-                .replace(APIUrl.ACCOUNT_NUMBER_KEY, Long.toString(mAccount.getNumber()))
-                .replace(APIUrl.AMOUNT_KEY, topUpAmountString);
-        mCommonUtil.showProgressDialog();
-        RESTClient.get(ADD_MONEY, null, new RSJsonHttpResponseHandler(mCommonUtil) {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                if (isAdded()) {
-                    super.onSuccess(statusCode, headers, response);
-                    mCommonUtil.dismissProgressDialog();
-                    mAccount = new Gson().fromJson(response.toString(), Account.class);
-                    mCommonUtil.updateAccount(mAccount);
-                    //This will refresh the wallet balance
-                    setWalletBalance(mAccount.getBalance());
-                    // No need to go back to create ride automatically, let user press back to do that
-                    //they can see their updated balance properly before moving back
-                    if (mRequiredBalanceVisiblity) {
-                        resetRequiredBalanceViews();
-                        //This will go back to the create rides page
-                        //Don't have this here as are refreshing the view and it will kill the fragment view above
-                        //hideSoftKeyBoard();
-                        //Toast.makeText(getActivity(), "New Wallet Balance:" + mCurrencySymbol + mAccount.getBalance(), Toast.LENGTH_LONG).show();
-                        //TODO Fix this bug as its causing Crash
-                        //getActivity().getSupportFragmentManager().popBackStack();
-                    }
-                    //VERY IMP - This has to be the last line else you will NPE on fragment
-                    //as it would get killed post this line
-                    //This will refresh the fragment and transaction list as well
-                    mListener.onTopUpFragmentRefresh();
-                }
-            }
-        });
-    }
-
     private void resetRequiredBalanceViews(){
         //Below commented line will not come into effect as fragment would get reloaded
         // and it will again get visiblility so that's fine for now.
@@ -244,7 +212,7 @@ public class TopUpFragment extends BaseFragment {
 
         PaytmPGService Service = PaytmPGService.getStagingService();
 
-        PaytmOrder Order = new PaytmOrder(paramMap);
+        final PaytmOrder Order = new PaytmOrder(paramMap);
 
         Service.initialize(Order, null);
 
@@ -259,17 +227,19 @@ public class TopUpFragment extends BaseFragment {
                         // initialization of webview. // Error Message details
                         // the error occurred.
                         Logger.debug(TAG, "someUIErrorOccurred" + inErrorMessage);
+                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onTransactionResponse(Bundle inResponse) {
-                        Logger.debug(TAG, "Payment Transaction : " + inResponse);
-                        Toast.makeText(getActivity(), "Payment Transaction response "+inResponse.toString(), Toast.LENGTH_LONG).show();
-                        if (inResponse.get("RESPCODE").toString().equals("01")){
-                            addMoneyToWallet(mTopUpAmount);
-                        } else {
-                            //TODO Implement failed response flow
+                        Logger.debug(TAG, "Payment Transaction Response in Bundle: " + inResponse);
+                        Set<String> keys = inResponse.keySet();
+                        Map<String, String> paramMap = new HashMap<>();
+                        for (String key: keys){
+                            paramMap.put(key, inResponse.get(key).toString());
                         }
+                        Logger.debug(TAG, "PayTM Response in HashMap:"+paramMap.toString());
+                        validateAndProcessPayment(paramMap);
                     }
 
                     @Override
@@ -278,6 +248,7 @@ public class TopUpFragment extends BaseFragment {
                         // available, then this
                         // method gets called.
                         Logger.debug(TAG, "networkNotAvailable");
+                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -290,6 +261,7 @@ public class TopUpFragment extends BaseFragment {
                         // that client. That is value of payt_STATUS is 2. //
                         // Error Message describes the reason for failure.
                         Logger.debug(TAG, "clientAuthenticationFailed" + inErrorMessage);
+                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -297,22 +269,69 @@ public class TopUpFragment extends BaseFragment {
                                                       String inErrorMessage, String inFailingUrl) {
 
                         Logger.debug(TAG, "onErrorLoadingWebPage:" + iniErrorCode +":"+inErrorMessage);
+                        Toast.makeText(getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
 
                     }
 
                     // had to be added: NOTE
                     @Override
                     public void onBackPressedCancelTransaction() {
-                        // TODO Auto-generated method stub
+                        Logger.debug(TAG, "User Cancels the transaction");
+                        String url = APIUrl.CANCEL_FINANCIAL_TRANSACTION.replace(APIUrl.ORDER_ID_KEY, Order.getRequestParamMap().get("ORDER_ID"))
+                                .replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
+                        mCommonUtil.showProgressDialog();
+                        RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                super.onSuccess(statusCode, headers, response);
+                                mCommonUtil.dismissProgressDialog();
+                            }
+                        });
                     }
 
                     @Override
                     public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
                         Logger.debug(TAG, "Payment Transaction Failed " + inErrorMessage);
-                        Toast.makeText(getActivity(), "Payment Transaction Failed ", Toast.LENGTH_LONG).show();
                     }
 
                 });
+    }
+
+    private void validateAndProcessPayment(Map<String, String> paramMap) {
+        String url = APIUrl.VALIDATE_AND_PROCESS_PAYMENT.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                .replace(APIUrl.ACCOUNT_NUMBER_KEY, Long.toString(mAccount.getNumber()));
+        mCommonUtil.showProgressDialog();
+        RESTClient.post(getActivity(), url, paramMap, new RSJsonHttpResponseHandler(mCommonUtil) {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    Logger.debug(TAG, "TopupResponse:"+response.toString());
+                    mCommonUtil.dismissProgressDialog();
+                    TopUpResponse topUpResponse = new Gson().fromJson(response.toString(), TopUpResponse.class);
+                    Toast.makeText(getActivity(), topUpResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    mAccount = topUpResponse.getAccount();
+                    mCommonUtil.updateAccount(mAccount);
+                    //This will refresh the wallet balance
+                    setWalletBalance(mAccount.getBalance());
+                    // No need to go back to create ride automatically, let user press back to do that
+                    //they can see their updated balance properly before moving back
+                    if (mRequiredBalanceVisiblity) {
+                        resetRequiredBalanceViews();
+                        //This will go back to the create rides page
+                        //Don't have this here as are refreshing the view and it will kill the fragment view above
+                        //hideSoftKeyBoard();
+                        //Toast.makeText(getActivity(), "New Wallet Balance:" + mCurrencySymbol + mAccount.getBalance(), Toast.LENGTH_LONG).show();
+                        //TODO Fix this bug as its causing Crash
+                        //getActivity().getSupportFragmentManager().popBackStack();
+                    }
+                    //VERY IMP - This has to be the last line else you will NPE on fragment
+                    //as it would get killed post this line
+                    //This will refresh the fragment and transaction list as well
+                    mListener.onTopUpFragmentRefresh();
+                }
+            }
+        });
     }
 
     @Override
