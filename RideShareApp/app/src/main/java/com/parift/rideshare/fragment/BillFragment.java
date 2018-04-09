@@ -89,6 +89,9 @@ public class BillFragment extends BaseFragment {
         mBillStatusTextView.setText(mBill.getStatus().toString());
         //Reason for casting to float to get decimal value as distance is int, its not giving decimal value
         float distance = (float) mRideRequest.getTravelDistance() / 1000;
+        float walkingDistance = (float) (mRideRequest.getRidePickupPointDistance() + mRideRequest.getRideDropPointDistance()) / 1000;
+        //This will reduce the walking distance from the bill, amount has already been taken care
+        distance = distance - walkingDistance;
 
         ((TextView) view.findViewById(R.id.rate_per_km_text)).setText(mCommonUtil.getDecimalFormattedString(mBill.getRate()));
         ((TextView) view.findViewById(R.id.distance_text)).setText(mCommonUtil.getDecimalFormattedString(distance));

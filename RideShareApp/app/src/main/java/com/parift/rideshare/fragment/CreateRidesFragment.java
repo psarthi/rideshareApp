@@ -844,9 +844,11 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                         mTravelTime = element.getDuration_in_traffic().getValue();
                         //Note - Below statements of setting travelTime and Distance may be duplicate need to be 100% sure before removing them
                         //as we are already setting the values while creating the ride request with other properties in setRideRequest()
-                        //mRideRequest.setTravelDistance(mTravelDistance);
+                        //****Updated Note - DON'T REMOVE THIS LINE OTHERWISE TRAVEL TIME AND DISTANCE IS NOT GETTING SET
+                        mRideRequest.setTravelDistance(mTravelDistance);
                         //IMP - Its important to get duration in traffic instead of using standard duration as traffic duration would cover actual time in traffic condition
-                        //mRideRequest.setTravelTime(mTravelTime);
+                        //****Updated Note - DON'T REMOVE THIS LINE OTHERWISE TRAVEL TIME AND DISTANCE IS NOT GETTING SET
+                        mRideRequest.setTravelTime(mTravelTime);
                         //Maxfare is applicable for All Sub-Categories else for specific sub-category you will get exact fare
                         getFare();
                     } else {
@@ -886,6 +888,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                     if (isAdded()) {
                         super.onSuccess(statusCode, headers, response);
                         mCommonUtil.dismissProgressDialog();
+                        Logger.debug(TAG, "Response:"+response.toString());
                         mPreBookingRideRequestResult =
                                 new Gson().fromJson(response.toString(), PreBookingRideRequestResult.class);
                         mMaxFare = mPreBookingRideRequestResult.getMaxFare();
