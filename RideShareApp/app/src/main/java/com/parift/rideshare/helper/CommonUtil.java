@@ -18,6 +18,7 @@ import com.parift.rideshare.model.billing.domain.core.Account;
 import com.parift.rideshare.model.ride.dto.BasicRideRequest;
 import com.parift.rideshare.model.ride.dto.FullRide;
 import com.parift.rideshare.model.ride.dto.FullRideRequest;
+import com.parift.rideshare.model.serviceprovider.domain.core.Company;
 import com.parift.rideshare.model.user.domain.Country;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.parift.rideshare.model.user.dto.UserSignInResult;
@@ -104,6 +105,7 @@ public class CommonUtil {
         saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_KEY,new Gson().toJson(userSignInResult.getCurrentRide()));
         saveInSharedPref(Constant.SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY,new Gson().toJson(userSignInResult.getCurrentRideRequest()));
         saveInSharedPref(Constant.SHARED_PREFS_USER_IS_GROUP_MEMBER_KEY,Boolean.toString(userSignInResult.isGroupMember()));
+        saveInSharedPref(Constant.SHARED_PREFS_COMPANY_KEY,new Gson().toJson(userSignInResult.getCompany()));
     }
 
     public void saveInSharedPref(String key, String value) {
@@ -138,6 +140,11 @@ public class CommonUtil {
     public BasicUser getUser() {
         String user = getSharedPreferences().getString(Constant.SHARED_PREFS_USER_KEY,null);
         return new Gson().fromJson(user, BasicUser.class);
+    }
+
+    public Company getCompany() {
+        String user = getSharedPreferences().getString(Constant.SHARED_PREFS_COMPANY_KEY,null);
+        return new Gson().fromJson(user, Company.class);
     }
 
     public Account getAccount() {

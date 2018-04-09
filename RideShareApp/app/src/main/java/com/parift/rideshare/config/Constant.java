@@ -19,6 +19,7 @@ public class Constant {
     public static final String SHARED_PREFS_CURRENT_RIDE_KEY = "currentRide";
     public static final String SHARED_PREFS_CURRENT_RIDE_REQUEST_KEY = "currentRideRequest";
     public static final String SHARED_PREFS_USER_IS_GROUP_MEMBER_KEY = "isUserGroupMember";
+    public static final String SHARED_PREFS_COMPANY_KEY = "company";
     public static final int ACCESS_FINE_LOCATION_REQUEST_CODE=1;
     public static final float MAP_SINGLE_LOCATION_ZOOM_LEVEL = 15;
     public static final double LAT_LNG_LARGE_PADDING_PERCENT = 0.30;

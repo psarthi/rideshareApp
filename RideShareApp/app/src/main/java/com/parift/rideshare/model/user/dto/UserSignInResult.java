@@ -2,6 +2,7 @@ package com.parift.rideshare.model.user.dto;
 
 import com.parift.rideshare.model.ride.dto.FullRide;
 import com.parift.rideshare.model.ride.dto.FullRideRequest;
+import com.parift.rideshare.model.serviceprovider.domain.core.Company;
 
 public class UserSignInResult {
 
@@ -10,6 +11,7 @@ public class UserSignInResult {
 	private FullRide currentRide;
 	private FullRideRequest currentRideRequest;
 	private boolean groupMember;
+	private Company company;
 	
 	public String getToken() {
 		return token;
@@ -40,5 +42,13 @@ public class UserSignInResult {
 	}
 	public void setGroupMember(boolean groupMember) {
 		this.groupMember = groupMember;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 }

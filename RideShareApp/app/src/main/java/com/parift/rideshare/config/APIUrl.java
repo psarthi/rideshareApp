@@ -109,7 +109,6 @@ public class APIUrl {
 
     //Billing System URL's
     public static final String PAY_BILL = BASE_URL_BILLING_SYSTEM + "/billing/pay";
-    public static final String ADD_MONEY = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/addmoney/{amount}";
     public static final String REDEEM_MONEY = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/redeem/{amount}";
     public static final String GET_USER_WALLET_TRANSACTION = BASE_URL_BILLING_SYSTEM + "/accounts/{accountNumber}/transactions?page={page}";
     public static final String GET_PENDING_BILLS = BASE_URL_BILLING_SYSTEM + "/billing/pending";

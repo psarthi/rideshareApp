@@ -1,0 +1,291 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            tools:context="com.parift.rideshare.fragment.InvoiceFragment">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+              android:orientation="vertical"
+             android:layout_margin="@dimen/default_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView android:id="@+id/invoice_number"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Invoice No. 1"
+                  android:textStyle="bold"
+                  android:textColor="@color/colorPrimaryDark"/>
+
+        <TextView android:id="@+id/invoice_date"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Sat Dec 2, 9:00 AM"
+                  android:textStyle="bold|italic"
+                  android:textAlignment="viewEnd"
+                  android:textColor="@color/colorPrimaryDark"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:background="@color/colorGrayLight"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView android:id="@+id/customer_name"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Partha Sarthi"
+                  android:textStyle="bold"
+                  android:textColor="@android:color/black"/>
+
+        <TextView android:id="@+id/customer_contact"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="8123110011 / partha.sarthi@gmail.com"/>
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:background="@color/colorGrayLight"/>
+
+
+    <TextView android:id="@+id/ride_start_point_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Gopalan Grandeur, Hoodi, Bangalore"
+              android:gravity="center_vertical"
+              android:drawableLeft="@drawable/ic_green_marker"/>
+
+    <TextView android:id="@+id/ride_end_point_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Ajmera Infinity, Electronic City, Bangalore"
+              android:gravity="center_vertical"
+              android:drawableLeft="@drawable/ic_red_marker"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:background="@color/colorGrayLight"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView android:id="@+id/total_ride_earning_label"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Total Ride Earning"/>
+
+        <TextView android:id="@+id/total_ride_earning_amount"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="5"
+                  android:textAlignment="viewEnd"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView android:id="@+id/platform_fees_label"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Platform Fees (15%)"/>
+
+        <TextView android:id="@+id/platform_fees_amount"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="5"
+                  android:textAlignment="viewEnd"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cgst_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView android:id="@+id/cgst_label"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="CGST (9%)"/>
+
+        <TextView android:id="@+id/cgst_amount"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="5"
+                  android:textAlignment="viewEnd"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sgst_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView android:id="@+id/sgst_label"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="SGST (9%)"/>
+
+        <TextView android:id="@+id/sgst_amount"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="5"
+                  android:textAlignment="viewEnd"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/igst_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView android:id="@+id/igst_label"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="IGST (18%)"/>
+
+        <TextView android:id="@+id/igst_amount"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="5"
+                  android:textAlignment="viewEnd"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tcs_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView android:id="@+id/tcs_label"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="TCS (2%)"/>
+
+        <TextView android:id="@+id/tcs_amount"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="5"
+                  android:textAlignment="viewEnd"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/total_deduction_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView android:id="@+id/total_deduction_label"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Total Deduction"
+                  android:textStyle="bold"
+                  android:textColor="@android:color/black"/>
+
+        <TextView android:id="@+id/total_deduction_amount"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="15"
+                  android:textAlignment="viewEnd"
+                  android:textStyle="bold"
+                  android:textColor="@android:color/black"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/net_ride_earning_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView android:id="@+id/net_ride_earning_label"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Net Ride Earning"
+                  android:textStyle="italic"
+                  android:textColor="@color/colorPrimaryDark"/>
+
+        <TextView android:id="@+id/net_ride_earning_amount"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="45"
+                  android:textAlignment="viewEnd"
+                  android:textStyle="italic"
+                  android:textColor="@color/colorPrimaryDark"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:background="@color/colorGrayLight"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView android:id="@+id/company_name"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Parift Technologies Private Limited"
+                  android:textStyle="bold"
+                  android:textAlignment="center"/>
+
+        <TextView android:id="@+id/company_address"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="Villa No. 38, MS Shelters,Kammasandra(A), Kasaba(H),Anekal Taluk, Bangalore, Karnataka, India, 562106"
+                  android:textAlignment="center"/>
+
+        <TextView android:id="@+id/company_gstin"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="GSTIN # 1234567891001212"
+                  android:textStyle="bold"
+                  android:textAlignment="center"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+
+</ScrollView>

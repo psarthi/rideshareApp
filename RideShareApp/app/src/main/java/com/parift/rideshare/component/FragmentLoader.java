@@ -18,6 +18,7 @@ import com.parift.rideshare.fragment.HelpFragment;
 import com.parift.rideshare.fragment.HelpQuestionAnswerFragment;
 import com.parift.rideshare.fragment.InfoFragment;
 import com.parift.rideshare.fragment.InterestFragment;
+import com.parift.rideshare.fragment.InvoiceFragment;
 import com.parift.rideshare.fragment.MembershipRequestFragment;
 import com.parift.rideshare.fragment.SearchGroupFragment;
 import com.parift.rideshare.fragment.SearchUserForGroupFragment;
@@ -277,6 +278,16 @@ public class FragmentLoader {
         fragmentTransaction.replace(R.id.home_page_container, interestFragment,
                 InterestFragment.TAG);
         fragmentTransaction.addToBackStack(InterestFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadInvoiceFragment(String basicRide) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        InvoiceFragment invoiceFragment = InvoiceFragment.
+                newInstance(basicRide);
+        fragmentTransaction.replace(R.id.home_page_container, invoiceFragment,
+                InvoiceFragment.TAG);
+        fragmentTransaction.addToBackStack(InvoiceFragment.TAG);
         fragmentTransaction.commit();
     }
 

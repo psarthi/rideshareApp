@@ -29,6 +29,7 @@ import com.parift.rideshare.fragment.HelpFragment;
 import com.parift.rideshare.fragment.HelpQuestionAnswerFragment;
 import com.parift.rideshare.fragment.InfoFragment;
 import com.parift.rideshare.fragment.InterestFragment;
+import com.parift.rideshare.fragment.InvoiceFragment;
 import com.parift.rideshare.fragment.MembershipRequestFragment;
 import com.parift.rideshare.fragment.SearchGroupFragment;
 import com.parift.rideshare.fragment.SearchUserForGroupFragment;
@@ -103,7 +104,8 @@ public class HomePageActivity extends BaseActivity
         HelpQuestionAnswerFragment.OnFragmentInteractionListener,
         InterestFragment.OnFragmentInteractionListener,
         CommonGroupListFragment.OnFragmentInteractionListener,
-        CommonInterestListFragment.OnFragmentInteractionListener{
+        CommonInterestListFragment.OnFragmentInteractionListener,
+        InvoiceFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -588,6 +590,11 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onCommonInterestListFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onInvoiceFragmentInteraction(String data) {
 
     }
 }

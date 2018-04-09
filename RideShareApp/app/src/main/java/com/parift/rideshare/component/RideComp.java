@@ -133,6 +133,14 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
             rideTotalEarnedAmount.setText(symbol + amount);
             rideInvoiceStatus.setText(mBasicRide.getInvoice().getStatus().toString());
 
+            rideInvoiceStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                    fragmentLoader.loadInvoiceFragment(new Gson().toJson(mBasicRide));
+                }
+            });
+
         } else {
             rideTotalEarnedAmount.setVisibility(View.GONE);
             rideInvoiceStatus.setVisibility(View.GONE);
