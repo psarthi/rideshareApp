@@ -274,6 +274,11 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         Logger.debug(TAG, "Recieved Callback for Refresh for Ride Request Id with status:"
                 +rideRequest.getId()+":"+rideRequest.getStatus());
         mRideRequest = rideRequest;
+        //This will ensure on ride refresh post cancellation etc. it doesn't show up old suggestions
+        //IMP - This will remove the functionality of showing the suggestions post cancellation on the same view.
+        //e.g. if there are two matches and user accepted one, then rejected that, so you still have another option
+        //which will not show up. Which is fine for now
+        mSuggestedMatchedRideInfos.clear();
         setRideRequestInfoView(getView());
     }
 
