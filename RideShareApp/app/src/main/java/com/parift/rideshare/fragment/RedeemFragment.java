@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.config.APIUrl;
+import com.parift.rideshare.config.Constant;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
@@ -132,6 +133,7 @@ public class RedeemFragment extends BaseFragment {
                                 mCommonUtil.updateAccount(mAccount);
                                 //This will refresh the wallet balance
                                 setWalletBalance(mAccount.getBalance());
+                                Toast.makeText(getActivity(), "Money would be credited to Paytm account in couple of days", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -147,6 +149,14 @@ public class RedeemFragment extends BaseFragment {
         } else {
             if (Integer.parseInt(redeemAmount) == 0) {
                 Toast.makeText(getActivity(), "Please enter the valid amount.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+            if (Integer.parseInt(redeemAmount) < Constant.MIN_REDEMPTION_AMOUNT){
+                Toast.makeText(getActivity(), "Min. Redemption amount is "+mCurrencySymbol + Constant.MIN_REDEMPTION_AMOUNT, Toast.LENGTH_LONG).show();
+                return false;
+            }
+            if (Integer.parseInt(redeemAmount) > mAccount.getBalance()){
+                Toast.makeText(getActivity(), "Redemption amount should be less than your wallet balance", Toast.LENGTH_LONG).show();
                 return false;
             }
         }

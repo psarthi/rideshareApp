@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.google.gson.reflect.TypeToken;
 import com.parift.rideshare.R;
 import com.parift.rideshare.config.APIUrl;
+import com.parift.rideshare.config.Constant;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
@@ -202,6 +203,10 @@ public class TopUpFragment extends BaseFragment {
             }
             if (topUpAmount == 0) {
                 Toast.makeText(getActivity(), "Please enter the valid amount.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+            if (topUpAmount > Constant.MAX_TOPUP_AMOUNT){
+                Toast.makeText(getActivity(), "Max. Top up amount is "+mCurrencySymbol + Constant.MAX_TOPUP_AMOUNT, Toast.LENGTH_LONG).show();
                 return false;
             }
         }

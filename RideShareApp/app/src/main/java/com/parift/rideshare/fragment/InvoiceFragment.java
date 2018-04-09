@@ -103,7 +103,8 @@ public class InvoiceFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.total_ride_earning_amount)).setText(totalEarning);
 
         float platformFeesPercentage = mInvoice.getServiceCharge() / mInvoice.getTotalAmountEarned() * 100;
-        String platformFeesLabel = "Platform Fees (" + platformFeesPercentage +"%)";
+        String platformFeesLabel = "Platform Fees ("
+                + mCommonUtil.getDecimalFormattedString(platformFeesPercentage) +"%)";
         ((TextView) view.findViewById(R.id.platform_fees_label)).setText(platformFeesLabel);
 
         String platformFeesAmount = mCommonUtil.getCurrencySymbol(mDriver.getCountry())
@@ -112,7 +113,7 @@ public class InvoiceFragment extends BaseFragment {
 
         if (mInvoice.getCgst()!=0 && mInvoice.getSgst()!=0){
             float sgstPercentage = mInvoice.getSgst() / mInvoice.getServiceCharge() * 100;
-            String sgstLabel = "SGST (" + sgstPercentage +"%)";
+            String sgstLabel = "SGST (" + mCommonUtil.getDecimalFormattedString(sgstPercentage) +"%)";
             ((TextView) view.findViewById(R.id.sgst_label)).setText(sgstLabel);
 
             String sgstAmount = mCommonUtil.getCurrencySymbol(mDriver.getCountry())
@@ -120,7 +121,7 @@ public class InvoiceFragment extends BaseFragment {
             ((TextView) view.findViewById(R.id.sgst_amount)).setText(sgstAmount);
 
             float cgstPercentage = mInvoice.getCgst() / mInvoice.getServiceCharge() * 100;
-            String cgstLabel = "CGST (" + cgstPercentage +"%)";
+            String cgstLabel = "CGST (" + mCommonUtil.getDecimalFormattedString(cgstPercentage) +"%)";
             ((TextView) view.findViewById(R.id.cgst_label)).setText(cgstLabel);
 
             String cgstAmount = mCommonUtil.getCurrencySymbol(mDriver.getCountry())
@@ -130,7 +131,7 @@ public class InvoiceFragment extends BaseFragment {
             view.findViewById(R.id.igst_layout).setVisibility(View.GONE);
         } else {
             float igstPercentage = mInvoice.getIgst() / mInvoice.getServiceCharge() * 100;
-            String igstLabel = "IGST (" + igstPercentage +"%)";
+            String igstLabel = "IGST (" + mCommonUtil.getDecimalFormattedString(igstPercentage) +"%)";
             ((TextView) view.findViewById(R.id.igst_label)).setText(igstLabel);
 
             String igstAmount = mCommonUtil.getCurrencySymbol(mDriver.getCountry())
@@ -143,7 +144,7 @@ public class InvoiceFragment extends BaseFragment {
 
         if (mInvoice.getTcs()!=0){
             float tcsPercentage = mInvoice.getTcs() / mInvoice.getTotalAmountEarned() * 100;
-            String tcsLabel = "TCS (" + tcsPercentage +"%)";
+            String tcsLabel = "TCS (" + mCommonUtil.getDecimalFormattedString(tcsPercentage) +"%)";
             ((TextView) view.findViewById(R.id.tcs_label)).setText(tcsLabel);
 
             String tcsAmount = mCommonUtil.getCurrencySymbol(mDriver.getCountry())

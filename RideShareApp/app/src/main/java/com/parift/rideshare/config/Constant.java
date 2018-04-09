@@ -50,8 +50,8 @@ public class Constant {
     public static final int DEFAULT_LUGGAGE = 2;
     public static final int MIN_LUGGAGE = 0;
     public static final int MAX_LUGGAGE = 6;
-    public static final int MIN_TOPUP_AMOUNT = 1;
-    public static final int MAX_TOPUP_AMOUNT = 1000;
+    public static final int MIN_REDEMPTION_AMOUNT = 200;
+    public static final int MAX_TOPUP_AMOUNT = 2000;
     public static final int LONG_DISTANCE_IN_METERS=100000;
     public static final String PRICE_DETAILS_PAGE_TITLE="Price";
     public static final int MAX_INTEREST = 5;
