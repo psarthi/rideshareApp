@@ -93,7 +93,8 @@ public class BillFragment extends BaseFragment {
         //This will reduce the walking distance from the bill, amount has already been taken care
         distance = distance - walkingDistance;
 
-        ((TextView) view.findViewById(R.id.rate_per_km_text)).setText(mCommonUtil.getDecimalFormattedString(mBill.getRate()));
+        String rate = mCommonUtil.getCurrencySymbol(mUser.getCountry()) + mCommonUtil.getDecimalFormattedString(mBill.getRate());
+        ((TextView) view.findViewById(R.id.rate_per_km_text)).setText(rate);
         ((TextView) view.findViewById(R.id.distance_text)).setText(mCommonUtil.getDecimalFormattedString(distance));
         ((TextView) view.findViewById(R.id.discount_text)).setText(mCommonUtil.getDecimalFormattedString(mBill.getDiscountPercentage()));
         ((TextView) view.findViewById(R.id.co_traveller_count_text)).setText(Integer.toString(mRideRequest.getSeatRequired()));

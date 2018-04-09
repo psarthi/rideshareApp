@@ -215,7 +215,14 @@ public class TopUpFragment extends BaseFragment {
 
     public void onStartTransaction(final Map<String, String> paramMap) {
 
-        PaytmPGService Service = PaytmPGService.getStagingService();
+        PaytmPGService Service = null;
+
+        if (APIUrl.ENV.equals("DEVELOPMENT")) {
+            Service = PaytmPGService.getStagingService();
+        }
+        if (APIUrl.ENV.equals("PRODUCTION")) {
+            Service = PaytmPGService.getProductionService();
+        }
 
         final PaytmOrder Order = new PaytmOrder(paramMap);
 
