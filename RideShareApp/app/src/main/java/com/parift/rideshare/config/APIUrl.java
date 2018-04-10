@@ -122,6 +122,7 @@ public class APIUrl {
 
     //Service Provider URL's
     public static final String GET_HELP_QUESTION_ANSWER_LIST = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/serviceprovider/help";
+    public static final String GET_APP_INFO = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/serviceprovider/appinfo";
 
     //Google Service
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +

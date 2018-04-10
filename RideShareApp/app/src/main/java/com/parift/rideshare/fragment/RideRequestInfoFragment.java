@@ -278,7 +278,7 @@ public class RideRequestInfoFragment extends BaseFragment implements OnMapReadyC
         //IMP - This will remove the functionality of showing the suggestions post cancellation on the same view.
         //e.g. if there are two matches and user accepted one, then rejected that, so you still have another option
         //which will not show up. Which is fine for now
-        mSuggestedMatchedRideInfos.clear();
+        if (mSuggestedMatchedRideInfos!=null) mSuggestedMatchedRideInfos.clear();
         setRideRequestInfoView(getView());
     }
 

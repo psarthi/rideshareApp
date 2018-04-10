@@ -60,6 +60,7 @@ import com.parift.rideshare.model.ride.domain.RideType;
 import com.parift.rideshare.model.billing.domain.core.Bill;
 import com.parift.rideshare.model.ride.domain.core.RideMode;
 import com.parift.rideshare.model.ride.dto.RideRequestResult;
+import com.parift.rideshare.model.serviceprovider.dto.AppInfo;
 import com.parift.rideshare.model.user.domain.Preference;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.parift.rideshare.model.user.dto.GroupDetail;
@@ -297,10 +298,11 @@ public class HomePageActivity extends BaseActivity
     }
 
     private void share() {
+        AppInfo appInfo = mCommonUtil.getAppInfo();
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT,
-                getString(R.string.app_share_msg));
+                appInfo.getShareMsg() + appInfo.getAppUrl());
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }

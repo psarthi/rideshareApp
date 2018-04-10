@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -19,6 +21,7 @@ import com.parift.rideshare.model.ride.dto.BasicRideRequest;
 import com.parift.rideshare.model.ride.dto.FullRide;
 import com.parift.rideshare.model.ride.dto.FullRideRequest;
 import com.parift.rideshare.model.serviceprovider.domain.core.Company;
+import com.parift.rideshare.model.serviceprovider.dto.AppInfo;
 import com.parift.rideshare.model.user.domain.Country;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.parift.rideshare.model.user.dto.UserSignInResult;
@@ -145,6 +148,11 @@ public class CommonUtil {
     public Company getCompany() {
         String user = getSharedPreferences().getString(Constant.SHARED_PREFS_COMPANY_KEY,null);
         return new Gson().fromJson(user, Company.class);
+    }
+
+    public AppInfo getAppInfo() {
+        String user = getSharedPreferences().getString(Constant.SHARED_PREFS_APP_INFO_KEY,null);
+        return new Gson().fromJson(user, AppInfo.class);
     }
 
     public Account getAccount() {
@@ -342,6 +350,17 @@ public class CommonUtil {
         } else {
             Logger.debug(TAG, "User is null, so can't update push notification token");
         }
+    }
+
+    public int getAppVersionCode(){
+        int versionCode = 0;
+        try {
+            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            versionCode = pInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionCode;
     }
 
 }
