@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.config.APIUrl;
@@ -62,6 +63,8 @@ import com.parift.rideshare.model.ride.domain.core.RideMode;
 import com.parift.rideshare.model.ride.dto.RideRequestResult;
 import com.parift.rideshare.model.serviceprovider.dto.AppInfo;
 import com.parift.rideshare.model.user.domain.Preference;
+import com.parift.rideshare.model.user.domain.Role;
+import com.parift.rideshare.model.user.domain.RoleName;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.parift.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
@@ -143,18 +146,25 @@ public class HomePageActivity extends BaseActivity
 
         //This will set up listener on Navigation items
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (mUser.getCountry().getRideMode().equals(RideMode.Free)){
+        if (mUser.getCountry().getRideMode().equals(RideMode.Free)) {
             navigationView.getMenu().findItem(R.id.nav_wallet).setVisible(false);
         }
         navigationView.setNavigationItemSelectedListener(this);
 
         setNavHeader(navigationView);
-        //No need to fetch from server again as while signing in, we refresh the current rides
-        mFragmentLoader.loadHomePageWithCurrentRidesFragment(FetchType.Local, null);
+        if (!isDriver()) {
+            Toast.makeText(this, R.string.platform_limited_to_car_owners_msg, Toast.LENGTH_LONG).show();
+            Logger.debug(TAG, "User is not a driver, so add vehicle");
+            mFragmentLoader.loadAddVehicleFragment(this.getClass().getName());
+        } else {
+            //No need to fetch from server again as while signing in, we refresh the current rides
+            mFragmentLoader.loadHomePageWithCurrentRidesFragment(FetchType.Local, null);
+        }
 
         //Dismiss progress dialog when activity is loaded, else its confusing to the user
         //mCommonUtil.dismissProgressDialog();
     }
+
 
     private void setNavHeader(NavigationView navigationView) {
 
@@ -240,22 +250,36 @@ public class HomePageActivity extends BaseActivity
             HomePageWithCurrentRidesFragment fragment = (HomePageWithCurrentRidesFragment) getSupportFragmentManager()
                     .findFragmentByTag(HomePageWithCurrentRidesFragment.TAG);
 
-            //This will update the fetch type from local to server, as initially post sign fetch type is local
-            //This may not be required as we are forcefully calling the fetchFromServer but it would be good to
-            //have this value set for any future purpose e.g. if we are taking some further action based on FetchType
-            fragment.setFetchType(FetchType.Server);
+            if (fragment!=null){
+                //This will update the fetch type from local to server, as initially post sign fetch type is local
+                //This may not be required as we are forcefully calling the fetchFromServer but it would be good to
+                //have this value set for any future purpose e.g. if we are taking some further action based on FetchType
+                fragment.setFetchType(FetchType.Server);
 
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0){
-                Logger.debug(TAG, "Refreshing Home Page View");
-                //This will refresh the view if the fragment is already loaded which is based on the backstack count
-                //Note - Don't do this on else block otherwise it will throw NPE as view would only be created post onCreateView is called
-                //But if some other fragment is loaded then View is already destroyed
-                fragment.fetchRidesFromServer(fragment.getView());
+                if (getSupportFragmentManager().getBackStackEntryCount() == 0){
+                    Logger.debug(TAG, "Refreshing Home Page View");
+                    //This will refresh the view if the fragment is already loaded which is based on the backstack count
+                    //Note - Don't do this on else block otherwise it will throw NPE as view would only be created post onCreateView is called
+                    //But if some other fragment is loaded then View is already destroyed
+                    fragment.fetchRidesFromServer(fragment.getView());
+                } else {
+                    //This has to be post setting the FetchType else we will not get data refreshed from server
+                    //Note - Fragment would only get reloaded if you are not on the Home Page else it will not do anything
+                    //as home page is already loaded
+                    removeAllBackStacks();
+                }
             } else {
-                //This has to be post setting the FetchType else we will not get data refreshed from server
-                //Note - Fragment would only get reloaded if you are not on the Home Page else it will not do anything
-                //as home page is already loaded
+                Logger.debug(TAG, "Home page create rides fragment is not loaded, so loading add vehicle fragment");
+                //This would be the case when Home page create rides fragment is not loaded
+                //This is required else previous fragment would not get removed
+                //Don't try to mix this with above case, just to keep it simple
                 removeAllBackStacks();
+                //Reason for doing double check just as a safety measure and in future if we add more fragments on the home page, this may help
+                if (!isDriver()){
+                    Toast.makeText(this, R.string.platform_limited_to_car_owners_msg,Toast.LENGTH_LONG).show();
+                    Logger.debug(TAG, "User is not a driver, so add vehicle");
+                    mFragmentLoader.loadAddVehicleFragment(this.getClass().getName());
+                }
             }
         } else {
 
@@ -295,6 +319,18 @@ public class HomePageActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private boolean isDriver() {
+        boolean driverStatus = false;
+        //Reason for not using contains directly as it was not working
+        for (Role role : mUser.getRoles()){
+            if (role.getName().equals(RoleName.Driver)){
+                driverStatus = true;
+                break;
+            }
+        }
+        return driverStatus;
     }
 
     private void share() {
@@ -490,7 +526,9 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onAddVehicleFragmentFragmentInteraction(String data) {
-
+        //This is the scenario when vehicle is added for the first time post user login
+        //No need to fetch from server again as while signing in, we refresh the current rides
+        mFragmentLoader.loadHomePageWithCurrentRidesFragment(FetchType.Local, null);
     }
 
     @Override

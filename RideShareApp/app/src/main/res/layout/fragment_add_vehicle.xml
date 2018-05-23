@@ -25,7 +25,7 @@
         <EditText android:id="@+id/add_vehicle_model_text"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:inputType="textNoSuggestions"/>
+                  android:inputType="textNoSuggestions|textCapCharacters"/>
     </LinearLayout>
 
     <LinearLayout android:id="@+id/add_vehicle_number_layout"
@@ -44,7 +44,7 @@
         <EditText android:id="@+id/add_vehicle_number_text"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:inputType="textNoSuggestions"/>
+                  android:inputType="textNoSuggestions|textCapCharacters"/>
     </LinearLayout>
 
     <include layout="@layout/seat_luggage_layout" android:id="@+id/seat_luggage_layout"/>

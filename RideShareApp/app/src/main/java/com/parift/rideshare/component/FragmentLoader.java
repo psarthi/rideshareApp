@@ -77,9 +77,9 @@ public class FragmentLoader {
                 .commit();
     }
 
-    public void loadAddVehicleFragment(String data) {
+    public void loadAddVehicleFragment(String callingClassName) {
         AddVehicleFragment addVehicleFragment = AddVehicleFragment.
-                newInstance(data);
+                newInstance(callingClassName);
         getFragmentManager().beginTransaction()
                 .replace(R.id.home_page_container, addVehicleFragment, AddVehicleFragment.TAG)
                 .addToBackStack(AddVehicleFragment.TAG)

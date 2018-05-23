@@ -51,10 +51,8 @@ CommonComp.onSeatLuggageSelectionListener{
     public static final String TAG = AddVehicleFragment.class.getName();
     public static final String TITLE = "Add Vehicle";
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_DATA = "data";
-
-    private String mData;
+    public static final String ARG_DATA = "data";
+    private String mCallingClassName;
 
     private OnFragmentInteractionListener mListener;
     private BasicUser mUser;
@@ -80,13 +78,13 @@ CommonComp.onSeatLuggageSelectionListener{
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param data  Data in Json format
+     * @param callingClassName calling class Name
      * @return A new instance of fragment AddVehicleFragment.
      */
-    public static AddVehicleFragment newInstance(String data) {
+    public static AddVehicleFragment newInstance(String callingClassName) {
         AddVehicleFragment fragment = new AddVehicleFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_DATA, data);
+        args.putString(ARG_DATA, callingClassName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -95,7 +93,7 @@ CommonComp.onSeatLuggageSelectionListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mData = getArguments().getString(ARG_DATA);
+            mCallingClassName = getArguments().getString(ARG_DATA);
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
@@ -161,7 +159,11 @@ CommonComp.onSeatLuggageSelectionListener{
                                 mUser = new Gson().fromJson(response.toString(), BasicUser.class);
                                 mCommonUtil.updateUser(mUser);
                                 Logger.debug(TAG, "Vehicle Added");
-                                getActivity().getSupportFragmentManager().popBackStack();
+                                if (mCallingClassName.equals(HomePageActivity.class.getName())){
+                                    mListener.onAddVehicleFragmentFragmentInteraction(null);
+                                } else {
+                                    getActivity().getSupportFragmentManager().popBackStack();
+                                }
                             }
                         }
                     });
@@ -195,7 +197,11 @@ CommonComp.onSeatLuggageSelectionListener{
     @Override
     public void onResume() {
         super.onResume();
-        ((HomePageActivity)getActivity()).showBackButton(true);
+        if (mCallingClassName.equals(HomePageActivity.class.getName())){
+            ((HomePageActivity)getActivity()).showBackButton(false);
+        } else {
+            ((HomePageActivity)getActivity()).showBackButton(true);
+        }
         getActivity().setTitle(TITLE);
         Logger.debug(TAG,"Inside OnResume");
         showBackStackDetails();

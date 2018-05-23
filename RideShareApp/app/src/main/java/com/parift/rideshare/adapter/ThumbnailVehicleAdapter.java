@@ -99,7 +99,7 @@ public class ThumbnailVehicleAdapter extends RecyclerView.Adapter<ThumbnailVehic
                 public void onClick(View v) {
                     Logger.debug(TAG, "Add Vehicle Clicked");
                     FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                    fragmentLoader.loadAddVehicleFragment(null);
+                    fragmentLoader.loadAddVehicleFragment(this.getClass().getName());
                 }
             });
         }

@@ -110,5 +110,6 @@
     <string name="feedback_concern">(Feedback / Concern)</string>
     <string name="redemption_msg">Money would be credited to your <b>Paytm</b> account in couple of days.
         In case you don\'t have Paytm account, please create one. For any issue, please contact us.</string>
+    <string name="platform_limited_to_car_owners_msg">We offer Ride Sharing between car owner\'s only, so please add your vehicle</string>
 
 </resources>
