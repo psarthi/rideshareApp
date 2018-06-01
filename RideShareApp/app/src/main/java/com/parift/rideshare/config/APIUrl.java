@@ -9,7 +9,7 @@ public class APIUrl {
     //Environment Specific Parameters
     //public static final String ENV = "DEVELOPMENT";
     public static final String ENV = "PRODUCTION";
-    //public static final String HOST_NAME = "http://10.0.0.4:8080";
+    //public static final String HOST_NAME = "http://10.0.0.6:8080";
     //public static final String HOST_NAME = "http://rideshare-test.ap-south-1.elasticbeanstalk.com";
     public static final String HOST_NAME = "https://api.parift.in";
     public static final String BASE_URL_USER_SYSTEM = HOST_NAME + "/RSUserSystem/api";

@@ -43,6 +43,9 @@ public class RSJsonHttpResponseHandler extends JsonHttpResponseHandler {
             if (errorMessage.getErrorCause().equals("NA")){
                 Logger.debug(TAG, "Request Failed with Proper ErrorMessage:"+ errorMessage.getErrorMessage());
                 Toast.makeText(mCommonUtil.getActivity(), errorMessage.getErrorMessage(), Toast.LENGTH_LONG).show();
+                if (errorMessage.getErrorCode()==7){
+                    ((BaseActivity) mCommonUtil.getActivity()).signOut();
+                }
             } else {
                 showSystemErrorMsg(errorMessage.getErrorMessage());
             }
@@ -58,10 +61,17 @@ public class RSJsonHttpResponseHandler extends JsonHttpResponseHandler {
     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
         super.onFailure(statusCode, headers, responseString, throwable);
         mCommonUtil.dismissProgressDialog();
-        showSystemErrorMsg(throwable.getMessage());
+        Logger.debug(TAG, "Request statusCode: "+statusCode);
+        if (statusCode==401){
+            Logger.debug(TAG, "Request Unauthorized, so signing out");
+            Toast.makeText(mCommonUtil.getActivity(), "Invalid token, please sign-in again", Toast.LENGTH_LONG).show();
+            ((BaseActivity) mCommonUtil.getActivity()).signOut();
+        } else {
+            showSystemErrorMsg(throwable.getMessage());
+        }
     }
 
-    private void showSystemErrorMsg(String msg){
+    protected void showSystemErrorMsg(String msg){
         Logger.debug(TAG, "Request Failed with system error:"+ msg);
         Toast.makeText(mCommonUtil.getActivity(), R.string.system_exception_msg, Toast.LENGTH_LONG).show();
     }
