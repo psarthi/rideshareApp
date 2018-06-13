@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/offer_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/large_block_height"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:background="@color/colorGrayLight"/>
+
+    <TextView
+        android:id="@+id/offer_partner_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Parift Ride"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:textSize="@dimen/heading3_text_size"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/offer_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Free Parking anywhere in Bangalore"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:textSize="@dimen/heading3_text_size"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/reward_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Paid"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"/>
+
+
+        <TextView
+            android:id="@+id/reward_redemption_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sat Dec 2, 9:00 AM"
+            android:gravity="end"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -15,6 +15,10 @@
             android:icon="@drawable/ic_vehicle_medium"
             android:title="Rides"/>
         <item
+            android:id="@+id/nav_rewards"
+            android:icon="@drawable/ic_interest_medium"
+            android:title="Rewards"/>
+        <item
             android:id="@+id/nav_interest"
             android:icon="@drawable/ic_interest_medium"
             android:title="Interests"/>

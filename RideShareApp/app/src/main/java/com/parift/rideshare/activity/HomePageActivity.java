@@ -32,6 +32,13 @@ import com.parift.rideshare.fragment.InfoFragment;
 import com.parift.rideshare.fragment.InterestFragment;
 import com.parift.rideshare.fragment.InvoiceFragment;
 import com.parift.rideshare.fragment.MembershipRequestFragment;
+import com.parift.rideshare.fragment.OfferInfoFragment;
+import com.parift.rideshare.fragment.OfferListFragment;
+import com.parift.rideshare.fragment.ReimbursementFragment;
+import com.parift.rideshare.fragment.ReimbursementInfoFragment;
+import com.parift.rideshare.fragment.RewardCouponTransactionListFragment;
+import com.parift.rideshare.fragment.RewardHomePageFragment;
+import com.parift.rideshare.fragment.RewardReimbursementTransactionListFragment;
 import com.parift.rideshare.fragment.SearchGroupFragment;
 import com.parift.rideshare.fragment.SearchUserForGroupFragment;
 import com.parift.rideshare.fragment.GroupListFragment;
@@ -58,16 +65,14 @@ import com.parift.rideshare.helper.RESTClient;
 import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
 import com.parift.rideshare.model.app.FetchType;
 import com.parift.rideshare.model.ride.domain.RideType;
-import com.parift.rideshare.model.billing.domain.core.Bill;
 import com.parift.rideshare.model.ride.domain.core.RideMode;
-import com.parift.rideshare.model.ride.dto.RideRequestResult;
+import com.parift.rideshare.model.serviceprovider.domain.core.RewardCouponTransaction;
 import com.parift.rideshare.model.serviceprovider.dto.AppInfo;
 import com.parift.rideshare.model.user.domain.Preference;
 import com.parift.rideshare.model.user.domain.Role;
 import com.parift.rideshare.model.user.domain.RoleName;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.parift.rideshare.model.user.dto.GroupDetail;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -109,7 +114,14 @@ public class HomePageActivity extends BaseActivity
         InterestFragment.OnFragmentInteractionListener,
         CommonGroupListFragment.OnFragmentInteractionListener,
         CommonInterestListFragment.OnFragmentInteractionListener,
-        InvoiceFragment.OnFragmentInteractionListener{
+        InvoiceFragment.OnFragmentInteractionListener,
+        RewardHomePageFragment.OnFragmentInteractionListener,
+        OfferListFragment.OnFragmentInteractionListener,
+        OfferInfoFragment.OnFragmentInteractionListener,
+        ReimbursementFragment.OnFragmentInteractionListener,
+        RewardReimbursementTransactionListFragment.OnFragmentInteractionListener,
+        RewardCouponTransactionListFragment.OnFragmentInteractionListener,
+        ReimbursementInfoFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -289,6 +301,10 @@ public class HomePageActivity extends BaseActivity
             if (id == R.id.nav_rides) {
                 Logger.debug(TAG, "Rides Clicked");
                 mFragmentLoader.loadRidesListFragment();
+            }
+            else if (id == R.id.nav_rewards) {
+                mFragmentLoader.loadRewardHomePageFragment();
+                Logger.debug(TAG, "Rewards Clicked");
             }
             else if (id == R.id.nav_interest) {
                 mFragmentLoader.loadInterestFragment(null);
@@ -635,6 +651,41 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onInvoiceFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onRewardHomePageFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onOfferListFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onOfferInfoFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onReimbursementFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onRewardReimbursementTransactionListFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onRewardCouponTransactionListFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onReimbursementInfoFragmentInteraction(String data) {
 
     }
 }

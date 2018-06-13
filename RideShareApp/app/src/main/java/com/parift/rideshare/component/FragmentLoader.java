@@ -20,6 +20,10 @@ import com.parift.rideshare.fragment.InfoFragment;
 import com.parift.rideshare.fragment.InterestFragment;
 import com.parift.rideshare.fragment.InvoiceFragment;
 import com.parift.rideshare.fragment.MembershipRequestFragment;
+import com.parift.rideshare.fragment.OfferInfoFragment;
+import com.parift.rideshare.fragment.ReimbursementFragment;
+import com.parift.rideshare.fragment.ReimbursementInfoFragment;
+import com.parift.rideshare.fragment.RewardHomePageFragment;
 import com.parift.rideshare.fragment.SearchGroupFragment;
 import com.parift.rideshare.fragment.SearchUserForGroupFragment;
 import com.parift.rideshare.fragment.HomePageWithCurrentRidesFragment;
@@ -172,6 +176,15 @@ public class FragmentLoader {
         fragmentTransaction.commit();
     }
 
+    public void loadRewardHomePageFragment() {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        RewardHomePageFragment rewardHomePageFragment = RewardHomePageFragment.newInstance(null, null);
+        fragmentTransaction.replace(R.id.home_page_container, rewardHomePageFragment, RewardHomePageFragment.TAG);
+        fragmentTransaction.addToBackStack(RewardHomePageFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+
     public void loadSearchUserForGroupFragment(String group) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         SearchUserForGroupFragment searchUserForGroupFragment = SearchUserForGroupFragment.newInstance(group);
@@ -288,6 +301,30 @@ public class FragmentLoader {
         fragmentTransaction.replace(R.id.home_page_container, invoiceFragment,
                 InvoiceFragment.TAG);
         fragmentTransaction.addToBackStack(InvoiceFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadOfferInfoFragment(String offer) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        OfferInfoFragment offerInfoFragment = OfferInfoFragment.newInstance(offer);
+        fragmentTransaction.replace(R.id.home_page_container, offerInfoFragment, OfferInfoFragment.TAG);
+        fragmentTransaction.addToBackStack(OfferInfoFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadReimbursementFragment(String offer) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        ReimbursementFragment reimbursementFragment = ReimbursementFragment.newInstance(offer);
+        fragmentTransaction.replace(R.id.home_page_container, reimbursementFragment, ReimbursementFragment.TAG);
+        fragmentTransaction.addToBackStack(ReimbursementFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadReimbursementInfoFragment(String reimbursementTransaction) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        ReimbursementInfoFragment reimbursementInfoFragment = ReimbursementInfoFragment.newInstance(reimbursementTransaction);
+        fragmentTransaction.replace(R.id.home_page_container, reimbursementInfoFragment, ReimbursementInfoFragment.TAG);
+        fragmentTransaction.addToBackStack(ReimbursementInfoFragment.TAG);
         fragmentTransaction.commit();
     }
 

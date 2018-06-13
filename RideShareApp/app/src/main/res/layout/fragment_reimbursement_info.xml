@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="8dp">
+
+
+
+    <include layout="@layout/reward_transaction_item" android:id="@+id/reward_transaction_item"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_margin="0dp"/>
+
+    <View
+        android:id="@+id/line_seperator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:background="@color/colorGrayLight"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reimbursement_approved_amount_label"
+            android:text="Approved Amount"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reimbursement_approved_amount"
+            android:text="Rs 50/-"
+            android:gravity="end"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reimbursement_payment_date_label"
+            android:text="Paid On"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reimbursement_payment_date"
+            android:text="Sat Dec 2, 9:00 AM"
+            android:gravity="end"/>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reimbursement_remark_label"
+        android:text="Remarks"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/default_margin"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reimbursement_remark"
+        android:text="Max. Limit of all bills is Rs 100/-"/>
+
+    <View
+        android:id="@+id/termsAndCondition_line_seperator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:background="@color/colorGrayLight"/>
+
+    <TextView
+        android:id="@+id/offer_ride_termsAndCondition_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="Terms and Condition"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/offer_ride_termsAndCondition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Terms and Condition Description"/>
+
+    </LinearLayout>
+</ScrollView>

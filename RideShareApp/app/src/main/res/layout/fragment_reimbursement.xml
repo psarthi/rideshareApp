@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="@dimen/default_margin"
+              xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/attach_bill_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Bills"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:layout_margin="@dimen/default_margin"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/heading3_text_size"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/attach_bill_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/fab_margin"
+        app:fabSize="mini"
+        android:src="@drawable/ic_add_white_custom"
+        android:layout_toEndOf="@id/attach_bill_label"/>
+
+    <LinearLayout
+        android:id="@+id/attached_bills_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_below="@id/attach_bill_label"
+        android:gravity="center_vertical">
+
+        <include layout="@layout/file_attachement_layout"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/reimbursement_submit_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="Submit"
+        android:layout_below="@id/attached_bills_layout"
+        android:layout_marginTop="@dimen/medium_margin"/>
+
+
+</RelativeLayout>

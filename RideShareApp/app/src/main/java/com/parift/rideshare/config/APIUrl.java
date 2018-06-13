@@ -7,11 +7,11 @@ package com.parift.rideshare.config;
 public class APIUrl {
 
     //Environment Specific Parameters
-    //public static final String ENV = "DEVELOPMENT";
-    public static final String ENV = "PRODUCTION";
-    //public static final String HOST_NAME = "http://10.0.0.6:8080";
+    public static final String ENV = "DEVELOPMENT";
+    //public static final String ENV = "PRODUCTION";
+    public static final String HOST_NAME = "http://10.0.0.2:8080";
     //public static final String HOST_NAME = "http://rideshare-test.ap-south-1.elasticbeanstalk.com";
-    public static final String HOST_NAME = "https://api.parift.in";
+    //public static final String HOST_NAME = "https://api.parift.in";
     public static final String BASE_URL_USER_SYSTEM = HOST_NAME + "/RSUserSystem/api";
     public static final String BASE_URL_RIDE_SYSTEM = HOST_NAME + "/RSRideSystem/api/users/{userId}";
     public static final String BASE_URL_BILLING_SYSTEM = HOST_NAME + "/RSBillingSystem/api/users/{userId}";
@@ -123,6 +123,9 @@ public class APIUrl {
     //Service Provider URL's
     public static final String GET_HELP_QUESTION_ANSWER_LIST = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/serviceprovider/help";
     public static final String GET_APP_INFO = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/serviceprovider/appinfo";
+    public static final String GET_OFFERS = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/offers?page={page}";
+    public static final String GET_REWARD_COUPON_TRANSACTIONS = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/users/{userId}/rewardtransactions/coupon?page={page}";
+    public static final String GET_REWARD_REIMBURSEMENT_TRANSACTIONS = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/users/{userId}/rewardtransactions/reimbursement?page={page}";
 
     //Google Service
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +

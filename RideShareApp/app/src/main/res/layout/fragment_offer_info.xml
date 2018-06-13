@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <include layout="@layout/offer_item" android:id="@+id/offer_item"
+            android:layout_margin="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <View
+            android:id="@+id/termsAndCondition_line_seperator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_seperator_thickness"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:background="@color/colorGrayLight"/>
+
+        <TextView
+            android:id="@+id/offer_ride_termsAndCondition_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="Terms and Condition"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/offer_ride_termsAndCondition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Terms and Condition Description"/>
+
+        <View
+            android:id="@+id/redemptionProcess_line_seperator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_seperator_thickness"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:background="@color/colorGrayLight"/>
+
+        <TextView
+            android:id="@+id/offer_ride_redemptionProcess_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="How to Redeem"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/offer_ride_redemptionProcess"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Redemption Process"
+            android:layout_marginBottom="60dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout android:id="@+id/offer_buttons_layout"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/reimburse_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="Reimburse"
+            android:textAllCaps="false"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/redeem_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="Redeem"
+            android:textAllCaps="false"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
