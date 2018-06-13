@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="8dp">
+
+    <include layout="@layout/reward_transaction_item" android:id="@+id/reward_transaction_item"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_margin="0dp"/>
+
+    <View
+        android:id="@+id/line_seperator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_seperator_thickness"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:background="@color/colorGrayLight"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin">
+
+        <TextView
+            android:id="@+id/coupon_code_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Coupon Code"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/heading3_text_size"/>
+
+        <TextView
+            android:id="@+id/coupon_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ABCDEF"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textAlignment="viewEnd"
+            android:textSize="@dimen/heading3_text_size"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:id="@+id/redeem_date_layout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/coupon_redemption_date_label"
+            android:text="Redeemed On"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/coupon_redemption_date"
+            android:text="Sat Dec 2, 9:00 AM"
+            android:gravity="end"/>
+
+    </LinearLayout>
+
+        <include layout="@layout/offer_details" android:id="@+id/offer_details"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -15,55 +15,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <include layout="@layout/offer_item" android:id="@+id/offer_item"
+            <include layout="@layout/offer_item" android:id="@+id/offer_item"
             android:layout_margin="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <View
-            android:id="@+id/termsAndCondition_line_seperator"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/line_seperator_thickness"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:background="@color/colorGrayLight"/>
+            <include layout="@layout/offer_details" android:id="@+id/offer_details"/>
 
-        <TextView
-            android:id="@+id/offer_ride_termsAndCondition_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:text="Terms and Condition"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/offer_ride_termsAndCondition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Terms and Condition Description"/>
-
-        <View
-            android:id="@+id/redemptionProcess_line_seperator"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/line_seperator_thickness"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:background="@color/colorGrayLight"/>
-
-        <TextView
-            android:id="@+id/offer_ride_redemptionProcess_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:text="How to Redeem"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/offer_ride_redemptionProcess"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Redemption Process"
-            android:layout_marginBottom="60dp"/>
 
         </LinearLayout>
 
@@ -92,7 +50,6 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
             android:layout_weight="1"
             android:background="@color/colorPrimary"
             android:text="Redeem"

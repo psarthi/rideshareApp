@@ -9,6 +9,7 @@ import com.parift.rideshare.activity.BaseActivity;
 import com.parift.rideshare.fragment.AddVehicleFragment;
 import com.parift.rideshare.fragment.BaseFragment;
 import com.parift.rideshare.fragment.BillFragment;
+import com.parift.rideshare.fragment.CouponInfoFragment;
 import com.parift.rideshare.fragment.CreateGroupFragment;
 import com.parift.rideshare.fragment.CreateMembershipFormFragment;
 import com.parift.rideshare.fragment.CreateRidesFragment;
@@ -325,6 +326,14 @@ public class FragmentLoader {
         ReimbursementInfoFragment reimbursementInfoFragment = ReimbursementInfoFragment.newInstance(reimbursementTransaction);
         fragmentTransaction.replace(R.id.home_page_container, reimbursementInfoFragment, ReimbursementInfoFragment.TAG);
         fragmentTransaction.addToBackStack(ReimbursementInfoFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    public void loadCouponInfoFragment(String couponTransaction) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        CouponInfoFragment couponInfoFragment = CouponInfoFragment.newInstance(couponTransaction);
+        fragmentTransaction.replace(R.id.home_page_container, couponInfoFragment, CouponInfoFragment.TAG);
+        fragmentTransaction.addToBackStack(CouponInfoFragment.TAG);
         fragmentTransaction.commit();
     }
 

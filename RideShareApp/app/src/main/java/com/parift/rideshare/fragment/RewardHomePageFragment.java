@@ -73,7 +73,7 @@ public class RewardHomePageFragment extends BaseFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        int pageCount = 2;
+        int pageCount = 3;
         mRewardHomePageViewPagerAdapter = new RewardHomePageViewPagerAdapter(getChildFragmentManager(), pageCount);
         mFragmentLoader = new FragmentLoader(this);
         mCommonUtil = new CommonUtil(this);

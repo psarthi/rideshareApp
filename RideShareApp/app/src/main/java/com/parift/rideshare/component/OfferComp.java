@@ -13,6 +13,7 @@ import com.parift.rideshare.R;
 import com.parift.rideshare.fragment.BaseFragment;
 import com.parift.rideshare.fragment.OfferInfoFragment;
 import com.parift.rideshare.model.serviceprovider.domain.core.Offer;
+import com.parift.rideshare.model.serviceprovider.domain.core.RedemptionType;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -64,6 +65,38 @@ public class OfferComp {
 
     public void setOfferInfoLayout(View view){
         setBasicOfferLayout(view);
+        setOfferDetails(view);
+
+        Button reimburseButton = view.findViewById(R.id.reimburse_button);
+        Button redeemButton = view.findViewById(R.id.redeem_button);
+
+        if (mOffer.getRedemptionType().equals(RedemptionType.Reimburse)){
+            redeemButton.setVisibility(View.GONE);
+        } else {
+            reimburseButton.setVisibility(View.GONE);
+        }
+
+        reimburseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                fragmentLoader.loadReimbursementFragment(new Gson().toJson(mOffer));
+            }
+        });
+
+        redeemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
+                //TODO implement proper logic and then load couponInfo
+                //fragmentLoader.loadCouponInfoFragment(new Gson().toJson(mOffer));
+            }
+        });
+
+        //TODO Implement listener based on eligibility logic
+    }
+
+    public void setOfferDetails(View view) {
         TextView termsAndConditionTextView = view.findViewById(R.id.offer_ride_termsAndCondition);
         TextView redemptionProcessTextView = view.findViewById(R.id.offer_ride_redemptionProcess);
 
@@ -75,18 +108,6 @@ public class OfferComp {
             termsAndConditionTextView.setText(Html.fromHtml(mOffer.getTermsAndCondition()));
             redemptionProcessTextView.setText(Html.fromHtml(mOffer.getRedemptionProcess()));
         }
-
-        Button reimburseButton = view.findViewById(R.id.reimburse_button);
-        Button redeemButton = view.findViewById(R.id.redeem_button);
-
-        reimburseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentLoader fragmentLoader = new FragmentLoader(mBaseFragment);
-                fragmentLoader.loadReimbursementFragment(new Gson().toJson(mOffer));
-            }
-        });
-        //TODO Implement listener based on eligibility logic
     }
 
 

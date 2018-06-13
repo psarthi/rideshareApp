@@ -22,6 +22,7 @@ import com.parift.rideshare.fragment.AddVehicleFragment;
 import com.parift.rideshare.fragment.BillFragment;
 import com.parift.rideshare.fragment.CommonGroupListFragment;
 import com.parift.rideshare.fragment.CommonInterestListFragment;
+import com.parift.rideshare.fragment.CouponInfoFragment;
 import com.parift.rideshare.fragment.CreateGroupFragment;
 import com.parift.rideshare.fragment.GroupHomePageFragment;
 import com.parift.rideshare.fragment.GroupInfoFragment;
@@ -121,7 +122,8 @@ public class HomePageActivity extends BaseActivity
         ReimbursementFragment.OnFragmentInteractionListener,
         RewardReimbursementTransactionListFragment.OnFragmentInteractionListener,
         RewardCouponTransactionListFragment.OnFragmentInteractionListener,
-        ReimbursementInfoFragment.OnFragmentInteractionListener{
+        ReimbursementInfoFragment.OnFragmentInteractionListener,
+        CouponInfoFragment.OnFragmentInteractionListener{
 
     private static final String TAG = HomePageActivity.class.getName();
 
@@ -686,6 +688,11 @@ public class HomePageActivity extends BaseActivity
 
     @Override
     public void onReimbursementInfoFragmentInteraction(String data) {
+
+    }
+
+    @Override
+    public void onCouponInfoFragmentInteraction(String data) {
 
     }
 }
