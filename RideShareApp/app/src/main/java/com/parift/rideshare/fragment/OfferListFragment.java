@@ -77,7 +77,7 @@ public class OfferListFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
-        GET_OFFERS_URL = APIUrl.GET_OFFERS;
+        GET_OFFERS_URL = APIUrl.GET_OFFERS.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
     }
 
     @Override

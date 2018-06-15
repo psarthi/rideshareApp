@@ -1,16 +1,15 @@
 package com.parift.rideshare.model.serviceprovider.domain.core;
 
-import java.time.LocalDateTime;
+import com.parift.rideshare.model.user.domain.core.User;
+
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import com.parift.rideshare.model.user.domain.core.User;
-
-public class RewardTransaction {
+public class RewardTransaction implements Comparable<RewardTransaction>{
 
 	private int id;
 	private Offer offer;
-	private Date transactionDateTime;
+	private Date rewardTransactionDateTime;
 	private User user;
 	
 	public int getId() {
@@ -31,12 +30,21 @@ public class RewardTransaction {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	@Override
+	public int compareTo(RewardTransaction rewardTransaction) {
+		//Negative number is desc order, positive is asc order
+		//ascending order
+		//return this.id - rewardTransaction.id;
 
-	public Date getTransactionDateTime() {
-		return transactionDateTime;
+		//descending order
+		return Long.compare(rewardTransaction.id, this.id);
 	}
 
-	public void setTransactionDateTime(Date transactionDateTime) {
-		this.transactionDateTime = transactionDateTime;
+	public Date getRewardTransactionDateTime() {
+		return rewardTransactionDateTime;
+	}
+
+	public void setRewardTransactionDateTime(Date rewardTransactionDateTime) {
+		this.rewardTransactionDateTime = rewardTransactionDateTime;
 	}
 }

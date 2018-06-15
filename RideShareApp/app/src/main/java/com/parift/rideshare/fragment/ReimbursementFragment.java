@@ -1,21 +1,44 @@
 package com.parift.rideshare.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
-import com.parift.rideshare.component.OfferComp;
+import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
+import com.parift.rideshare.helper.RESTClient;
+import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
 import com.parift.rideshare.model.serviceprovider.domain.core.Offer;
+import com.parift.rideshare.model.serviceprovider.dto.ReimbursementRequest;
 import com.parift.rideshare.model.user.dto.BasicUser;
+
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.util.Calendar;
+import java.util.LinkedList;
+
+import cz.msebera.android.httpclient.Header;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +61,16 @@ public class ReimbursementFragment extends BaseFragment {
     private CommonUtil mCommonUtil;
     private BasicUser mUser;
     private Offer mOffer;
+
+    ImageView mFile1ImageView;
+    ImageView mFile2ImageView;
+    ImageView mFile3ImageView;
+
+    TextView mFile1DeleteTextView;
+    TextView mFile2DeleteTextView;
+    TextView mFile3DeleteTextView;
+
+    private LinkedList<FileDetails> mImages = new LinkedList<>();
 
     public ReimbursementFragment() {
         // Required empty public constructor
@@ -75,7 +108,130 @@ public class ReimbursementFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_reimbursement, container, false);
+        View file1View = view.findViewById(R.id.file_1);
+        View file2View = view.findViewById(R.id.file_2);
+        View file3View = view.findViewById(R.id.file_3);
+
+        initializeFileDetails(file1View, 0);
+        initializeFileDetails(file2View, 1);
+        initializeFileDetails(file3View, 2);
+
+        Button submitButton = view.findViewById(R.id.reimbursement_submit_button);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitReimbursementRequest();
+            }
+        });
+
         return view;
+    }
+
+    private void initializeFileDetails(View fileView, int index){
+        FileDetails fileDetails = new FileDetails();
+        fileDetails.index = index;
+        fileDetails.mFileImageView = fileView.findViewById(R.id.file_image);
+        fileDetails.mDeleteTextView = fileView.findViewById(R.id.file_delete_text);
+        fileDetails.mDeleteTextView.setVisibility(View.INVISIBLE);
+        mImages.add(fileDetails);
+        setFileUploadListener(fileView,index);
+        setFileDeleteListener(index);
+
+    }
+
+    private void setFileUploadListener(View fileView, final int requestCode) {
+        fileView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Note - We don't want to have camera selection due to two reason
+                //1. Group photo doesn't require mostly individual photo
+                //2. Dialog is not looking good
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto , requestCode);//one can be replaced with any action code
+            }
+        });
+    }
+
+    private void setFileDeleteListener(final int index){
+        mImages.get(index).mDeleteTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mImages.get(index).mFileImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
+                mImages.get(index).uploaded=false;
+                mImages.get(index).image=null;
+                mImages.get(index).mDeleteTextView.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        switch(requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    handleSelectedPhoto(imageReturnedIntent, requestCode);
+                }
+                break;
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    handleSelectedPhoto(imageReturnedIntent, requestCode);
+                }
+                break;
+            case 2:
+                if (resultCode == RESULT_OK) {
+                    handleSelectedPhoto(imageReturnedIntent, requestCode);
+                }
+                break;
+        }
+
+    }
+
+    private void handleSelectedPhoto(Intent imageReturnedIntent, int requestCode) {
+        Uri selectedImage = imageReturnedIntent.getData();
+        try {
+            Bitmap bm = BitmapFactory.decodeStream(
+                    getActivity().getContentResolver().openInputStream(selectedImage));
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 20, bytes);
+            mImages.get(requestCode).mFileImageView.setImageBitmap(bm);
+            mImages.get(requestCode).mDeleteTextView.setVisibility(View.VISIBLE);
+            //Note bytes is the compressed bytes
+            mImages.get(requestCode).uploaded=true;
+            mImages.get(requestCode).image = bytes.toByteArray();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void submitReimbursementRequest(){
+
+        ReimbursementRequest request = new ReimbursementRequest();
+        LinkedList<byte[]> uploadedPhotos = new LinkedList<>();
+        for (FileDetails fileDetails: mImages){
+            if (fileDetails.uploaded){
+                uploadedPhotos.add(fileDetails.image);
+            }
+        }
+        request.setImages(uploadedPhotos);
+        request.setRewardTransactionDateTime(Calendar.getInstance().getTime());
+        String URL = APIUrl.CREATE_REWARD_REIMBURSEMENT_TRANSACTIONS.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()))
+                .replace(APIUrl.OFFER_ID_KEY,Integer.toString(mOffer.getId()));
+        mCommonUtil.showProgressDialog();
+
+        RESTClient.post(getActivity(),URL, request, new RSJsonHttpResponseHandler(mCommonUtil){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    Toast.makeText(getActivity(), "Request successfully submitted", Toast.LENGTH_LONG).show();
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            }
+        } );
+
     }
 
     @Override
@@ -127,5 +283,13 @@ public class ReimbursementFragment extends BaseFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onReimbursementFragmentInteraction(String data);
+    }
+
+    private class FileDetails{
+        int index;
+        boolean uploaded;
+        byte[] image;
+        ImageView mFileImageView;
+        TextView mDeleteTextView;
     }
 }

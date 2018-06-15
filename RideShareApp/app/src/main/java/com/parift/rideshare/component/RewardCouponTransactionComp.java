@@ -49,7 +49,7 @@ public class RewardCouponTransactionComp {
         }
         TextView statusTextView = view.findViewById(R.id.reward_status);
         TextView redemptionDateTextView = view.findViewById(R.id.reward_redemption_date);
-        redemptionDateTextView.setText(mCommonUtil.getFormattedDateTimeString(mRewardCouponTransaction.getTransactionDateTime()));
+        redemptionDateTextView.setText(mCommonUtil.getFormattedDateTimeString(mRewardCouponTransaction.getRewardTransactionDateTime()));
         statusTextView.setText(mRewardCouponTransaction.getStatus().toString());
 
         if (!(mBaseFragment instanceof CouponInfoFragment)){

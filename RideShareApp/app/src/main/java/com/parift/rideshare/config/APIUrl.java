@@ -9,7 +9,7 @@ public class APIUrl {
     //Environment Specific Parameters
     public static final String ENV = "DEVELOPMENT";
     //public static final String ENV = "PRODUCTION";
-    public static final String HOST_NAME = "http://10.0.0.2:8080";
+    public static final String HOST_NAME = "http://10.0.0.4:8080";
     //public static final String HOST_NAME = "http://rideshare-test.ap-south-1.elasticbeanstalk.com";
     //public static final String HOST_NAME = "https://api.parift.in";
     public static final String BASE_URL_USER_SYSTEM = HOST_NAME + "/RSUserSystem/api";
@@ -48,6 +48,7 @@ public class APIUrl {
     public static final String OTP_RETRY_STATUS = "{retryStatus}";
     public static final String TOKEN_KEY = "{token}";
     public static final String ORDER_ID_KEY = "{orderId}";
+    public static final String OFFER_ID_KEY = "{offerId}";
 
     //User System URL's
     public static final String GOOGLE_SIGN_IN_URL = BASE_URL_USER_SYSTEM + "/users/googlesignin";
@@ -123,9 +124,11 @@ public class APIUrl {
     //Service Provider URL's
     public static final String GET_HELP_QUESTION_ANSWER_LIST = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/serviceprovider/help";
     public static final String GET_APP_INFO = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/serviceprovider/appinfo";
-    public static final String GET_OFFERS = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/offers?page={page}";
+    public static final String GET_OFFERS = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/users/{userId}/offers?page={page}";
     public static final String GET_REWARD_COUPON_TRANSACTIONS = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/users/{userId}/rewardtransactions/coupon?page={page}";
     public static final String GET_REWARD_REIMBURSEMENT_TRANSACTIONS = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/users/{userId}/rewardtransactions/reimbursement?page={page}";
+    public static final String CREATE_REWARD_REIMBURSEMENT_TRANSACTIONS = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/users/{userId}/rewardtransactions/offer/{offerId}/create";
+
 
     //Google Service
     public static final String GET_GOOGLE_DIRECTION_URL="https://maps.googleapis.com/maps/api/directions/json?origin={originLat},{originLng}" +

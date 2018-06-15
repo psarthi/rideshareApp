@@ -17,25 +17,17 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/heading3_text_size"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/attach_bill_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/fab_margin"
-        app:fabSize="mini"
-        android:src="@drawable/ic_add_white_custom"
-        android:layout_toEndOf="@id/attach_bill_label"/>
-
     <LinearLayout
         android:id="@+id/attached_bills_layout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/small_margin"
-        android:layout_below="@id/attach_bill_label"
-        android:gravity="center_vertical">
+        android:orientation="horizontal"
+        android:layout_below="@id/attach_bill_label">
 
-        <include layout="@layout/file_attachement_layout"/>
+        <include layout="@layout/file_attachment_layout" android:id="@+id/file_1"/>
+        <include layout="@layout/file_attachment_layout" android:id="@+id/file_2"/>
+        <include layout="@layout/file_attachment_layout" android:id="@+id/file_3"/>
+
 
     </LinearLayout>
 
@@ -47,7 +39,7 @@
         android:background="@color/colorPrimary"
         android:text="Submit"
         android:layout_below="@id/attached_bills_layout"
-        android:layout_marginTop="@dimen/medium_margin"/>
+        android:layout_marginTop="@dimen/small_margin"/>
 
 
 </RelativeLayout>

@@ -51,7 +51,7 @@ public class RewardReimbursementTransactionComp {
         }
         TextView statusTextView = view.findViewById(R.id.reward_status);
         TextView redemptionDateTextView = view.findViewById(R.id.reward_redemption_date);
-        redemptionDateTextView.setText(mCommonUtil.getFormattedDateTimeString(mRewardReimbursementTransaction.getTransactionDateTime()));
+        redemptionDateTextView.setText(mCommonUtil.getFormattedDateTimeString(mRewardReimbursementTransaction.getRewardTransactionDateTime()));
         statusTextView.setText(mRewardReimbursementTransaction.getStatus().toString());
 
         if (!(mBaseFragment instanceof ReimbursementInfoFragment)){
