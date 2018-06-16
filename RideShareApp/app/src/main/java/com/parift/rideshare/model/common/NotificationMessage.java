@@ -1,10 +1,15 @@
 package com.parift.rideshare.model.common;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class NotificationMessage {
 
 	private String to;
 	private Notification notification = new Notification();
-	
+	private Map<String, String> data = new HashMap<String, String>();
+
 	public String getTo() {
 		return to;
 	}
@@ -19,6 +24,14 @@ public class NotificationMessage {
 
 	public void setNotification(Notification notification) {
 		this.notification = notification;
+	}
+
+	public Map<String, String> getData() {
+		return data;
+	}
+
+	public void setData(Map<String, String> data) {
+		this.data = data;
 	}
 
 	public class Notification {
@@ -37,7 +50,9 @@ public class NotificationMessage {
 		public void setBody(String body) {
 			this.body = body;
 		}
-		
-		
+	}
+
+	public enum DataKey{
+		message,imageUrl
 	}
 }

@@ -19,7 +19,10 @@ import com.parift.rideshare.activity.SplashScreenActivity;
 import com.parift.rideshare.helper.Logger;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.parift.rideshare.model.common.NotificationMessage;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.List;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -102,17 +105,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.ic_notification)
+        NotificationCompat.Builder notificationBuilder = null;
+        try {
+            notificationBuilder = new NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setLargeIcon(Picasso.with(MyFirebaseMessagingService.this).load(R.mipmap.ic_logo_round).get())
+                    .setAutoCancel(true)
+                    .setColor(getResources().getColor(R.color.colorPrimary))
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+            //Idea is to set data key only when you want to have picture shown in notification which may be applicable for rewards
+            //for text content notification, only issue is it would not show up largeIcon and only topic/body would be shown
+            //which is fine
+            if (mRemoteMessage.getData().containsKey(NotificationMessage.DataKey.message.toString())){
+                notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(
+                        Picasso.with(this).load(mRemoteMessage.getData().get(NotificationMessage.DataKey.imageUrl.toString())).get()))
+                        .setContentTitle(mRemoteMessage.getData().get("title"))
+                        .setContentText(mRemoteMessage.getData().get("body"));
+            } else {
+                notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(
+                        mRemoteMessage.getNotification().getBody()))
                         .setContentTitle(mRemoteMessage.getNotification().getTitle())
-                        .setContentText(mRemoteMessage.getNotification().getBody())
-                        .setAutoCancel(true)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(
-                                mRemoteMessage.getNotification().getBody()))
-                        .setColor(getResources().getColor(R.color.colorPrimary))
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
+                        .setContentText(mRemoteMessage.getNotification().getBody());
+            }
+
+        } catch (IOException e) {
+            Logger.debug(TAG, e.getMessage());
+        }
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

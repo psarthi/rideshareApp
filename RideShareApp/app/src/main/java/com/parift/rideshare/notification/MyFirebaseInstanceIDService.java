@@ -2,6 +2,7 @@ package com.parift.rideshare.notification;
 
 import android.util.Log;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
@@ -30,6 +31,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
         Logger.debug(TAG, "Refreshed token: " + refreshedToken);
 
         // If you want to send messages to this application instance or
