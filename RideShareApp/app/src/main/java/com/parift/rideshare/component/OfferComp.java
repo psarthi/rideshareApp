@@ -138,21 +138,30 @@ public class OfferComp {
 
             }
         });
-
-        //TODO Implement listener based on eligibility logic
     }
 
     public void setOfferDetails(View view) {
         TextView termsAndConditionTextView = view.findViewById(R.id.offer_ride_termsAndCondition);
         TextView redemptionProcessTextView = view.findViewById(R.id.offer_ride_redemptionProcess);
+        TextView redemptionProcessLabelTextView = view.findViewById(R.id.offer_ride_redemptionProcess_label);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
             termsAndConditionTextView.setText(Html.fromHtml(mUserOffer.getTermsAndCondition(),Html.FROM_HTML_MODE_COMPACT));
-            redemptionProcessTextView.setText(Html.fromHtml(mUserOffer.getRedemptionProcess(),Html.FROM_HTML_MODE_COMPACT));
-
+            if (mUserOffer.getRedemptionType().equals(RedemptionType.Reimburse)){
+                redemptionProcessTextView.setVisibility(View.GONE);
+                redemptionProcessLabelTextView.setVisibility(View.GONE);
+            } else {
+                //IMP - If you mark the visiblity as gone and then setText it would throw NPE, so we need to ensure we don't set until its visibility is visible
+                redemptionProcessTextView.setText(Html.fromHtml(mUserOffer.getRedemptionProcess(),Html.FROM_HTML_MODE_COMPACT));
+            }
         } else {
             termsAndConditionTextView.setText(Html.fromHtml(mUserOffer.getTermsAndCondition()));
-            redemptionProcessTextView.setText(Html.fromHtml(mUserOffer.getRedemptionProcess()));
+            if (mUserOffer.getRedemptionType().equals(RedemptionType.Reimburse)){
+                redemptionProcessTextView.setVisibility(View.GONE);
+                redemptionProcessLabelTextView.setVisibility(View.GONE);
+            } else {
+                redemptionProcessTextView.setText(Html.fromHtml(mUserOffer.getRedemptionProcess()));
+            }
         }
     }
 
