@@ -25,12 +25,12 @@
             android:textSize="@dimen/heading3_text_size"/>
 
 
+        <!-- Don't add text here as it will show up the moment fragment loads till the time we get balance from backend and will create flicker affect as welll-->
         <TextView
             android:id="@+id/wallet_balance_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin"
-            android:text="100"
             android:textStyle="bold"
             android:textAllCaps="true"
             android:textSize="@dimen/heading3_text_size"/>
