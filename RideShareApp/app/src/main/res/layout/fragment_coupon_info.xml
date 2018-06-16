@@ -71,6 +71,28 @@
 
     </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:id="@+id/expiry_date_layout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/coupon_expiry_date_label"
+                android:text="Expiry Date"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/coupon_expiry_date"
+                android:text="Sat Dec 2, 9:00 AM"
+                android:gravity="end"/>
+
+        </LinearLayout>
+
+
         <include layout="@layout/offer_details" android:id="@+id/offer_details"/>
 
     </LinearLayout>

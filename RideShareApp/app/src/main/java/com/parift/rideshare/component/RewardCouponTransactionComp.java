@@ -1,5 +1,7 @@
 package com.parift.rideshare.component;
 
+import android.os.Build;
+import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,6 +12,7 @@ import com.parift.rideshare.fragment.BaseFragment;
 import com.parift.rideshare.fragment.CouponInfoFragment;
 import com.parift.rideshare.fragment.ReimbursementInfoFragment;
 import com.parift.rideshare.helper.CommonUtil;
+import com.parift.rideshare.model.serviceprovider.domain.core.Offer;
 import com.parift.rideshare.model.serviceprovider.domain.core.ReimbursementStatus;
 import com.parift.rideshare.model.serviceprovider.domain.core.RewardCouponTransaction;
 import com.parift.rideshare.model.serviceprovider.domain.core.RewardReimbursementTransaction;
@@ -67,16 +70,37 @@ public class RewardCouponTransactionComp {
 
     public void setCouponInfoLayout(View view){
         setBasicRewardTransactionLayout(view);
-        OfferComp offerComp = new OfferComp(mBaseFragment, mRewardCouponTransaction.getOffer());
-        offerComp.setOfferDetails(view);
+        setOfferDetails(view);
 
         TextView couponCodeTextView = view.findViewById(R.id.coupon_code);
         couponCodeTextView.setText(mRewardCouponTransaction.getCouponCode());
 
+        View redemptionDateLayout = view.findViewById(R.id.redeem_date_layout);
+        View expiryDateLayout = view.findViewById(R.id.expiry_date_layout);
         TextView redemptionDateTextView = view.findViewById(R.id.coupon_redemption_date);
-        //TODO Set actual redemption date of coupon
+        TextView expiryDateTextView = view.findViewById(R.id.coupon_expiry_date);
+        if (mRewardCouponTransaction.getRedemptionDateTime()==null) {
+            redemptionDateLayout.setVisibility(View.GONE);
+            expiryDateTextView.setText(mCommonUtil.getFormattedDateTimeString(mRewardCouponTransaction.getExpiryDateTime()));
+        } else {
+            expiryDateLayout.setVisibility(View.GONE);
+            redemptionDateTextView.setText(mCommonUtil.getFormattedDateTimeString(mRewardCouponTransaction.getRedemptionDateTime()));
+        }
 
     }
 
+    public void setOfferDetails(View view) {
+        TextView termsAndConditionTextView = view.findViewById(R.id.offer_ride_termsAndCondition);
+        TextView redemptionProcessTextView = view.findViewById(R.id.offer_ride_redemptionProcess);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            termsAndConditionTextView.setText(Html.fromHtml(mRewardCouponTransaction.getOffer().getTermsAndCondition(),Html.FROM_HTML_MODE_COMPACT));
+            redemptionProcessTextView.setText(Html.fromHtml(mRewardCouponTransaction.getOffer().getRedemptionProcess(),Html.FROM_HTML_MODE_COMPACT));
+
+        } else {
+            termsAndConditionTextView.setText(Html.fromHtml(mRewardCouponTransaction.getOffer().getTermsAndCondition()));
+            redemptionProcessTextView.setText(Html.fromHtml(mRewardCouponTransaction.getOffer().getRedemptionProcess()));
+        }
+    }
 
 }

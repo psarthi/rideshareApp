@@ -119,7 +119,7 @@ public class APIUrl {
     public static final String GET_ORDER_INFO = BASE_URL_BILLING_SYSTEM + "/financialtransaction/{amount}/getorderinfo";
     public static final String VALIDATE_AND_PROCESS_PAYMENT = BASE_URL_BILLING_SYSTEM + "/financialtransaction/{accountNumber}/validateandprocesspayment";
     public static final String CANCEL_FINANCIAL_TRANSACTION = BASE_URL_BILLING_SYSTEM + "/financialtransaction/cancel/{orderId}";
-
+    public static final String GET_WALLET_INFO = BASE_URL_BILLING_SYSTEM + "/accounts/walletinfo";
 
     //Service Provider URL's
     public static final String GET_HELP_QUESTION_ANSWER_LIST = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/serviceprovider/help";
@@ -128,6 +128,7 @@ public class APIUrl {
     public static final String GET_REWARD_COUPON_TRANSACTIONS = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/users/{userId}/rewardtransactions/coupon?page={page}";
     public static final String GET_REWARD_REIMBURSEMENT_TRANSACTIONS = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/users/{userId}/rewardtransactions/reimbursement?page={page}";
     public static final String CREATE_REWARD_REIMBURSEMENT_TRANSACTIONS = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/users/{userId}/rewardtransactions/offer/{offerId}/create";
+    public static final String GENERATE_COUPON = BASE_URL_SERVICE_PROVIDER_SYSTEM + "/users/{userId}/rewardtransactions/coupon/generate/offer/{offerId}";
 
 
     //Google Service

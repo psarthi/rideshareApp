@@ -15,6 +15,8 @@ import com.parift.rideshare.component.OfferComp;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.model.serviceprovider.domain.core.Offer;
+import com.parift.rideshare.model.serviceprovider.dto.UserOffer;
+import com.parift.rideshare.model.user.domain.core.User;
 import com.parift.rideshare.model.user.dto.BasicUser;
 
 /**
@@ -37,7 +39,7 @@ public class OfferInfoFragment extends BaseFragment {
     private OnFragmentInteractionListener mListener;
     private CommonUtil mCommonUtil;
     private BasicUser mUser;
-    private Offer mOffer;
+    private UserOffer mOffer;
 
     public OfferInfoFragment() {
         // Required empty public constructor
@@ -47,14 +49,14 @@ public class OfferInfoFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param offer Offer in Json format
+     * @param userOffer UserOffer in Json format
      * @return A new instance of fragment Offer Info Fragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static OfferInfoFragment newInstance(String offer) {
+    public static OfferInfoFragment newInstance(String userOffer) {
         OfferInfoFragment fragment = new OfferInfoFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_OFFER, offer);
+        args.putString(ARG_OFFER, userOffer);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,7 +66,7 @@ public class OfferInfoFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             String offer = getArguments().getString(ARG_OFFER);
-            mOffer = new Gson().fromJson(offer, Offer.class);
+            mOffer = new Gson().fromJson(offer, UserOffer.class);
         }
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();

@@ -305,9 +305,9 @@ public class FragmentLoader {
         fragmentTransaction.commit();
     }
 
-    public void loadOfferInfoFragment(String offer) {
+    public void loadOfferInfoFragment(String userOffer) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        OfferInfoFragment offerInfoFragment = OfferInfoFragment.newInstance(offer);
+        OfferInfoFragment offerInfoFragment = OfferInfoFragment.newInstance(userOffer);
         fragmentTransaction.replace(R.id.home_page_container, offerInfoFragment, OfferInfoFragment.TAG);
         fragmentTransaction.addToBackStack(OfferInfoFragment.TAG);
         fragmentTransaction.commit();

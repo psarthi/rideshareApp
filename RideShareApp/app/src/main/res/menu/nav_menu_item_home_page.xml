@@ -16,7 +16,7 @@
             android:title="Rides"/>
         <item
             android:id="@+id/nav_rewards"
-            android:icon="@drawable/ic_interest_medium"
+            android:icon="@drawable/ic_reward"
             android:title="Rewards"/>
         <item
             android:id="@+id/nav_interest"

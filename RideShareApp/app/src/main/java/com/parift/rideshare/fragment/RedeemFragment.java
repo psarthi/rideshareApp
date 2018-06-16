@@ -1,11 +1,9 @@
 package com.parift.rideshare.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +18,11 @@ import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
 import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
 import com.parift.rideshare.model.billing.domain.core.Account;
-import com.parift.rideshare.model.common.ErrorMessage;
+import com.parift.rideshare.model.billing.dto.WalletInfo;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
-
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -52,9 +47,10 @@ public class RedeemFragment extends BaseFragment {
     private BasicUser mUser;
     private CommonUtil mCommonUtil;
     private Account mAccount;
-    private TextView mWalletBalance;
+    private TextView mRedeemableBalanceTextView;
     private TextView mRedeemAmount;
     private String mCurrencySymbol;
+    private float mRedeemableBalance;
 
 
     private OnFragmentInteractionListener mListener;
@@ -102,13 +98,33 @@ public class RedeemFragment extends BaseFragment {
         mAccount = mCommonUtil.getAccount();
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_redeem, container, false);
-        mWalletBalance = view.findViewById(R.id.wallet_balance_amount);
+        TextView balanceLabelTextView = view.findViewById(R.id.wallet_balance_label);
+        balanceLabelTextView.setText("Redeemable Balance");
+        mRedeemableBalanceTextView = view.findViewById(R.id.wallet_balance_amount);
         mRedeemAmount = view.findViewById(R.id.redeem_amount);
-        setWalletBalance(mAccount.getBalance());
 
+
+        loadWalletInfo();
         setRedeemButtonListener(view);
 
         return view;
+    }
+
+    private void loadWalletInfo(){
+        String url = APIUrl.GET_WALLET_INFO.replace(APIUrl.USER_ID_KEY, Long.toString(mUser.getId()));
+        mCommonUtil.showProgressDialog();
+        RESTClient.get(url, null, new RSJsonHttpResponseHandler(mCommonUtil){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                if (isAdded()) {
+                    super.onSuccess(statusCode, headers, response);
+                    mCommonUtil.dismissProgressDialog();
+                    WalletInfo walletInfo = new Gson().fromJson(response.toString(), WalletInfo.class);
+                    float redeemableBalance = mAccount.getBalance()-walletInfo.getPendingBillsAmount()-walletInfo.getRewardMoneyBalance();
+                    setRedeemableBalance(redeemableBalance);
+                }
+            }
+        });
     }
 
     private void setRedeemButtonListener(final View view) {
@@ -132,7 +148,7 @@ public class RedeemFragment extends BaseFragment {
                                 mAccount = new Gson().fromJson(response.toString(), Account.class);
                                 mCommonUtil.updateAccount(mAccount);
                                 //This will refresh the wallet balance
-                                setWalletBalance(mAccount.getBalance());
+                                setRedeemableBalance(mAccount.getBalance());
                                 Toast.makeText(getActivity(), "Money would be credited to Paytm account in couple of days", Toast.LENGTH_LONG).show();
                             }
                         }
@@ -155,17 +171,18 @@ public class RedeemFragment extends BaseFragment {
                 Toast.makeText(getActivity(), "Min. Redemption amount is "+mCurrencySymbol + Constant.MIN_REDEMPTION_AMOUNT, Toast.LENGTH_LONG).show();
                 return false;
             }
-            if (Integer.parseInt(redeemAmount) > mAccount.getBalance()){
-                Toast.makeText(getActivity(), "Redemption amount should be less than your wallet balance", Toast.LENGTH_LONG).show();
+            if (Integer.parseInt(redeemAmount) > mRedeemableBalance){
+                Toast.makeText(getActivity(), "Redemption amount should be less than your redeemable balance", Toast.LENGTH_LONG).show();
                 return false;
             }
         }
         return true;
     }
 
-    private void setWalletBalance(float balance) {
+    private void setRedeemableBalance(float balance) {
         String balanceString = mCurrencySymbol + mCommonUtil.getDecimalFormattedString(balance);
-        mWalletBalance.setText(balanceString);
+        mRedeemableBalanceTextView.setText(balanceString);
+        mRedeemableBalance = balance;
         String hint = getResources().getString(R.string.amount_hint)+" ("+mCurrencySymbol+")";
         mRedeemAmount.setHint(hint);
         mRedeemAmount.setText("");

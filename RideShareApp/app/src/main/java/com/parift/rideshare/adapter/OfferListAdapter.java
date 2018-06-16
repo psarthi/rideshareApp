@@ -4,12 +4,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.component.OfferComp;
 import com.parift.rideshare.fragment.BaseFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.model.serviceprovider.domain.core.Offer;
+import com.parift.rideshare.model.serviceprovider.dto.UserOffer;
+import com.parift.rideshare.model.user.domain.core.User;
 
 import java.util.List;
 
@@ -20,11 +23,11 @@ import java.util.List;
 public class OfferListAdapter extends RecyclerView.Adapter<OfferListAdapter.ViewHolder> {
 
     private static final String TAG = RideListAdapter.class.getName();
-    private List<Offer> mOffers;
+    private List<UserOffer> mOffers;
     private BaseFragment mBaseFragment;
     private CommonUtil mCommonUtil;
 
-    public OfferListAdapter(List<Offer> offers, BaseFragment fragment) {
+    public OfferListAdapter(List<UserOffer> offers, BaseFragment fragment) {
         mOffers = offers;
         mBaseFragment = fragment;
         mCommonUtil = new CommonUtil(fragment);
@@ -42,7 +45,7 @@ public class OfferListAdapter extends RecyclerView.Adapter<OfferListAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         View view = holder.itemView;
-        Offer offer = mOffers.get(position);
+        UserOffer offer = mOffers.get(position);
         OfferComp offerComp = new OfferComp(mBaseFragment, offer);
         offerComp.setBasicOfferLayout(view);
     }

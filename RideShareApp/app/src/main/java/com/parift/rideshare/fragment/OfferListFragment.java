@@ -22,6 +22,8 @@ import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
 import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
 import com.parift.rideshare.model.serviceprovider.domain.core.Offer;
+import com.parift.rideshare.model.serviceprovider.dto.UserOffer;
+import com.parift.rideshare.model.user.domain.core.User;
 import com.parift.rideshare.model.user.dto.BasicUser;
 
 import org.json.JSONArray;
@@ -49,7 +51,7 @@ public class OfferListFragment extends BaseFragment {
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener mScrollListener;
     private CommonUtil mCommonUtil;
-    private List<Offer> mOffers = new ArrayList<>();
+    private List<UserOffer> mOffers = new ArrayList<>();
     private BasicUser mUser;
     private String GET_OFFERS_URL;
 
@@ -125,7 +127,7 @@ public class OfferListFragment extends BaseFragment {
                 if (isAdded()) {
                     super.onSuccess(statusCode, headers, response);
                     mCommonUtil.dismissProgressDialog();
-                    Type listType = new TypeToken<ArrayList<Offer>>() {
+                    Type listType = new TypeToken<ArrayList<UserOffer>>() {
                     }.getType();
                     mOffers = new Gson().fromJson(response.toString(), listType);
                     Logger.debug(TAG, "Size of initial set of data is: " + mOffers.size());
@@ -168,9 +170,9 @@ public class OfferListFragment extends BaseFragment {
                 if (isAdded()) {
                     super.onSuccess(statusCode, headers, response);
                     if (offset != 1) mCommonUtil.dismissProgressDialog();
-                    Type listType = new TypeToken<ArrayList<Offer>>() {
+                    Type listType = new TypeToken<ArrayList<UserOffer>>() {
                     }.getType();
-                    List<Offer> newOffers = new Gson().fromJson(response.toString(), listType);
+                    List<UserOffer> newOffers = new Gson().fromJson(response.toString(), listType);
                     //Since object is pass by reference, so when you drawable.add in mRides, this will be reflected everywhere
                     mOffers.addAll(newOffers);
                     Logger.debug(TAG, "Size of new set of data is: " + newOffers.size() + " :Updated count is:" + mOffers.size());

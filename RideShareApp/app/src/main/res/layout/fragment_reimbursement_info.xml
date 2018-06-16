@@ -17,18 +17,21 @@
              android:layout_height="wrap_content"
              android:layout_margin="0dp"/>
 
-    <View
-        android:id="@+id/line_seperator"
+        <View
+        android:id="@+id/reimbursement_approval_details_line_seperator"
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_seperator_thickness"
         android:layout_marginBottom="@dimen/default_margin"
         android:layout_marginTop="@dimen/default_margin"
         android:background="@color/colorGrayLight"/>
 
-    <LinearLayout
+
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin">
+        android:layout_marginBottom="@dimen/default_margin"
+        android:id="@+id/reimbursement_approved_amount_layout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -48,7 +51,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin">
+        android:layout_marginBottom="@dimen/default_margin"
+        android:id="@+id/reimbursement_payment_date_layout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -65,20 +69,28 @@
 
     </LinearLayout>
 
-
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/reimbursement_remark_label"
-        android:text="Remarks"
-        android:textStyle="bold"
-        android:layout_marginBottom="@dimen/default_margin"/>
+        android:orientation="vertical"
+        android:id="@+id/reimbursement_remark_layout">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/reimbursement_remark"
-        android:text="Max. Limit of all bills is Rs 100/-"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reimbursement_remark_label"
+            android:text="Remarks"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/default_margin"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reimbursement_remark"
+            android:text="Max. Limit of all bills is Rs 100/-"/>
+
+    </LinearLayout>
+
 
     <View
         android:id="@+id/termsAndCondition_line_seperator"

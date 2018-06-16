@@ -2,6 +2,7 @@ package com.parift.rideshare.component;
 
 import android.os.Build;
 import android.text.Html;
+import android.text.Layout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.parift.rideshare.fragment.OfferInfoFragment;
 import com.parift.rideshare.fragment.ReimbursementInfoFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.model.serviceprovider.domain.core.RedemptionType;
+import com.parift.rideshare.model.serviceprovider.domain.core.ReimbursementStatus;
 import com.parift.rideshare.model.serviceprovider.domain.core.RewardReimbursementTransaction;
 import com.parift.rideshare.model.serviceprovider.domain.core.RewardTransaction;
 import com.squareup.picasso.Picasso;
@@ -67,11 +69,31 @@ public class RewardReimbursementTransactionComp {
 
     public void setReimbursementInfoLayout(View view) {
         setBasicRewardTransactionLayout(view);
+        View approvalDetailsSeperator = view.findViewById(R.id.reimbursement_approval_details_line_seperator);
+        View approvedAmountLayout = view.findViewById(R.id.reimbursement_approved_amount_layout);
+        View paidOnLayout = view.findViewById(R.id.reimbursement_payment_date_layout);
+        View ramarksLayout = view.findViewById(R.id.reimbursement_remark_layout);
         TextView approvedAmountTextView = view.findViewById(R.id.reimbursement_approved_amount);
         TextView paymentDateTextView = view.findViewById(R.id.reimbursement_payment_date);
         TextView remarksTextView = view.findViewById(R.id.reimbursement_remark);
 
-        //TODO Set all text view's
+        if (mRewardReimbursementTransaction.getStatus().equals(ReimbursementStatus.Approved)
+                || mRewardReimbursementTransaction.getStatus().equals(ReimbursementStatus.Paid)){
+            approvedAmountTextView.setText(Integer.toString(mRewardReimbursementTransaction.getApprovedAmount()));
+            remarksTextView.setText(mRewardReimbursementTransaction.getRemarks());
+        } else {
+            approvalDetailsSeperator.setVisibility(View.GONE);
+            approvedAmountLayout.setVisibility(View.GONE);
+            ramarksLayout.setVisibility(View.GONE);
+        }
+
+        if (mRewardReimbursementTransaction.getStatus().equals(ReimbursementStatus.Paid)){
+            paymentDateTextView.setText(mCommonUtil.getFormattedDateTimeString(
+                    mRewardReimbursementTransaction.getTransaction().getDateTime()));
+        } else {
+            paidOnLayout.setVisibility(View.GONE);
+        }
+
 
         TextView termsAndConditionTextView = view.findViewById(R.id.offer_ride_termsAndCondition);
 
