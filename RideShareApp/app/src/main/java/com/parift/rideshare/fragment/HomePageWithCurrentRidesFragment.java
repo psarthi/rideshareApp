@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
@@ -98,6 +99,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
     private MapComp mMapComp;
     private CurrentRidesStatus mCurrentRidesStatus;
     private boolean mMapLoaded;
+    private boolean mShowMessage;
 
     public HomePageWithCurrentRidesFragment() {
         // Required empty public constructor
@@ -137,6 +139,7 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mFragmentLoader = new FragmentLoader(this);
         mCommonUtil = new CommonUtil(this);
         mUser = mCommonUtil.getUser();
+        mShowMessage = true;
     }
 
     @Override
@@ -158,6 +161,25 @@ public class HomePageWithCurrentRidesFragment extends BaseFragment
         mCurrentRideRequestLinearLayout.setVisibility(View.GONE);
         mCurrentRideLinearLayout.setVisibility(View.GONE);
         showRidesLayoutVisibilityStatusForDebugging();
+
+        final TextView homePageMsgCloseTextView = view.findViewById(R.id.home_page_message_box_close);
+        final TextView homePageMsgTextView = view.findViewById(R.id.home_page_message_box);
+
+        if (mShowMessage){
+            String msg = mCommonUtil.getAppInfo().getHomePageMsg();
+            homePageMsgTextView.setText(msg);
+            homePageMsgCloseTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mShowMessage = false;
+                    homePageMsgCloseTextView.setVisibility(View.GONE);
+                    homePageMsgTextView.setVisibility(View.GONE);
+                }
+            });
+        } else {
+            homePageMsgCloseTextView.setVisibility(View.GONE);
+            homePageMsgTextView.setVisibility(View.GONE);
+        }
 
         view.findViewById(R.id.home_page_offer_ride_button).setOnClickListener(new View.OnClickListener() {
             @Override

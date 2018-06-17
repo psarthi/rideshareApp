@@ -21,7 +21,7 @@ import com.parift.rideshare.model.ride.dto.BasicRideRequest;
 import com.parift.rideshare.model.ride.dto.FullRide;
 import com.parift.rideshare.model.ride.dto.FullRideRequest;
 import com.parift.rideshare.model.serviceprovider.domain.core.Company;
-import com.parift.rideshare.model.serviceprovider.dto.AppInfo;
+import com.parift.rideshare.model.serviceprovider.domain.core.AppInfo;
 import com.parift.rideshare.model.user.domain.Country;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.parift.rideshare.model.user.dto.UserSignInResult;

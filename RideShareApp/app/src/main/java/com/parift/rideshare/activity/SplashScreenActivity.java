@@ -1,6 +1,5 @@
 package com.parift.rideshare.activity;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -14,12 +13,11 @@ import com.google.gson.Gson;
 import com.parift.rideshare.R;
 import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.config.Constant;
-import com.parift.rideshare.dialog.StandardAlertDialog;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
 import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
-import com.parift.rideshare.model.serviceprovider.dto.AppInfo;
+import com.parift.rideshare.model.serviceprovider.domain.core.AppInfo;
 import com.parift.rideshare.model.user.dto.BasicUser;
 
 import org.json.JSONObject;

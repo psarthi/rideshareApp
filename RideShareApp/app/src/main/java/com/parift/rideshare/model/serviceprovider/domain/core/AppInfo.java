@@ -1,10 +1,12 @@
-package com.parift.rideshare.model.serviceprovider.dto;
+package com.parift.rideshare.model.serviceprovider.domain.core;
 
 public class AppInfo {
 
+	private int id;
 	private int minAppVersionCode;
 	private String appUrl;
 	private String shareMsg;
+	private String homePageMsg;
 
 	public String getAppUrl() {
 		return appUrl;
@@ -28,5 +30,21 @@ public class AppInfo {
 
 	public void setMinAppVersionCode(int minAppVersionCode) {
 		this.minAppVersionCode = minAppVersionCode;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getHomePageMsg() {
+		return homePageMsg;
+	}
+
+	public void setHomePageMsg(String homePageMsg) {
+		this.homePageMsg = homePageMsg;
 	}
 }
