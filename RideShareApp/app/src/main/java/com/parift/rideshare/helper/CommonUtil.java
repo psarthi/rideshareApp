@@ -130,10 +130,14 @@ public class CommonUtil {
     }
 
     public void removeSharedPref(){
+        Logger.debug(TAG, "Getting AppInfo keys");
+        AppInfo appInfo = getAppInfo();
         Logger.debug(TAG, "Removing shared preference all keys");
         SharedPreferences sharedPref = getSharedPreferences();
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear().commit();
+        Logger.debug(TAG, "Saving AppInfo keys again so that it can be accessed again by another user");
+        saveInSharedPref(Constant.SHARED_PREFS_APP_INFO_KEY, new Gson().toJson(appInfo));
     }
 
     public String getAccessToken() {

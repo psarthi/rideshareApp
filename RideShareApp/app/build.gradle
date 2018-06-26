@@ -7,8 +7,8 @@ android {
         applicationId "com.parift.rideshare"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 12
-        versionName "1.0.9"
+        versionCode 13
+        versionName "1.0.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -33,7 +33,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     //This is for Json parser
-    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.google.code.gson:gson:2.8.5'
     //This is for REST Calls
     compile 'com.loopj.android:android-async-http:1.4.9'
     //This is for image suppport

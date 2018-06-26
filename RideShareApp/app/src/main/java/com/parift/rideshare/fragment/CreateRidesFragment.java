@@ -737,7 +737,9 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
                 mToAddress = getPlaceFullAddress(mToPlace);
                 mToAddressTextView.setText(mToAddress);
                 mToLatLng = mToPlace.getLatLng();
-                Logger.debug(TAG, "To Place:"+new Gson().toJson(mToPlace));
+             // VERY IMP - Don't use Gson to print mToPlace as its going into recursive loop and causing stack overflow error
+             // Commented this for the same reason
+             // Logger.debug(TAG, "To Place:"+new Gson().toJson(mToPlace));
                 mLocationChanged = true;
                 drawOnMap();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {

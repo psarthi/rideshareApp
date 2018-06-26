@@ -8,6 +8,7 @@ import android.content.Intent;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -109,7 +110,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         try {
             notificationBuilder = new NotificationCompat.Builder(this, channelId)
                     .setSmallIcon(R.drawable.ic_notification)
-                    .setLargeIcon(Picasso.with(MyFirebaseMessagingService.this).load(R.mipmap.ic_logo_round).get())
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_logo_round))
                     .setAutoCancel(true)
                     .setColor(getResources().getColor(R.color.colorPrimary))
                     .setSound(defaultSoundUri)
