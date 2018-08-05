@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.HashSet;
 
 import com.parift.rideshare.model.billing.domain.core.Invoice;
-import com.parift.rideshare.model.ride.domain.RidePoint;
 import com.parift.rideshare.model.ride.domain.RecurringDetail;
+import com.parift.rideshare.model.ride.domain.RidePoint;
 import com.parift.rideshare.model.ride.domain.Route;
 import com.parift.rideshare.model.ride.domain.TrustNetwork;
 import com.parift.rideshare.model.user.domain.Sex;
@@ -43,6 +43,7 @@ public class Ride implements Comparable<Ride>{
 	private int travelDistance;
 	private RideMode rideMode;
 	private Invoice invoice;
+	private Ride parentRide;
 	
 	public long getId() {
 		return id;
@@ -79,12 +80,6 @@ public class Ride implements Comparable<Ride>{
 	}
 	public void setRecur(boolean recur) {
 		this.recur = recur;
-	}
-	public RecurringDetail getRecurringDetail() {
-		return recurringDetail;
-	}
-	public void setRecurringDetail(RecurringDetail recurringDetail) {
-		this.recurringDetail = recurringDetail;
 	}
 	public RideStatus getStatus() {
 		return status;
@@ -242,5 +237,21 @@ public class Ride implements Comparable<Ride>{
 
 	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
+	}
+
+	public RecurringDetail getRecurringDetail() {
+		return recurringDetail;
+	}
+
+	public void setRecurringDetail(RecurringDetail recurringDetail) {
+		this.recurringDetail = recurringDetail;
+	}
+
+	public Ride getParentRide() {
+		return parentRide;
+	}
+
+	public void setParentRide(Ride parentRide) {
+		this.parentRide = parentRide;
 	}
 }

@@ -1,44 +1,26 @@
 package com.parift.rideshare.model.ride.domain;
 
-import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class RecurringDetail {
-	
-	private long id;
-	private Date startDate;
-	private Date endDate;
-	private String repeatFrequency;
 
-	public long getId() {
-		return id;
+	private RecurringStatus recurringStatus;
+	List<WeekDay> weekDays = new LinkedList<WeekDay>();
+
+	public RecurringStatus getRecurringStatus() {
+		return recurringStatus;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setRecurringStatus(RecurringStatus recurringStatus) {
+		this.recurringStatus = recurringStatus;
 	}
 
-	public Date getStartDate() {
-		return startDate;
+	public List<WeekDay> getWeekDays() {
+		return weekDays;
 	}
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setWeekDays(List<WeekDay> weekDays) {
+		this.weekDays = weekDays;
 	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getRepeatFrequency() {
-		return repeatFrequency;
-	}
-
-	public void setRepeatFrequency(String repeatFrequency) {
-		this.repeatFrequency = repeatFrequency;
-	}
-
 }

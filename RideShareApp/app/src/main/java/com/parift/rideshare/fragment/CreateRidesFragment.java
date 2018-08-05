@@ -5,20 +5,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -42,12 +44,15 @@ import com.parift.rideshare.model.app.google.Element;
 import com.parift.rideshare.model.app.google.GoogleDirection;
 import com.parift.rideshare.model.app.google.GoogleDistance;
 import com.parift.rideshare.model.app.google.GoogleGeocode;
+import com.parift.rideshare.model.ride.domain.RecurringDetail;
+import com.parift.rideshare.model.ride.domain.RecurringStatus;
 import com.parift.rideshare.model.ride.domain.RideType;
 import com.parift.rideshare.model.billing.domain.core.Account;
 import com.parift.rideshare.model.billing.domain.core.Bill;
 import com.parift.rideshare.model.ride.domain.Point;
 import com.parift.rideshare.model.ride.domain.RidePoint;
 import com.parift.rideshare.model.ride.domain.RideRequestPoint;
+import com.parift.rideshare.model.ride.domain.WeekDay;
 import com.parift.rideshare.model.ride.domain.core.RideMode;
 import com.parift.rideshare.model.ride.dto.BasicRide;
 import com.parift.rideshare.model.ride.dto.BasicRideRequest;
@@ -83,6 +88,7 @@ import com.google.maps.android.PolyUtil;
 
 import org.json.JSONObject;
 
+import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -152,6 +158,15 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
     private PreBookingRideRequestResult mPreBookingRideRequestResult;
     private String mFromAddress;
     private String mToAddress;
+    private CheckBox mRepeatCheckBox;
+    private boolean monday = true;
+    private boolean tuesday = true;
+    private boolean wednesday = true;
+    private boolean thursday = true;
+    private boolean friday = true;
+    private boolean saturday;
+    private boolean sunday;
+    private boolean mRepeat;
 
     public CreateRidesFragment() {
         Logger.debug(TAG, "CreateRidesFragment() Called");
@@ -218,13 +233,26 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_rides, container, false);
         mFareTextView = view.findViewById(R.id.create_rides_fare_text);
+        mRepeatCheckBox = view.findViewById(R.id.repeat_checkbox);
 
         if (mRideType.equals(RideType.RequestRide)) {
             //Using invisible so that we can block the space and map would not move when it becomes visible
             mFareTextView.setVisibility(View.INVISIBLE);
+            mRepeatCheckBox.setVisibility(View.GONE);
+            view.findViewById(R.id.repeat_days_layout).setVisibility(View.GONE);
         } else {
             mFareTextView.setVisibility(View.GONE);
+            setWeekdaysLayout(view);
+            setWeekDayBgColor(view,WeekDay.MONDAY,monday);
+            setWeekDayBgColor(view,WeekDay.TUESDAY,tuesday);
+            setWeekDayBgColor(view,WeekDay.WEDNESDAY,wednesday);
+            setWeekDayBgColor(view,WeekDay.THURSDAY,thursday);
+            setWeekDayBgColor(view,WeekDay.FRIDAY,friday);
+            setWeekDayBgColor(view,WeekDay.SATURDAY,saturday);
+            setWeekDayBgColor(view,WeekDay.SUNDAY,sunday);
         }
+
+        setRepeatListeners(view);
 
         mFromAddressTextView = view.findViewById(R.id.create_rides_from_address_text);
         mToAddressTextView = view.findViewById(R.id.create_rides_to_address_text);
@@ -264,6 +292,113 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
 
         return view;
     }
+
+    private void setRepeatListeners(final View view){
+
+        mRepeatCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRepeat = !mRepeat;
+                setWeekdaysLayout(view);
+            }
+        });
+
+        setWeekDayListener(view);
+    }
+
+    private void setWeekdaysLayout(View view) {
+        //IMP - Don't do check on mRepeatCheckbox.checked status as its not working properly when page reloads
+        //so member variable works fine on reloads
+        if (!mRepeat){
+            view.findViewById(R.id.repeat_days_layout).setVisibility(View.GONE);
+        } else {
+            view.findViewById(R.id.repeat_days_layout).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setWeekDayListener(final View view) {
+        view.findViewById(R.id.monday).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                monday = !monday;
+                setWeekDayBgColor(view,WeekDay.MONDAY,monday);
+            }
+
+        });
+        view.findViewById(R.id.tuesday).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tuesday = !tuesday;
+                setWeekDayBgColor(view,WeekDay.TUESDAY,tuesday);
+            }
+        });
+        view.findViewById(R.id.wednesday).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wednesday = !wednesday;
+                setWeekDayBgColor(view,WeekDay.WEDNESDAY,wednesday);
+            }
+        });
+        view.findViewById(R.id.thursday).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                thursday = !thursday;
+                setWeekDayBgColor(view,WeekDay.THURSDAY,thursday);
+            }
+        });
+        view.findViewById(R.id.friday).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                friday = !friday;
+                setWeekDayBgColor(view,WeekDay.FRIDAY,friday);
+            }
+        });
+        view.findViewById(R.id.saturday).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saturday = !saturday;
+                setWeekDayBgColor(view,WeekDay.SATURDAY,saturday);
+            }
+        });
+        view.findViewById(R.id.sunday).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sunday = !sunday;
+                setWeekDayBgColor(view,WeekDay.SUNDAY,sunday);
+            }
+        });
+    }
+
+    private void setWeekDayBgColor(View view, WeekDay weekDay, boolean weekDayStatus) {
+        GradientDrawable bgShape = null;
+        if (weekDay.equals(WeekDay.MONDAY)){
+            bgShape = (GradientDrawable)view.findViewById(R.id.monday).getBackground();
+        }
+        if (weekDay.equals(WeekDay.TUESDAY)){
+            bgShape = (GradientDrawable)view.findViewById(R.id.tuesday).getBackground();
+        }
+        if (weekDay.equals(WeekDay.WEDNESDAY)){
+            bgShape = (GradientDrawable)view.findViewById(R.id.wednesday).getBackground();
+        }
+        if (weekDay.equals(WeekDay.THURSDAY)){
+            bgShape = (GradientDrawable)view.findViewById(R.id.thursday).getBackground();
+        }
+        if (weekDay.equals(WeekDay.FRIDAY)){
+            bgShape = (GradientDrawable)view.findViewById(R.id.friday).getBackground();
+        }
+        if (weekDay.equals(WeekDay.SATURDAY)){
+            bgShape = (GradientDrawable)view.findViewById(R.id.saturday).getBackground();
+        }
+        if (weekDay.equals(WeekDay.SUNDAY)){
+            bgShape = (GradientDrawable)view.findViewById(R.id.sunday).getBackground();
+        }
+        if (!weekDayStatus){
+            bgShape.setColor(Color.WHITE);
+        } else {
+            bgShape.setColor(Color.LTGRAY);
+        }
+    }
+
 
     //Keep this here instead of moving to BaseFragment, so that you have better control
     @Override
@@ -554,6 +689,20 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
             mRide.setVehicle(mUser.getPreference().getDefaultVehicle());
             mRide.setRideMode(mUser.getPreference().getRideMode());
         }
+
+        mRide.setRecur(mRepeat);
+        RecurringDetail recurringDetail = new RecurringDetail();
+        List<WeekDay> weekDays = recurringDetail.getWeekDays();
+        if (monday) weekDays.add(WeekDay.MONDAY);
+        if (tuesday) weekDays.add(WeekDay.TUESDAY);
+        if (wednesday) weekDays.add(WeekDay.WEDNESDAY);
+        if (thursday) weekDays.add(WeekDay.THURSDAY);
+        if (friday) weekDays.add(WeekDay.FRIDAY);
+        if (saturday) weekDays.add(WeekDay.SATURDAY);
+        if (sunday) weekDays.add(WeekDay.SUNDAY);
+        recurringDetail.setWeekDays(weekDays);
+        recurringDetail.setRecurringStatus(RecurringStatus.Active);
+        mRide.setRecurringDetail(recurringDetail);
     }
 
     private Vehicle getVehicle(String vehicleRegistrationNumber) {
@@ -630,6 +779,10 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         }
         if (mRideType.equals(RideType.OfferRide) && mGoogleDirection == null){
             Toast.makeText(getActivity(), "Please wait for route to show up",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (mRepeat && !(monday || tuesday || wednesday || thursday || friday || saturday || sunday)){
+            Toast.makeText(getActivity(), "Please select at least one weekday for recurring rides",Toast.LENGTH_LONG).show();
             return false;
         }
         //Don't validate time again here as this may effect fare calculation if time is not proper
