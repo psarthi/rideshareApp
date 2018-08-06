@@ -24,6 +24,7 @@ public class Constant {
     public static final int ACCESS_FINE_LOCATION_REQUEST_CODE=1;
     public static final float MAP_SINGLE_LOCATION_ZOOM_LEVEL = 15;
     public static final double LAT_LNG_LARGE_PADDING_PERCENT = 0.30;
+    public static final double LAT_LNG_EXTRA_LARGE_PADDING_PERCENT = 0.40;
     public static final double LAT_LNG_MEDIUM_PADDING_PERCENT = 0.10;
     public static final double LAT_LNG_SMALL_PADDING_PERCENT = 0.05;
     //This will ensure that markers are visible properly

@@ -18,6 +18,7 @@ import com.parift.rideshare.R;
 import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.config.Constant;
 import com.parift.rideshare.dialog.CancelCoTravellerFragment;
+import com.parift.rideshare.dialog.CancelRecurringRideAlertDialog;
 import com.parift.rideshare.dialog.DropCoTravellerFragment;
 import com.parift.rideshare.dialog.StandardAlertDialog;
 import com.parift.rideshare.fragment.BaseFragment;
@@ -201,37 +202,91 @@ public class RideComp implements DropCoTravellerFragment.DropCoTravellerFragment
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = mBaseFragment.getString(R.string.standard_cancellation_confirmation_message);
-                DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardListAlertDialogListener() {
-                    @Override
-                    public void onPositiveStandardAlertDialog() {
-                        //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
-                        String CANCEL_RIDE = APIUrl.CANCEL_RIDE.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
-                                .replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
-                        mCommonUtil.showProgressDialog();
-                        RESTClient.get(CANCEL_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                if (mBaseFragment.isAdded()) {
-                                    super.onSuccess(statusCode, headers, response);
-                                    mCommonUtil.dismissProgressDialog();
-                                    Logger.debug(TAG, "Ride Cancelled");
-                                    //Imp - Ensure that output is always saved as FullRide as you actually get fullride
-                                    mRide = new Gson().fromJson(response.toString(), FullRide.class);
-                                    mListener.onRideRefresh(mRide);
-                                    Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Cancelled", Toast.LENGTH_LONG).show();
+                if (!mRide.isRecur() && mRide.getParentRide()==null){
+                    String message = mBaseFragment.getString(R.string.standard_cancellation_confirmation_message);
+                    DialogFragment dialogFragment = new StandardAlertDialog().newInstance(message, new StandardAlertDialog.StandardListAlertDialogListener() {
+                        @Override
+                        public void onPositiveStandardAlertDialog() {
+                            //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
+                            String CANCEL_RIDE = APIUrl.CANCEL_RIDE.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                                    .replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
+                            mCommonUtil.showProgressDialog();
+                            RESTClient.get(CANCEL_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    if (mBaseFragment.isAdded()) {
+                                        super.onSuccess(statusCode, headers, response);
+                                        mCommonUtil.dismissProgressDialog();
+                                        Logger.debug(TAG, "Ride Cancelled");
+                                        //Imp - Ensure that output is always saved as FullRide as you actually get fullride
+                                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                                        mListener.onRideRefresh(mRide);
+                                        Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Cancelled", Toast.LENGTH_LONG).show();
+                                    }
                                 }
-                            }
-                        });
-                    }
+                            });
+                        }
 
-                    @Override
-                    public void onNegativeStandardAlertDialog() {
-                        Logger.debug(TAG, "Negative Button clicked on standard dialog");
-                    }
-                });
+                        @Override
+                        public void onNegativeStandardAlertDialog() {
+                            Logger.debug(TAG, "Negative Button clicked on standard dialog");
+                        }
+                    });
 
-                dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), StandardAlertDialog.TAG);
+                    dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), StandardAlertDialog.TAG);
+                }
+                if (mRide.isRecur() || mRide.getParentRide()!=null){
+                    String message = mBaseFragment.getString(R.string.recurring_cancellation_confirmation_message);
+                    DialogFragment dialogFragment = new CancelRecurringRideAlertDialog().newInstance(message, new CancelRecurringRideAlertDialog.CancelRecurringRideAlertDialogListener() {
+                        @Override
+                        public void onPositiveCancelRecurringRideAlertDialog() {
+                            //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
+                            String CANCEL_RIDE = APIUrl.CANCEL_RIDE.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                                    .replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
+                            mCommonUtil.showProgressDialog();
+                            RESTClient.get(CANCEL_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    if (mBaseFragment.isAdded()) {
+                                        super.onSuccess(statusCode, headers, response);
+                                        mCommonUtil.dismissProgressDialog();
+                                        Logger.debug(TAG, "Ride Cancelled");
+                                        //Imp - Ensure that output is always saved as FullRide as you actually get fullride
+                                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                                        mListener.onRideRefresh(mRide);
+                                        Toast.makeText(mBaseFragment.getActivity(), "Ride Successfully Cancelled", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onNegativeCancelRecurringRideAlertDialog() {
+                            //Imp - Ensure that input is always based on BasicRide as this has to work for both Ride List as well as Ride Info
+                            String CANCEL_ALL_UPCOMING_RIDE = APIUrl.CANCEL_ALL_UPCOMING_RIDE.replace(APIUrl.USER_ID_KEY,Long.toString(mUser.getId()))
+                                    .replace(APIUrl.ID_KEY, Long.toString(mBasicRide.getId()));
+                            mCommonUtil.showProgressDialog();
+                            RESTClient.get(CANCEL_ALL_UPCOMING_RIDE, null, new RSJsonHttpResponseHandler(mCommonUtil) {
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    if (mBaseFragment.isAdded()) {
+                                        super.onSuccess(statusCode, headers, response);
+                                        mCommonUtil.dismissProgressDialog();
+                                        Logger.debug(TAG, "All Upcoming Rides Cancelled");
+                                        //Imp - Ensure that output is always saved as FullRide as you actually get fullride
+                                        mRide = new Gson().fromJson(response.toString(), FullRide.class);
+                                        mListener.onRideRefresh(mRide);
+                                        Toast.makeText(mBaseFragment.getActivity(), "All Upcoming Rides Successfully Cancelled", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+
+                        }
+                    });
+
+                    dialogFragment.show(mBaseFragment.getActivity().getSupportFragmentManager(), CancelRecurringRideAlertDialog.TAG);
+
+                }
             }
         });
 

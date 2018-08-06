@@ -65,6 +65,7 @@ public class MapComp{
             mStandardPadding = (int) (mHeight * Constant.LAT_LNG_MEDIUM_PADDING_PERCENT);
 
             int topPadding = (int) (mHeight * Constant.LAT_LNG_LARGE_PADDING_PERCENT);
+            int topExtraPadding = (int) (mHeight * Constant.LAT_LNG_EXTRA_LARGE_PADDING_PERCENT);
             int smallPadding = (int) (mHeight * Constant.LAT_LNG_SMALL_PADDING_PERCENT);
             Logger.debug(TAG, "Width Pixel:" + mWidth + ",Heigth Pixel:" + mHeight + ",Customm Top Padding Pixel:" + topPadding + ",Standard Padding Pixel:" + mStandardPadding);
 
@@ -82,7 +83,7 @@ public class MapComp{
                     Logger.debug(TAG, "Setting Custom Padding for Offer Ride");
                     //This is very important to customize the visibility range of camera
                     // void setPadding (int left,int top,int right,int bottom)
-                    mMap.setPadding(smallPadding, topPadding, smallPadding, smallPadding);
+                    mMap.setPadding(smallPadding, topExtraPadding, smallPadding, smallPadding);
 
                 }
             }

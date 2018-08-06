@@ -129,7 +129,10 @@ public class BaseActivity extends AppCompatActivity {
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Logger.warn(TAG, "signInResult:failed code=" + e.getStatusCode());
             mCommonUtil.dismissProgressDialog();
-            if (e.getStatusCode() == GoogleSignInStatusCodes.SIGN_IN_CANCELLED){
+            //IMP - ERROR code is thrown when you cancel the sign-in upfront
+            //and SIGN_IN_CANCELLED is thrown if you cancel in between login
+            if (e.getStatusCode() == GoogleSignInStatusCodes.SIGN_IN_CANCELLED ||
+                    e.getStatusCode() == GoogleSignInStatusCodes.ERROR ){
                 Logger.debug(TAG, "Sign in Cancelled");
             } else {
                 Toast.makeText(BaseActivity.this, R.string.system_exception_msg, Toast.LENGTH_LONG).show();

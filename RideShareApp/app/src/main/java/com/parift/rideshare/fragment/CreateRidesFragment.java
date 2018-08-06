@@ -211,6 +211,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         mIntialMinStartTimeCalender = (Calendar) mStartTimeCalendar.clone();
         //This will enable or disable back button
         //((HomePageActivity) getActivity()).showBackButton(true);
+        mRepeat = mCommonUtil.getAppInfo().isDefaultRecurringRideOption();
     }
 
     @Override
@@ -234,6 +235,7 @@ public class CreateRidesFragment extends BaseFragment implements OnMapReadyCallb
         View view = inflater.inflate(R.layout.fragment_create_rides, container, false);
         mFareTextView = view.findViewById(R.id.create_rides_fare_text);
         mRepeatCheckBox = view.findViewById(R.id.repeat_checkbox);
+        mRepeatCheckBox.setChecked(mRepeat);
 
         if (mRideType.equals(RideType.RequestRide)) {
             //Using invisible so that we can block the space and map would not move when it becomes visible

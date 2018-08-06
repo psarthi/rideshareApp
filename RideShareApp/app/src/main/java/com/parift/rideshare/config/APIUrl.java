@@ -101,6 +101,7 @@ public class APIUrl {
     public static final String START_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/start/{id}";
     public static final String END_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/end/{id}";
     public static final String CANCEL_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/cancel/{id}";
+    public static final String CANCEL_ALL_UPCOMING_RIDE = BASE_URL_RIDE_SYSTEM + "/rides/cancelallupcoming/{id}";
     public static final String PICKUP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/pickup/{rideRequestId}";
     public static final String DROP_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/drop/{rideRequestId}?ridemode={rideMode}&paymentcode={paymentCode}";
     public static final String CANCEL_PASSENGER = BASE_URL_RIDE_SYSTEM + "/rides/{rideId}/cancelpassenger/{rideRequestId}?rating={rating}";

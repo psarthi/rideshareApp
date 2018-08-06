@@ -62,6 +62,7 @@
     <string name="rate_cotraveller_text">"Rate "</string>
     <string name="system_exception_msg">Technical Issue. Please try again</string>
     <string name="standard_cancellation_confirmation_message">Are you sure you want to cancel?</string>
+    <string name="recurring_cancellation_confirmation_message">Do you want to cancel current ride or all upcoming rides?</string>
     <string name="ride_end_confirmation_message">Are you sure you want to end the ride early?</string>
     <string name="bill_no_text">Bill</string>
     <string name="rides_offered_text">"Rides Offered - "</string>
