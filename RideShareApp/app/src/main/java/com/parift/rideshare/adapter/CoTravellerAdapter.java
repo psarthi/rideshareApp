@@ -1,9 +1,9 @@
 package com.parift.rideshare.adapter;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +16,6 @@ import com.parift.rideshare.component.RideRequestComp;
 import com.parift.rideshare.component.UserComp;
 import com.parift.rideshare.fragment.BaseFragment;
 import com.parift.rideshare.helper.Logger;
-import com.parift.rideshare.model.ride.domain.RideType;
 import com.parift.rideshare.model.ride.dto.FullRide;
 import com.parift.rideshare.model.ride.dto.FullRideRequest;
 import com.parift.rideshare.model.user.domain.UserFeedback;

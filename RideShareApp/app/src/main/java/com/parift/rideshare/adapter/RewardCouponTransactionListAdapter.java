@@ -1,17 +1,15 @@
 package com.parift.rideshare.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.component.RewardCouponTransactionComp;
-import com.parift.rideshare.component.RewardReimbursementTransactionComp;
 import com.parift.rideshare.fragment.BaseFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.model.serviceprovider.domain.core.RewardCouponTransaction;
-import com.parift.rideshare.model.serviceprovider.domain.core.RewardReimbursementTransaction;
 
 import java.util.List;
 

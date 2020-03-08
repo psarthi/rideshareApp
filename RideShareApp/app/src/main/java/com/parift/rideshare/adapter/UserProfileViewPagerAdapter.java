@@ -1,27 +1,17 @@
 package com.parift.rideshare.adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.google.gson.Gson;
-import com.parift.rideshare.fragment.AboutGroupFragment;
 import com.parift.rideshare.fragment.BaseFragment;
 import com.parift.rideshare.fragment.CommonGroupListFragment;
 import com.parift.rideshare.fragment.CommonInterestListFragment;
-import com.parift.rideshare.fragment.GroupListFragment;
-import com.parift.rideshare.fragment.GroupMemberListFragment;
-import com.parift.rideshare.fragment.GroupMembershipRequestListFragment;
-import com.parift.rideshare.fragment.InterestFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.model.user.dto.BasicUser;
-import com.parift.rideshare.model.user.dto.GroupDetail;
 import com.parift.rideshare.model.user.dto.UserProfile;
-import com.parift.rideshare.test.Interest;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by psarthi on 1/10/18.

@@ -1,8 +1,8 @@
 package com.parift.rideshare.component;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.BaseActivity;
@@ -41,7 +41,6 @@ import com.parift.rideshare.model.app.FetchType;
 import com.parift.rideshare.model.ride.domain.RideType;
 import com.parift.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;
-import com.parift.rideshare.test.Interest;
 
 /**
  * Created by psarthi on 12/6/17.

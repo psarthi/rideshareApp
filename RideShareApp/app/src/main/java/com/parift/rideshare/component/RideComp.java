@@ -1,13 +1,12 @@
 package com.parift.rideshare.component;
 
 import android.app.Dialog;
-import android.media.Image;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RatingBar;
@@ -43,7 +42,6 @@ import com.parift.rideshare.model.user.dto.UserFeedbackInfo;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;

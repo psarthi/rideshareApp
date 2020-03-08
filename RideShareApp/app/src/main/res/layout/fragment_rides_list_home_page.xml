@@ -5,7 +5,7 @@
                 android:layout_height="match_parent"
                 tools:context="com.parift.rideshare.fragment.RidesListHomePageFragment">
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/rides_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,14 +13,14 @@
         app:tabGravity="fill">
 
 
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/rides_viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rides_tab">
 
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.parift.rideshare.notification;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
@@ -10,14 +11,13 @@ import com.parift.rideshare.helper.RESTClient;
 import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
 
-public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
+public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
 
     public static final String TAG = MyFirebaseInstanceIDService.class.getName();
 
@@ -28,16 +28,16 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
      */
     // [START refresh_token]
     @Override
-    public void onTokenRefresh() {
+    public void onNewToken(String token) {
         // Get updated InstanceID token.
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        //String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseMessaging.getInstance().subscribeToTopic("all");
-        Logger.debug(TAG, "Refreshed token: " + refreshedToken);
+        Logger.debug(TAG, "Refreshed token: " + token);
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
-        sendRegistrationToServer(refreshedToken);
+        sendRegistrationToServer(token);
     }
     // [END refresh_token]
 

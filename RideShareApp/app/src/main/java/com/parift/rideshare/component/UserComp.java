@@ -1,22 +1,16 @@
 package com.parift.rideshare.component;
 
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parift.rideshare.Manifest;
 import com.parift.rideshare.R;
 import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.fragment.BaseFragment;
-import com.parift.rideshare.fragment.GroupMemberListFragment;
-import com.parift.rideshare.fragment.UserProfileFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;

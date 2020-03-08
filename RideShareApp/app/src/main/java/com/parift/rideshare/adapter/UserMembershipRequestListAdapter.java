@@ -1,21 +1,18 @@
 package com.parift.rideshare.adapter;
 
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.component.FragmentLoader;
 import com.parift.rideshare.component.GroupComp;
 import com.parift.rideshare.fragment.BaseFragment;
-import com.parift.rideshare.fragment.SearchGroupFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
-import com.parift.rideshare.model.app.MembershipStatusType;
 import com.parift.rideshare.model.user.dto.BasicMembershipRequest;
 import com.parift.rideshare.model.user.dto.GroupDetail;
 import com.google.gson.Gson;

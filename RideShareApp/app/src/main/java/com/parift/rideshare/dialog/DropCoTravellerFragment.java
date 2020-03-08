@@ -4,8 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.util.Log;
+import androidx.fragment.app.DialogFragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parift.rideshare.R;
-import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.model.ride.domain.core.RideMode;
 import com.parift.rideshare.model.ride.dto.BasicRideRequest;

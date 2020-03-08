@@ -1,9 +1,9 @@
 package com.parift.rideshare.component;
 
 import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -25,7 +25,6 @@ import com.parift.rideshare.model.billing.domain.core.BillStatus;
 import com.parift.rideshare.model.ride.domain.RideType;
 import com.parift.rideshare.model.ride.domain.core.PassengerStatus;
 import com.parift.rideshare.model.ride.domain.core.RideRequestStatus;
-import com.parift.rideshare.model.ride.dto.BasicRide;
 import com.parift.rideshare.model.ride.dto.BasicRideRequest;
 import com.parift.rideshare.model.ride.dto.FullRideRequest;
 import com.parift.rideshare.model.ride.dto.SuggestedMatchedRideInfo;
@@ -35,7 +34,6 @@ import com.parift.rideshare.model.user.dto.UserFeedbackInfo;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -6,8 +6,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +19,6 @@ import com.parift.rideshare.component.FragmentLoader;
 import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.config.Constant;
 import com.parift.rideshare.helper.CommonUtil;
-import com.parift.rideshare.model.ride.dto.BasicRide;
 import com.parift.rideshare.model.user.dto.BasicUser;
 
 /**

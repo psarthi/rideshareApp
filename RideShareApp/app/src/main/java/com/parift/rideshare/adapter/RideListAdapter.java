@@ -1,28 +1,23 @@
 package com.parift.rideshare.adapter;
 
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.component.FragmentLoader;
 import com.parift.rideshare.component.RideComp;
 import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.fragment.BaseFragment;
-import com.parift.rideshare.fragment.RidesListFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
 import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
-import com.parift.rideshare.model.common.ErrorMessage;
 import com.parift.rideshare.model.ride.dto.BasicRide;
 import com.parift.rideshare.model.ride.dto.FullRide;
 import com.parift.rideshare.model.user.dto.BasicUser;
-import com.google.gson.Gson;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 

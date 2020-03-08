@@ -2,8 +2,8 @@ package com.parift.rideshare.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
 import com.parift.rideshare.component.MapComp;
@@ -20,7 +19,6 @@ import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.model.billing.domain.core.Bill;
 import com.parift.rideshare.model.ride.domain.core.RideRequestStatus;
-import com.parift.rideshare.model.ride.dto.BasicRideRequest;
 import com.parift.rideshare.model.ride.dto.FullRideRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,8 +27,6 @@ import com.google.gson.Gson;
 import com.parift.rideshare.model.ride.dto.RideRequestResult;
 import com.parift.rideshare.model.ride.dto.SuggestedMatchedRideInfo;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 

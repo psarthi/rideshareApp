@@ -2,19 +2,17 @@ package com.parift.rideshare.fragment;
 
 import android.app.DialogFragment;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
@@ -23,14 +21,9 @@ import com.parift.rideshare.activity.HomePageActivity;
 import com.parift.rideshare.adapter.CoTravellerAdapter;
 import com.parift.rideshare.component.MapComp;
 import com.parift.rideshare.component.RideComp;
-import com.parift.rideshare.component.RideRequestComp;
-import com.parift.rideshare.dialog.DropCoTravellerFragment;
-import com.parift.rideshare.dialog.CancelCoTravellerFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
-import com.parift.rideshare.model.billing.domain.core.Bill;
 import com.parift.rideshare.model.ride.domain.core.RideStatus;
-import com.parift.rideshare.model.ride.dto.BasicRideRequest;
 import com.parift.rideshare.model.ride.dto.FullRide;
 import com.parift.rideshare.model.ride.dto.FullRideRequest;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,9 +31,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 
 /**

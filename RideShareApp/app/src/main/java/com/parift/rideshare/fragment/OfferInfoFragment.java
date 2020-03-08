@@ -2,8 +2,8 @@ package com.parift.rideshare.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +14,7 @@ import com.parift.rideshare.activity.HomePageActivity;
 import com.parift.rideshare.component.OfferComp;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
-import com.parift.rideshare.model.serviceprovider.domain.core.Offer;
 import com.parift.rideshare.model.serviceprovider.dto.UserOffer;
-import com.parift.rideshare.model.user.domain.core.User;
 import com.parift.rideshare.model.user.dto.BasicUser;
 
 /**

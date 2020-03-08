@@ -2,9 +2,9 @@ package com.parift.rideshare.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +23,11 @@ import com.parift.rideshare.component.FragmentLoader;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
 import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
-import com.parift.rideshare.model.common.ErrorMessage;
 import com.parift.rideshare.model.user.domain.VehicleCategory;
 import com.parift.rideshare.model.user.domain.VehicleSubCategory;
 import com.parift.rideshare.model.user.domain.core.Vehicle;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.google.gson.Gson;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
 

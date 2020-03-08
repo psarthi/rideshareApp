@@ -1,18 +1,15 @@
 package com.parift.rideshare.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.component.OfferComp;
 import com.parift.rideshare.fragment.BaseFragment;
 import com.parift.rideshare.helper.CommonUtil;
-import com.parift.rideshare.model.serviceprovider.domain.core.Offer;
 import com.parift.rideshare.model.serviceprovider.dto.UserOffer;
-import com.parift.rideshare.model.user.domain.core.User;
 
 import java.util.List;
 

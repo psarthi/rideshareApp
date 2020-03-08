@@ -2,13 +2,11 @@ package com.parift.rideshare.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import android.widget.TextView;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
-import com.parift.rideshare.adapter.GroupListAdapter;
 import com.parift.rideshare.adapter.UserProfileViewPagerAdapter;
 import com.parift.rideshare.component.UserComp;
 import com.parift.rideshare.helper.CommonUtil;

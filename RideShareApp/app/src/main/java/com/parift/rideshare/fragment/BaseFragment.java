@@ -1,45 +1,30 @@
 package com.parift.rideshare.fragment;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.parift.rideshare.R;
-import com.parift.rideshare.adapter.GroupListAdapter;
 import com.parift.rideshare.component.UserComp;
-import com.parift.rideshare.config.APIUrl;
-import com.parift.rideshare.config.Constant;
-import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
-import com.parift.rideshare.helper.RESTClient;
-import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
-import com.parift.rideshare.model.user.dto.GroupDetail;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by psarthi on 11/21/17.

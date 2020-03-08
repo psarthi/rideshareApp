@@ -2,8 +2,8 @@ package com.parift.rideshare.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +12,9 @@ import com.google.gson.Gson;
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
 import com.parift.rideshare.component.RewardCouponTransactionComp;
-import com.parift.rideshare.component.RewardReimbursementTransactionComp;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.model.serviceprovider.domain.core.RewardCouponTransaction;
-import com.parift.rideshare.model.serviceprovider.domain.core.RewardReimbursementTransaction;
 import com.parift.rideshare.model.user.dto.BasicUser;
 
 /**

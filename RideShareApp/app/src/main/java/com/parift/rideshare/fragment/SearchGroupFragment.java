@@ -2,44 +2,35 @@ package com.parift.rideshare.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
+
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.activity.HomePageActivity;
 import com.parift.rideshare.adapter.EndlessRecyclerViewScrollListener;
-import com.parift.rideshare.adapter.GroupInviteUserSearchListAdapter;
 import com.parift.rideshare.adapter.GroupListAdapter;
 import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
 import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
-import com.parift.rideshare.model.app.GroupInviteUserSearchResultWrapper;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.parift.rideshare.model.user.dto.GroupDetail;
-import com.parift.rideshare.model.user.dto.GroupInviteUserSearchResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -142,7 +133,7 @@ public class SearchGroupFragment extends BaseFragment {
         });
 
         // Catch event on [x] button inside search view
-        View closeButton = searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
+        View closeButton = searchView.findViewById(R.id.search_close_btn);
         // Set on click listener
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override

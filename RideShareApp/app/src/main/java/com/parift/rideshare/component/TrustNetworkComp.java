@@ -1,8 +1,8 @@
 package com.parift.rideshare.component;
 
 import android.graphics.ColorFilter;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import androidx.core.content.ContextCompat;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,7 +16,6 @@ import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.model.ride.domain.TrustCategory;
 import com.parift.rideshare.model.ride.domain.TrustCategoryName;
 import com.parift.rideshare.model.ride.domain.TrustNetwork;
-import com.parift.rideshare.model.user.dto.BasicUser;
 
 /**
  * Created by psarthi on 12/6/17.

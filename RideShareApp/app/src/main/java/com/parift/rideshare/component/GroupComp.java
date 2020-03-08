@@ -1,24 +1,21 @@
 package com.parift.rideshare.component;
 
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
+
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.appcompat.widget.AppCompatTextView;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.parift.rideshare.R;
 import com.parift.rideshare.config.APIUrl;
 import com.parift.rideshare.fragment.BaseFragment;
-import com.parift.rideshare.fragment.GroupInfoFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
 import com.parift.rideshare.helper.RESTClient;
 import com.parift.rideshare.helper.RSJsonHttpResponseHandler;
-import com.parift.rideshare.model.user.domain.GroupFeedback;
 import com.parift.rideshare.model.user.domain.Vote;
 import com.parift.rideshare.model.user.dto.BasicUser;
 import com.parift.rideshare.model.user.dto.GroupDetail;

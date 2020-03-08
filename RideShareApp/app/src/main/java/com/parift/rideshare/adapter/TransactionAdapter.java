@@ -1,7 +1,7 @@
 package com.parift.rideshare.adapter;
 
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +12,6 @@ import com.parift.rideshare.R;
 import com.parift.rideshare.fragment.BaseFragment;
 import com.parift.rideshare.helper.CommonUtil;
 import com.parift.rideshare.helper.Logger;
-import com.parift.rideshare.model.billing.domain.core.Purpose;
 import com.parift.rideshare.model.billing.domain.core.Transaction;
 import com.parift.rideshare.model.billing.domain.core.TransactionType;
 
