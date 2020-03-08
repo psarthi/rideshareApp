@@ -7,7 +7,7 @@ android {
         applicationId "com.parift.rideshare"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 17
+        versionCode 15
         versionName "1.0.12"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
