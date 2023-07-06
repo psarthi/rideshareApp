@@ -2,7 +2,7 @@
 
 This is an Android native app codebase for ride sharing mobile app, something similar to Uber for car pooling.
 
-Google Playstore link - https://play.google.com/store/apps/details?id=com.parift.rideshare
+MobileApp Screenshots - https://photos.app.goo.gl/UuyEcvhL5ow752HH8
 
 # About me
 
